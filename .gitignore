@@ -1,0 +1,6 @@
+.settings/
+target/
+.idea/
+TrainingHneu.iml
+.classpath
+.project
