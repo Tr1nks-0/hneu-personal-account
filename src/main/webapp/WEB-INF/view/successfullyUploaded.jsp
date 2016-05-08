@@ -3,8 +3,12 @@
 <%@ include file="jspf/header.jspf" %>
 <%@ include file="jspf/management-header.jspf" %>
 <ul class="list-group">
-    <c:forEach items="${files}" var="file">
-        <li class="list-group-item">${file}</li>
+    <c:forEach items="${files.entrySet()}" var="file">
+        <c:choose>
+            <c:when test="${file.value}"><li class="list-group-item list-group-item-success"></c:when>
+            <c:otherwise><li class="list-group-item list-group-item-danger"></c:otherwise>
+        </c:choose>
+       ${file.key}</li>
     </c:forEach>
 </ul>
 <%@ include file="jspf/management-footer.jspf" %>
