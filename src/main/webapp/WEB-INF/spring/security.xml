@@ -13,10 +13,10 @@
     <http auto-config="true" use-expressions="true">
         <intercept-url pattern="/management/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/login" access="isAnonymous()"/>
-        <form-login login-page="/login" default-target-url="/management"
+        <form-login login-page="/login" default-target-url="/account"
                     authentication-failure-url="/login?error" username-parameter="username"
                     password-parameter="password"/>
-        <logout logout-success-url="/info" logout-url="/logout"/>
+        <logout logout-success-url="/login" logout-url="/logout"/>
     </http>
 
     <!--

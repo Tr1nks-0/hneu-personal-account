@@ -1,9 +1,17 @@
 package com.rozdolskyi.traininghneu.model;
 
+
+import lombok.Data;
+
 public class Tag {
 
-	public String id;
-	public String tagName;
+	private String id;
+	private String tagName;
+
+	public Tag(String id, String tagName) {
+		this.id = id;
+		this.tagName = tagName;
+	}
 
 	public String getId() {
 		return id;
@@ -20,10 +28,4 @@ public class Tag {
 	public void setTagName(String tagName) {
 		this.tagName = tagName;
 	}
-
-	public Tag(String id, String tagName) {
-		this.id = id;
-		this.tagName = tagName;
-	}
-
 }

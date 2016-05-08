@@ -22,25 +22,30 @@ public class StudentProfileExcelExcelParser extends AbstractExcelParser<StudentP
 
     @Override
     public StudentProfile extractModel() {
+        String header = getStringCellValue(3, 0);
+        if(!header.contains("ІНДИВІДУАЛЬНИЙ НАВЧАЛЬНИЙ ПЛАН")) {
+            throw new RuntimeException("Student profile is not valid");
+        }
         currentIndex = 5;
         StudentProfile studentProfile = new StudentProfile();
         studentProfile.setSurname(getStringCellValue(currentIndex++, 2));
         studentProfile.setName(getStringCellValue(currentIndex++, 2));
         studentProfile.setFaculty(getStringCellValue(currentIndex++, 2));
         studentProfile.setIncomeYear(getIntegerCellValue(currentIndex++, 2));
-        studentProfile.setContactInfo(getContactInfo());
+        studentProfile.setContactInfo(getContactInfo(currentIndex));
         studentProfile.setSpeciality(getStringCellValue(currentIndex++, 2));
-        studentProfile.setCourses(getCourses());
+        studentProfile.setGroup(getStringCellValue(currentIndex++, 2));
+        studentProfile.setCourses(getCourses(currentIndex));
         studentProfile.setId(getId(studentProfile));
         return studentProfile;
     }
 
     private String getId(StudentProfile studentProfile) {
-        String id = studentProfile.getName() + studentProfile.getSurname() + studentProfile.getSpeciality();
+        String id = studentProfile.getSurname() + studentProfile.getName()  + studentProfile.getGroup();
         return id.replace(" ", "").toLowerCase().trim();
     }
 
-    private List<Course> getCourses() {
+    private List<Course> getCourses(Integer currentIndex) {
         List<Course> courses = new ArrayList<>();
         while (currentIndex++ < 100) {
             if(isCourseLabel())
@@ -73,6 +78,8 @@ public class StudentProfileExcelExcelParser extends AbstractExcelParser<StudentP
                 disciplines.add(getDiscipline(rowNumber));
             rowNumber++;
         }
+        if (disciplines.isEmpty())
+            throw new RuntimeException("Disciplines were not found");
         semester.setDisciplines(disciplines);
         semester.setTotal(getIntegerCellValue(rowNumber, collNumber + 2));
         return semester;
@@ -86,10 +93,12 @@ public class StudentProfileExcelExcelParser extends AbstractExcelParser<StudentP
         return discipline;
     }
 
-    private List<String> getContactInfo() {
+    private List<String> getContactInfo(int currentIndex) {
         List<String> contacts = new ArrayList<>();
-        while (isNotSpecialityLabel(currentIndex))
-            contacts.add(getStringCellValue(currentIndex++, 2));
+        while (currentIndex++ < 100 && isNotSpecialityLabel(currentIndex))
+            contacts.add(getStringCellValue(currentIndex, 2));
+        if (contacts.isEmpty())
+            throw new RuntimeException("Contacts were not found");
         return contacts;
     }
 

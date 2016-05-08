@@ -1,0 +1,16 @@
+<div class="container" id="main-container">
+    <div class="row">
+        <div id="wrapper">
+            <div id="sidebar-wrapper">
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="/management/uploadStudentProfilesFromExcel"><spring:message code="form.label.management.add.profiles"/></a>
+                        <a href="/management/uploadTotalsFromExcel"><spring:message code="form.label.management.add.totals"/></a>
+                        <a href="/logout"><spring:message code="top.menu.exit"/></a>
+                    </li>
+                </ul>
+            </div>
+            <div id="page-content-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">

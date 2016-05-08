@@ -16,7 +16,9 @@ public interface StudentService {
 
     Optional<StudentProfile> findStudentProfileByEmail(String email);
 
-    void updateStudentsScoresFromFiles(List<File> files);
+    void updateStudentsScoresFromFile(File file);
 
     List<StudentProfile> findAll();
+
+    void setCredentials(StudentProfile studentProfile);
 }

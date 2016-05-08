@@ -1,16 +1,12 @@
+    </div>
 </div>
 <footer class="footer">
-	<div class="container">
-		<p class="text-muted" style="margin: 20px">rzd &#169; 2016</p>
-	</div>
+    <div class="container">
+        <p class="text-muted">Copyright &copy; HNEU | Student account 2016</p>
+    </div>
 </footer>
-<script src="<c:url value="/resources/js/jquery-1.12.0.min.js"/>"></script>
-<script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
-<script src="<c:url value="/resources/js/jquery-1.12.0.min.js"/>"></script>
-<script>
-	$(".clickable-row").click(function() {
-		window.document.location = $(this).data("href");
-	});
-</script>
+<script type="text/javascript" src="/resources/js/jquery-1.12.0.min.js"></script>
+<script type="text/javascript" src="/resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/resources/js/scripts.js"></script>
 </body>
 </html>

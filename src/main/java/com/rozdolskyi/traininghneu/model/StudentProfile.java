@@ -1,11 +1,12 @@
 package com.rozdolskyi.traininghneu.model;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document(collection = "StudentProfile")
+@Document(collection = "student_profiles")
 public class StudentProfile {
 
     @Id
@@ -16,9 +17,18 @@ public class StudentProfile {
     private Integer incomeYear;
     private List<String> contactInfo;
     private String speciality;
+    private String group;
     private List<Course> courses;
     private String email;
     private String password;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -36,20 +46,20 @@ public class StudentProfile {
         this.surname = surname;
     }
 
-    public String getFaculty() {
-        return faculty;
-    }
-
-    public void setFaculty(String faculty) {
-        this.faculty = faculty;
-    }
-
     public Integer getIncomeYear() {
         return incomeYear;
     }
 
     public void setIncomeYear(Integer incomeYear) {
         this.incomeYear = incomeYear;
+    }
+
+    public String getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(String faculty) {
+        this.faculty = faculty;
     }
 
     public List<String> getContactInfo() {
@@ -76,25 +86,12 @@ public class StudentProfile {
         this.courses = courses;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getEmail() {
         return email;
     }
 
-    @Override
-    public String toString() {
-        return String.format("%s - %s %s", getSpeciality(), getName(), getSurname());
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -103,5 +100,13 @@ public class StudentProfile {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 }

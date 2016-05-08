@@ -1,5 +1,6 @@
 package com.rozdolskyi.traininghneu.model;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,6 +13,14 @@ public class Discipline {
     private String credits;
     private String controlForm;
     private String mark;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getLabel() {
         return label;
@@ -43,13 +52,5 @@ public class Discipline {
 
     public void setMark(String mark) {
         this.mark = mark;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }
