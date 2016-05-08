@@ -67,7 +67,7 @@
 <script type="text/javascript" src="/resources/js/jquery.backstretch.min.js"></script>
 <script type="text/javascript" src="/resources/js/scripts.js"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $.backstretch("/resources/img/back.jpg");
     });
 </script>

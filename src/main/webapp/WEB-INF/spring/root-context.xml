@@ -1,30 +1,49 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/data/mongo
-        http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
-        
-	<context:annotation-config />
+        http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+       	http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<context:component-scan base-package="com.rozdolskyi.traininghneu.dao" />
-	<context:component-scan base-package="com.rozdolskyi.traininghneu.service" />
+    <context:annotation-config/>
 
-	<import resource="security.xml" />
+    <context:component-scan base-package="edu.hneu.studentsportal.dao"/>
+    <context:component-scan base-package="edu.hneu.studentsportal.service"/>
+    <context:component-scan base-package="edu.hneu.studentsportal.controller"/>
+    <mongo:repositories base-package="edu.hneu.studentsportal.dao"/>
 
-	<context:property-placeholder location="classpath:database.properties" />
+    <import resource="security.xml"/>
 
-	<mongo:mongo host="${mongo.host}" port="${mongo.port}" />
+    <context:property-placeholder location="classpath:database.properties"/>
 
-	<mongo:db-factory username="${mongo.username}" password="${mongo.password}" dbname="${mongo.db}" mongo-ref="mongo" />
+    <mongo:mongo host="${mongo.host}" port="${mongo.port}"/>
 
-	<mongo:repositories base-package="com.rozdolskyi.traininghneu.dao" />
+    <mongo:db-factory username="${mongo.username}" password="${mongo.password}" dbname="${mongo.db}" mongo-ref="mongo"/>
 
-	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
-	</bean>
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+    </bean>
+
+    <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+        <property name="paramName" value="lang"/>
+    </bean>
+
+    <mvc:annotation-driven/>
+    <mvc:resources mapping="/resources/**" location="classpath:/theme/"/>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/*"/>
+            <ref bean="localeChangeInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
 </beans>
