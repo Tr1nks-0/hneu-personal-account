@@ -48,7 +48,7 @@ public class DefaultFileService implements FileService {
             }
             return false;
         } catch (RuntimeException e) {
-            return false;
+             return false;
         }
     }
 

@@ -20,6 +20,7 @@ public class StudentProfile {
     private List<Course> courses;
     private String email;
     private String password;
+    private String profileImage;
 
     public String getId() {
         return id;
@@ -107,5 +108,13 @@ public class StudentProfile {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
     }
 }

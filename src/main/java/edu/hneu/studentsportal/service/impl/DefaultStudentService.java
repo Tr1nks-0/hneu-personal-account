@@ -4,13 +4,14 @@ package edu.hneu.studentsportal.service.impl;
 import edu.hneu.studentsportal.dao.StudentDao;
 import edu.hneu.studentsportal.model.*;
 import edu.hneu.studentsportal.parser.PointsExcelParser;
-import edu.hneu.studentsportal.parser.StudentProfileExcelExcelParser;
+import edu.hneu.studentsportal.parser.StudentProfileExcelParser;
 import edu.hneu.studentsportal.parser.dto.PointsDto;
 import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.File;
 import java.util.*;
@@ -38,10 +39,12 @@ public class DefaultStudentService implements StudentService {
     private StudentDao studentDao;
     @Autowired
     private UserService userService;
+    @Autowired
+    private WebApplicationContext context;
 
     @Override
     public StudentProfile readStudentProfilesFromFile(File file) {
-        return new StudentProfileExcelExcelParser().parse(file);
+        return ((StudentProfileExcelParser) context.getBean("studentProfileExcelParser")).parse(file);
     }
 
     @Override

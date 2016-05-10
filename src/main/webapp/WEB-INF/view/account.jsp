@@ -6,6 +6,9 @@
     <div class="row">
         <form:form action="account/update" method="POST" commandName="profile">
             <div class="row">
+                <img src="${uploadedFilesLocation}${profile.profileImage}"/>
+            </div>
+            <div class="row">
                 <div class="col-md-7 col-sm-8 col-xs-12">
                     <div class="row">
                         <div class="col-md-4 col-sm-4 col-xs-5 profile-label"><strong><spring:message

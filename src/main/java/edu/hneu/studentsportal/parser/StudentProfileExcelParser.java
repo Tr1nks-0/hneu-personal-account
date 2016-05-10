@@ -5,18 +5,37 @@ import edu.hneu.studentsportal.model.Course;
 import edu.hneu.studentsportal.model.Discipline;
 import edu.hneu.studentsportal.model.Semester;
 import edu.hneu.studentsportal.model.StudentProfile;
+import edu.hneu.studentsportal.service.FileService;
+import org.apache.poi.ss.usermodel.PictureData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
-public class StudentProfileExcelExcelParser extends AbstractExcelParser<StudentProfile> {
+@Component
+@Scope("prototype")
+public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfile> {
 
     private static final int LEFT_SEMESTER_COLL = 0;
     private static final int RIGHT_SEMESTER_COLL = 6;
+
+    @Autowired
+    private FileService fileService;
+
+    @Value("${uploaded.files.location}")
+    public String uploadedFilesLocation;
 
     @Override
     public StudentProfile extractModel() {
@@ -35,6 +54,7 @@ public class StudentProfileExcelExcelParser extends AbstractExcelParser<StudentP
         studentProfile.setGroup(getStringCellValue(currentIndex++, 2));
         studentProfile.setCourses(getCourses(currentIndex));
         studentProfile.setId(getId(studentProfile));
+        studentProfile.setProfileImage(getProfileImage(studentProfile));
         return studentProfile;
     }
 
@@ -114,5 +134,26 @@ public class StudentProfileExcelExcelParser extends AbstractExcelParser<StudentP
 
     public boolean isNotSemesterEnd(int semesterRow, int cellIndex) {
         return isFalse(getStringCellValue(semesterRow, cellIndex).contains("ВСЬОГО ЗА"));
+    }
+
+    private String getProfileImage(StudentProfile studentProfile) {
+        List<? extends PictureData> allPictures = workbook.getAllPictures();
+        if(allPictures.isEmpty())
+            return null;
+        try {
+            PictureData profilePhoto = allPictures.get(allPictures.size() - 1);
+            String profilePhotoLocation = studentProfile.getId() + "/" + "photo." + profilePhoto.suggestFileExtension();
+            String classPath = studentProfile.getClass().getResource("/").getPath();
+            String filePath = classPath + uploadedFilesLocation + profilePhotoLocation;
+            File file = new File(filePath);
+            fileService.createDirectoryIfNotExist(file.getParentFile());
+            FileOutputStream out = new FileOutputStream(file);
+            out.write(profilePhoto.getData());
+            out.close();
+            return profilePhotoLocation;
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

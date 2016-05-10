@@ -19,6 +19,7 @@
     <context:component-scan base-package="edu.hneu.studentsportal.dao"/>
     <context:component-scan base-package="edu.hneu.studentsportal.service"/>
     <context:component-scan base-package="edu.hneu.studentsportal.controller"/>
+    <context:component-scan base-package="edu.hneu.studentsportal.parser"/>
     <mongo:repositories base-package="edu.hneu.studentsportal.dao"/>
 
     <import resource="security.xml"/>
