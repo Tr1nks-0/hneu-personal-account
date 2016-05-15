@@ -37,4 +37,10 @@ public class DefaultStudentDao implements StudentDao {
     public List<StudentProfile> findAll() {
         return mongoOperations.findAll(StudentProfile.class);
     }
+
+    @Override
+    public void remove(String id) {
+        StudentProfile profile = mongoOperations.findById(id, StudentProfile.class);
+        mongoOperations.remove(profile);
+    }
 }

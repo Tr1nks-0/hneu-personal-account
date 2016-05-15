@@ -40,6 +40,7 @@
 
     <mvc:annotation-driven/>
     <mvc:resources mapping="/resources/**" location="classpath:/theme/"/>
+    <mvc:resources mapping="/profile/**" location="classpath:/profile/"/>
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/*"/>

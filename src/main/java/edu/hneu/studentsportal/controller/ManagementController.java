@@ -1,8 +1,10 @@
 package edu.hneu.studentsportal.controller;
 
 import edu.hneu.studentsportal.model.FilesUploadModel;
+import edu.hneu.studentsportal.model.Group;
 import edu.hneu.studentsportal.model.StudentProfile;
 import edu.hneu.studentsportal.service.FileService;
+import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,9 +66,20 @@ public class ManagementController {
         return "uploadTotalsFromExcel";
     }
 
-    @RequestMapping(value = "/successfullyUploaded", method = RequestMethod.GET)
+    @RequestMapping(value = "/successfullyUploaded")
     public String successfullyUploaded() {
         return "successfullyUploaded";
     }
+/*
+    @RequestMapping(value = "/synchronizeSchedule")
+    public String downloadGroups() {
+        scheduleService.downloadGroups();
+        return "redirect:scheduleSynchronizedSuccessfully";
+    }
+
+    @RequestMapping(value = "/scheduleSynchronizedSuccessfully")
+    public String groupsDownloadedSuccessfully() {
+        return "scheduleSynchronizedSuccessfully";
+    }*/
 
 }

@@ -14,4 +14,6 @@ public interface StudentDao {
     Optional<StudentProfile> findByEmail(String email);
 
     List<StudentProfile> findAll();
+
+    void remove(String id);
 }

@@ -49,6 +49,7 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void save(StudentProfile studentProfile) {
+        studentDao.remove(studentProfile.getId());
         studentDao.save(studentProfile);
     }
 
