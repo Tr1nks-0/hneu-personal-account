@@ -16,4 +16,14 @@ public class DefaultUserService implements UserService {
     public void save(User user) {
         userDao.save(user);
     }
+
+    @Override
+    public User getUserForId(String id){
+        try {
+            return userDao.findOne(id);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
 }
