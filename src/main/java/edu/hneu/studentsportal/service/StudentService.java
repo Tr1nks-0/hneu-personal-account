@@ -21,4 +21,6 @@ public interface StudentService {
     List<StudentProfile> findAll();
 
     void setCredentials(StudentProfile studentProfile);
+
+    void setGroupId(StudentProfile studentProfile);
 }

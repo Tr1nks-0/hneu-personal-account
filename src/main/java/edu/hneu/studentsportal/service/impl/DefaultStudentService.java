@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.service.impl;
 
 
+import edu.hneu.studentsportal.dao.GroupDao;
 import edu.hneu.studentsportal.dao.StudentDao;
 import edu.hneu.studentsportal.model.*;
 import edu.hneu.studentsportal.parser.PointsExcelParser;
@@ -41,6 +42,8 @@ public class DefaultStudentService implements StudentService {
     private UserService userService;
     @Autowired
     private WebApplicationContext context;
+    @Autowired
+    private GroupDao groupDao;
 
     @Override
     public StudentProfile readStudentProfilesFromFile(File file) {
@@ -142,6 +145,12 @@ public class DefaultStudentService implements StudentService {
             user.setRole(2);
             userService.save(user);
         }
+    }
+
+    @Override
+    public void setGroupId(StudentProfile studentProfile) {
+        Group group = groupDao.findOne(studentProfile.getGroup());
+        studentProfile.setGroupId(group.getId());
     }
 
     private Optional<String> getStudentEmail(StudentProfile studentProfile) {

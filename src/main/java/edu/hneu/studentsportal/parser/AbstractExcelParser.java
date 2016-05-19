@@ -15,7 +15,6 @@ import static java.util.Objects.nonNull;
 public abstract class AbstractExcelParser<E> {
 
     protected Sheet sheet;
-    protected int currentIndex = 0;
     protected Workbook workbook;
 
     public E parse(File file) {

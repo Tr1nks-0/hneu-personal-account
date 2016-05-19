@@ -17,6 +17,7 @@ public class StudentProfile {
     private List<String> contactInfo;
     private String speciality;
     private String group;
+    private String groupId;
     private List<Course> courses;
     private String email;
     private String password;
@@ -110,6 +111,14 @@ public class StudentProfile {
         this.group = group;
     }
 
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
@@ -117,4 +126,5 @@ public class StudentProfile {
     public String getProfileImage() {
         return profileImage;
     }
+
 }

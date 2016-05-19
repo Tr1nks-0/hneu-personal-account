@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//@Service
+@Service
 public class DefaultScheduleService implements ScheduleService {
 
     private static final String ID_REGEX = "id=\".+\"";
@@ -21,7 +21,7 @@ public class DefaultScheduleService implements ScheduleService {
     private static final String SPECIALITIES_URL = "http://services.ksue.edu.ua:8081/schedule/xmlmetadata?q=specialities&facultyid=%s&auth=test";
     private static final String GROUPS_URL = "http://services.ksue.edu.ua:8081/schedule/xmlmetadata?q=groups&facultyid=%s&specialityid=%s&course=%s&auth=test";
 
-  //  @Autowired
+    @Autowired
     private GroupDao groupDao;
 
     @Override
@@ -35,6 +35,7 @@ public class DefaultScheduleService implements ScheduleService {
                     List<String> groupIds = getListOfIds(response);
                     List<String> groupName = getListOfNames(response);
                     for (int i = 0; i < groupIds.size(); i++) {
+                        System.out.println("new groups");
                         groupDao.save(new Group(groupIds.get(i), groupName.get(i)));
                     }
                 }

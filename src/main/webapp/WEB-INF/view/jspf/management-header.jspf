@@ -8,6 +8,8 @@
                                 code="form.label.management.add.profiles"/></a>
                         <a href="/management/uploadTotalsFromExcel"><spring:message
                                 code="form.label.management.add.totals"/></a>
+                        <a href="/management/synchronizeSchedule"><spring:message
+                                code="form.label.management.synchronize.schedule"/></a>
                         <a href="/logout"><spring:message code="top.menu.exit"/></a>
                     </li>
                 </ul>

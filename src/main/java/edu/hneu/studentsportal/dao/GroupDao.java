@@ -5,6 +5,6 @@ import edu.hneu.studentsportal.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-//@Repository
+@Repository
 public interface GroupDao extends CrudRepository<Group, String> {
 }

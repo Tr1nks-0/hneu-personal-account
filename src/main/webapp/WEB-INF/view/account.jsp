@@ -7,7 +7,7 @@
         <form:form action="account/update" method="POST" commandName="profile">
             <div class="row">
                 <div class="col-md-4 col-sm-4 col-xs-12">
-                    <img class="profiles-photo img-thumbnail" src="${uploadedFilesLocation}${profile.profileImage}"/>
+                    <img class="profiles-photo img-thumbnail" src="/profile/${profile.profileImage}"/>
                 </div>
                 <div class="col-md-7 col-md-offset-1 col-sm-8 col-xs-12">
                     <div class="row">

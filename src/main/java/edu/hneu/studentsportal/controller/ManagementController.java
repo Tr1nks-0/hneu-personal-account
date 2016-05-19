@@ -6,6 +6,7 @@ import edu.hneu.studentsportal.model.StudentProfile;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.StudentService;
+import org.apache.commons.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,6 +19,8 @@ import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Controller
 @RequestMapping("/management")
@@ -29,6 +32,8 @@ public class ManagementController {
     private ServletContext servletContext;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private ScheduleService scheduleService;
 
     @RequestMapping(value = "/uploadStudentProfilesFromExcel")
     public String addUserProfilesFromExcel() {
@@ -43,6 +48,7 @@ public class ManagementController {
         Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload, filePath, uploadedFile -> {
             StudentProfile studentProfile = studentService.readStudentProfilesFromFile(uploadedFile);
             studentService.setCredentials(studentProfile);
+            studentService.setGroupId(studentProfile);
             studentService.save(studentProfile);
         });
         redirectAttributes.addFlashAttribute("files", uploadedFilesNames);
@@ -70,16 +76,21 @@ public class ManagementController {
     public String successfullyUploaded() {
         return "successfullyUploaded";
     }
-/*
+
     @RequestMapping(value = "/synchronizeSchedule")
+    public String synchronizeSchedulePage() {
+        return "synchronizeSchedule";
+    }
+
+    @RequestMapping(value = "/downloadGroups")
     public String downloadGroups() {
-        scheduleService.downloadGroups();
+        Executors.newSingleThreadExecutor().execute( () -> scheduleService.downloadGroups());
         return "redirect:scheduleSynchronizedSuccessfully";
     }
 
     @RequestMapping(value = "/scheduleSynchronizedSuccessfully")
     public String groupsDownloadedSuccessfully() {
         return "scheduleSynchronizedSuccessfully";
-    }*/
+    }
 
 }

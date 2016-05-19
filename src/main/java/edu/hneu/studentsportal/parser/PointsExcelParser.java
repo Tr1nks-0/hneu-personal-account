@@ -21,6 +21,8 @@ public class PointsExcelParser extends AbstractExcelParser<PointsDto> {
     private static final String GROUP_PREFIX = "академічної групи з навчальних дисциплін";
     private static final String SEMESTER_NUMBER_PREFIX = "Навчальний семестр:";
 
+    private int currentIndex = 0;
+
     @Override
     public PointsDto extractModel() {
         PointsDto pointsDto = new PointsDto();

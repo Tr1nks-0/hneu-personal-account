@@ -33,6 +33,14 @@
         <sec:authorize access="hasRole('ROLE_STUDENT')">
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <c:if test="${not empty profile.groupId}">
+                        <c:set var="groupId" value="${profile.groupId}"/>
+                    </c:if>
+                    <c:if test="${not empty groupId}">
+                        <li>
+                            <a href="/account/schedule/${groupId}"><spring:message code="top.menu.schedule"/></a>
+                        </li>
+                    </c:if>
                     <li>
                         <a href="/logout"><spring:message code="top.menu.exit"/></a>
                     </li>
