@@ -7,6 +7,7 @@ import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.StudentService;
 import org.apache.commons.logging.Log;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,6 +27,8 @@ import java.util.concurrent.Executors;
 @RequestMapping("/management")
 public class ManagementController {
 
+    private static Logger LOG = Logger.getLogger(ManagementController.class.getName());
+
     @Autowired
     private StudentService studentService;
     @Autowired
@@ -43,6 +46,7 @@ public class ManagementController {
     @RequestMapping(value = "/uploadStudentProfilesFromExcel", method = RequestMethod.POST)
     public String uploadFiles(@ModelAttribute("uploadForm") FilesUploadModel uploadForm,
                               RedirectAttributes redirectAttributes) throws IllegalStateException, IOException {
+        LOG.info("Files are going to upload");
         List<MultipartFile> filesToUpload = uploadForm.getFiles();
         String filePath = servletContext.getRealPath("/WEB-INF/excel/uploaded");
         Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload, filePath, uploadedFile -> {
@@ -52,6 +56,7 @@ public class ManagementController {
             studentService.save(studentProfile);
         });
         redirectAttributes.addFlashAttribute("files", uploadedFilesNames);
+        LOG.info("Files were uploaded");
         return "redirect:successfullyUploaded";
     }
 

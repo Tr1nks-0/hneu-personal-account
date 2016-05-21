@@ -2,6 +2,7 @@ package edu.hneu.studentsportal.service.impl;
 
 import edu.hneu.studentsportal.service.FileService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +15,9 @@ import static java.util.Objects.nonNull;
 
 @Service
 public class DefaultFileService implements FileService {
+
+
+    private static Logger LOG = Logger.getLogger(DefaultFileService.class.getName());
 
     @Override
     public Map<String, Boolean> reduceForEachUploadedFile(List<MultipartFile> filesToUpload, String path,
@@ -48,7 +52,8 @@ public class DefaultFileService implements FileService {
             }
             return false;
         } catch (RuntimeException e) {
-             return false;
+            LOG.error("File uploaded error: ", e);
+            return false;
         }
     }
 
