@@ -20,14 +20,14 @@
         <property name="defaultLocale" value="ua"/>
     </bean>
 
-    <!--   <bean
-               class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-           <property name="exceptionMappings">
-               <props>
-                   <prop key="java.lang.Exception">error_page</prop>
-               </props>
-           </property>
-       </bean>-->
+    <bean
+            class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">error_page</prop>
+            </props>
+        </property>
+    </bean>
 
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 

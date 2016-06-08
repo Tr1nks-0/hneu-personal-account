@@ -11,6 +11,11 @@ import java.util.Objects;
 @Controller
 public class LoginController {
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String login() {
+        return "redirect:login";
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
         ModelAndView model = new ModelAndView();

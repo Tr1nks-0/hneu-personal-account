@@ -148,7 +148,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
             PictureData profilePhoto = allPictures.get(allPictures.size() - 1);
             String profilePhotoLocation = studentProfile.getId() + "/" + "photo." + profilePhoto.suggestFileExtension();
             String classPath = studentProfile.getClass().getResource("/").getPath();
-            String filePath = classPath + uploadedFilesLocation + profilePhotoLocation;
+            String filePath = classPath + uploadedFilesLocation + "/" +profilePhotoLocation;
             File file = new File(filePath);
             fileService.createDirectoryIfNotExist(file.getParentFile());
             FileOutputStream out = new FileOutputStream(file);

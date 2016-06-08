@@ -51,8 +51,8 @@ public class ManagementController {
         String filePath = servletContext.getRealPath("/WEB-INF/excel/uploaded");
         Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload, filePath, uploadedFile -> {
             StudentProfile studentProfile = studentService.readStudentProfilesFromFile(uploadedFile);
-            studentService.setCredentials(studentProfile);
             studentService.setGroupId(studentProfile);
+            studentService.setCredentials(studentProfile);
             studentService.save(studentProfile);
         });
         redirectAttributes.addFlashAttribute("files", uploadedFilesNames);

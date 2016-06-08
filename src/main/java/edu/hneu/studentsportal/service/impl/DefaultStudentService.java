@@ -10,8 +10,11 @@ import edu.hneu.studentsportal.parser.dto.PointsDto;
 import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.UserService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.File;
@@ -22,9 +25,12 @@ import static java.util.Objects.nonNull;
 @Service
 public class DefaultStudentService implements StudentService {
 
+    private static final Logger LOG = Logger.getLogger(DefaultStudentService.class);
+
     private static final int PREFIX_LENGTH = 5;
     private static final double MIN_SIMILARITY_COEFFICIENT = 0.6;
     private static final Map<String, String> semesters = new HashMap<>();
+    public static final String GET_STUDENT_EMAIL_URL = "http://212.111.199.46:65008/EmailToOutController?name=%s&surname=%s&groupId=%s";
 
     static {
         semesters.put("1", "І СЕМЕСТР");
@@ -135,15 +141,17 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void setCredentials(StudentProfile studentProfile) {
-        Optional<String> studentEmail = getStudentEmail(studentProfile);
-        if (studentEmail.isPresent()) {
+        String studentEmail = getStudentEmail(studentProfile);
+        if (StringUtils.isNotBlank(studentEmail)) {
             User user = new User();
-            user.setId(studentEmail.get());
-            studentProfile.setEmail(studentEmail.get());
+            user.setId(studentEmail);
+            studentProfile.setEmail(studentEmail);
             user.setPassword("0000");
             //studentProfile.setPassword(UUID.randomUUID().toString().substring(0, 8));
             user.setRole(2);
             userService.save(user);
+        } else {
+            throw new RuntimeException("Cannot found email for the user!");
         }
     }
 
@@ -153,11 +161,18 @@ public class DefaultStudentService implements StudentService {
         studentProfile.setGroupId(group.getId());
     }
 
-    private Optional<String> getStudentEmail(StudentProfile studentProfile) {
-        return studentProfile
-                .getContactInfo()
-                .stream()
-                .filter(contact -> contact.contains("@"))
-                .findFirst();
+    private String getStudentEmail(StudentProfile studentProfile) {
+        try {
+            String name = studentProfile.getName().toLowerCase().split(" ")[0];
+            String surname = studentProfile.getSurname().toLowerCase();
+            RestTemplate restTemplate = new RestTemplate();
+            return restTemplate
+                    .getForEntity(String.format(GET_STUDENT_EMAIL_URL, name, surname, studentProfile.getGroup()), String.class)
+                    .getBody();
+        } catch (RuntimeException e) {
+            LOG.warn("Cannot receive the email!", e);
+            return StringUtils.EMPTY;
+        }
+
     }
 }
