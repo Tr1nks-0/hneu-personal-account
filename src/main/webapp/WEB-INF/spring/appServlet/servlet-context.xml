@@ -16,11 +16,9 @@
         <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
-<!--
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-        <property name="defaultLocale" value="ru"/>
+        <property name="defaultLocale" value="ua"/>
     </bean>
--->
 
     <!--   <bean
                class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">

@@ -42,6 +42,9 @@
                         </li>
                     </c:if>
                     <li>
+                        <a href="/contacts"><spring:message code="top.menu.contacts"/></a>
+                    </li>
+                    <li>
                         <a href="/logout"><spring:message code="top.menu.exit"/></a>
                     </li>
                 </ul>
