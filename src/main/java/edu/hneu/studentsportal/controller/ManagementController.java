@@ -54,6 +54,7 @@ public class ManagementController {
             studentService.setGroupId(studentProfile);
             studentService.setCredentials(studentProfile);
             studentService.save(studentProfile);
+            studentService.sendEmail(studentProfile);
         });
         redirectAttributes.addFlashAttribute("files", uploadedFilesNames);
         LOG.info("Files were uploaded");

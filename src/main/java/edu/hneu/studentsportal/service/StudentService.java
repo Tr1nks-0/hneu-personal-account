@@ -23,4 +23,6 @@ public interface StudentService {
     void setCredentials(StudentProfile studentProfile);
 
     void setGroupId(StudentProfile studentProfile);
+
+    void sendEmail(StudentProfile studentProfile);
 }

@@ -12,11 +12,17 @@ import edu.hneu.studentsportal.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.*;
 
@@ -50,6 +56,8 @@ public class DefaultStudentService implements StudentService {
     private WebApplicationContext context;
     @Autowired
     private GroupDao groupDao;
+    @Autowired
+    private MailSender mailSender;
 
     @Override
     public StudentProfile readStudentProfilesFromFile(File file) {
@@ -146,8 +154,10 @@ public class DefaultStudentService implements StudentService {
             User user = new User();
             user.setId(studentEmail);
             studentProfile.setEmail(studentEmail);
-            user.setPassword("0000");
-            //studentProfile.setPassword(UUID.randomUUID().toString().substring(0, 8));
+            //user.setPassword("0000");
+            String password = UUID.randomUUID().toString().substring(0, 8);
+            user.setPassword(password);
+            studentProfile.setPassword(password);
             user.setRole(2);
             userService.save(user);
         } else {
@@ -159,6 +169,16 @@ public class DefaultStudentService implements StudentService {
     public void setGroupId(StudentProfile studentProfile) {
         Group group = groupDao.findOne(studentProfile.getGroup());
         studentProfile.setGroupId(group.getId());
+    }
+
+    @Override
+    public void sendEmail(StudentProfile studentProfile) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("oleksandr_rozdolskyi2012@gmail.com");
+        message.setTo("oleksandr.rozdolskyi@epam.com");
+        message.setSubject("Пароль для входу");
+        message.setText(studentProfile.getPassword());
+        mailSender.send(message);
     }
 
     private String getStudentEmail(StudentProfile studentProfile) {
