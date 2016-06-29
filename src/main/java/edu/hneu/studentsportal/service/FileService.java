@@ -9,8 +9,10 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public interface FileService {
+
     Map<String, Boolean> reduceForEachUploadedFile(List<MultipartFile> filesToUpload, String path,
                                                    Consumer<File> forEachFileConsumer) throws IOException;
 
     boolean createDirectoryIfNotExist(File file);
+
 }

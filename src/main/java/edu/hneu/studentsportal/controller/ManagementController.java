@@ -1,12 +1,10 @@
 package edu.hneu.studentsportal.controller;
 
 import edu.hneu.studentsportal.model.FilesUploadModel;
-import edu.hneu.studentsportal.model.Group;
 import edu.hneu.studentsportal.model.StudentProfile;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.StudentService;
-import org.apache.commons.logging.Log;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +18,6 @@ import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Controller
@@ -54,7 +51,7 @@ public class ManagementController {
             studentService.setGroupId(studentProfile);
             studentService.setCredentials(studentProfile);
             studentService.save(studentProfile);
-            studentService.sendEmail(studentProfile);
+            studentService.sendEmailAfterProfileCreation(studentProfile);
         });
         redirectAttributes.addFlashAttribute("files", uploadedFilesNames);
         LOG.info("Files were uploaded");

@@ -12,17 +12,13 @@ import edu.hneu.studentsportal.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.*;
 
@@ -58,6 +54,8 @@ public class DefaultStudentService implements StudentService {
     private GroupDao groupDao;
     @Autowired
     private MailSender mailSender;
+    @Value("${support.mail}")
+    public String supportMail;
 
     @Override
     public StudentProfile readStudentProfilesFromFile(File file) {
@@ -88,6 +86,7 @@ public class DefaultStudentService implements StudentService {
                 String semesterId = studentsPoints.getSemester();
                 updateStudentProfileSemester(studentProfile, semesterId, studentScore.getValue());
                 save(studentProfile);
+                sendEmailAfterProfileUpdating(studentProfile);
             }
         }
     }
@@ -172,12 +171,26 @@ public class DefaultStudentService implements StudentService {
     }
 
     @Override
-    public void sendEmail(StudentProfile studentProfile) {
+    public void sendEmailAfterProfileCreation(StudentProfile studentProfile) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("oleksandr_rozdolskyi2012@gmail.com");
+        message.setFrom(supportMail);
+        //// TODO: 27.06.16 Remove comments
+        //message.setTo(studentProfile.getId());
         message.setTo("oleksandr.rozdolskyi@epam.com");
         message.setSubject("Пароль для входу");
         message.setText(studentProfile.getPassword());
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendEmailAfterProfileUpdating(StudentProfile studentProfile) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(supportMail);
+        //// TODO: 27.06.16 Remove comments
+        //message.setTo(studentProfile.getId());
+        message.setTo("oleksandr.rozdolskyi@epam.com");
+        message.setSubject("Зміни в профілі");
+        message.setText("Ваш профіль був оновлений. Перейдійть у кабінет для перегляду.");
         mailSender.send(message);
     }
 

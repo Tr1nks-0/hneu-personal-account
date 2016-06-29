@@ -531,3 +531,22 @@ table.table.table-bordered tr th {
 #title {
     visibility: hidden;
 }
+
+.documents > h1 {
+    font-size: 20px;
+    line-height: 25px;
+    text-align: left;
+}
+
+.documents > p, .contacts > div > p {
+    font-size: 15px;
+    line-height: 20px;
+    text-align: justify;
+}
+
+.contacts{
+    margin: 40px 20px;
+}
+.contacts-photo {
+    width:300px;
+}

@@ -24,5 +24,7 @@ public interface StudentService {
 
     void setGroupId(StudentProfile studentProfile);
 
-    void sendEmail(StudentProfile studentProfile);
+    void sendEmailAfterProfileCreation(StudentProfile studentProfile);
+
+    void sendEmailAfterProfileUpdating(StudentProfile studentProfile);
 }
