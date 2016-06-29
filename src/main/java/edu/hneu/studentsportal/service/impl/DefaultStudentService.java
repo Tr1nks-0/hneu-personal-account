@@ -59,6 +59,7 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public StudentProfile readStudentProfilesFromFile(File file) {
+        LOG.info("Create new profile from : " + file.getAbsolutePath());
         return ((StudentProfileExcelParser) context.getBean("studentProfileExcelParser")).parse(file);
     }
 

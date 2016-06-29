@@ -6,6 +6,7 @@ import edu.hneu.studentsportal.model.Discipline;
 import edu.hneu.studentsportal.model.Semester;
 import edu.hneu.studentsportal.model.StudentProfile;
 import edu.hneu.studentsportal.service.FileService;
+import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,8 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
 @Scope("prototype")
 public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfile> {
 
+    private static final Logger LOG = Logger.getLogger(StudentProfileExcelParser.class);
+
     private static final int LEFT_SEMESTER_COLL = 0;
     private static final int RIGHT_SEMESTER_COLL = 6;
 
@@ -43,6 +46,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
     public StudentProfile extractModel() {
         String header = getStringCellValue(3, 0);
         if (!header.contains("ІНДИВІДУАЛЬНИЙ НАВЧАЛЬНИЙ ПЛАН")) {
+            LOG.info("File is not valid. Header :" + header);
             throw new RuntimeException("Student profile is not valid");
         }
         rowNumber = 5;
