@@ -2,11 +2,8 @@ package edu.hneu.studentsportal.controller;
 
 import edu.hneu.studentsportal.model.StudentProfile;
 import edu.hneu.studentsportal.service.StudentService;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.poi.ss.formula.functions.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.Authentication;
@@ -16,16 +13,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Properties;
 
 @Controller
 @RequestMapping("/account")
@@ -39,32 +33,42 @@ public class AccountController {
     public String supportMail;
 
     @RequestMapping
-    public ModelAndView account(HttpSession session) {
+    public ModelAndView account(HttpSession session, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (hasAdminRole(auth.getAuthorities()))
             return new ModelAndView("redirect:management/uploadStudentProfilesFromExcel");
         Optional<StudentProfile> studentProfile = studentService.findStudentProfileByEmail(auth.getName());
         if (studentProfile.isPresent()) {
+            model.addAttribute("title", "Головна сторінка");
             session.setAttribute("groupId", studentProfile.get().getGroupId());
-            return new ModelAndView("account", "profile", studentProfile.get());
+            return new ModelAndView("student/account", "profile", studentProfile.get());
         }
         return new ModelAndView("redirect:login");
     }
 
+    @ModelAttribute(value = "profile")
+    public StudentProfile getProfile() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Optional<StudentProfile> studentProfile = studentService.findStudentProfileByEmail(auth.getName());
+        return studentProfile.orElse(null);
+    }
     @RequestMapping("/schedule")
-    public String schedule() {
-        return "schedule";
+    public String schedule(Model model) {
+        model.addAttribute("title", "Розклад");
+        return "student/schedule";
     }
 
     @RequestMapping("/documents")
-    public String documents() {
-        return "documents";
+    public String documents(Model model) {
+        model.addAttribute("title", "Корисно");
+        return "student/documents";
     }
 
     @RequestMapping("/contactUs")
     public String contactUs(@RequestParam(required = false) Boolean success, Model model) {
         model.addAttribute("success", success);
-        return "contactUs";
+        model.addAttribute("title", "Контакти");
+        return "student/contactUs";
     }
 
     @RequestMapping("/sendEmail")

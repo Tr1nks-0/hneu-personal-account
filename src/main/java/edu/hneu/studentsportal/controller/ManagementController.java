@@ -37,7 +37,7 @@ public class ManagementController {
 
     @RequestMapping(value = "/uploadStudentProfilesFromExcel")
     public String addUserProfilesFromExcel() {
-        return "uploadUserProfilesFromExcel";
+        return "management/uploadUserProfilesFromExcel";
     }
 
     @RequestMapping(value = "/uploadStudentProfilesFromExcel", method = RequestMethod.POST)
@@ -72,17 +72,17 @@ public class ManagementController {
 
     @RequestMapping(value = "/uploadTotalsFromExcel")
     public String uploadTotalsFromExcel() {
-        return "uploadTotalsFromExcel";
+        return "management/uploadTotalsFromExcel";
     }
 
     @RequestMapping(value = "/successfullyUploaded")
     public String successfullyUploaded() {
-        return "successfullyUploaded";
+        return "management/successfullyUploaded";
     }
 
     @RequestMapping(value = "/synchronizeSchedule")
     public String synchronizeSchedulePage() {
-        return "synchronizeSchedule";
+        return "management/synchronizeSchedule";
     }
 
     @RequestMapping(value = "/downloadGroups")
@@ -93,7 +93,7 @@ public class ManagementController {
 
     @RequestMapping(value = "/scheduleSynchronizedSuccessfully")
     public String groupsDownloadedSuccessfully() {
-        return "scheduleSynchronizedSuccessfully";
+        return "management/scheduleSynchronizedSuccessfully";
     }
 
 }

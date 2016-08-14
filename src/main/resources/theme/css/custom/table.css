@@ -1,0 +1,23 @@
+.info-box-number {
+    font-weight: 300;
+}
+
+.info-box-text {
+    font-size: 14px;
+    line-height: 1.8;
+    font-weight: lighter;
+}
+
+.table-content {
+    padding: 0px;
+}
+
+.table-responsive > .table > thead > tr > th,
+.table-responsive > .table > tbody > tr > td {
+    line-height: 1.2;
+    font-size: 14px;
+}
+
+.table .center {
+    text-align: center;
+}

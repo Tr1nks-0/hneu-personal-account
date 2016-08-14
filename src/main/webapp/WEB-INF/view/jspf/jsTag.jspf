@@ -1,0 +1,14 @@
+<script src="/resources/js/jquery/jquery-2.2.3.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script src="/resources/js/bootstrap/bootstrap.min.js"></script>
+<script src="/resources/js/jquery/jquery.sparkline.min.js"></script>
+<script src="/resources/js/jquery/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="/resources/js/jquery/jquery-jvectormap-world-mill-en.js"></script>
+<script src="/resources/js/jquery/jquery.knob.js"></script>
+<script src="/resources/js/bootstrap/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="/resources/js/jquery/jquery.slimscroll.min.js"></script>
+<script src="/resources/js/template/app.min.js"></script>
+<script src="/resources/js/template/demo.js"></script>

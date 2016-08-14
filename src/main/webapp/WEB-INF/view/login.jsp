@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="/resources/css/style.css">
 </head>
 <body>
-<div class="top-content">
+<div class="top-content mask">
     <div class="inner-bg">
         <div class="container">
             <div class="row">

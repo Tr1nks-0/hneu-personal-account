@@ -3,50 +3,126 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html lang="ua">
+<html>
 <head>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><c:out value="${title}"/></title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
-    <link rel="stylesheet" type="text/css" href="/resources/fonts/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="/resources/css/bootstrap.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/resources/css/style.css">
-    <link rel="stylesheet" type="text/css" href="/resources/css/simple-sidebar.css">
+    <%@ include file="cssTag.jspf" %>
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 </head>
-<body>
+<body class="hold-transition skin-blue sidebar-mini <c:if test="${'Розклад' eq title}">sidebar-collapse</c:if> ">
 
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/account">
-                <img src="/resources/img/logo.png" id="logo"/>
-                <div class="navbar-brand-text hidden-xs"><spring:message code="logo.text"/></div>
-                <div class="navbar-brand-text-min visible-xs"><spring:message code="logo.text.min"/></div>
+    <c:set var="profileImage" value="/profile/${profile.profileImage}"/>
+    <c:if test="${empty profile.profileImage}">
+        <c:set var="profileImage" value="/resources/img/student_photo_default.png"/>
+    </c:if>
+
+    <div class="wrapper">
+        <header class="main-header">
+            <a href="/account" class="logo">
+                <span class="logo-mini"><small>ХНЕУ</small></span>
+                <span class="logo-lg"><b>Кабінет</b>Студента</span>
             </a>
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    id="menu-toggle" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only"></span><span class="icon-bar"></span> <span
-                    class="icon-bar"></span><span class="icon-bar"></span>
-            </button>
-        </div>
-        <sec:authorize access="hasRole('ROLE_STUDENT')">
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="/account/schedule"><spring:message code="top.menu.schedule"/></a>
+
+            <nav class="navbar navbar-static-top">
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only"></span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="${profileImage}" class="user-image profile-photo" alt="User Image">
+                                <span class="hidden-xs"><c:out value="${profile.name} ${profile.surname}"/></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="user-header">
+                                    <img src="${profileImage}" class="img-circle profile-photo-large" alt="User Image">
+                                    <p>
+                                        <c:out value="${profile.name} ${profile.surname}"/> - <c:out value="${profile.faculty}"/>
+                                        <small><c:out value="${profile.group}"/></small>
+                                    </p>
+                                </li>
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="/account" class="btn btn-default btn-flat"><spring:message code="top.menu.home"/></a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="/logout" class="btn btn-default btn-flat"><spring:message code="top.menu.exit"/></a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <aside class="main-sidebar">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="image">
+                        <img src="${profileImage}" class="img-circle profile-photo-large" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <p><c:out value="${profile.name} ${profile.surname}"/></p>
+                        <c:out value="${profile.group}"/>
+                    </div>
+                </div>
+
+                <ul class="sidebar-menu">
+                    <li class="header">ГОЛОВНЕ МЕНЮ</li>
+                    <li <c:if test="${'Головна сторінка' eq title}">class="active"</c:if> >
+                        <a href="/account">
+                            <i class="fa fa-home "></i> <span><spring:message code="top.menu.home"/></span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <a href="/account">
+                                    <i class="fa fa-circle-o"></i> Особиста інформація
+                                </a>
+                            </li>
+                            <c:forEach items="${profile.courses}" varStatus="i" var="course">
+                                <li>
+                                    <a href="/account#${i.index + 1}course">
+                                        <i class="fa fa-circle-o"></i>
+                                        ${i.index + 1} <spring:message code="form.label.student.profile.course"/>
+                                    </a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </li>
+                    <li <c:if test="${'Розклад' eq title}">class="active"</c:if>>
+                        <a href="/account/schedule">
+                            <i class="fa fa-calendar"></i> <span><spring:message code="top.menu.schedule"/></span>
+                        </a>
+                    </li>
+                    <li <c:if test="${'Корисно' eq title}">class="active"</c:if>>
+                        <a href="/account/documents">
+                            <i class="fa fa-files-o"></i> <span><spring:message code="top.menu.documents"/></span>
+                        </a>
+                    </li>
+                    <li <c:if test="${'Контакти' eq title}">class="active"</c:if>>
+                        <a href="/account/contactUs">
+                            <i class="fa fa-envelope"></i> <span><spring:message code="top.menu.contacts"/></span>
+                        </a>
                     </li>
                     <li>
-                        <a href="/account/documents"><spring:message code="top.menu.documents"/></a>
-                    </li>
-                    <li>
-                        <a href="/account/contactUs"><spring:message code="top.menu.contacts"/></a>
-                    </li>
-                    <li>
-                        <a href="/logout"><spring:message code="top.menu.exit"/></a>
+                        <a href="/logout">
+                            <i class="fa fa-share"></i> <span><spring:message code="top.menu.exit"/></span>
+                        </a>
                     </li>
                 </ul>
-            </div>
-        </sec:authorize>
-    </div>
-</nav>
+            </section>
+        </aside>

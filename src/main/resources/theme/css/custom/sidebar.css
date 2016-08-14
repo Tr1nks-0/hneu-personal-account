@@ -1,0 +1,32 @@
+.user-panel {
+    height: 135px;
+}
+
+.image {
+    text-align: center;
+}
+
+.profile-photo {
+    background-color: darkslategray;
+    border: 1px solid white;
+}
+
+.user-panel > .image > .profile-photo-large {
+    max-width: 75px;
+    border: 2px solid white;
+}
+
+.sidebar > .user-panel> .info {
+    text-align: center;
+    left: 0;
+    width: 100%;
+    padding: 8px;
+}
+
+.sidebar-collapse > .wrapper > .main-sidebar > .sidebar > .user-panel {
+    height: auto;
+}
+
+.sidebar-collapse > .wrapper > .main-sidebar > .sidebar > .user-panel > .image > .profile-photo-large {
+    border: 1px solid white;
+}

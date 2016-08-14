@@ -1,9 +1,0 @@
-diff a/src/main/resources/theme/css/style.css b/src/main/resources/theme/css/style.css	(rejected hunks)
-@@ -6,6 +6,7 @@
-     color: #888;
-     line-height: 30px;
-     text-align: center;
-+    overflow:hidden;
- }
- 
- strong {

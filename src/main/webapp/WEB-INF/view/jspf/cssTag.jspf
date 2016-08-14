@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="/resources/css/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+<link rel="stylesheet" href="/resources/css/template/skins.min.css">
+<link rel="stylesheet" href="/resources/css/jquery/jquery-jvectormap-1.2.2.css">
+<link rel="stylesheet" href="/resources/css/template/template.min.css">
+<link rel="stylesheet" href="/resources/css/custom/footer.css">
+<link rel="stylesheet" href="/resources/css/custom/sidebar.css">
+<link rel="stylesheet" href="/resources/css/custom/table.css">
+<link rel="stylesheet" href="/resources/css/custom/schedule.css">
+<link rel="stylesheet" href="/resources/css/custom/box.css">
+<link rel="stylesheet" href="/resources/css/custom/chat.css">
