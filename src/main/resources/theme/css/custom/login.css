@@ -1,0 +1,20 @@
+.container {
+    padding-top: 50px;
+}
+
+.form-box {
+    padding-top: 25px;
+}
+
+.text {
+    color: white;
+}
+
+.mask {
+    background-color:rgba(0,0,0,.3);
+    height:100%;
+    position:fixed;
+    width:100%;
+    top:0;
+    left:0;
+}

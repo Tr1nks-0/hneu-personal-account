@@ -21,3 +21,8 @@
 .table .center {
     text-align: center;
 }
+
+.text-center {
+    vertical-align: middle !important;
+    text-align: center !important;
+}

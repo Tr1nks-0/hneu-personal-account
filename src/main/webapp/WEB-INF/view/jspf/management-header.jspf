@@ -62,6 +62,11 @@
                         <i class="fa fa-calendar"></i> <span><spring:message code="form.label.management.synchronize.schedule"/></span>
                     </a>
                 </li>
+                <li <c:if test="${'Студенти' eq title}">class="active"</c:if>>
+                    <a href="/management/students">
+                        <i class="fa fa-university"></i> <span>Студенти</span>
+                    </a>
+                </li>
                 <li>
                     <a href="/logout">
                         <i class="fa fa-share"></i> <span><spring:message code="top.menu.exit"/></span>

@@ -18,7 +18,7 @@ public interface StudentService {
 
     void updateStudentsScoresFromFile(File file);
 
-    List<StudentProfile> findAll();
+    List<StudentProfile> find();
 
     void setCredentials(StudentProfile studentProfile);
 
@@ -27,4 +27,8 @@ public interface StudentService {
     void sendEmailAfterProfileCreation(StudentProfile studentProfile);
 
     void sendEmailAfterProfileUpdating(StudentProfile studentProfile);
+
+    List<StudentProfile> find(String fullName, Integer page);
+
+    long getPageCountForSearchCriteria(String searchCriteria);
 }

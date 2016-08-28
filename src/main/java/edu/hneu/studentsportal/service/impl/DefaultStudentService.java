@@ -143,7 +143,7 @@ public class DefaultStudentService implements StudentService {
     }
 
     @Override
-    public List<StudentProfile> findAll() {
+    public List<StudentProfile> find() {
         return studentDao.findAll();
     }
 
@@ -193,6 +193,16 @@ public class DefaultStudentService implements StudentService {
         message.setSubject("Зміни в профілі");
         message.setText("Ваш профіль був оновлений. Перейдійть у кабінет для перегляду.");
         mailSender.send(message);
+    }
+
+    @Override
+    public List<StudentProfile> find(String searchCriteria, Integer page) {
+        return studentDao.find(searchCriteria, page);
+    }
+
+    @Override
+    public long getPageCountForSearchCriteria(String searchCriteria) {
+        return studentDao.getPageCountForSearchCriteria(searchCriteria);
     }
 
     private String getStudentEmail(StudentProfile studentProfile) {

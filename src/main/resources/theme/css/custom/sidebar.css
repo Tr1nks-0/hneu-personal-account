@@ -1,5 +1,5 @@
 .user-panel {
-    height: 135px;
+    height: 150px;
 }
 
 .image {
@@ -11,9 +11,23 @@
     border: 1px solid white;
 }
 
-.user-panel > .image > .profile-photo-large {
-    max-width: 75px;
+.student-photo {
+    height: 50px;
+    width: auto;
+    border: 1px solid #c7ddef;
+
+}
+
+.profile-photo-large {
+    height: 90px !important;
+    width: auto !important;
+    max-width: 75px !important;
     border: 2px solid white;
+}
+
+.user-image {
+    height: 25px !important;
+    width: auto !important;
 }
 
 .sidebar > .user-panel> .info {
@@ -29,4 +43,7 @@
 
 .sidebar-collapse > .wrapper > .main-sidebar > .sidebar > .user-panel > .image > .profile-photo-large {
     border: 1px solid white;
+    height: auto !important;
+    width: auto !important;
+    max-width: 33px !important;
 }

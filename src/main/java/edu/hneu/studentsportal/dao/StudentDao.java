@@ -13,7 +13,11 @@ public interface StudentDao {
 
     Optional<StudentProfile> findByEmail(String email);
 
+    void remove(String id);
+
     List<StudentProfile> findAll();
 
-    void remove(String id);
+    List<StudentProfile> find(String fullName, Integer page);
+
+    long getPageCountForSearchCriteria(String searchCriteria);
 }

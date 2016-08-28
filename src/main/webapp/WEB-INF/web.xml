@@ -41,8 +41,9 @@
         <servlet-name>appServlet</servlet-name>
         <url-pattern>*.js</url-pattern>
     </servlet-mapping>
+
     <filter>
-        <filter-name>charsetFilter</filter-name>
+        <filter-name>CharacterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
         <init-param>
             <param-name>encoding</param-name>
@@ -54,7 +55,7 @@
         </init-param>
     </filter>
     <filter-mapping>
-        <filter-name>charsetFilter</filter-name>
+        <filter-name>CharacterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
