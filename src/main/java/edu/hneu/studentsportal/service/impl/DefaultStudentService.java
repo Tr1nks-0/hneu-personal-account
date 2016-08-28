@@ -32,7 +32,7 @@ public class DefaultStudentService implements StudentService {
     private static final int PREFIX_LENGTH = 5;
     private static final double MIN_SIMILARITY_COEFFICIENT = 0.6;
     private static final Map<String, String> semesters = new HashMap<>();
-    public static final String GET_STUDENT_EMAIL_URL = "http://212.111.199.46:65008/EmailToOutController?name=%s&surname=%s&groupId=%s";
+    public static final String GET_STUDENT_EMAIL_URL = "http://172.16.0.208:8080/EmailToOutController?name=%s&surname=%s&groupId=%s";
 
     static {
         semesters.put("1", "І СЕМЕСТР");
