@@ -22,6 +22,7 @@ public class StudentProfile {
     private String email;
     private String password;
     private String profileImage;
+    private long modificationTime;
 
     public String getId() {
         return id;
@@ -127,4 +128,11 @@ public class StudentProfile {
         return profileImage;
     }
 
+    public long getModificationTime() {
+        return modificationTime;
+    }
+
+    public void setModificationTime(long modificationTime) {
+        this.modificationTime = modificationTime;
+    }
 }

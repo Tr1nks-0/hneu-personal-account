@@ -30,5 +30,7 @@ public interface StudentService {
 
     List<StudentProfile> find(String fullName, Integer page);
 
-    long getPageCountForSearchCriteria(String searchCriteria);
+    long getPagesCountForSearchCriteria(String searchCriteria);
+
+    void remove(String id);
 }

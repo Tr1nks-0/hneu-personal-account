@@ -201,8 +201,13 @@ public class DefaultStudentService implements StudentService {
     }
 
     @Override
-    public long getPageCountForSearchCriteria(String searchCriteria) {
-        return studentDao.getPageCountForSearchCriteria(searchCriteria);
+    public long getPagesCountForSearchCriteria(String searchCriteria) {
+        return studentDao.getPagesCountForSearchCriteria(searchCriteria);
+    }
+
+    @Override
+    public void remove(String id) {
+        studentDao.remove(id);
     }
 
     private String getStudentEmail(StudentProfile studentProfile) {

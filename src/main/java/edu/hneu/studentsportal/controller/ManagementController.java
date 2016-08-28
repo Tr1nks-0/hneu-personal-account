@@ -94,9 +94,15 @@ public class ManagementController {
             page = 1;
         model.addAttribute("page", page);
         model.addAttribute("searchCriteria", searchCriteria);
-        model.addAttribute("pagesCount", studentService.getPageCountForSearchCriteria(searchCriteria));
+        model.addAttribute("pagesCount", studentService.getPagesCountForSearchCriteria(searchCriteria));
         model.addAttribute("students", studentService.find(searchCriteria, page));
         return "management/students-list";
+    }
+
+    @RequestMapping(value = "/removeStudent")
+    public String removeStudent(@RequestParam String id) {
+        studentService.remove(id);
+        return "redirect:students";
     }
 
     @RequestMapping(value = "/downloadGroups")

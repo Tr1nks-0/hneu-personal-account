@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +36,7 @@ public class DefaultStudentDao implements StudentDao {
 
     @Override
     public void save(StudentProfile studentProfile) {
+        studentProfile.setModificationTime(System.nanoTime());
         mongoOperations.save(studentProfile);
     }
 
@@ -59,13 +62,14 @@ public class DefaultStudentDao implements StudentDao {
         Query query = getStudentSearchQuery(searchCriteria);
         query.limit(ITEMS_ON_PAGE_COUNT);
         query.skip(ITEMS_ON_PAGE_COUNT * (page - 1));
-        query.with(new Sort(Sort.Direction.DESC, "lastModifiedDate"));
+        query.with(new Sort(Sort.Direction.DESC, "modificationTime"));
         return mongoOperations.find(query, StudentProfile.class);
     }
 
     @Override
-    public long getPageCountForSearchCriteria(String searchCriteria) {
-        return mongoOperations.count(getStudentSearchQuery(searchCriteria), StudentProfile.class) / ITEMS_ON_PAGE_COUNT;
+    public long getPagesCountForSearchCriteria(String searchCriteria) {
+        long studentsCount = mongoOperations.count(getStudentSearchQuery(searchCriteria), StudentProfile.class);
+        return new BigDecimal(studentsCount).divide(new BigDecimal(ITEMS_ON_PAGE_COUNT), RoundingMode.UP).longValue();
     }
 
     private Query getStudentSearchQuery(String searchCriteria) {

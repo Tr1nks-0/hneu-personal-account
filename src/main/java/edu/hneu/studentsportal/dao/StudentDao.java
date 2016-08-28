@@ -19,5 +19,5 @@ public interface StudentDao {
 
     List<StudentProfile> find(String fullName, Integer page);
 
-    long getPageCountForSearchCriteria(String searchCriteria);
+    long getPagesCountForSearchCriteria(String searchCriteria);
 }
