@@ -44,7 +44,7 @@ public class PointsExcelParser extends AbstractExcelParser<PointsDto> {
                 if (isEmpty(getStringCellValue(currentIndex, 1)))
                     break;
                 String studentName = getStringCellValue(currentIndex, 1);
-                studentsDisciplinesScores.put(getKey(studentName + groupId), getScoresForDisciplines(headerIndex, firstDisciplineNameIndex));
+                studentsDisciplinesScores.put(getKey(studentName + "$" + groupId), getScoresForDisciplines(headerIndex, firstDisciplineNameIndex));
             }
         }
         return studentsDisciplinesScores;

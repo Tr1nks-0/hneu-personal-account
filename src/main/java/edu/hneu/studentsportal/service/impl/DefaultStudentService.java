@@ -32,8 +32,7 @@ public class DefaultStudentService implements StudentService {
     private static final int PREFIX_LENGTH = 5;
     private static final double MIN_SIMILARITY_COEFFICIENT = 0.6;
     private static final Map<String, String> semesters = new HashMap<>();
-    public static final String GET_STUDENT_EMAIL_URL = "http://172.16.0.208:8080/EmailToOutController?name=%s&surname=%s&groupId=%s";
-
+    private static final String GET_STUDENT_EMAIL_URL = "/EmailToOutController?name=%s&surname=%s&groupId=%s";
     static {
         semesters.put("1", "І СЕМЕСТР");
         semesters.put("2", "ІІ СЕМЕСТР");
@@ -56,6 +55,8 @@ public class DefaultStudentService implements StudentService {
     private MailSender mailSender;
     @Value("${support.mail}")
     public String supportMail;
+    @Value("${emails.integration.service.url}")
+    public String emailsIntegrationServiceUrl;
 
     @Override
     public StudentProfile readStudentProfilesFromFile(File file) {
@@ -82,7 +83,7 @@ public class DefaultStudentService implements StudentService {
     public void updateStudentsScoresFromFile(File file) {
         PointsDto studentsPoints = new PointsExcelParser().parse(file);
         for (Map.Entry<String, Map<String, String>> studentScore : studentsPoints.getMap().entrySet()) {
-            StudentProfile studentProfile = findStudentProfileById(studentScore.getKey());
+            StudentProfile studentProfile = getStudentProfile(studentScore);
             if (nonNull(studentProfile)) {
                 String semesterId = studentsPoints.getSemester();
                 updateStudentProfileSemester(studentProfile, semesterId, studentScore.getValue());
@@ -90,6 +91,20 @@ public class DefaultStudentService implements StudentService {
                 sendEmailAfterProfileUpdating(studentProfile);
             }
         }
+    }
+
+    private StudentProfile getStudentProfile(Map.Entry<String, Map<String, String>> studentScore) {
+        String[] keys = studentScore.getKey().split("\\$");
+        if(keys.length == 2) {
+            String subKey = keys[0];
+            String groupCode = keys[1];
+            return findStudentProfile(subKey, groupCode);
+        }
+        return null;
+    }
+
+    private StudentProfile findStudentProfile(String subKey, String groupCode) {
+        return studentDao.find(subKey, groupCode);
     }
 
     private void updateStudentProfileSemester(StudentProfile studentProfile, String semesterId, Map<String, String> studentScore) {
@@ -216,7 +231,7 @@ public class DefaultStudentService implements StudentService {
             String surname = studentProfile.getSurname().toLowerCase();
             RestTemplate restTemplate = new RestTemplate();
             return restTemplate
-                    .getForEntity(String.format(GET_STUDENT_EMAIL_URL, name, surname, studentProfile.getGroup()), String.class)
+                    .getForEntity(String.format(emailsIntegrationServiceUrl + GET_STUDENT_EMAIL_URL, name, surname, studentProfile.getGroup()), String.class)
                     .getBody();
         } catch (RuntimeException e) {
             LOG.warn("Cannot receive the email!", e);

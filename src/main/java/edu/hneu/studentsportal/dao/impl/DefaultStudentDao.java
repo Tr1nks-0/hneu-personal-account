@@ -58,6 +58,13 @@ public class DefaultStudentDao implements StudentDao {
     }
 
     @Override
+    public StudentProfile find(String subKey, String groupCode) {
+        Pattern subKeyPattern = Pattern.compile(subKey, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+        Query query = Query.query(new Criteria().andOperator(Criteria.where("id").regex(subKeyPattern), Criteria.where("group").is(groupCode)));
+        return mongoOperations.findOne(query, StudentProfile.class);
+    }
+
+    @Override
     public List<StudentProfile> find(String searchCriteria, Integer page) {
         Query query = getStudentSearchQuery(searchCriteria);
         query.limit(ITEMS_ON_PAGE_COUNT);
