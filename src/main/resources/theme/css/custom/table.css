@@ -18,6 +18,11 @@
     font-size: 14px;
 }
 
+.table-responsive > .table > tbody > tr > td > button {
+    padding: 0px;
+    width: 40px;
+}
+
 .table .center {
     text-align: center;
 }
