@@ -55,7 +55,7 @@
                         <c:forEach items="${course.semesters}" varStatus="j" var="semester">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="box box-info">
+                                    <div class="box box-info collapsed-box">
                                         <div class="box-header with-border">
                                             <h4 class="box-title">
                                                 <span class="label label-success"><c:out value="${semester.label}"/></span>

@@ -58,7 +58,7 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/resources/js/jquery/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="/resources/js/jquery/jquery-1.12.0.min.js"></script>
 <script type="text/javascript" src="/resources/js/bootstrap/bootstrap.min.js"></script>
 <script type="text/javascript" src="/resources/js/jquery/jquery.backstretch.min.js"></script>
 <script type="text/javascript">
