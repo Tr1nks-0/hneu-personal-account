@@ -5,6 +5,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html lang="ua">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <%@ include file="jspf/cssTag.jspf" %>
     <link rel="stylesheet" href="/resources/css/custom/login.css">
 </head>
@@ -16,12 +17,13 @@
                 <div class="hidden-xs col-sm-8 col-sm-offset-2 text text-center">
                     <h1>
                         <strong><spring:message code="form.label.hneu"/></strong>
+                        <span class="hidden-sm hidden-xs">|</span>
                         <spring:message code="form.label.student.profile"/>
                     </h1>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 col-sm-offset-3 form-box">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 form-box">
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title"><spring:message code="form.login.label.login"/></h3><br>
@@ -58,8 +60,7 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/resources/js/jquery/jquery-1.12.0.min.js"></script>
-<script type="text/javascript" src="/resources/js/bootstrap/bootstrap.min.js"></script>
+<%@ include file="jspf/jsTag.jspf" %>
 <script type="text/javascript" src="/resources/js/jquery/jquery.backstretch.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
