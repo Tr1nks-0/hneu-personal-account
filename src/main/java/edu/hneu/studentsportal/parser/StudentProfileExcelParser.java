@@ -10,15 +10,12 @@ import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -53,6 +50,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         StudentProfile studentProfile = new StudentProfile();
         studentProfile.setSurname(getStringCellValue(rowNumber, 2));
         studentProfile.setName(getStringCellValue(++rowNumber, 2));
+        studentProfile.setPassportNumber(getStringCellValue(++rowNumber, 2).split("\\.")[0]);
         studentProfile.setFaculty(getStringCellValue(++rowNumber, 2));
         studentProfile.setIncomeYear(getIntegerCellValue(++rowNumber, 2));
         studentProfile.setContactInfo(getContactInfo());

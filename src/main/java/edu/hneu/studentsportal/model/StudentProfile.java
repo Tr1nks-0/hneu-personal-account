@@ -22,6 +22,7 @@ public class StudentProfile {
     private String email;
     private String password;
     private String profileImage;
+    private String passportNumber;
     private long modificationTime;
 
     public String getId() {
@@ -134,5 +135,13 @@ public class StudentProfile {
 
     public void setModificationTime(long modificationTime) {
         this.modificationTime = modificationTime;
+    }
+
+    public String getPassportNumber() {
+        return passportNumber;
+    }
+
+    public void setPassportNumber(String passportNumber) {
+        this.passportNumber = passportNumber;
     }
 }
