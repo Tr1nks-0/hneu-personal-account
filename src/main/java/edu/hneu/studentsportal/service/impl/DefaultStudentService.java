@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.service.impl;
 
 
+import com.google.common.collect.ImmutableMap;
 import edu.hneu.studentsportal.dao.GroupDao;
 import edu.hneu.studentsportal.dao.StudentDao;
 import edu.hneu.studentsportal.model.*;
@@ -11,14 +12,16 @@ import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.*;
 
@@ -33,6 +36,8 @@ public class DefaultStudentService implements StudentService {
     private static final double MIN_SIMILARITY_COEFFICIENT = 0.6;
     private static final Map<String, String> semesters = new HashMap<>();
     private static final String GET_STUDENT_EMAIL_URL = "/EmailToOutController?name=%s&surname=%s&groupId=%s";
+    public static final String SEND_PASSWORD_VM_TEMPLATE = "velocity/sendProfileWasCreatedMessageWithPassword.vm";
+
     static {
         semesters.put("1", "І СЕМЕСТР");
         semesters.put("2", "ІІ СЕМЕСТР");
@@ -52,11 +57,15 @@ public class DefaultStudentService implements StudentService {
     @Autowired
     private GroupDao groupDao;
     @Autowired
-    private MailSender mailSender;
+    private JavaMailSender mailSender;
+    @Autowired
+    private VelocityEngine velocityEngine;
     @Value("${support.mail}")
     public String supportMail;
     @Value("${emails.integration.service.url}")
     public String emailsIntegrationServiceUrl;
+    @Autowired
+    private DefaultEmailService emailService;
 
     @Override
     public StudentProfile readStudentProfilesFromFile(File file) {
@@ -188,14 +197,24 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void sendEmailAfterProfileCreation(StudentProfile studentProfile) {
-        SimpleMailMessage message = new SimpleMailMessage();
+        /*SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(supportMail);
         //// TODO: 27.06.16 Remove comments
         //message.setTo(studentProfile.getId());
         message.setTo("oleksandr.rozdolskyi@epam.com");
         message.setSubject("Пароль для входу");
-        message.setText(studentProfile.getPassword());
-        mailSender.send(message);
+        message.setText("Пароль: " + studentProfile.getPassword());
+        mailSender.send(message);*/
+        try {
+            Map<String, Object> modelForVelocity = ImmutableMap.of("password", studentProfile.getPassword(), "name", studentProfile.getName());
+            MimeMessage mimeMessage = emailService.new MimeMessageBuilder("oleksandr.rozdolskyi@epam.com", supportMail)
+                    .setSubject("Пароль для входу")
+                    .setText(emailService.createHtmlFromVelocityTemplate(SEND_PASSWORD_VM_TEMPLATE, modelForVelocity), true)
+                    .build();
+            emailService.send(mimeMessage);
+        } catch (RuntimeException e) {
+            LOG.warn(e);
+        }
     }
 
     @Override
