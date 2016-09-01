@@ -1,7 +1,10 @@
 package edu.hneu.studentsportal.controller;
 
-import edu.hneu.studentsportal.model.StudentProfile;
-import edu.hneu.studentsportal.service.StudentService;
+import java.util.Collection;
+import java.util.Optional;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
@@ -17,9 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
-import java.util.Collection;
-import java.util.Optional;
+import edu.hneu.studentsportal.model.StudentProfile;
+import edu.hneu.studentsportal.service.StudentService;
 
 @Controller
 @RequestMapping("/account")
@@ -33,13 +35,13 @@ public class AccountController {
     public String supportMail;
 
     @RequestMapping
-    public ModelAndView account(HttpSession session, Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public ModelAndView account(final HttpSession session, final Model model) {
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (hasAdminRole(auth.getAuthorities()))
             return new ModelAndView("redirect:management/uploadStudentProfilesFromExcel");
-        Optional<StudentProfile> studentProfile = studentService.findStudentProfileByEmail(auth.getName());
+        final Optional<StudentProfile> studentProfile = studentService.findStudentProfileByEmail(auth.getName());
         if (studentProfile.isPresent()) {
-            model.addAttribute("title", "Головна сторінка");
+            model.addAttribute("title", "top.menu.home");
             session.setAttribute("groupId", studentProfile.get().getGroupId());
             return new ModelAndView("student/account", "profile", studentProfile.get());
         }
@@ -48,32 +50,32 @@ public class AccountController {
 
     @ModelAttribute(value = "profile")
     public StudentProfile getProfile() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Optional<StudentProfile> studentProfile = studentService.findStudentProfileByEmail(auth.getName());
+        final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        final Optional<StudentProfile> studentProfile = studentService.findStudentProfileByEmail(auth.getName());
         return studentProfile.orElse(null);
     }
     @RequestMapping("/schedule")
-    public String schedule(Model model) {
-        model.addAttribute("title", "Розклад");
+    public String schedule(final Model model) {
+        model.addAttribute("title", "top.menu.schedule");
         return "student/schedule";
     }
 
     @RequestMapping("/documents")
-    public String documents(Model model) {
-        model.addAttribute("title", "Корисно");
+    public String documents(final Model model) {
+        model.addAttribute("title", "top.menu.documents");
         return "student/documents";
     }
 
     @RequestMapping("/contactUs")
-    public String contactUs(@RequestParam(required = false) Boolean success, Model model) {
+    public String contactUs(@RequestParam(required = false) final Boolean success, final Model model) {
         model.addAttribute("success", success);
-        model.addAttribute("title", "Контакти");
+        model.addAttribute("title", "top.menu.contacts");
         return "student/contactUs";
     }
 
     @RequestMapping("/sendEmail")
-    public String contactUs(@RequestParam String message, HttpSession session) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+    public String contactUs(@RequestParam final String message, final HttpSession session) {
+        final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         //// TODO: 27.06.16 remove comments
         //simpleMailMessage.setFrom(getGroupId(session));
         simpleMailMessage.setFrom(supportMail);
@@ -85,11 +87,11 @@ public class AccountController {
     }
 
     @ModelAttribute(value = "groupId")
-    public String getGroupId(HttpSession session) {
+    public String getGroupId(final HttpSession session) {
         return (String) session.getAttribute("groupId");
     }
 
-    private boolean hasAdminRole(Collection<? extends GrantedAuthority> authorities) {
+    private boolean hasAdminRole(final Collection<? extends GrantedAuthority> authorities) {
         return authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 }

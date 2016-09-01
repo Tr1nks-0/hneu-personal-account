@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head lang="ua">
-    <title><c:out value="${title}"/></title>
+    <title><spring:message code="${title}"/></title>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -81,7 +81,7 @@
 
                 <ul class="sidebar-menu">
                     <li class="header">ГОЛОВНЕ МЕНЮ</li>
-                    <li <c:if test="${'Головна сторінка' eq title}">class="active"</c:if> >
+                    <li <c:if test="${'top.menu.home' eq title}">class="active"</c:if> >
                         <a href="/account">
                             <i class="fa fa-home "></i> <span><spring:message code="top.menu.home"/></span>
                             <span class="pull-right-container">
@@ -104,17 +104,17 @@
                             </c:forEach>
                         </ul>
                     </li>
-                    <li <c:if test="${'Розклад' eq title}">class="active"</c:if>>
+                    <li <c:if test="${'top.menu.schedule' eq title}">class="active"</c:if>>
                         <a href="/account/schedule">
                             <i class="fa fa-calendar"></i> <span><spring:message code="top.menu.schedule"/></span>
                         </a>
                     </li>
-                    <li <c:if test="${'Корисно' eq title}">class="active"</c:if>>
+                    <li <c:if test="${'top.menu.documents' eq title}">class="active"</c:if>>
                         <a href="/account/documents">
                             <i class="fa fa-files-o"></i> <span><spring:message code="top.menu.documents"/></span>
                         </a>
                     </li>
-                    <li <c:if test="${'Контакти' eq title}">class="active"</c:if>>
+                    <li <c:if test="${'top.menu.contacts' eq title}">class="active"</c:if>>
                         <a href="/account/contactUs">
                             <i class="fa fa-envelope"></i> <span><spring:message code="top.menu.contacts"/></span>
                         </a>
