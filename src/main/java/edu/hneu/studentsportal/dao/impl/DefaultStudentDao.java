@@ -31,7 +31,7 @@ public class DefaultStudentDao implements StudentDao {
 
     @Override
     public StudentProfile findById(String id) {
-        return mongoOperations.findById(id, StudentProfile.class);
+        return mongoOperations.findOne(Query.query(Criteria.where("id").is(id)), StudentProfile.class);
     }
 
     @Override

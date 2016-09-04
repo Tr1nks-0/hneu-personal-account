@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletContext;
@@ -20,6 +21,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Controller
 @RequestMapping("/management")
@@ -96,7 +98,28 @@ public class ManagementController {
         model.addAttribute("searchCriteria", searchCriteria);
         model.addAttribute("pagesCount", studentService.getPagesCountForSearchCriteria(searchCriteria));
         model.addAttribute("students", studentService.find(searchCriteria, page));
-        return "management/students-list";
+        return "management/studentsList";
+    }
+
+    @RequestMapping(value = "/students/{id:.+}")
+    public ModelAndView editStudent(@PathVariable("id") String id) {
+        StudentProfile studentProfile = studentService.findStudentProfileById(id);
+        return new ModelAndView("management/studentEditor", "profile", studentProfile);
+    }
+
+    @RequestMapping(value = "/students/{id:.+}", method = RequestMethod.POST)
+    public String editStudent(@PathVariable("id") String id, @ModelAttribute("profile") StudentProfile editedProfile) {
+        StudentProfile studentProfile = studentService.findStudentProfileById(id);
+        if (nonNull(studentProfile)){
+            studentProfile.setName(editedProfile.getName());
+            studentProfile.setSurname(editedProfile.getSurname());
+            studentProfile.setFaculty(editedProfile.getFaculty());
+            studentProfile.setSpeciality(editedProfile.getSpeciality());
+            studentProfile.setGroup(editedProfile.getGroup());
+            studentProfile.setContactInfo(editedProfile.getContactInfo());
+            studentService.save(studentProfile);
+        }
+        return "redirect:/management/students";
     }
 
     @RequestMapping(value = "/removeStudent")

@@ -24,7 +24,7 @@
                         <c:when test="${not empty students}">
                             <table class="table table-hover no-margin">
                                 <c:forEach items="${students}" var="student">
-                                    <tr>
+                                    <tr onclick="document.location = '/management/students/${student.id}';">
                                         <td>
                                             <div class="image">
                                                 <c:set var="studentProfileImage" value="/profile/${student.profileImage}"/>
