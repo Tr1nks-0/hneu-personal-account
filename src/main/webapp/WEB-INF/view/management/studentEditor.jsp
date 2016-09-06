@@ -3,21 +3,6 @@
 
 <%@ include file="../jspf/management-header.jspf" %>
 
-<style>
-    .editor-input {
-        width: 100%;
-    }
-    .photo-editor {
-        width: 150px;
-        height: 150px;
-        margin: 5px;
-        border: 2px solid gainsboro;
-    }
-    .float-right {
-        float: right;
-    }
-</style>
-
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
