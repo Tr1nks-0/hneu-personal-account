@@ -19,7 +19,7 @@
     <![endif]-->
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini <c:if test="${'Розклад' eq title}">sidebar-collapse</c:if> ">
+<body class="hold-transition skin-blue sidebar-mini <c:if test="${'top.menu.schedule' eq title}">sidebar-collapse</c:if> ">
 
     <c:set var="profileImage" value="/profile/${profile.profileImage}"/>
     <c:if test="${empty profile.profileImage}">
@@ -42,13 +42,13 @@
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="${profileImage}" class="user-image profile-photo" alt="User Image">
-                                <span class="hidden-xs"><c:out value="${profile.name} ${profile.surname}"/></span>
+                                <span class="hidden-xs"><c:out value="${profile.surname} ${profile.name}"/></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="user-header">
                                     <img src="${profileImage}" class="img-circle profile-photo-large" alt="User Image">
                                     <p>
-                                        <c:out value="${profile.name} ${profile.surname}"/> - <c:out value="${profile.faculty}"/>
+                                        <c:out value="${profile.surname} ${profile.name}"/> - <c:out value="${profile.faculty}"/>
                                         <small><c:out value="${profile.group}"/></small>
                                     </p>
                                 </li>
@@ -74,7 +74,7 @@
                         <img src="${profileImage}" class="img-circle profile-photo-large" alt="User Image">
                     </div>
                     <div class="info">
-                        <p><c:out value="${profile.name} ${profile.surname}"/></p>
+                        <p><c:out value="${profile.surname} ${profile.name}"/></p>
                         <c:out value="${profile.group}"/>
                     </div>
                 </div>

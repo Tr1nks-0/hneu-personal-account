@@ -36,7 +36,7 @@
                                         </td>
                                         <td class="text-center">${student.name}</td>
                                         <td class="text-center">${student.surname}</td>
-                                        <td class="text-center">${student.faculty}</td>
+                                        <td class="text-center">${student.email}</td>
                                         <td class="text-center">${student.speciality}</td>
                                         <td class="text-center">${student.group}</td>
                                         <td class="text-center"><a class="btn btn-danger" href="/management/removeStudent?id=${student.id}"><i class="fa fa-remove"></i></a></td>

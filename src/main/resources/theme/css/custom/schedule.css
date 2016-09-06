@@ -1,6 +1,6 @@
 .schedule-frame {
-    padding-top: 6px;
     padding-bottom: 10px;
-    height: 100vh;
     width: 100%;
+    height: 100vh;
+    margin-top: -45px;
 }

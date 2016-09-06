@@ -3,6 +3,12 @@
 
 <%@ include file="../jspf/header.jspf" %>
 
+<style>
+    .hold-transition {
+        overflow: hidden;
+    }
+</style>
+
 <div class="content-wrapper">
     <section class="content-header" style="padding: 0px">
         <iframe class="schedule-frame" src="http://services.ksue.edu.ua:8081/schedule/schedule?group=${groupId}">
@@ -10,4 +16,5 @@
     </section>
 </div>
 
-<%@ include file="../jspf/footer.jspf" %>
+<%@ include file="../jspf/jsTag.jspf" %>
+
