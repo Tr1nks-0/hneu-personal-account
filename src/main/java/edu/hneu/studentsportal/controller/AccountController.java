@@ -1,10 +1,8 @@
 package edu.hneu.studentsportal.controller;
 
-import java.util.Collection;
-import java.util.Optional;
-
-import javax.servlet.http.HttpSession;
-
+import edu.hneu.studentsportal.model.StudentProfile;
+import edu.hneu.studentsportal.pojo.Schedule;
+import edu.hneu.studentsportal.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
@@ -18,10 +16,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.hneu.studentsportal.model.StudentProfile;
-import edu.hneu.studentsportal.service.StudentService;
+import javax.servlet.http.HttpSession;
+import java.util.Collection;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/account")
@@ -54,8 +54,12 @@ public class AccountController {
         final Optional<StudentProfile> studentProfile = studentService.findStudentProfileByEmail(auth.getName());
         return studentProfile.orElse(null);
     }
+
     @RequestMapping("/schedule")
     public String schedule(final Model model) {
+        String url = "http://services.ksue.edu.ua:8081/schedule/xml?auth=com.alcsan.atimetable_19092013_552ca3ffa5&group=21382&week=2";
+        Schedule schedule = new RestTemplate().getForObject(url, Schedule.class);
+        model.addAttribute("schedule", schedule);
         model.addAttribute("title", "top.menu.schedule");
         return "student/schedule";
     }
