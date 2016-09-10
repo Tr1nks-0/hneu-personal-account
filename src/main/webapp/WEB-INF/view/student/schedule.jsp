@@ -118,8 +118,12 @@
         <div class="content-wrapper">
             <section class="content-header">
                 <div class="row">
-                    <a class="btn" href="/account/schedule?week=${week-1}">Попередня</a>
-                    <a class="btn float-right" href="/account/schedule?week=${week+1}">Наступна</a>
+                    <c:if test="${week > 1}">
+                        <a class="btn" href="/account/schedule?week=${week-1}">Попередня</a>
+                    </c:if>
+                    <c:if test="${week < 53}">
+                        <a class="btn float-right" href="/account/schedule?week=${week+1}">Наступна</a>
+                    </c:if>
                 </div>
                 <div class="table-responsive">
                     <table class="table schedule-table table-striped table-hover">
