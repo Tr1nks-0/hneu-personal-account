@@ -1,0 +1,204 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="schedule">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="metadata">
+                    <xs:complexType>
+                        <xs:simpleContent>
+                            <xs:extension base="xs:string">
+                                <xs:attribute type="xs:string" name="description"/>
+                                <xs:attribute type="xs:string" name="end-date"/>
+                                <xs:attribute type="xs:string" name="has-three-last-pairs"/>
+                                <xs:attribute type="xs:string" name="has-weekend-pairs"/>
+                                <xs:attribute type="xs:short" name="id"/>
+                                <xs:attribute type="xs:string" name="name"/>
+                                <xs:attribute type="xs:string" name="short-name"/>
+                                <xs:attribute type="xs:string" name="start-date"/>
+                                <xs:attribute type="xs:string" name="type"/>
+                                <xs:attribute type="xs:short" name="year"/>
+                                <xs:attribute type="xs:string" name="year-display-name"/>
+                            </xs:extension>
+                        </xs:simpleContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="week">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="day" maxOccurs="unbounded" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:simpleContent>
+                                        <xs:extension base="xs:string">
+                                            <xs:attribute type="xs:string" name="date" use="optional"/>
+                                            <xs:attribute type="xs:byte" name="day" use="optional"/>
+                                            <xs:attribute type="xs:string" name="display-name" use="optional"/>
+                                            <xs:attribute type="xs:string" name="name" use="optional"/>
+                                        </xs:extension>
+                                    </xs:simpleContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="xs:byte" name="number"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="schedule-elements">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="schedule-element" maxOccurs="unbounded" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="subject" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute type="xs:short" name="id" use="optional"/>
+                                                        <xs:attribute type="xs:string" name="short-name" use="optional"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="type" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:string">
+                                                        <xs:attribute type="xs:byte" name="id" use="optional"/>
+                                                        <xs:attribute type="xs:string" name="type" use="optional"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="teacher" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element type="xs:string" name="display-name"/>
+                                                </xs:sequence>
+                                                <xs:attribute type="xs:string" name="full-name" use="optional"/>
+                                                <xs:attribute type="xs:int" name="id" use="optional"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="room" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element type="xs:string" name="display-name"/>
+                                                </xs:sequence>
+                                                <xs:attribute type="xs:string" name="building" use="optional"/>
+                                                <xs:attribute type="xs:short" name="id" use="optional"/>
+                                                <xs:attribute type="xs:string" name="name" use="optional"/>
+                                                <xs:attribute type="xs:string" name="short-name" use="optional"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="groups" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="group" maxOccurs="unbounded" minOccurs="0">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element type="xs:string" name="display-name"/>
+                                                                <xs:element type="xs:string" name="title"/>
+                                                            </xs:sequence>
+                                                            <xs:attribute type="xs:string" name="all" use="optional"/>
+                                                            <xs:attribute type="xs:short" name="id" use="optional"/>
+                                                            <xs:attribute type="xs:string" name="main" use="optional"/>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="schedule-element" maxOccurs="unbounded" minOccurs="0">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="subject">
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="xs:string">
+                                                                    <xs:attribute type="xs:short" name="id" use="optional"/>
+                                                                    <xs:attribute type="xs:string" name="short-name" use="optional"/>
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="type">
+                                                        <xs:complexType>
+                                                            <xs:simpleContent>
+                                                                <xs:extension base="xs:string">
+                                                                    <xs:attribute type="xs:byte" name="id" use="optional"/>
+                                                                    <xs:attribute type="xs:string" name="type" use="optional"/>
+                                                                </xs:extension>
+                                                            </xs:simpleContent>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="teacher">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element type="xs:string" name="display-name"/>
+                                                            </xs:sequence>
+                                                            <xs:attribute type="xs:string" name="full-name" use="optional"/>
+                                                            <xs:attribute type="xs:int" name="id" use="optional"/>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="room">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element type="xs:string" name="display-name"/>
+                                                            </xs:sequence>
+                                                            <xs:attribute type="xs:string" name="building" use="optional"/>
+                                                            <xs:attribute type="xs:short" name="id" use="optional"/>
+                                                            <xs:attribute type="xs:short" name="name" use="optional"/>
+                                                            <xs:attribute type="xs:string" name="short-name" use="optional"/>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                    <xs:element name="groups">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="group" maxOccurs="unbounded" minOccurs="0">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element type="xs:string" name="display-name"/>
+                                                                            <xs:element type="xs:string" name="title"/>
+                                                                        </xs:sequence>
+                                                                        <xs:attribute type="xs:short" name="id" use="optional"/>
+                                                                        <xs:attribute type="xs:string" name="main" use="optional"/>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute type="xs:string" name="break-end" use="optional"/>
+                                                <xs:attribute type="xs:int" name="break-end-epoch" use="optional"/>
+                                                <xs:attribute type="xs:string" name="break-start" use="optional"/>
+                                                <xs:attribute type="xs:int" name="break-start-epoch" use="optional"/>
+                                                <xs:attribute type="xs:string" name="date" use="optional"/>
+                                                <xs:attribute type="xs:byte" name="day" use="optional"/>
+                                                <xs:attribute type="xs:string" name="end" use="optional"/>
+                                                <xs:attribute type="xs:int" name="end-epoch" use="optional"/>
+                                                <xs:attribute type="xs:string" name="first" use="optional"/>
+                                                <xs:attribute type="xs:string" name="is-one-of-multiple" use="optional"/>
+                                                <xs:attribute type="xs:byte" name="pair" use="optional"/>
+                                                <xs:attribute type="xs:string" name="start" use="optional"/>
+                                                <xs:attribute type="xs:int" name="start-epoch" use="optional"/>
+                                                <xs:attribute type="xs:string" name="last" use="optional"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute type="xs:string" name="break-end" use="optional"/>
+                                    <xs:attribute type="xs:int" name="break-end-epoch" use="optional"/>
+                                    <xs:attribute type="xs:string" name="break-start" use="optional"/>
+                                    <xs:attribute type="xs:int" name="break-start-epoch" use="optional"/>
+                                    <xs:attribute type="xs:string" name="date" use="optional"/>
+                                    <xs:attribute type="xs:byte" name="day" use="optional"/>
+                                    <xs:attribute type="xs:string" name="end" use="optional"/>
+                                    <xs:attribute type="xs:int" name="end-epoch" use="optional"/>
+                                    <xs:attribute type="xs:byte" name="pair" use="optional"/>
+                                    <xs:attribute type="xs:string" name="start" use="optional"/>
+                                    <xs:attribute type="xs:int" name="start-epoch" use="optional"/>
+                                    <xs:attribute type="xs:string" name="contains-multiple" use="optional"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="time-zone"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

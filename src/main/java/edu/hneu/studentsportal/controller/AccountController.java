@@ -3,6 +3,9 @@ package edu.hneu.studentsportal.controller;
 import edu.hneu.studentsportal.model.StudentProfile;
 import edu.hneu.studentsportal.pojo.Schedule;
 import edu.hneu.studentsportal.service.StudentService;
+import edu.hneu.studentsportal.service.TimeService;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
@@ -20,8 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/account")
@@ -31,8 +33,13 @@ public class AccountController {
     private StudentService studentService;
     @Autowired
     private MailSender mailSender;
+    @Autowired
+    private TimeService timeService;
+
     @Value("${support.mail}")
     public String supportMail;
+    @Value("${schedule.url}")
+    public String scheduleUrl;
 
     @RequestMapping
     public ModelAndView account(final HttpSession session, final Model model) {
@@ -56,12 +63,39 @@ public class AccountController {
     }
 
     @RequestMapping("/schedule")
-    public String schedule(final Model model) {
-        String url = "http://services.ksue.edu.ua:8081/schedule/xml?auth=com.alcsan.atimetable_19092013_552ca3ffa5&group=21382&week=2";
-        Schedule schedule = new RestTemplate().getForObject(url, Schedule.class);
-        model.addAttribute("schedule", schedule);
+    public String schedule(final Model model, @RequestParam(required = false) Integer week) {
+        try {
+            if(Objects.isNull(week))
+                week = timeService.getCurrentEducationWeek();
+            String groupCode = getProfile().getGroupId();
+            String url = String.format(scheduleUrl, groupCode, week);
+
+            Schedule schedule = new RestTemplate().getForObject(url, Schedule.class);
+
+            Map<Integer, Map<Integer, Schedule.ScheduleElements.ScheduleElement>> pairs = extractPairs(schedule);
+            List<Schedule.Week.Day> days = schedule.getWeek().getDay();
+
+            model.addAttribute("pairs", pairs);
+            model.addAttribute("days", days);
+            model.addAttribute("week", week);
+        } catch (RuntimeException e) {
+            //
+        }
         model.addAttribute("title", "top.menu.schedule");
         return "student/schedule";
+    }
+
+    private Map<Integer, Map<Integer, Schedule.ScheduleElements.ScheduleElement>> extractPairs(Schedule schedule) {
+        Map<Integer, Map<Integer, Schedule.ScheduleElements.ScheduleElement>> pairs = new HashedMap(7);
+        for(byte i = 0; i < 7; i++) {
+            pairs.put(Integer.valueOf(i), new HashedMap(8));
+        }
+        for(Schedule.ScheduleElements.ScheduleElement scheduleElement : schedule.getScheduleElements().getScheduleElement()) {
+            Map<Integer, Schedule.ScheduleElements.ScheduleElement> days = pairs.get(Integer.valueOf(scheduleElement.getPair()));
+            days.put(Integer.valueOf(scheduleElement.getDay()), scheduleElement);
+            pairs.put(Integer.valueOf(scheduleElement.getPair()), days);
+        }
+        return pairs;
     }
 
     @RequestMapping("/documents")
@@ -82,8 +116,8 @@ public class AccountController {
         final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         //// TODO: 27.06.16 remove comments
         //simpleMailMessage.setFrom(getGroupId(session));
-        simpleMailMessage.setFrom(supportMail);
-        simpleMailMessage.setTo(supportMail);
+        simpleMailMessage.setFrom(scheduleUrl);
+        simpleMailMessage.setTo(scheduleUrl);
         simpleMailMessage.setSubject("Зворотній зв'язок | Кабінет студнта");
         simpleMailMessage.setText(message);
         mailSender.send(simpleMailMessage);
