@@ -4,38 +4,6 @@
 
 <%@ include file="../jspf/header.jspf" %>
 
-<style>
-    .info-box-no-content {
-        position: relative;
-    }
-    .info-box-no-content-label {
-        position: absolute;
-        bottom: 0px;
-        padding-bottom: 3px;
-        width: 100%;
-        text-align: center;
-        color: white;
-    }
-
-    .info-box-no-content .info-box-icon {
-        width: 100%;
-    }
-
-    .info-box-no-content .info-box-icon .text{
-        font-size: 14px;
-        line-height: 14px;
-    }
-
-    .info-box-no-content .info-box-icon .img{
-        line-height: 65px;
-    }
-
-    .info-box-no-content .info-box-icon:hover {
-        background-color: #1e282c !important;
-    }
-
-</style>
-
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
@@ -111,7 +79,7 @@
                                                 <span class="label label-success"><c:out value="${semester.label}"/></span>
                                             </h4>
                                             <div class="box-tools pull-right">
-                                                <button type="button" class="btn btn-box-tool" <c:if test="${isNotCurrentCourse}">data-widget="collapse"</c:if>>
+                                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
                                                     <c:choose>
                                                         <c:when test="${isNotCurrentCourse}"><i class="fa fa-plus"></i></c:when>
                                                         <c:otherwise><i class="fa fa-minus"></i></c:otherwise>
@@ -179,11 +147,4 @@
 </div>
 
 <%@ include file="../jspf/footer.jspf" %>
-
-<script>
-    $('.current-marks').click(function() {
-        window.open('', 'marks-window');
-        $('#studentForm').submit()
-    });
-</script>
 

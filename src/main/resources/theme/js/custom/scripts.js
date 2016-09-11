@@ -50,17 +50,9 @@ jQuery(document).ready(function () {
 
     });
 
-    $('.mark-label').each(function() {
-        var value = this.value;
-        if(value >= '90') {
-            this.parentNode.style.backgroundColor = '#A8FF52'
-        } else if(value >= '74' && value < '90') {
-            this.parentNode.style.backgroundColor = '#FFF952'
-        } else if(value >= '60' && value < '74') {
-            this.parentNode.style.backgroundColor = '#FFCD80'
-        } else if(value >= '0' && value < '60' || value === 'н') {
-            this.parentNode.style.backgroundColor = '#FF9880'
-        }
+    $('.current-marks').click(function() {
+        window.open('', 'marks-window');
+        $('#studentForm').submit()
     });
 });
 

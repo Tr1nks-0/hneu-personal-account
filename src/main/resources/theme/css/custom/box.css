@@ -18,3 +18,21 @@
 .float-right {
     float: right;
 }
+
+
+.info-box-no-content .info-box-icon {
+    width: 100%;
+}
+
+.info-box-no-content .info-box-icon .text{
+    font-size: 14px;
+    line-height: 14px;
+}
+
+.info-box-no-content .info-box-icon .img{
+    line-height: 65px;
+}
+
+.info-box-no-content .info-box-icon:hover {
+    background-color: #1e282c !important;
+}
