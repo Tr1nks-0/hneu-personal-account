@@ -18,7 +18,7 @@
                         <input type="hidden" size="15" name="lastName" value="${profile.surname}">
                         <input type="hidden" size="15" name="code" value="${profile.passportNumber}">
                     </form>
-                    <a class="info-box-icon bg-green current-marks">
+                    <a class="info-box-icon bg-blue current-marks">
                         <div class="img"><i class="ion ion-podium"></i></div>
                         <div class="text"><span>Поточні оцінки</span></div>
                     </a>
