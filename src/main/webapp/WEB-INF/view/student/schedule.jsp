@@ -218,5 +218,5 @@
 </c:choose>
 
 
-<%@ include file="../jspf/jsTag.jspf" %>
+<%@ include file="../jspf/footer.jspf" %>
 

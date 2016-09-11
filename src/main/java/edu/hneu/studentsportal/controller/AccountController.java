@@ -5,7 +5,6 @@ import edu.hneu.studentsportal.pojo.Schedule;
 import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.TimeService;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
@@ -46,13 +45,19 @@ public class AccountController {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (hasAdminRole(auth.getAuthorities()))
             return new ModelAndView("redirect:management/uploadStudentProfilesFromExcel");
-        final Optional<StudentProfile> studentProfile = studentService.findStudentProfileByEmail(auth.getName());
-        if (studentProfile.isPresent()) {
+        final Optional<StudentProfile> profile = studentService.findStudentProfileByEmail(auth.getName());
+        if(profile.isPresent()) {
+            StudentProfile studentProfile = profile.get();
             model.addAttribute("title", "top.menu.home");
-            session.setAttribute("groupId", studentProfile.get().getGroupId());
-            return new ModelAndView("student/account", "profile", studentProfile.get());
+            model.addAttribute("currentCourse", getCurrentCourse(studentProfile));
+            session.setAttribute("groupId", studentProfile.getGroupId());
+            return new ModelAndView("student/account", "profile", studentProfile);
         }
         return new ModelAndView("redirect:login");
+    }
+
+    private int getCurrentCourse(StudentProfile studentProfile) {
+        return timeService.getCurrentDate().getYear() - studentProfile.getIncomeYear() + 1;
     }
 
     @ModelAttribute(value = "profile")

@@ -1,7 +1,40 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <%@ include file="../jspf/header.jspf" %>
+
+<style>
+    .info-box-no-content {
+        position: relative;
+    }
+    .info-box-no-content-label {
+        position: absolute;
+        bottom: 0px;
+        padding-bottom: 3px;
+        width: 100%;
+        text-align: center;
+        color: white;
+    }
+
+    .info-box-no-content .info-box-icon {
+        width: 100%;
+    }
+
+    .info-box-no-content .info-box-icon .text{
+        font-size: 14px;
+        line-height: 14px;
+    }
+
+    .info-box-no-content .info-box-icon .img{
+        line-height: 65px;
+    }
+
+    .info-box-no-content .info-box-icon:hover {
+        background-color: #1e282c !important;
+    }
+
+</style>
 
 <div class="content-wrapper">
     <section class="content-header">
@@ -10,7 +43,21 @@
             <small><spring:message code="form.label.student.profile.head.second"/></small>
         </h1>
         <div class="content">
-            <div class="col-md-6 col-sm-12 col-xs-12">
+
+            <div class="col-md-2 col-sm-12 col-xs-12">
+                <div class="info-box info-box-no-content">
+                    <form method="post" id="studentForm" name="studentForm" action="http://services.ksue.edu.ua:8081/student/report" target="marks-window">
+                        <input type="hidden" size="15" name="lastName" value="${profile.surname}">
+                        <input type="hidden" size="15" name="code" value="${profile.passportNumber}">
+                    </form>
+                    <a class="info-box-icon bg-green current-marks">
+                        <div class="img"><i class="ion ion-podium"></i></div>
+                        <div class="text"><span>Поточні оцінки</span></div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-5 col-sm-12 col-xs-12">
                 <div class="info-box">
                     <span class="info-box-icon bg-green"><i class="ion ion-university"></i></span>
 
@@ -27,7 +74,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-12 col-xs-12">
+
+            <div class="col-md-5 col-sm-12 col-xs-12">
                 <div class="info-box">
                     <span class="info-box-icon bg-yellow"><i class="ion ion-ios-telephone-outline"></i></span>
                     <div class="info-box-content">
@@ -46,6 +94,8 @@
             </div>
             <div>
                 <c:forEach items="${profile.courses}" varStatus="i" var="course">
+                    <c:set var="isNotCurrentCourse" value="${currentCourse != i.index + 1}"/>
+
                     <div>
                         <h3 class="box-title">
                             <span class="course-label badge bg-light-blue" id="${i.index + 1}course">
@@ -55,13 +105,18 @@
                         <c:forEach items="${course.semesters}" varStatus="j" var="semester">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="box box-info collapsed-box">
+                                    <div class="box box-info <c:if test="${isNotCurrentCourse}">collapsed-box</c:if>">
                                         <div class="box-header with-border">
                                             <h4 class="box-title">
                                                 <span class="label label-success"><c:out value="${semester.label}"/></span>
                                             </h4>
                                             <div class="box-tools pull-right">
-                                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                                                <button type="button" class="btn btn-box-tool" <c:if test="${isNotCurrentCourse}">data-widget="collapse"</c:if>>
+                                                    <c:choose>
+                                                        <c:when test="${isNotCurrentCourse}"><i class="fa fa-plus"></i></c:when>
+                                                        <c:otherwise><i class="fa fa-minus"></i></c:otherwise>
+                                                    </c:choose>
+                                                </button>
                                             </div>
                                         </div>
                                         <div class="box-body">
@@ -124,3 +179,11 @@
 </div>
 
 <%@ include file="../jspf/footer.jspf" %>
+
+<script>
+    $('.current-marks').click(function() {
+        window.open('', 'marks-window');
+        $('#studentForm').submit()
+    });
+</script>
+

@@ -14,20 +14,20 @@ public class DefaultTimeService implements TimeService {
 
 
     @Override
-    public LocalDate getCurrentDay () {
+    public LocalDate getCurrentDate() {
         return LocalDate.now();
     }
 
     @Override
     public int getCurrentEducationWeek() {
         int firstWeek = getFirstEducationWeek();
-        int currentWeek = getCurrentDay().get(getWeekField());
+        int currentWeek = getCurrentDate().get(getWeekField());
         return currentWeek - firstWeek + 1;
 
     }
 
     private int getFirstEducationWeek() {
-        int educationYear = getEducationYearForDate(getCurrentDay());
+        int educationYear = getEducationYearForDate(getCurrentDate());
         return LocalDate.of(educationYear, Month.SEPTEMBER, 1).get(getWeekField());
     }
 
