@@ -1,12 +1,37 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
             <footer class="main-footer">
-                <div class="pull-right design-label">
-                    <a href="https://almsaeedstudio.com/">Design</a>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="col-md-4">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="http://www.hneu.edu.ua/">Сайт університету</a></li>
+                                <li><a href="http://www.ikt.hneu.edu.ua/">Сайт персональних навчальних систем</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="http://www.ei.hneu.edu.ua/">Сайт факультету ЕІ</a></li>
+                                <li><a href="http://library.hneu.edu.ua/index.php">Сайт бібліотеки ХНЕУ</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="http://mon.gov.ua/">Сайт МОН України</a><br></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="pull-right hidden-xs">
-                    <b>Version</b> 0.9.beta
+                <hr>
+                <div>
+                    <div class="pull-right hidden-xs design-label">
+                        <a href="https://almsaeedstudio.com/">Design</a>
+                    </div>
+                    <div class="pull-right hidden-xs">
+                        <b>Version</b> 0.9.beta
+                    </div>
+                    <strong>Copyright &copy; 2016 <a href="http://www.hneu.edu.ua/">Simon Kuznets Kharkiv National University of Economics</a>.</strong> All rights
+                    reserved.
                 </div>
-                <strong>Copyright &copy; 2016 <a href="http://www.hneu.edu.ua/">Simon Kuznets Kharkiv National University of Economics</a>.</strong> All rights
-                reserved.
             </footer>
         </div>
 
