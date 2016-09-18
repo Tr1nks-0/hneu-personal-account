@@ -54,7 +54,7 @@
                         <div>
                             <c:forEach items="${profile.contactInfo}" varStatus="i" var="contact">
                                 <span class="info-box-number">
-                                    <small><c:out value="${contact}"/></small>
+                                    <small class="info-box-cropped"><c:out value="${contact}"/></small>
                                 </span>
                             </c:forEach>
                         </div>

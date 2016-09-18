@@ -36,3 +36,9 @@
 .info-box-no-content .info-box-icon:hover {
     background-color: #1e282c !important;
 }
+
+.info-box-cropped {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
