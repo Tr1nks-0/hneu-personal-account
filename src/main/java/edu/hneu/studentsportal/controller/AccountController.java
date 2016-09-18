@@ -119,10 +119,8 @@ public class AccountController {
     @RequestMapping("/sendEmail")
     public String contactUs(@RequestParam final String message, final HttpSession session) {
         final SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        //// TODO: 27.06.16 remove comments
-        //simpleMailMessage.setFrom(getGroupId(session));
-        simpleMailMessage.setFrom(scheduleUrl);
-        simpleMailMessage.setTo(scheduleUrl);
+        simpleMailMessage.setFrom(getGroupId(session));
+        simpleMailMessage.setTo("dekanstei@gmail.com");
         simpleMailMessage.setSubject("Зворотній зв'язок | Кабінет студнта");
         simpleMailMessage.setText(message);
         mailSender.send(simpleMailMessage);

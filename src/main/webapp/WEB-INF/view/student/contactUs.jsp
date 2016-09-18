@@ -29,7 +29,7 @@
                         <span><b>Тел.</b> +38 (057) 702-18-31</span><br>
                         <span><b>Факс:</b> +38 (057) 702-07-17</span><br>
                         <span><b>Сайт:</b> http://www.ei.hneu.edu.ua/</span><br>
-                        <span><b>E-mail:</b> ei@ksue.edu.ua</span>
+                        <span><b>E-mail:</b> dekanstei@gmail.com</span>
                     </div>
                 </div>
 
