@@ -2,21 +2,21 @@
             <footer class="main-footer">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-sm-6">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="http://www.hneu.edu.ua/">Сайт університету</a></li>
-                                <li><a href="http://www.ikt.hneu.edu.ua/">Сайт персональних навчальних систем</a></li>
+                                <li><a href="http://www.hneu.edu.ua/"><i class="ion ion-link"></i>Сайт університету</a></li>
+                                <li><a href="http://www.ikt.hneu.edu.ua/"><i class="ion ion-link"></i>Сайт персональних навчальних систем</a></li>
                             </ul>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-sm-6">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="http://www.ei.hneu.edu.ua/">Сайт факультету ЕІ</a></li>
-                                <li><a href="http://library.hneu.edu.ua/index.php">Сайт бібліотеки ХНЕУ</a></li>
+                                <li><a href="http://www.ei.hneu.edu.ua/"><i class="ion ion-link"></i>Сайт факультету ЕІ</a></li>
+                                <li><a href="http://library.hneu.edu.ua/index.php"><i class="ion ion-link"></i>Сайт бібліотеки ХНЕУ</a></li>
                             </ul>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-sm-6">
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="http://mon.gov.ua/">Сайт МОН України</a><br></li>
+                                <li><a href="http://mon.gov.ua/"><i class="ion ion-link"></i>Сайт МОН України</a><br></li>
                             </ul>
                         </div>
                     </div>

@@ -23,6 +23,7 @@ public class StudentProfile {
     private String password;
     private String profileImage;
     private String passportNumber;
+    private String filePath;
     private long modificationTime;
 
     public String getId() {
@@ -143,5 +144,13 @@ public class StudentProfile {
 
     public void setPassportNumber(String passportNumber) {
         this.passportNumber = passportNumber;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

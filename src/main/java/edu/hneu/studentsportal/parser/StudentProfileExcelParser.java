@@ -34,8 +34,8 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
     @Autowired
     private FileService fileService;
 
-    @Value("${uploaded.files.location}")
-    public String uploadedFilesLocation;
+    @Value("${profile.photo.location}")
+    public String profilePhotoLocation;
 
     private Integer rowNumber;
 
@@ -148,15 +148,15 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
             return null;
         try {
             PictureData profilePhoto = allPictures.get(allPictures.size() - 1);
-            String profilePhotoLocation = studentProfile.getId() + "/" + "photo." + profilePhoto.suggestFileExtension();
-            String classPath = studentProfile.getClass().getResource("/").getPath();
-            String filePath = classPath + uploadedFilesLocation + "/" +profilePhotoLocation;
+            String profilePhotoFileName = studentProfile.getId() + "/" + "photo." + profilePhoto.suggestFileExtension();
+            String classPath = this.getClass().getResource("/").getPath();
+            String filePath = classPath + profilePhotoLocation + "/" +profilePhotoFileName;
             File file = new File(filePath);
             fileService.createDirectoryIfNotExist(file.getParentFile());
             FileOutputStream out = new FileOutputStream(file);
             out.write(profilePhoto.getData());
             out.close();
-            return profilePhotoLocation;
+            return profilePhotoFileName;
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

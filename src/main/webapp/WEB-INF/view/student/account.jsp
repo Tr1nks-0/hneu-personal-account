@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="html" uri="http://struts.apache.org/tags-html" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <%@ include file="../jspf/header.jspf" %>
@@ -18,14 +19,14 @@
                         <input type="hidden" size="15" name="lastName" value="${profile.surname}">
                         <input type="hidden" size="15" name="code" value="${profile.passportNumber}">
                     </form>
-                    <a class="info-box-icon bg-blue current-marks">
+                    <a class="info-box-icon bg-light-blue current-marks">
                         <div class="img"><i class="ion ion-podium"></i></div>
                         <div class="text"><span>Поточні оцінки</span></div>
                     </a>
                 </div>
             </div>
 
-            <div class="col-md-5 col-sm-12 col-xs-12">
+            <div class="col-md-4 col-sm-12 col-xs-12">
                 <div class="info-box">
                     <span class="info-box-icon bg-green"><i class="ion ion-university"></i></span>
 
@@ -43,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="col-md-5 col-sm-12 col-xs-12">
+            <div class="col-md-4 col-sm-12 col-xs-12">
                 <div class="info-box">
                     <span class="info-box-icon bg-yellow"><i class="ion ion-ios-telephone-outline"></i></span>
                     <div class="info-box-content">
@@ -60,6 +61,16 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-2 col-sm-12 col-xs-12">
+                <div class="info-box info-box-no-content">
+                    <a class="info-box-icon bg-red" href="${profile.filePath}">
+                        <div class="img"><i class="ion-ios-download-outline"></i></div>
+                        <div class="text"><span>Завантажити план</span></div>
+                    </a>
+                </div>
+            </div>
+
             <div>
                 <c:forEach items="${profile.courses}" varStatus="i" var="course">
                     <c:set var="isNotCurrentCourse" value="${currentCourse != i.index + 1}"/>

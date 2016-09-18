@@ -7,6 +7,7 @@ import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.StudentService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -48,9 +49,9 @@ public class ManagementController {
                               RedirectAttributes redirectAttributes) throws IllegalStateException, IOException {
         LOG.info("Files are going to upload");
         List<MultipartFile> filesToUpload = uploadForm.getFiles();
-        String filePath = servletContext.getRealPath("/WEB-INF/excel/uploaded");
-        Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload, filePath, uploadedFile -> {
+        Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload, uploadedFile -> {
             StudentProfile studentProfile = studentService.readStudentProfilesFromFile(uploadedFile);
+            studentProfile.setFilePath("/individual-plan/" + uploadedFile.getName());
             studentService.setGroupId(studentProfile);
             studentService.setCredentials(studentProfile);
             studentService.save(studentProfile);
@@ -65,8 +66,7 @@ public class ManagementController {
     public String uploadTotalsFromExcel(@ModelAttribute("uploadForm") FilesUploadModel uploadForm,
                                         RedirectAttributes redirectAttributes) throws IllegalStateException, IOException {
         List<MultipartFile> filesToUpload = uploadForm.getFiles();
-        String filePath = servletContext.getRealPath("/WEB-INF/excel/uploaded");
-        Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload, filePath,
+        Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload,
                 uploadedFile -> studentService.updateStudentsScoresFromFile(uploadedFile)
         );
         redirectAttributes.addFlashAttribute("files", uploadedFilesNames);

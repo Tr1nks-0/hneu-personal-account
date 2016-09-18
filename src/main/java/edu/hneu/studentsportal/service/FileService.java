@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 public interface FileService {
 
-    Map<String, Boolean> reduceForEachUploadedFile(List<MultipartFile> filesToUpload, String path,
+    Map<String, Boolean> reduceForEachUploadedFile(List<MultipartFile> filesToUpload,
                                                    Consumer<File> forEachFileConsumer) throws IOException;
 
     boolean createDirectoryIfNotExist(File file);

@@ -41,7 +41,8 @@
 
     <mvc:annotation-driven/>
     <mvc:resources mapping="/resources/**" location="classpath:/theme/"/>
-    <mvc:resources mapping="/profile/**" location="classpath:/${uploaded.files.location}/"/>
+    <mvc:resources mapping="/profile/**" location="classpath:${profile.photo.location}"/>
+    <mvc:resources mapping="/individual-plan/**" location="classpath:${uploaded.files.location}"/>
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/*"/>
