@@ -114,11 +114,11 @@
                             <i class="fa fa-files-o"></i> <span><spring:message code="top.menu.documents"/></span>
                         </a>
                     </li>
-                    <li <c:if test="${'top.menu.contacts' eq title}">class="active"</c:if>>
+                    <%--<li <c:if test="${'top.menu.contacts' eq title}">class="active"</c:if>>
                         <a href="/account/contactUs">
                             <i class="fa fa-envelope"></i> <span><spring:message code="top.menu.contacts"/></span>
                         </a>
-                    </li>
+                    </li>--%>
                     <li>
                         <a href="/logout">
                             <i class="fa fa-share"></i> <span><spring:message code="top.menu.exit"/></span>
