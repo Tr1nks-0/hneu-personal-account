@@ -162,6 +162,24 @@
             <artifactId>spring-social-google</artifactId>
             <version>1.0.0.RELEASE</version>
         </dependency>
+
+        <!-- Gmail -->
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.22.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-gmail</artifactId>
+            <version>v1-rev48-1.22.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client-jetty</artifactId>
+            <version>1.11.0-beta</version>
+        </dependency>
+
     </dependencies>
 
     <build>

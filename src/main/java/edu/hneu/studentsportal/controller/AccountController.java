@@ -2,12 +2,15 @@ package edu.hneu.studentsportal.controller;
 
 import static java.util.Objects.isNull;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.map.HashedMap;
@@ -30,6 +33,8 @@ import edu.hneu.studentsportal.pojo.Schedule;
 import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.TimeService;
 import edu.hneu.studentsportal.service.UserService;
+import edu.hneu.studentsportal.service.impl.DefaultEmailService;
+import edu.hneu.studentsportal.service.impl.GmailService;
 
 @Controller
 @RequestMapping("/account")
@@ -41,6 +46,10 @@ public class AccountController {
     private TimeService timeService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private GmailService gmailService;
+    @Autowired
+    private DefaultEmailService emailService;
 
     @Value("${support.mail}")
     public String supportMail;
@@ -133,7 +142,15 @@ public class AccountController {
     }
 
     @RequestMapping("/sendEmail")
-    public String contactUs(@RequestParam final String message) {
+    public String contactUs(@RequestParam final String message, final HttpSession session, final Principal principal) throws MessagingException, IOException {
+        //@formatter:off
+        final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(
+                getProfile(session, principal).getEmail(), supportMail)
+                .setSubject("Кабінет студента | Спілкування з деканом")
+                .setText(message, false)
+                .build();
+        //@formatter:on
+        gmailService.api().users().messages().send("me", gmailService.convertToGmailMessage(mimeMessage)).execute();
         return "redirect:contactUs?success=true";
     }
 
@@ -141,4 +158,5 @@ public class AccountController {
     public String getGroupId(final HttpSession session) {
         return (String) session.getAttribute("groupId");
     }
+
 }

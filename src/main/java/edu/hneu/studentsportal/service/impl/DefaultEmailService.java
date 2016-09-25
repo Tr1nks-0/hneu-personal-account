@@ -36,7 +36,7 @@ public class DefaultEmailService implements EmailService {
         return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, velocityTemplate, UTF_8, model);
     }
 
-    class MimeMessageBuilder {
+    public class MimeMessageBuilder {
 
         private final String from;
         private final String to;
