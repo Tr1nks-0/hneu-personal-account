@@ -37,6 +37,7 @@ public class DefaultEmailService implements EmailService {
     }
 
     class MimeMessageBuilder {
+
         private final String from;
         private final String to;
         private String subject;

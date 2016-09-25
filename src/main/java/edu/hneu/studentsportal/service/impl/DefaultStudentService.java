@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.service.impl;
 
-
 import static java.util.Objects.nonNull;
 
 import java.io.File;
@@ -17,7 +16,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
@@ -69,8 +67,6 @@ public class DefaultStudentService implements StudentService {
     @Autowired
     private GroupDao groupDao;
     @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
     private DefaultEmailService emailService;
 
     @Value("${support.mail}")
@@ -115,7 +111,7 @@ public class DefaultStudentService implements StudentService {
 
     private StudentProfile getStudentProfile(final Map.Entry<String, Map<String, String>> studentScore) {
         final String[] keys = studentScore.getKey().split("\\$");
-        if(keys.length == 2) {
+        if (keys.length == 2) {
             final String subKey = keys[0];
             final String groupCode = keys[1];
             return findStudentProfile(subKey, groupCode);
@@ -145,10 +141,7 @@ public class DefaultStudentService implements StudentService {
     }
 
     private Discipline getEmptyDiscipline(final List<Discipline> disciplines) {
-        return disciplines.stream()
-                .filter(discipline -> StringUtils.isEmpty(discipline.getLabel()))
-                .findFirst()
-                .orElse(new Discipline());
+        return disciplines.stream().filter(discipline -> StringUtils.isEmpty(discipline.getLabel())).findFirst().orElse(new Discipline());
     }
 
     private Optional<Semester> findSemesterForLabel(final StudentProfile studentProfile, final String semesterId) {
@@ -173,8 +166,8 @@ public class DefaultStudentService implements StudentService {
     private boolean isAppropriateDisciplineName(final String discipline, final String total) {
         final int levenshteinDistance = StringUtils.getLevenshteinDistance(discipline, total);
         final double antiSimilarityCoefficient = levenshteinDistance * 1.0 / Math.max(discipline.length(), total.length());
-        return antiSimilarityCoefficient < MIN_SIMILARITY_COEFFICIENT && total.startsWith(discipline.substring(0, PREFIX_LENGTH))
-                || total.startsWith(discipline.substring(0, discipline.length() / 3));
+        return antiSimilarityCoefficient < MIN_SIMILARITY_COEFFICIENT && total.startsWith(discipline.substring(0, PREFIX_LENGTH)) ||
+                total.startsWith(discipline.substring(0, discipline.length() / 3));
     }
 
     @Override
@@ -189,7 +182,6 @@ public class DefaultStudentService implements StudentService {
             final User user = new User();
             user.setId(studentEmail);
             studentProfile.setEmail(studentEmail);
-            //user.setPassword("0000");
             final String password = UUID.randomUUID().toString().substring(0, 8);
             user.setPassword(password);
             studentProfile.setPassword(password);
@@ -210,12 +202,11 @@ public class DefaultStudentService implements StudentService {
     public void sendEmailAfterProfileCreation(final StudentProfile studentProfile) {
         try {
             //// TODO: 27.06.16 Remove comments
-            //setTo(studentProfile.getId());
+            // setTo(studentProfile.getId());
             final Map<String, Object> modelForVelocity = ImmutableMap.of("password", studentProfile.getPassword(), "name", studentProfile.getName());
             final MimeMessage mimeMessage = emailService.new MimeMessageBuilder("oleksandr.rozdolskyi@epam.com", supportMail)
                     .setSubject("Кабінет студента | Пароль для входу")
-                    .setText(emailService.createHtmlFromVelocityTemplate(SEND_PASSWORD_VM_TEMPLATE, modelForVelocity), true)
-                    .build();
+                    .setText(emailService.createHtmlFromVelocityTemplate(SEND_PASSWORD_VM_TEMPLATE, modelForVelocity), true).build();
             emailService.send(mimeMessage);
         } catch (final RuntimeException e) {
             LOG.warn(e);
@@ -225,13 +216,10 @@ public class DefaultStudentService implements StudentService {
     @Override
     public void sendEmailAfterProfileUpdating(final StudentProfile studentProfile) {
         try {
-            //// TODO: 27.06.16 Remove comments
-            //setTo(studentProfile.getId());
             final Map<String, Object> modelForVelocity = ImmutableMap.of("message", "Ваш профіль був оновлений. Перейдійть у кабінет для перегляду.");
-            final MimeMessage mimeMessage = emailService.new MimeMessageBuilder("oleksandr.rozdolskyi@epam.com", supportMail)
+            final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(supportMail, studentProfile.getEmail())
                     .setSubject("Кабінет студента | Зміни в профілі")
-                    .setText(emailService.createHtmlFromVelocityTemplate(SEND_PROFILE_WAS_CHANGED_VM_TEMPLATE, modelForVelocity), true)
-                    .build();
+                    .setText(emailService.createHtmlFromVelocityTemplate(SEND_PROFILE_WAS_CHANGED_VM_TEMPLATE, modelForVelocity), true).build();
             emailService.send(mimeMessage);
         } catch (final RuntimeException e) {
             LOG.warn(e);

@@ -1,5 +1,5 @@
 .user-panel {
-    height: 150px;
+    height: 165px;
 }
 
 .image {
@@ -50,6 +50,10 @@
 
 .navbar-nav>.user-menu>.dropdown-menu>li.user-header {
     min-height: 200px;
+}
+
+.sidebar-menu, .main-sidebar .user-panel, .sidebar-menu > li.header {
+    white-space: normal;
 }
 
 @media (min-width: 768px) {

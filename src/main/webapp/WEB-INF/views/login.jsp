@@ -12,6 +12,14 @@
 <body>
 <div class="top-content mask">
     <div class="inner-bg">
+
+        <div class="container">
+            <div class="row">
+                <div class="span14 columns offset2">
+
+                </div>
+            </div>
+        </div>
         <div class="container">
             <div class="row">
                 <div class="hidden-xs col-sm-8 col-sm-offset-2 text text-center">
@@ -23,11 +31,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 form-box">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-4 form-box">
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title"><spring:message code="form.login.label.login"/></h3><br>
-                            <spring:message code="form.login.label.login.description"/>
                         </div>
                         <c:if test="${error}">
                             <div id="login-alert" class="alert no-border alert-danger col-sm-12">
@@ -35,25 +42,14 @@
                             </div>
                             <br class="visible-lg"/>
                         </c:if>
-                        <form name='loginForm' action="<c:url value='/j_spring_security_check' />" method='POST'>
-                            <div class="box-body">
-                                <div class="form-group">
-                                    <input id="login-username" type="text" class="form-username form-control"
-                                           id="form-username" name="username" value=""
-                                           placeholder="<spring:message code="form.login.label.email"/>"/>
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-password form-control"
-                                           id="form-password" name="password"
-                                           placeholder="<spring:message code="form.login.label.password"/>">
-                                </div>
+                            <div class="box-body text-center">
+                                <spring:message code="form.login.label.login.description"/>
                             </div>
                             <div class="box-footer">
-                                <button type="submit" style="width:100%" class="btn btn-primary">
-                                    <spring:message code="form.login.label.login"/>
-                                </button>
+                                <a href="/connect/google" class="btn btn-block btn-social btn-google">
+                                    <span class="fa fa-google"></span> Sign in with Google
+                                </a>
                             </div>
-                        </form>
                     </div>
                 </div>
             </div>
