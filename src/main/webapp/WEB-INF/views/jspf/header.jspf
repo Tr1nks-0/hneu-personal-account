@@ -85,7 +85,7 @@
                         <a href="/account">
                             <i class="fa fa-home "></i> <span><spring:message code="top.menu.home"/></span>
                             <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
+                                <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
