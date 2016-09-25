@@ -11,7 +11,7 @@ google:
     clientSecret: MXEPao9tGhk8l5fkTZ5zsqVH
     accessTokenUri: https://www.googleapis.com/oauth2/v3/token
     userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
-    scope: email
+    scope: email, https://www.googleapis.com/auth/gmail.send
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://www.googleapis.com/plus/v1/people/me

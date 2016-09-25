@@ -144,13 +144,14 @@ public class AccountController {
     @RequestMapping("/sendEmail")
     public String contactUs(@RequestParam final String message, final HttpSession session, final Principal principal) throws MessagingException, IOException {
         //@formatter:off
+        final String userEmail = getProfile(session, principal).getEmail();
         final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(
-                getProfile(session, principal).getEmail(), supportMail)
+                userEmail, supportMail)
                 .setSubject("Кабінет студента | Спілкування з деканом")
                 .setText(message, false)
                 .build();
         //@formatter:on
-        gmailService.api().users().messages().send("me", gmailService.convertToGmailMessage(mimeMessage)).execute();
+        gmailService.apiForUser(userEmail).users().messages().send(userEmail, gmailService.convertToGmailMessage(mimeMessage)).execute();
         return "redirect:contactUs?success=true";
     }
 

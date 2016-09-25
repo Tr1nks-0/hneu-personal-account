@@ -34,6 +34,7 @@ public class GmailService {
     private static final JacksonFactory JACKSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static FileDataStoreFactory DATA_STORE_FACTORY;
     private static HttpTransport HTTP_TRANSPORT;
+
     {
         try {
             HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
@@ -43,7 +44,7 @@ public class GmailService {
         }
     }
 
-    public Credential authorize() {
+    public Credential authorize(final String userEmail) {
         try {
             final InputStream applicationSchemaStream = this.getClass().getResourceAsStream("/client_secret.json");
             final GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JACKSON_FACTORY, new InputStreamReader(applicationSchemaStream));
@@ -55,15 +56,15 @@ public class GmailService {
                     .build();
             //@formatter:on
             final LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
-            return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("me");
+            return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize(userEmail);
         } catch (final Exception e) {
             throw new RuntimeException("Cannot properly authorize the user.", e);
         }
     }
 
 
-    public Gmail api() {
-        final Credential credential = authorize();
+    public Gmail apiForUser(final String userEmail) {
+        final Credential credential = authorize(userEmail);
         return new Gmail.Builder(HTTP_TRANSPORT, JACKSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
     }
 
