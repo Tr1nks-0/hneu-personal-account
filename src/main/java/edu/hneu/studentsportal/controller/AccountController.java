@@ -151,7 +151,7 @@ public class AccountController {
                 .setText(message, false)
                 .build();
         //@formatter:on
-        gmailService.apiForUser(userEmail).users().messages().send(userEmail, gmailService.convertToGmailMessage(mimeMessage)).execute();
+        gmailService.api().users().messages().send(userEmail, gmailService.convertToGmailMessage(mimeMessage)).execute();
         return "redirect:contactUs?success=true";
     }
 

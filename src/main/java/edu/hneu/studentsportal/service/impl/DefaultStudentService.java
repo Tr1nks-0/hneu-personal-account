@@ -201,10 +201,8 @@ public class DefaultStudentService implements StudentService {
     @Override
     public void sendEmailAfterProfileCreation(final StudentProfile studentProfile) {
         try {
-            //// TODO: 27.06.16 Remove comments
-            // setTo(studentProfile.getId());
             final Map<String, Object> modelForVelocity = ImmutableMap.of("password", studentProfile.getPassword(), "name", studentProfile.getName());
-            final MimeMessage mimeMessage = emailService.new MimeMessageBuilder("oleksandr.rozdolskyi@epam.com", supportMail)
+            final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(supportMail, studentProfile.getEmail())
                     .setSubject("Кабінет студента | Пароль для входу")
                     .setText(emailService.createHtmlFromVelocityTemplate(SEND_PASSWORD_VM_TEMPLATE, modelForVelocity), true).build();
             emailService.send(mimeMessage);
