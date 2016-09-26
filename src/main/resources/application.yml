@@ -16,6 +16,3 @@ google:
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://www.googleapis.com/plus/v1/people/me
-logging:
-  level:
-    org.springframework.security: DEBUG
