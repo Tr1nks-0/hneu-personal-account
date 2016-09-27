@@ -146,7 +146,7 @@ public class AccountController {
         //@formatter:off
         final String userEmail = getProfile(session, principal).getEmail();
         final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(
-                userEmail, supportMail)
+                userEmail, "dekanstei@gmail.com")
                 .setSubject("Кабінет студента | Спілкування з деканом")
                 .setText(message, false)
                 .build();
