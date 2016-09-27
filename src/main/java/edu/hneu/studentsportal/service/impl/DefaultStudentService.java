@@ -180,8 +180,8 @@ public class DefaultStudentService implements StudentService {
         final String studentEmail = getStudentEmail(studentProfile);
         if (StringUtils.isNotBlank(studentEmail)) {
             final User user = new User();
-            user.setId(studentEmail);
-            studentProfile.setEmail(studentEmail);
+            user.setId(studentEmail.toLowerCase());
+            studentProfile.setEmail(studentEmail.toLowerCase());
             final String password = UUID.randomUUID().toString().substring(0, 8);
             user.setPassword(password);
             studentProfile.setPassword(password);
