@@ -64,7 +64,7 @@
 
             <div class="col-md-2 col-sm-12 col-xs-12">
                 <div class="info-box info-box-no-content">
-                    <a class="info-box-icon bg-red" href="${profile.filePath}">
+                    <a class="info-box-icon bg-red" href="${profile.filePath}" download>
                         <div class="img"><i class="ion-ios-download-outline"></i></div>
                         <div class="text"><span>Завантажити план</span></div>
                     </a>

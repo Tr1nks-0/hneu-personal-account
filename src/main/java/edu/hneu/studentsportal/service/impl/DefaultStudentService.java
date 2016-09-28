@@ -45,7 +45,7 @@ public class DefaultStudentService implements StudentService {
     private static final double MIN_SIMILARITY_COEFFICIENT = 0.6;
     private static final Map<String, String> semesters = new HashMap<>();
     private static final String GET_STUDENT_EMAIL_URL = "/EmailToOutController?name=%s&surname=%s&groupId=%s";
-    private static final String SEND_PASSWORD_VM_TEMPLATE = "velocity/sendProfileWasCreatedMessageWithPassword.vm";
+    private static final String SEND_PASSWORD_VM_TEMPLATE = "velocity/sendProfileWasCreated.vm";
     private static final String SEND_PROFILE_WAS_CHANGED_VM_TEMPLATE = "velocity/sendProfileWasChangedMessage.vm";
 
     static {
@@ -203,7 +203,7 @@ public class DefaultStudentService implements StudentService {
         try {
             final Map<String, Object> modelForVelocity = ImmutableMap.of("password", studentProfile.getPassword(), "name", studentProfile.getName());
             final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(supportMail, studentProfile.getEmail())
-                    .setSubject("Кабінет студента | Пароль для входу")
+                    .setSubject("Кабінет студента | Вхід")
                     .setText(emailService.createHtmlFromVelocityTemplate(SEND_PASSWORD_VM_TEMPLATE, modelForVelocity), true).build();
             emailService.send(mimeMessage);
         } catch (final RuntimeException e) {
