@@ -1,5 +1,6 @@
 package edu.hneu.studentsportal.model;
 
+import edu.hneu.studentsportal.model.type.DisciplineType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,6 +13,7 @@ public class Discipline {
     private String credits;
     private String controlForm;
     private String mark;
+    private DisciplineType type;
 
     public String getId() {
         return id;
@@ -51,5 +53,13 @@ public class Discipline {
 
     public void setMark(String mark) {
         this.mark = mark;
+    }
+
+    public DisciplineType getType() {
+        return type;
+    }
+
+    public void setType(DisciplineType type) {
+        this.type = type;
     }
 }

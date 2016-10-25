@@ -5,6 +5,7 @@ import edu.hneu.studentsportal.model.Course;
 import edu.hneu.studentsportal.model.Discipline;
 import edu.hneu.studentsportal.model.Semester;
 import edu.hneu.studentsportal.model.StudentProfile;
+import edu.hneu.studentsportal.model.type.DisciplineType;
 import edu.hneu.studentsportal.service.FileService;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.PictureData;
@@ -110,7 +111,17 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
 
     private Discipline getDiscipline(int rowNumber, int collNumber) {
         Discipline discipline = new Discipline();
-        discipline.setLabel(getStringCellValue(rowNumber, collNumber));
+        String disciplineName = getStringCellValue(rowNumber, collNumber);
+        if("МАГ-МАЙНОР".equals(disciplineName))
+            discipline.setType(DisciplineType.MAGMAYNOR);
+        else if("МАЙНОР".equals(disciplineName))
+            discipline.setType(DisciplineType.MAYNOR);
+        else if("МЕЙДЖОР".equals(disciplineName))
+            discipline.setType(DisciplineType.MAJOR);
+        else {
+            discipline.setType(DisciplineType.REGULAR);
+            discipline.setLabel(disciplineName);
+        }
         discipline.setCredits(getStringCellValue(rowNumber, collNumber + 1));
         discipline.setControlForm(getStringCellValue(rowNumber, collNumber + 2));
         return discipline;
