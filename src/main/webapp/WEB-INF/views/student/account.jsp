@@ -12,62 +12,73 @@
             <small><spring:message code="form.label.student.profile.head.second"/></small>
         </h1>
         <div class="content">
-
-            <div class="col-md-2 col-sm-12 col-xs-12">
-                <div class="info-box info-box-no-content">
-                    <form method="post" id="studentForm" name="studentForm" action="http://services.ksue.edu.ua:8081/student/report" target="marks-window">
-                        <input type="hidden" size="15" name="lastName" value="${profile.surname}">
-                        <input type="hidden" size="15" name="code" value="${profile.passportNumber}">
-                    </form>
-                    <a class="info-box-icon bg-light-blue current-marks">
-                        <div class="img"><i class="ion ion-podium"></i></div>
-                        <div class="text"><span>Поточні оцінки</span></div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-4 col-sm-12 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-green"><i class="ion ion-university"></i></span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">
-                            <spring:message code="form.label.student.profile.faculty"/> <c:out value="${profile.faculty}"/>
-                        </span>
-                        <span class="info-box-text">
-                            <spring:message code="form.label.student.profile.incomeYear"/> <c:out value="${profile.incomeYear}"/>
-                        </span>
-                        <span class="info-box-text">
-                            <spring:message code="form.label.student.profile.group"/> <c:out value="${profile.group}"/>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 col-sm-12 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-yellow"><i class="ion ion-ios-telephone-outline"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">
-                            <spring:message code="form.label.student.profile.contacts"/>
-                        </span>
-                        <div>
-                            <c:forEach items="${profile.contactInfo}" varStatus="i" var="contact">
-                                <span class="info-box-number info-box-cropped">
-                                    <small><c:out value="${contact}"/></small>
-                                </span>
-                            </c:forEach>
+            <div class="row student-info">
+                <div>
+                    <div class="col-md-6 col-sm-12 col-xs-12 border-bottom border-right">
+                        <span class="info-box-icon bg-white"><i class="ion-ios-book-outline"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">
+                                <spring:message code="form.label.student.profile.faculty"/> <c:out value="${profile.faculty}"/>
+                            </span>
+                            <span class="info-box-text">
+                                <spring:message code="form.label.student.profile.incomeYear"/> <c:out value="${profile.incomeYear}"/>
+                            </span>
+                            <span class="info-box-text">
+                                <spring:message code="form.label.student.profile.group"/> <c:out value="${profile.group}"/>
+                            </span>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-md-2 col-sm-12 col-xs-12">
-                <div class="info-box info-box-no-content">
-                    <a class="info-box-icon bg-red" href="${profile.filePath}" download>
-                        <div class="img"><i class="ion-ios-download-outline"></i></div>
-                        <div class="text"><span>Завантажити план</span></div>
-                    </a>
+                    <div class="col-md-6 col-sm-12 col-xs-12 border-bottom">
+                        <span class="info-box-icon bg-white"><i class="ion ion-ios-telephone-outline"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">
+                                <spring:message code="form.label.student.profile.contacts"/>
+                            </span>
+                            <div>
+                                <c:forEach items="${profile.contactInfo}" varStatus="i" var="contact">
+                                    <span class="info-box-number info-box-cropped">
+                                        <small><c:out value="${contact}"/></small>
+                                    </span>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 hidden-xs hidden-sm info-box-no-content border-right">
+                        <form method="post" id="studentForm" name="studentForm" action="http://services.ksue.edu.ua:8081/student/report" target="marks-window">
+                            <input type="hidden" size="15" name="lastName" value="${profile.surname}">
+                            <input type="hidden" size="15" name="code" value="${profile.passportNumber}">
+                        </form>
+                        <a class="info-box-icon bg-white current-marks border-bottom">
+                            <div class="img"><i class="ion ion-ios-analytics-outline"></i></div>
+                            <div class="text"><span>Поточні оцінки</span></div>
+                        </a>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 hidden-md hidden-lg border-right current-marks border-bottom">
+                        <span class="info-box-icon bg-white"><i class="ion ion-ios-analytics-outline"></i></span>
+                        <div class="info-box-content">
+                            <a class="info-box-text info-box-text-center bg-white">
+                                <span>Поточні оцінки</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 hidden-xs hidden-sm info-box-no-content border-right">
+                        <a class="info-box-icon bg-white" href="${profile.filePath}" download>
+                            <div class="img"><i class="ion-ios-download-outline"></i></div>
+                            <div class="text"><span>Завантажити план</span></div>
+                        </a>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 hidden-md hidden-lg border-right">
+                        <a class="info-box-icon bg-white" href="${profile.filePath}" download>
+                            <span class="info-box-icon bg-white"><i class="ion-ios-download-outline"></i></span>
+                        </a>
+                        <div class="info-box-content">
+                            <a class="info-box-text info-box-text-center bg-white" href="${profile.filePath}" download>
+                                Завантажити план
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4 info-box-no-content">
+                    </div>
                 </div>
             </div>
 

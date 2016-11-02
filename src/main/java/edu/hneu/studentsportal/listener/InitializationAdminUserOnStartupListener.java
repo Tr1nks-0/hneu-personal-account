@@ -15,7 +15,7 @@ public class InitializationAdminUserOnStartupListener implements ApplicationList
 
     private static final Logger LOG = Logger.getLogger(InitializationAdminUserOnStartupListener.class.getName());
 
-    private static final String ADMIN_USER_ID = "oleksandr.rozdolskyi2012@gmail.com";
+    private static final String ADMIN_USER_ID = "lkhneu@hneu.net";
     private static final int ADMIN_ROLE = 1;
 
     @Autowired
