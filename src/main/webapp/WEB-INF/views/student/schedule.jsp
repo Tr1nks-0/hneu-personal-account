@@ -79,13 +79,11 @@
 
                                                                     <span class="info-tag"><i class="fa fa-graduation-cap"></i> ${pair.teacher.displayName}</span><br>
                                                                     <span class="info-tag"><i class="fa fa-map-marker"></i> ${pair.room.shortName}</span><br>
-                                                                    <div class="col-md-6">
-                                                                        <c:forEach items="${scheduleElement.groups.group}" var="group">
-                                                                            <c:if test="${group.main eq 'true'}">
-                                                                                <span class="info-tag"><i class="fa fa-group"></i> ${group.displayName}</span><br>
-                                                                            </c:if>
-                                                                        </c:forEach>
-                                                                    </div>
+                                                                    <c:forEach items="${pair.groups.group}" var="group">
+                                                                        <c:if test="${group.main eq 'true'}">
+                                                                            <span class="info-tag"><i class="fa fa-group"></i> ${group.displayName}</span><br>
+                                                                        </c:if>
+                                                                    </c:forEach>
                                                                     <div class="type"><span class="label label-info">${pair.type.value}</span></div>
                                                                 </div>
                                                             </td>
