@@ -1,12 +1,17 @@
 package edu.hneu.studentsportal.parser;
 
 
-import edu.hneu.studentsportal.model.Course;
-import edu.hneu.studentsportal.model.Discipline;
-import edu.hneu.studentsportal.model.Semester;
-import edu.hneu.studentsportal.model.StudentProfile;
-import edu.hneu.studentsportal.model.type.DisciplineType;
-import edu.hneu.studentsportal.service.FileService;
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import javafx.util.Pair;
+
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +19,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang.BooleanUtils.isFalse;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import edu.hneu.studentsportal.model.Course;
+import edu.hneu.studentsportal.model.Discipline;
+import edu.hneu.studentsportal.model.Semester;
+import edu.hneu.studentsportal.model.StudentProfile;
+import edu.hneu.studentsportal.model.type.DisciplineType;
+import edu.hneu.studentsportal.service.FileService;
 
 @Component
 @Scope("prototype")
@@ -42,13 +45,13 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
 
     @Override
     public StudentProfile extractModel() {
-        String header = getStringCellValue(3, 0);
+        final String header = getStringCellValue(3, 0);
         if (!header.contains("ІНДИВІДУАЛЬНИЙ НАВЧАЛЬНИЙ ПЛАН")) {
             LOG.info("File is not valid. Header :" + header);
             throw new RuntimeException("Student profile is not valid");
         }
         rowNumber = 5;
-        StudentProfile studentProfile = new StudentProfile();
+        final StudentProfile studentProfile = new StudentProfile();
         studentProfile.setSurname(getStringCellValue(rowNumber, 2));
         studentProfile.setName(getStringCellValue(++rowNumber, 2));
         studentProfile.setPassportNumber(getStringCellValue(++rowNumber, 2).split("\\.")[0]);
@@ -63,13 +66,13 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         return studentProfile;
     }
 
-    private String getId(StudentProfile studentProfile) {
-        String id = studentProfile.getSurname() + studentProfile.getName() + studentProfile.getGroup();
+    private String getId(final StudentProfile studentProfile) {
+        final String id = studentProfile.getSurname() + studentProfile.getName() + studentProfile.getGroup();
         return id.replace(" ", "").toLowerCase().trim();
     }
 
     private List<Course> getCourses() {
-        List<Course> courses = new ArrayList<>();
+        final List<Course> courses = new ArrayList<>();
         while (++rowNumber < 100) {
             if (isCourseLabel(rowNumber))
                 courses.add(getCourse(rowNumber));
@@ -80,22 +83,22 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
     }
 
     private Course getCourse(Integer rowNumber) {
-        Course course = new Course();
+        final Course course = new Course();
         course.setLabel(getStringCellValue(rowNumber, 0));
         course.setSemesters(getSemesters(++rowNumber));
         return course;
     }
 
-    private ArrayList<Semester> getSemesters(Integer rowNumber) {
-        Semester semesterLeft = getSemester(rowNumber, LEFT_SEMESTER_COLL);
-        Semester semesterRight = getSemester(rowNumber, RIGHT_SEMESTER_COLL);
+    private ArrayList<Semester> getSemesters(final Integer rowNumber) {
+        final Semester semesterLeft = getSemester(rowNumber, LEFT_SEMESTER_COLL);
+        final Semester semesterRight = getSemester(rowNumber, RIGHT_SEMESTER_COLL);
         return new ArrayList<>(asList(semesterLeft, semesterRight));
     }
 
-    private Semester getSemester(int rowNumber, Integer collNumber) {
-        Semester semester = new Semester();
+    private Semester getSemester(int rowNumber, final Integer collNumber) {
+        final Semester semester = new Semester();
         semester.setLabel(getStringCellValue(rowNumber, collNumber));
-        List<Discipline> disciplines = new ArrayList<>();
+        final List<Discipline> disciplines = new ArrayList<>();
         rowNumber += 2;
         while (isNotSemesterEnd(rowNumber, collNumber + 1)) {
             if (isNotEmpty(getStringCellValue(rowNumber, collNumber + 1)))
@@ -109,9 +112,9 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         return semester;
     }
 
-    private Discipline getDiscipline(int rowNumber, int collNumber) {
-        Discipline discipline = new Discipline();
-        String disciplineName = getStringCellValue(rowNumber, collNumber);
+    private Discipline getDiscipline(final int rowNumber, final int collNumber) {
+        final Discipline discipline = new Discipline();
+        final String disciplineName = getStringCellValue(rowNumber, collNumber);
         if("МАГ-МАЙНОР".equals(disciplineName))
             discipline.setType(DisciplineType.MAGMAYNOR);
         else if("МАЙНОР".equals(disciplineName))
@@ -124,11 +127,12 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         }
         discipline.setCredits(getStringCellValue(rowNumber, collNumber + 1));
         discipline.setControlForm(getStringCellValue(rowNumber, collNumber + 2));
+        discipline.setMarkPosition(new Pair<>(rowNumber, collNumber + 3));
         return discipline;
     }
 
     private List<String> getContactInfo() {
-        List<String> contacts = new ArrayList<>();
+        final List<String> contacts = new ArrayList<>();
         while (++rowNumber < 100 && isNotSpecialityLabel(rowNumber)) {
             contacts.add(getStringCellValue(rowNumber, 2));
         }
@@ -137,38 +141,38 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         return contacts;
     }
 
-    private boolean isNotSpecialityLabel(Integer rowNumber) {
+    private boolean isNotSpecialityLabel(final Integer rowNumber) {
         return isFalse(getStringCellValue(rowNumber, 0).contains("НАПРЯМ ПІДГОТОВКИ"));
     }
 
-    public boolean isCourseLabel(Integer rowNumber) {
+    public boolean isCourseLabel(final Integer rowNumber) {
         return getStringCellValue(rowNumber, 0).contains("КУРС");
     }
 
-    public boolean isFileEnd(Integer rowNumber) {
+    public boolean isFileEnd(final Integer rowNumber) {
         return getStringCellValue(rowNumber, 1).contains("Декан факультету");
     }
 
-    public boolean isNotSemesterEnd(Integer semesterRow, int cellrowNumber) {
+    public boolean isNotSemesterEnd(final Integer semesterRow, final int cellrowNumber) {
         return isFalse(getStringCellValue(semesterRow, cellrowNumber).contains("ВСЬОГО ЗА"));
     }
 
-    private String getProfileImage(StudentProfile studentProfile) {
-        List<? extends PictureData> allPictures = workbook.getAllPictures();
+    private String getProfileImage(final StudentProfile studentProfile) {
+        final List<? extends PictureData> allPictures = workbook.getAllPictures();
         if(allPictures.isEmpty())
             return null;
         try {
-            PictureData profilePhoto = allPictures.get(allPictures.size() - 1);
-            String profilePhotoFileName = studentProfile.getId() + "/" + "photo." + profilePhoto.suggestFileExtension();
-            String classPath = this.getClass().getResource("/").getPath();
-            String filePath = classPath + profilePhotoLocation + "/" +profilePhotoFileName;
-            File file = new File(filePath);
+            final PictureData profilePhoto = allPictures.get(allPictures.size() - 1);
+            final String profilePhotoFileName = studentProfile.getId() + "/" + "photo." + profilePhoto.suggestFileExtension();
+            final String classPath = this.getClass().getResource("/").getPath();
+            final String filePath = classPath + profilePhotoLocation + "/" +profilePhotoFileName;
+            final File file = new File(filePath);
             fileService.createDirectoryIfNotExist(file.getParentFile());
-            FileOutputStream out = new FileOutputStream(file);
+            final FileOutputStream out = new FileOutputStream(file);
             out.write(profilePhoto.getData());
             out.close();
             return profilePhotoFileName;
-        } catch (java.io.IOException e) {
+        } catch (final java.io.IOException e) {
             e.printStackTrace();
         }
         return null;

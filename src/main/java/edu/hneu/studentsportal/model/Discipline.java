@@ -1,8 +1,11 @@
 package edu.hneu.studentsportal.model;
 
-import edu.hneu.studentsportal.model.type.DisciplineType;
+import javafx.util.Pair;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import edu.hneu.studentsportal.model.type.DisciplineType;
 
 @Document(collection = "Discipline")
 public class Discipline {
@@ -14,12 +17,13 @@ public class Discipline {
     private String controlForm;
     private String mark;
     private DisciplineType type;
+    private Pair<Integer, Integer> markPosition;
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -27,7 +31,7 @@ public class Discipline {
         return label;
     }
 
-    public void setLabel(String label) {
+    public void setLabel(final String label) {
         this.label = label;
     }
 
@@ -35,7 +39,7 @@ public class Discipline {
         return credits;
     }
 
-    public void setCredits(String credits) {
+    public void setCredits(final String credits) {
         this.credits = credits;
     }
 
@@ -43,7 +47,7 @@ public class Discipline {
         return controlForm;
     }
 
-    public void setControlForm(String controlForm) {
+    public void setControlForm(final String controlForm) {
         this.controlForm = controlForm;
     }
 
@@ -51,7 +55,7 @@ public class Discipline {
         return mark;
     }
 
-    public void setMark(String mark) {
+    public void setMark(final String mark) {
         this.mark = mark;
     }
 
@@ -59,7 +63,15 @@ public class Discipline {
         return type;
     }
 
-    public void setType(DisciplineType type) {
+    public void setType(final DisciplineType type) {
         this.type = type;
+    }
+
+    public Pair<Integer, Integer> getMarkPosition() {
+        return markPosition;
+    }
+
+    public void setMarkPosition(final Pair<Integer, Integer> markPosition) {
+        this.markPosition = markPosition;
     }
 }
