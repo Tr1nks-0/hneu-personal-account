@@ -1,7 +1,5 @@
 package edu.hneu.studentsportal.model;
 
-import javafx.util.Pair;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,7 +15,7 @@ public class Discipline {
     private String controlForm;
     private String mark;
     private DisciplineType type;
-    private Pair<Integer, Integer> markPosition;
+    private Integer rowInExcelFile;
 
     public String getId() {
         return id;
@@ -66,12 +64,12 @@ public class Discipline {
     public void setType(final DisciplineType type) {
         this.type = type;
     }
-
-    public Pair<Integer, Integer> getMarkPosition() {
-        return markPosition;
+    
+    public Integer getRowInExcelFile() {
+        return rowInExcelFile;
     }
 
-    public void setMarkPosition(final Pair<Integer, Integer> markPosition) {
-        this.markPosition = markPosition;
+    public void setRowInExcelFile(final Integer rowInExcelFile) {
+        this.rowInExcelFile = rowInExcelFile;
     }
 }

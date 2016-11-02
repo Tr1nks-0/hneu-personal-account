@@ -10,8 +10,6 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.util.Pair;
-
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,7 +125,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         }
         discipline.setCredits(getStringCellValue(rowNumber, collNumber + 1));
         discipline.setControlForm(getStringCellValue(rowNumber, collNumber + 2));
-        discipline.setMarkPosition(new Pair<>(rowNumber, collNumber + 3));
+        discipline.setRowInExcelFile(rowNumber);
         return discipline;
     }
 
