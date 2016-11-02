@@ -68,7 +68,8 @@ public class DefaultStudentService implements StudentService {
     private GroupDao groupDao;
     @Autowired
     private DefaultEmailService emailService;
-
+    @Autowired
+    private GmailService gmailService;
     @Value("${support.mail}")
     public String supportMail;
     @Value("${emails.integration.service.url}")
@@ -201,12 +202,16 @@ public class DefaultStudentService implements StudentService {
     @Override
     public void sendEmailAfterProfileCreation(final StudentProfile studentProfile) {
         try {
-            final Map<String, Object> modelForVelocity = ImmutableMap.of("password", studentProfile.getPassword(), "name", studentProfile.getName());
-            final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(supportMail, studentProfile.getEmail())
+            final Map<String, Object> modelForVelocity = ImmutableMap.of("name", studentProfile.getName());
+            //@formatter:off
+            final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(
+                    supportMail, studentProfile.getEmail())
                     .setSubject("Кабінет студента | Вхід")
-                    .setText(emailService.createHtmlFromVelocityTemplate(SEND_PASSWORD_VM_TEMPLATE, modelForVelocity), true).build();
-            emailService.send(mimeMessage);
-        } catch (final RuntimeException e) {
+                    .setText(emailService.createHtmlFromVelocityTemplate(SEND_PASSWORD_VM_TEMPLATE, modelForVelocity), true)
+                    .build();
+            //@formatter:on
+            gmailService.api().users().messages().send(supportMail, gmailService.convertToGmailMessage(mimeMessage)).execute();
+        } catch (final Exception e) {
             LOG.warn(e);
         }
     }
@@ -218,8 +223,8 @@ public class DefaultStudentService implements StudentService {
             final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(supportMail, studentProfile.getEmail())
                     .setSubject("Кабінет студента | Зміни в профілі")
                     .setText(emailService.createHtmlFromVelocityTemplate(SEND_PROFILE_WAS_CHANGED_VM_TEMPLATE, modelForVelocity), true).build();
-            emailService.send(mimeMessage);
-        } catch (final RuntimeException e) {
+            gmailService.api().users().messages().send(supportMail, gmailService.convertToGmailMessage(mimeMessage)).execute();
+        } catch (final Exception e) {
             LOG.warn(e);
         }
     }

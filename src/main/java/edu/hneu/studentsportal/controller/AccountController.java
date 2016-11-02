@@ -51,6 +51,8 @@ public class AccountController {
     @Autowired
     private DefaultEmailService emailService;
 
+    @Value("${decan.mail}")
+    public String decanMail;
     @Value("${support.mail}")
     public String supportMail;
     @Value("${schedule.url}")
@@ -146,7 +148,7 @@ public class AccountController {
         //@formatter:off
         final String userEmail = getProfile(session, principal).getEmail();
         final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(
-                userEmail, "dekanstei@gmail.com")
+                userEmail, decanMail)
                 .setSubject("Кабінет студента | Спілкування з деканом")
                 .setText(message, false)
                 .build();
