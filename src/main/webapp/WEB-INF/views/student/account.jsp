@@ -123,35 +123,37 @@
 
                                                     <tbody>
                                                         <c:forEach items="${semester.disciplines}" var="discipline">
-                                                            <tr>
-                                                                <td><c:out value="${discipline.label}"/></td>
-                                                                <td class="center hidden-xs"><c:out value="${discipline.credits}"/></td>
-                                                                <td class="center hidden-xs"><c:out value="${discipline.controlForm}"/></td>
-                                                                <td class="center">
-                                                                    <c:choose>
-                                                                        <c:when test="${discipline.mark ge '90' or discipline.mark eq 'з' }">
-                                                                            <button class="btn btn-success disabled">
-                                                                                <c:out value="${discipline.mark}"/>
-                                                                            </button>
-                                                                        </c:when>
-                                                                        <c:when test="${discipline.mark ge '74' and discipline.mark lt '90' }">
-                                                                            <button class="btn btn-default disabled">
-                                                                                <c:out value="${discipline.mark}"/>
-                                                                            </button>
-                                                                        </c:when>
-                                                                        <c:when test="${discipline.mark ge '60' and discipline.mark lt '74' }">
-                                                                            <button class="btn btn-warning disabled">
-                                                                                <c:out value="${discipline.mark}"/>
-                                                                            </button>
-                                                                        </c:when>
-                                                                        <c:when test="${(discipline.mark ge '0' and discipline.mark lt '60') or discipline.mark eq 'н'}">
-                                                                            <button class="btn btn-danger disabled">
-                                                                                <c:out value="${discipline.mark}"/>
-                                                                            </button>
-                                                                        </c:when>
-                                                                    </c:choose>
-                                                                </td>
-                                                            </tr>
+                                                            <c:if test="${not empty discipline.label}">
+                                                                <tr>
+                                                                    <td><c:out value="${discipline.label}"/></td>
+                                                                    <td class="center hidden-xs"><c:out value="${discipline.credits}"/></td>
+                                                                    <td class="center hidden-xs"><c:out value="${discipline.controlForm}"/></td>
+                                                                    <td class="center">
+                                                                        <c:choose>
+                                                                            <c:when test="${discipline.mark ge '90' or discipline.mark eq 'з' }">
+                                                                                <button class="btn btn-success disabled">
+                                                                                    <c:out value="${discipline.mark}"/>
+                                                                                </button>
+                                                                            </c:when>
+                                                                            <c:when test="${discipline.mark ge '74' and discipline.mark lt '90' }">
+                                                                                <button class="btn btn-default disabled">
+                                                                                    <c:out value="${discipline.mark}"/>
+                                                                                </button>
+                                                                            </c:when>
+                                                                            <c:when test="${discipline.mark ge '60' and discipline.mark lt '74' }">
+                                                                                <button class="btn btn-warning disabled">
+                                                                                    <c:out value="${discipline.mark}"/>
+                                                                                </button>
+                                                                            </c:when>
+                                                                            <c:when test="${(discipline.mark ge '0' and discipline.mark lt '60') or discipline.mark eq 'н'}">
+                                                                                <button class="btn btn-danger disabled">
+                                                                                    <c:out value="${discipline.mark}"/>
+                                                                                </button>
+                                                                            </c:when>
+                                                                        </c:choose>
+                                                                    </td>
+                                                                </tr>
+                                                            </c:if>
                                                         </c:forEach>
                                                     </tbody>
                                                 </table>
