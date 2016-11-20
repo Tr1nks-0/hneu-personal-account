@@ -6,7 +6,6 @@ import static java.util.Objects.nonNull;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Executors;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
@@ -16,7 +15,6 @@ import edu.hneu.studentsportal.model.*;
 import edu.hneu.studentsportal.model.type.DisciplineType;
 import edu.hneu.studentsportal.pojo.StudentDiscipline;
 import edu.hneu.studentsportal.pojo.StudentDisciplines;
-import org.apache.commons.codec.binary.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,6 +37,12 @@ import edu.hneu.studentsportal.service.StudentService;
 public class ManagementController {
 
     private static final Logger LOG = Logger.getLogger(ManagementController.class.getName());
+    private static final Comparator<StudentDiscipline> STUDENT_DISCIPLINE_COMPARATOR = (d1, d2) -> {
+        if (d1.getSurname().equals(d2.getSurname())) {
+            return d1.getName().compareTo(d2.getName());
+        }
+        return d1.getSurname().compareTo(d2.getSurname());
+    };
 
     @Autowired
     private StudentService studentService;
@@ -120,7 +124,9 @@ public class ManagementController {
                     .filter(userGroup -> userGroup.contains(group)).collect(Collectors.toSet()));
 
         }else {
-            model.addAttribute("groups", Lists.newArrayList());
+            model.addAttribute("groups",
+                    studentService.find().stream().map(StudentProfile::getGroup)
+                    .collect(Collectors.toSet()));
         }
         return "management/groupsList";
     }
@@ -141,44 +147,41 @@ public class ManagementController {
         model.addAttribute("group", group);
         model.addAttribute("course", course);
         model.addAttribute("semester", semester);
-        List<StudentDiscipline>  specialDisciplines = getCollect(group, --course, --semester);
-        Collections.sort(specialDisciplines, new Comparator<StudentDiscipline>() {
-            @Override
-            public int compare(StudentDiscipline d1, StudentDiscipline d2) {
-                if(d1.getSurname().equals(d2.getSurname())) {
-                    return d1.getName().compareTo(d2.getName());
-                }
-                return d1.getSurname().compareTo(d2.getSurname());
-            }
-        });
-
-        return new ModelAndView("management/specialDisciplines", "disciplines", new StudentDisciplines(specialDisciplines));
+        model.addAttribute("maynors", new StudentDisciplines(getSpecialDisciplines(group, --course, --semester, DisciplineType.MAYNOR)));
+        return new ModelAndView("management/specialDisciplines");
     }
 
     @RequestMapping(value = "/maynors/{group:.+}/{course}/{semester}", method = RequestMethod.POST)
     public String studentListForSpecialDisciplinesPost(@PathVariable String group, @PathVariable Integer course,
                                                        @PathVariable Integer semester, Model model,
                                                        @ModelAttribute StudentDisciplines disciplines) {
-        return null;
+        disciplines.getList().forEach(discipline -> {
+            StudentProfile studentProfile = studentService.findStudentProfileById(discipline.getStudentId());
+            Discipline studentDiscipline = studentProfile.getCourses().get(course)
+                    .getSemesters().get(semester)
+                    .getDisciplines().get(discipline.getNumber());
+            studentDiscipline.setLabel(discipline.getLabel());
+            studentDiscipline.setMark(discipline.getMark());
+            studentService.save(studentProfile);
+        });
+        return String.format("redirect:/groups/%s/%s/%s", group, course, semester);
     }
 
-    private List<StudentDiscipline> getCollect(@PathVariable String group, @PathVariable Integer course, @PathVariable Integer semester) {
-        return studentService.find().stream()
+    private List<StudentDiscipline> getSpecialDisciplines(String group, Integer course, Integer semester, DisciplineType type) {
+        List<StudentDiscipline> disciplines = studentService.find().stream()
                 .filter(student -> student.getGroup().contains(group))
                 .map(student -> {
                     Course courseModel = student.getCourses().get(course);
                     Semester semesterModel = courseModel.getSemesters().get(semester);
-                    List<StudentDiscipline> studentDisciplines = new ArrayList<>();
-                    for (int i = 0; i < semesterModel.getDisciplines().size(); i++) {
-                        Discipline discipline = semesterModel.getDisciplines().get(i);
-                        if(DisciplineType.MAYNOR.equals(discipline.getType())) {
-                            studentDisciplines.add(new StudentDiscipline(student.getName(), student.getSurname(), i, discipline));
-                        }
-                    }
-                    return studentDisciplines;
+                    return semesterModel.getDisciplines().stream()
+                            .filter(d -> type.equals(d.getType()))
+                            .map(d -> new StudentDiscipline(student.getId(), student.getName(), student.getSurname(), d))
+                            .collect(Collectors.toList());
                 })
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+        Collections.sort(disciplines, STUDENT_DISCIPLINE_COMPARATOR);
+        return disciplines;
     }
 
 

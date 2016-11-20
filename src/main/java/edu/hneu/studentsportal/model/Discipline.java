@@ -16,6 +16,7 @@ public class Discipline {
     protected String mark;
     protected DisciplineType type;
     protected Integer rowInExcelFile;
+    protected Integer number;
 
     public Integer getNumber() {
         return number;
@@ -24,8 +25,6 @@ public class Discipline {
     public void setNumber(Integer number) {
         this.number = number;
     }
-
-    protected Integer number;
 
     public String getId() {
         return id;

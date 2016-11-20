@@ -6,14 +6,14 @@ public class StudentDiscipline extends Discipline {
 
     private String name;
     private String surname;
-    private int number;
+    private String studentId;
 
     public StudentDiscipline() {}
 
-    public StudentDiscipline(String name, String surname, int number, Discipline discipline) {
+    public StudentDiscipline(String studentId, String name, String surname, Discipline discipline) {
         this.name = name;
+        this.studentId = studentId;
         this.surname = surname;
-        this.number = number;
         id = discipline.getId();
         label = discipline.getLabel();
         credits = discipline.getCredits();
@@ -37,5 +37,13 @@ public class StudentDiscipline extends Discipline {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
     }
 }

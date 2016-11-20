@@ -19,20 +19,22 @@
                         </button>
                     </div>
                 </div>
-                <form:form method="post" action="/management/maynors/${group}/${course}/${semester}" modelAttribute="disciplines">
+                <form:form method="post" action="/management/maynors/${group}/${course}/${semester}" modelAttribute="maynors">
                     <div class="box-body table-responsive">
-                        <c:if test="${not empty disciplines}">
+                        <c:if test="${not empty maynors}">
                             <table class="table table-hover no-margin">
-                                <c:forEach items="${disciplines.list}" var="discipline" varStatus="i">
+                                <c:forEach items="${maynors.list}" var="discipline" varStatus="i">
                                     <tr>
-                                        <td width="25%">${discipline.surname}</td>
-                                        <td width="25%">${discipline.name}</td>
-                                        <td width="50" class="text-center">
+                                        <td width="20%">${discipline.surname}</td>
+                                        <td width="20%">${discipline.name}</td>
+                                        <td width="50%" class="text-center">
                                             <form:input path="list[${i.index}].label"/>
                                         </td>
+                                        <td width="10%" class="text-center">
+                                            <form:input path="list[${i.index}].mark"/>
+                                        </td>
                                     </tr>
-                                    <form:hidden path="list[${i.index}].surname"/>
-                                    <form:hidden path="list[${i.index}].name"/>
+                                    <form:hidden path="list[${i.index}].studentId"/>
                                 </c:forEach>
                             </table>
                             <button type="submit" class="btn btn-danger col-md-12 text-center">
