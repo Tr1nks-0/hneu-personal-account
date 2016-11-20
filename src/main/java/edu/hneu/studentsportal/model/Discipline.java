@@ -9,13 +9,23 @@ import edu.hneu.studentsportal.model.type.DisciplineType;
 public class Discipline {
 
     @Id
-    private String id;
-    private String label;
-    private String credits;
-    private String controlForm;
-    private String mark;
-    private DisciplineType type;
-    private Integer rowInExcelFile;
+    protected String id;
+    protected String label;
+    protected String credits;
+    protected String controlForm;
+    protected String mark;
+    protected DisciplineType type;
+    protected Integer rowInExcelFile;
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
+    }
+
+    protected Integer number;
 
     public String getId() {
         return id;

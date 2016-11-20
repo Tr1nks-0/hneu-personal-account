@@ -68,6 +68,11 @@
                         <i class="fa fa-university"></i> <span>Студенти</span>
                     </a>
                 </li>
+                <li <c:if test="${'Вибіркові дисципліни' eq title}">class="active"</c:if>>
+                    <a href="/management/special-disciplines">
+                        <i class="fa fa-university"></i> <span>Вибіркові дисципліни</span>
+                    </a>
+                </li>
                 <li>
                     <a href="/logout">
                         <i class="fa fa-share"></i> <span><spring:message code="top.menu.exit"/></span>

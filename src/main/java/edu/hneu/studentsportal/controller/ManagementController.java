@@ -4,12 +4,19 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executors;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 
+import com.google.common.collect.Lists;
+import edu.hneu.studentsportal.model.*;
+import edu.hneu.studentsportal.model.type.DisciplineType;
+import edu.hneu.studentsportal.pojo.StudentDiscipline;
+import edu.hneu.studentsportal.pojo.StudentDisciplines;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,8 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.hneu.studentsportal.model.FilesUploadModel;
-import edu.hneu.studentsportal.model.StudentProfile;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.StudentService;
@@ -105,6 +110,77 @@ public class ManagementController {
         model.addAttribute("students", studentService.find(searchCriteria, page));
         return "management/studentsList";
     }
+
+    @RequestMapping(value = "/special-disciplines")
+    public String specialDisciplines(@RequestParam(value = "group", required = false) final String group,
+                                   final Model model) {
+        model.addAttribute("group", group);
+        if(nonNull(group) && !group.isEmpty()) {
+            model.addAttribute("groups", studentService.find().stream().map(StudentProfile::getGroup)
+                    .filter(userGroup -> userGroup.contains(group)).collect(Collectors.toSet()));
+
+        }else {
+            model.addAttribute("groups", Lists.newArrayList());
+        }
+        return "management/groupsList";
+    }
+
+    @RequestMapping(value = "/groups/{group:.+}")
+    public String choseSemesterForSpecialDisciplines(@PathVariable final String group, final Model model) {
+        model.addAttribute("group", group);
+        Optional<StudentProfile> studentProfile = studentService.find().stream()
+                .filter(student -> student.getGroup().contains(group)).findAny();
+        model.addAttribute("coursesCount", studentProfile.map(profile -> profile.getCourses().size()).orElse(0));
+        return "management/semesterPerGroup";
+    }
+
+    @RequestMapping(value = "/groups/{group:.+}/{course}/{semester}")
+    public ModelAndView studentListForSpecialDisciplines(@PathVariable String group,
+                                                   @PathVariable Integer course,
+                                                   @PathVariable Integer semester, Model model) {
+        model.addAttribute("group", group);
+        model.addAttribute("course", course);
+        model.addAttribute("semester", semester);
+        List<StudentDiscipline>  specialDisciplines = getCollect(group, --course, --semester);
+        Collections.sort(specialDisciplines, new Comparator<StudentDiscipline>() {
+            @Override
+            public int compare(StudentDiscipline d1, StudentDiscipline d2) {
+                if(d1.getSurname().equals(d2.getSurname())) {
+                    return d1.getName().compareTo(d2.getName());
+                }
+                return d1.getSurname().compareTo(d2.getSurname());
+            }
+        });
+
+        return new ModelAndView("management/specialDisciplines", "disciplines", new StudentDisciplines(specialDisciplines));
+    }
+
+    @RequestMapping(value = "/maynors/{group:.+}/{course}/{semester}", method = RequestMethod.POST)
+    public String studentListForSpecialDisciplinesPost(@PathVariable String group, @PathVariable Integer course,
+                                                       @PathVariable Integer semester, Model model,
+                                                       @ModelAttribute StudentDisciplines disciplines) {
+        return null;
+    }
+
+    private List<StudentDiscipline> getCollect(@PathVariable String group, @PathVariable Integer course, @PathVariable Integer semester) {
+        return studentService.find().stream()
+                .filter(student -> student.getGroup().contains(group))
+                .map(student -> {
+                    Course courseModel = student.getCourses().get(course);
+                    Semester semesterModel = courseModel.getSemesters().get(semester);
+                    List<StudentDiscipline> studentDisciplines = new ArrayList<>();
+                    for (int i = 0; i < semesterModel.getDisciplines().size(); i++) {
+                        Discipline discipline = semesterModel.getDisciplines().get(i);
+                        if(DisciplineType.MAYNOR.equals(discipline.getType())) {
+                            studentDisciplines.add(new StudentDiscipline(student.getName(), student.getSurname(), i, discipline));
+                        }
+                    }
+                    return studentDisciplines;
+                })
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
 
     @RequestMapping(value = "/students/{id:.+}")
     public ModelAndView editStudent(@PathVariable("id") final String id) {
