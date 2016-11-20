@@ -7,14 +7,15 @@ public class StudentDiscipline extends Discipline {
     private String name;
     private String surname;
     private String studentId;
+    private Integer number;
 
     public StudentDiscipline() {}
 
-    public StudentDiscipline(String studentId, String name, String surname, Discipline discipline) {
+    public StudentDiscipline(String studentId, String name, String surname, Integer number,  Discipline discipline) {
         this.name = name;
         this.studentId = studentId;
         this.surname = surname;
-        id = discipline.getId();
+        this.number = number;
         label = discipline.getLabel();
         credits = discipline.getCredits();
         controlForm = discipline.getControlForm();
@@ -45,5 +46,14 @@ public class StudentDiscipline extends Discipline {
 
     public void setStudentId(String studentId) {
         this.studentId = studentId;
+    }
+
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 }

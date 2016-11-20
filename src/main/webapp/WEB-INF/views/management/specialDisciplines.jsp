@@ -8,20 +8,21 @@
             Група ${group} курс ${course} семестр ${semester}
         </h1>
         <div class="content">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h4 class="box-title">
-                        <span class="label label-success">МАЙНОР</span>
-                    </h4>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-plus"></i>
-                        </button>
+
+            <c:if test="${not empty maynors.list}">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h4 class="box-title">
+                            <span class="label label-success">МАЙНОР</span>
+                        </h4>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <form:form method="post" action="/management/maynors/${group}/${course}/${semester}" modelAttribute="maynors">
-                    <div class="box-body table-responsive">
-                        <c:if test="${not empty maynors}">
+                    <form:form method="post" action="/management/maynors/${group}/${course}/${semester}" modelAttribute="maynors">
+                        <div class="box-body table-responsive">
                             <table class="table table-hover no-margin">
                                 <c:forEach items="${maynors.list}" var="discipline" varStatus="i">
                                     <tr>
@@ -35,15 +36,16 @@
                                         </td>
                                     </tr>
                                     <form:hidden path="list[${i.index}].studentId"/>
+                                    <form:hidden path="list[${i.index}].number"/>
                                 </c:forEach>
                             </table>
                             <button type="submit" class="btn btn-danger col-md-12 text-center">
                                 Save
                             </button>
-                        </c:if>
-                    </div>
-                </form:form>
-            </div>
+                        </div>
+                    </form:form>
+                </div>
+            </c:if>
         </div>
     </section>
 </div>

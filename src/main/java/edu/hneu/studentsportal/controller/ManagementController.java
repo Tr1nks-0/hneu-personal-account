@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.servlet.ServletContext;
 
@@ -155,16 +156,18 @@ public class ManagementController {
     public String studentListForSpecialDisciplinesPost(@PathVariable String group, @PathVariable Integer course,
                                                        @PathVariable Integer semester, Model model,
                                                        @ModelAttribute StudentDisciplines disciplines) {
+        int courseNumber = course - 1;
+        int semesterNumber = semester - 1;
         disciplines.getList().forEach(discipline -> {
             StudentProfile studentProfile = studentService.findStudentProfileById(discipline.getStudentId());
-            Discipline studentDiscipline = studentProfile.getCourses().get(course)
-                    .getSemesters().get(semester)
+            Discipline studentDiscipline = studentProfile.getCourses().get(courseNumber)
+                    .getSemesters().get(semesterNumber)
                     .getDisciplines().get(discipline.getNumber());
             studentDiscipline.setLabel(discipline.getLabel());
             studentDiscipline.setMark(discipline.getMark());
             studentService.save(studentProfile);
         });
-        return String.format("redirect:/groups/%s/%s/%s", group, course, semester);
+        return String.format("redirect:/management/groups/%s/%s/%s", group, course, semester);
     }
 
     private List<StudentDiscipline> getSpecialDisciplines(String group, Integer course, Integer semester, DisciplineType type) {
@@ -173,9 +176,9 @@ public class ManagementController {
                 .map(student -> {
                     Course courseModel = student.getCourses().get(course);
                     Semester semesterModel = courseModel.getSemesters().get(semester);
-                    return semesterModel.getDisciplines().stream()
-                            .filter(d -> type.equals(d.getType()))
-                            .map(d -> new StudentDiscipline(student.getId(), student.getName(), student.getSurname(), d))
+                    return IntStream.range(0, semesterModel.getDisciplines().size())
+                            .filter(i -> type.equals(semesterModel.getDisciplines().get(i).getType()))
+                            .mapToObj(i -> new StudentDiscipline(student.getId(), student.getName(), student.getSurname(), i, semesterModel.getDisciplines().get(i)))
                             .collect(Collectors.toList());
                 })
                 .flatMap(Collection::stream)

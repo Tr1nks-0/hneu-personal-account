@@ -16,23 +16,6 @@ public class Discipline {
     protected String mark;
     protected DisciplineType type;
     protected Integer rowInExcelFile;
-    protected Integer number;
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
 
     public String getLabel() {
         return label;
