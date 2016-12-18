@@ -5,6 +5,14 @@
 
 <%@ include file="../jspf/header.jspf" %>
 
+<style>
+    .average-mark {
+        text-align: center;
+        font-size: 30px;
+        font-weight: lighter;
+    }
+</style>
+
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
@@ -77,7 +85,20 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-md-4 info-box-no-content">
+                    <div class="col-md-4 hidden-xs hidden-sm info-box-no-content border-right">
+                        <div class="info-box-icon bg-white text average-mark">
+                            <div>${profile.specialityPlace}. ${profile.average}</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-xs-12 hidden-md hidden-lg border-right">
+                        <a class="info-box-icon bg-white" href="${profile.filePath}" download>
+                            <span class="info-box-icon bg-white"><i class="ion-ios-download-outline"></i></span>
+                        </a>
+                        <div class="info-box-content">
+                            <a class="info-box-text info-box-text-center bg-white" href="${profile.filePath}" download>
+                                Завантажити план
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

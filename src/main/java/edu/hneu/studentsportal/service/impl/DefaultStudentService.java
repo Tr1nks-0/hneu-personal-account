@@ -22,6 +22,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.mail.internet.MimeMessage;
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -255,10 +257,10 @@ public class DefaultStudentService implements StudentService {
             students.forEach(student -> {
                 List<Discipline> allStudentDisciplines = extractDisciplinesFunction.apply(student);
                 double studentAverage = calculateAverageFunction.apply(allStudentDisciplines);
-                student.setAverage(studentAverage);
+                student.setAverage(new BigDecimal(studentAverage).setScale(2, RoundingMode.HALF_UP).doubleValue());
             });
             Collections.sort(students, (s1, s2) -> NumberUtils.compare(s1.getAverage(), s2.getAverage()));
-            IntStream.range(0, students.size()).forEach(i -> students.get(i).setSpecialityPlace(i));
+            IntStream.range(0, students.size()).forEach(i -> students.get(i).setSpecialityPlace(i + 1));
             students.forEach(studentDao::save);
         } );
     }
