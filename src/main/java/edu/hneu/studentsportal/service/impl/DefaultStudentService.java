@@ -250,7 +250,7 @@ public class DefaultStudentService implements StudentService {
     @Override
     public void refreshMarks() {
         Map<String, List<StudentProfile>> studentsPerSpecialityAndCourse = studentDao.findAll().stream()
-                .collect(Collectors.groupingBy(s -> s.getSpeciality() + "$" + s.getCourses(), Collectors.mapping(s -> s, Collectors.toList())));
+                .collect(Collectors.groupingBy(s -> s.getIncomeYear() + "$" + s.getSpeciality(), Collectors.mapping(s -> s, Collectors.toList())));
         studentsPerSpecialityAndCourse.values().forEach(students -> {
             students.forEach(student -> {
                 List<Discipline> allStudentDisciplines = extractDisciplinesFunction.apply(student);
@@ -264,8 +264,8 @@ public class DefaultStudentService implements StudentService {
     }
 
     Function<List<Discipline>, Double> calculateAverageFunction = disciplines -> {
-        long total = disciplines.stream().map(Discipline::getMark).mapToLong(Long::parseLong).sum();
-        return total * 1.0 / disciplines.size();
+        double total = disciplines.stream().map(Discipline::getMark).mapToDouble(Double::valueOf).sum();
+        return total / disciplines.size();
     };
 
     Function<StudentProfile, List<Discipline>> extractDisciplinesFunction = student -> student
