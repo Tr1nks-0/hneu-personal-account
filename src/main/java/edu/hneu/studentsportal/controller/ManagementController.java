@@ -81,9 +81,10 @@ public class ManagementController {
     public String uploadTotalsFromExcel(@ModelAttribute("uploadForm") final FilesUploadModel uploadForm,
                                         final RedirectAttributes redirectAttributes) throws IllegalStateException, IOException {
         final List<MultipartFile> filesToUpload = uploadForm.getFiles();
-        final Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload,
-                uploadedFile -> studentService.updateStudentsScoresFromFile(uploadedFile)
-        );
+        final Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload, uploadedFile -> {
+            studentService.updateStudentsScoresFromFile(uploadedFile);
+            studentService.refreshMarks();
+        });
         redirectAttributes.addFlashAttribute("files", uploadedFilesNames);
         return "redirect:successfullyUploaded";
     }

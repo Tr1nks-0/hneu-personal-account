@@ -21,6 +21,8 @@ public class StudentProfile extends Profile {
     private String passportNumber;
     private String filePath;
     private long modificationTime;
+    private Double average;
+    private Integer specialityPlace;
 
     public void setId(final String id) {
         this.id = id;
@@ -136,5 +138,21 @@ public class StudentProfile extends Profile {
 
     public void setFilePath(final String filePath) {
         this.filePath = filePath;
+    }
+
+    public Double getAverage() {
+        return average;
+    }
+
+    public void setAverage(Double average) {
+        this.average = average;
+    }
+
+    public Integer getSpecialityPlace() {
+        return specialityPlace;
+    }
+
+    public void setSpecialityPlace(Integer specialityPlace) {
+        this.specialityPlace = specialityPlace;
     }
 }

@@ -33,4 +33,6 @@ public interface StudentService {
     long getPagesCountForSearchCriteria(String searchCriteria);
 
     void remove(String id);
+
+    void refreshMarks();
 }
