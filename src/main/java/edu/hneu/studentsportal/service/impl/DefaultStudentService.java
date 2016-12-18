@@ -124,7 +124,7 @@ public class DefaultStudentService implements StudentService {
             final List<Discipline> disciplines = semester.get().getDisciplines();
             for (final Discipline discipline : disciplines)
                 discipline.setMark(getDisciplineScore(studentScore, discipline.getLabel()));
-            if (!studentScore.isEmpty())
+            if (!studentScore.isEmpty() && studentScore.values().stream().noneMatch("-"::equals))
                 throw new RuntimeException("Some disciplines were not found");
         }
     }

@@ -122,13 +122,18 @@ public class ManagementController {
                                    final Model model) {
         model.addAttribute("group", group);
         if(nonNull(group) && !group.isEmpty()) {
-            model.addAttribute("groups", studentService.find().stream().map(StudentProfile::getGroup)
-                    .filter(userGroup -> userGroup.contains(group)).collect(Collectors.toSet()));
+            model.addAttribute("groups", studentService.find().stream()
+                    .map(StudentProfile::getGroup)
+                    .filter(userGroup -> userGroup.contains(group))
+                    .sorted()
+                    .collect(Collectors.toSet()));
 
         }else {
             model.addAttribute("groups",
-                    studentService.find().stream().map(StudentProfile::getGroup)
-                    .collect(Collectors.toSet()));
+                    studentService.find().stream()
+                            .map(StudentProfile::getGroup)
+                            .sorted()
+                            .collect(Collectors.toSet()));
         }
         return "management/groupsList";
     }
