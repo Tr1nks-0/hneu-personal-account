@@ -260,6 +260,8 @@ public class DefaultStudentService implements StudentService {
                 Double studentAverage = calculateAverageFunction.apply(allStudentDisciplines);
                 if(isFalse(studentAverage.isNaN())) {
                     student.setAverage(new BigDecimal(studentAverage).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                } else {
+                    student.setAverage(null);
                 }
             });
             Collections.sort(students, (s1, s2) -> NumberUtils.compare(s2.getAverage(), s1.getAverage()));

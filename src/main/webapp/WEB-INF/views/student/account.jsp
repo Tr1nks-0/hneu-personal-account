@@ -7,6 +7,7 @@
 
 <style>
     .average-mark {
+        height: 90px;
         text-align: center;
         font-size: 30px;
         font-weight: lighter;
@@ -75,7 +76,7 @@
                             <div class="text"><span>Завантажити план</span></div>
                         </a>
                     </div>
-                    <div class="col-sm-12 col-xs-12 hidden-md hidden-lg border-right">
+                    <div class="col-sm-12 col-xs-12 hidden-md hidden-lg border-right border-bottom">
                         <a class="info-box-icon bg-white" href="${profile.filePath}" download>
                             <span class="info-box-icon bg-white"><i class="ion-ios-download-outline"></i></span>
                         </a>
@@ -85,11 +86,19 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-12 col-xs-12 info-box-no-content border-right">
-                        <div class="bg-white info-box-text info-box-text-center average-mark">
-                            <div>${profile.specialityPlace} - ${profile.average}</div>
+
+                    <c:if test="${not empty profile.average}">
+                        <div class="col-md-4 col-sm-12 col-xs-12 border-right average-mark">
+                            <div class="col-md-6 col-sm-6 col-xs-6 bg-white text" style="padding-top: 8px">
+                                <div>${profile.specialityPlace}</div>
+                                <div style="font-size: 18px;">Rating</div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6 bg-white text" style="padding-top: 8px">
+                                <div>${profile.average}</div>
+                                <div style="font-size: 18px;">Avg</div>
+                            </div>
                         </div>
-                    </div>
+                    </c:if>
                 </div>
             </div>
 
