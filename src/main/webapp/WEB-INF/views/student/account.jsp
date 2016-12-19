@@ -87,7 +87,7 @@
                         </div>
                     </div>
 
-                    <c:if test="${not empty profile.average}">
+                    <c:if test="${0 ne profile.average }">
                         <div class="col-md-4 col-sm-12 col-xs-12 border-right average-mark">
                             <div class="col-md-6 col-sm-6 col-xs-6 bg-white text" style="padding-top: 8px">
                                 <div>${profile.specialityPlace}</div>
