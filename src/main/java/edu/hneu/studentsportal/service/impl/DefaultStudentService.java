@@ -31,6 +31,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.Objects.nonNull;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Service
 public class DefaultStudentService implements StudentService {
@@ -256,10 +257,12 @@ public class DefaultStudentService implements StudentService {
         studentsPerSpecialityAndCourse.values().forEach(students -> {
             students.forEach(student -> {
                 List<Discipline> allStudentDisciplines = extractDisciplinesFunction.apply(student);
-                double studentAverage = calculateAverageFunction.apply(allStudentDisciplines);
-                student.setAverage(new BigDecimal(studentAverage).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                Double studentAverage = calculateAverageFunction.apply(allStudentDisciplines);
+                if(isFalse(studentAverage.isNaN())) {
+                    student.setAverage(new BigDecimal(studentAverage).setScale(2, RoundingMode.HALF_UP).doubleValue());
+                }
             });
-            Collections.sort(students, (s1, s2) -> NumberUtils.compare(s1.getAverage(), s2.getAverage()));
+            Collections.sort(students, (s1, s2) -> NumberUtils.compare(s2.getAverage(), s1.getAverage()));
             IntStream.range(0, students.size()).forEach(i -> students.get(i).setSpecialityPlace(i + 1));
             students.forEach(studentDao::save);
         } );
