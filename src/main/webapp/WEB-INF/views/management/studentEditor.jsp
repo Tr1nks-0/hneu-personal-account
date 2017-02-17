@@ -55,6 +55,43 @@
                                 </tr>
                             </table>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <c:forEach items="${profile.courses}" var="course" varStatus="i">
+                                    <div class="col-md-12"><span class="label label-info">${course.label}</span></div>
+                                    <c:forEach items="${course.semesters}" var="semester" varStatus="j">
+                                        <div class="col-md-12"><div class="label label-success">${semester.label}</div></div>
+                                        <div class="col-md-12">
+                                            <table class="table no-margin">
+                                                <c:forEach items="${semester.disciplines}" var="discipline" varStatus="k">
+                                                    <tr>
+                                                        <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].label" cssClass="editor-input"/></td>
+                                                        <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].credits" cssClass="editor-input"/></td>
+                                                        <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].controlForm" cssClass="editor-input"/></td>
+                                                        <td>${discipline.type}</td>
+                                                        <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].mark" cssClass="editor-input"/></td>
+                                                    </tr>
+                                                    <form:hidden path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].id"/>
+                                                    <form:hidden path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].rowInExcelFile"/>
+                                                </c:forEach>
+                                            </table>
+                                        </div>
+                                        <form:hidden path="courses[${i.index}].semesters[${j.index}].id"/>
+                                        <form:hidden path="courses[${i.index}].semesters[${j.index}].total"/>
+                                    </c:forEach>
+                                    <form:hidden path="courses[${i.index}].id"/>
+                                </c:forEach>
+                                <form:hidden path="incomeYear"/>
+                                <form:hidden path="groupId"/>
+                                <form:hidden path="password"/>
+                                <form:hidden path="profileImage"/>
+                                <form:hidden path="passportNumber"/>
+                                <form:hidden path="filePath"/>
+                                <form:hidden path="modificationTime"/>
+                                <form:hidden path="average"/>
+                                <form:hidden path="specialityPlace"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
