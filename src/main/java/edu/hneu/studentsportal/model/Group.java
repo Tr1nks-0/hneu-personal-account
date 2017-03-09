@@ -4,33 +4,20 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.NotBlank;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
 @Entity
 @Table(name = "group")
+@AllArgsConstructor
 public class Group {
 
     @Id
     private String id;
+    @NotBlank
     private String name;
 
-    public Group(final String id, final String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
 }
