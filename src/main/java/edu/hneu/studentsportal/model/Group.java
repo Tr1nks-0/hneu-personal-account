@@ -1,16 +1,19 @@
 package edu.hneu.studentsportal.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Document(collection = "Group")
+
+@Entity
+@Table(name = "group")
 public class Group {
 
     @Id
-    private String name;
     private String id;
+    private String name;
 
-    public Group(String id, String name) {
+    public Group(final String id, final String name) {
         this.id = id;
         this.name = name;
     }
@@ -19,7 +22,7 @@ public class Group {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -27,7 +30,7 @@ public class Group {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 }

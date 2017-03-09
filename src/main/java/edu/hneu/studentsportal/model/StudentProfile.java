@@ -2,19 +2,42 @@ package edu.hneu.studentsportal.model;
 
 import java.util.List;
 
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
-@Document(collection = "student_profiles")
-public class StudentProfile extends Profile {
+@Entity
+@Table(name = "student")
+public class StudentProfile {
 
+    @Id
+    private String id;
+    private String email;
+    private String role;
     private String name;
     private String surname;
     private String faculty;
     private Integer incomeYear;
+    @ElementCollection
+    @CollectionTable(name="student_contacts", joinColumns=@JoinColumn(name="STUDENT_ID"))
+    @Column(name="contact")
     private List<String> contactInfo;
     private String speciality;
     private String group;
     private String groupId;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "student2course",
+            joinColumns = @JoinColumn(name = "STUDENT_ID"),
+            inverseJoinColumns = @JoinColumn(name = "COURSE_ID")
+    )
     private List<Course> courses;
     private String password;
     private String profileImage;
@@ -144,7 +167,7 @@ public class StudentProfile extends Profile {
         return average;
     }
 
-    public void setAverage(Double average) {
+    public void setAverage(final Double average) {
         this.average = average;
     }
 
@@ -152,7 +175,27 @@ public class StudentProfile extends Profile {
         return specialityPlace;
     }
 
-    public void setSpecialityPlace(Integer specialityPlace) {
+    public void setSpecialityPlace(final Integer specialityPlace) {
         this.specialityPlace = specialityPlace;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(final String email) {
+        this.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(final String role) {
+        this.role = role;
+    }
+
+    public String getId() {
+        return id;
     }
 }

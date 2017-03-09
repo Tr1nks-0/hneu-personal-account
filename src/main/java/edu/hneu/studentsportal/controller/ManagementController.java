@@ -4,18 +4,18 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.servlet.ServletContext;
 
-import com.google.common.collect.Lists;
-import edu.hneu.studentsportal.model.*;
-import edu.hneu.studentsportal.model.type.DisciplineType;
-import edu.hneu.studentsportal.pojo.StudentDiscipline;
-import edu.hneu.studentsportal.pojo.StudentDisciplines;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +29,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.hneu.studentsportal.model.Course;
+import edu.hneu.studentsportal.model.Discipline;
+import edu.hneu.studentsportal.model.Semester;
+import edu.hneu.studentsportal.model.StudentProfile;
+import edu.hneu.studentsportal.model.type.DisciplineType;
+import edu.hneu.studentsportal.pojo.FilesUploadModel;
+import edu.hneu.studentsportal.pojo.StudentDiscipline;
+import edu.hneu.studentsportal.pojo.StudentDisciplines;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.StudentService;
@@ -141,16 +149,16 @@ public class ManagementController {
     @RequestMapping(value = "/groups/{group:.+}")
     public String choseSemesterForSpecialDisciplines(@PathVariable final String group, final Model model) {
         model.addAttribute("group", group);
-        Optional<StudentProfile> studentProfile = studentService.find().stream()
+        final Optional<StudentProfile> studentProfile = studentService.find().stream()
                 .filter(student -> student.getGroup().contains(group)).findAny();
         model.addAttribute("coursesCount", studentProfile.map(profile -> profile.getCourses().size()).orElse(0));
         return "management/semesterPerGroup";
     }
 
     @RequestMapping(value = "/groups/{group:.+}/{course}/{semester}")
-    public ModelAndView studentListForSpecialDisciplines(@PathVariable String group,
-                                                   @PathVariable Integer course,
-                                                   @PathVariable Integer semester, Model model) {
+    public ModelAndView studentListForSpecialDisciplines(@PathVariable final String group,
+                                                         @PathVariable Integer course,
+                                                         @PathVariable Integer semester, final Model model) {
         model.addAttribute("group", group);
         model.addAttribute("course", course);
         model.addAttribute("semester", semester);
@@ -159,14 +167,14 @@ public class ManagementController {
     }
 
     @RequestMapping(value = "/maynors/{group:.+}/{course}/{semester}", method = RequestMethod.POST)
-    public String studentListForSpecialDisciplinesPost(@PathVariable String group, @PathVariable Integer course,
-                                                       @PathVariable Integer semester, Model model,
-                                                       @ModelAttribute StudentDisciplines disciplines) {
-        int courseNumber = course - 1;
-        int semesterNumber = semester - 1;
+    public String studentListForSpecialDisciplinesPost(@PathVariable final String group, @PathVariable final Integer course,
+                                                       @PathVariable final Integer semester, final Model model,
+                                                       @ModelAttribute final StudentDisciplines disciplines) {
+        final int courseNumber = course - 1;
+        final int semesterNumber = semester - 1;
         disciplines.getList().forEach(discipline -> {
-            StudentProfile studentProfile = studentService.findStudentProfileById(discipline.getStudentId());
-            Discipline studentDiscipline = studentProfile.getCourses().get(courseNumber)
+            final StudentProfile studentProfile = studentService.findStudentProfileById(discipline.getStudentId());
+            final Discipline studentDiscipline = studentProfile.getCourses().get(courseNumber)
                     .getSemesters().get(semesterNumber)
                     .getDisciplines().get(discipline.getNumber());
             studentDiscipline.setLabel(discipline.getLabel());
@@ -176,8 +184,8 @@ public class ManagementController {
         return String.format("redirect:/management/groups/%s/%s/%s", group, course, semester);
     }
 
-    private List<StudentDiscipline> getSpecialDisciplines(String group, Integer course, Integer semester, DisciplineType type) {
-        List<StudentDiscipline> disciplines = studentService.find().stream()
+    private List<StudentDiscipline> getSpecialDisciplines(final String group, final Integer course, final Integer semester, final DisciplineType type) {
+        final List<StudentDiscipline> disciplines = studentService.find().stream()
                 .filter(student -> student.getGroup().contains(group))
                 .map(student -> {
                     Course courseModel = student.getCourses().get(course);

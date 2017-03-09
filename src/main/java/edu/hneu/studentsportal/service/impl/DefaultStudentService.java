@@ -1,16 +1,24 @@
 package edu.hneu.studentsportal.service.impl;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.primitives.Longs;
-import edu.hneu.studentsportal.dao.GroupDao;
-import edu.hneu.studentsportal.dao.StudentDao;
-import edu.hneu.studentsportal.model.*;
-import edu.hneu.studentsportal.parser.PointsExcelParser;
-import edu.hneu.studentsportal.parser.StudentProfileExcelParser;
-import edu.hneu.studentsportal.parser.dto.PointsDto;
-import edu.hneu.studentsportal.service.StudentService;
-import edu.hneu.studentsportal.service.UserService;
-import org.apache.commons.collections.CollectionUtils;
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import javax.mail.internet.MimeMessage;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -20,18 +28,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import com.google.common.collect.ImmutableMap;
 
-import static java.util.Objects.nonNull;
-import static org.apache.commons.lang.BooleanUtils.isFalse;
+import edu.hneu.studentsportal.dao.GroupDao;
+import edu.hneu.studentsportal.dao.StudentDao;
+import edu.hneu.studentsportal.model.Course;
+import edu.hneu.studentsportal.model.Discipline;
+import edu.hneu.studentsportal.model.Group;
+import edu.hneu.studentsportal.model.Semester;
+import edu.hneu.studentsportal.model.StudentProfile;
+import edu.hneu.studentsportal.model.User;
+import edu.hneu.studentsportal.model.type.UserRole;
+import edu.hneu.studentsportal.parser.PointsExcelParser;
+import edu.hneu.studentsportal.parser.StudentProfileExcelParser;
+import edu.hneu.studentsportal.parser.dto.PointsDto;
+import edu.hneu.studentsportal.service.StudentService;
+import edu.hneu.studentsportal.service.UserService;
 
 @Service
 public class DefaultStudentService implements StudentService {
@@ -175,9 +187,8 @@ public class DefaultStudentService implements StudentService {
             user.setId(studentEmail.toLowerCase());
             studentProfile.setEmail(studentEmail.toLowerCase());
             final String password = UUID.randomUUID().toString().substring(0, 8);
-            user.setPassword(password);
             studentProfile.setPassword(password);
-            user.setRole(2);
+            user.setRole(UserRole.STUDENT);
             userService.save(user);
         } else {
             throw new RuntimeException("Cannot found email for the user!");
@@ -252,12 +263,12 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void refreshMarks() {
-        Map<String, List<StudentProfile>> studentsPerSpecialityAndCourse = studentDao.findAll().stream()
+        final Map<String, List<StudentProfile>> studentsPerSpecialityAndCourse = studentDao.findAll().stream()
                 .collect(Collectors.groupingBy(s -> s.getIncomeYear() + "$" + s.getSpeciality(), Collectors.mapping(s -> s, Collectors.toList())));
         studentsPerSpecialityAndCourse.values().forEach(students -> {
             students.forEach(student -> {
-                List<Discipline> allStudentDisciplines = extractDisciplinesFunction.apply(student);
-                Double studentAverage = calculateAverageFunction.apply(allStudentDisciplines);
+                final List<Discipline> allStudentDisciplines = extractDisciplinesFunction.apply(student);
+                final Double studentAverage = calculateAverageFunction.apply(allStudentDisciplines);
                 if(isFalse(studentAverage.isNaN())) {
                     student.setAverage(new BigDecimal(studentAverage).setScale(2, RoundingMode.HALF_UP).doubleValue());
                 } else {

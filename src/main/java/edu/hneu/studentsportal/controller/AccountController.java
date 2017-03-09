@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.hneu.studentsportal.model.StudentProfile;
 import edu.hneu.studentsportal.model.User;
+import edu.hneu.studentsportal.model.type.UserRole;
 import edu.hneu.studentsportal.pojo.Schedule;
 import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.TimeService;
@@ -64,7 +65,7 @@ public class AccountController {
                 .extractUserEmailFromDetails((LinkedHashMap) ((OAuth2Authentication) principal).getUserAuthentication().getDetails());
         if (email.isPresent()) {
             final Optional<User> currentUser = userService.getUserForId(email.get());
-            if (currentUser.isPresent() && currentUser.get().getRole() == 1)
+            if (currentUser.isPresent() && currentUser.get().getRole() == UserRole.ADMIN)
                 return new ModelAndView("redirect:management/uploadStudentProfilesFromExcel");
             final Optional<StudentProfile> profile = studentService.findStudentProfileByEmail(email.get());
             if (profile.isPresent()) {

@@ -1,23 +1,35 @@
 package edu.hneu.studentsportal.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.List;
 
-@Document(collection = "Course")
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "course")
 public class Course {
 
     @Id
     private String id;
     private String label;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "course2semester",
+            joinColumns = @JoinColumn(name = "COURSE_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SEMESTER_ID")
+    )
     private List<Semester> semesters;
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -25,7 +37,7 @@ public class Course {
         return label;
     }
 
-    public void setLabel(String label) {
+    public void setLabel(final String label) {
         this.label = label;
     }
 
@@ -33,7 +45,7 @@ public class Course {
         return semesters;
     }
 
-    public void setSemesters(List<Semester> semesters) {
+    public void setSemesters(final List<Semester> semesters) {
         this.semesters = semesters;
     }
 }

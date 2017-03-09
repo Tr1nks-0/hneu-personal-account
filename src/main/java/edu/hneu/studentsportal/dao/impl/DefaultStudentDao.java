@@ -1,32 +1,59 @@
 package edu.hneu.studentsportal.dao.impl;
 
-import edu.hneu.studentsportal.dao.StudentDao;
-import edu.hneu.studentsportal.model.StudentProfile;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
+import org.springframework.stereotype.Repository;
+
+import edu.hneu.studentsportal.dao.StudentDao;
+import edu.hneu.studentsportal.model.StudentProfile;
 
 @Repository
 public class DefaultStudentDao implements StudentDao {
 
     private static final int ITEMS_ON_PAGE_COUNT = 10;
 
-    @Autowired
+    @Override
+    public StudentProfile findById(final String id) {
+        return null;
+    }
+
+    @Override
+    public void save(final StudentProfile studentProfile) {
+
+    }
+
+    @Override
+    public Optional<StudentProfile> findByEmail(final String email) {
+        return null;
+    }
+
+    @Override
+    public void remove(final String id) {
+
+    }
+
+    @Override
+    public List<StudentProfile> findAll() {
+        return null;
+    }
+
+    @Override
+    public List<StudentProfile> find(final String fullName, final Integer page) {
+        return null;
+    }
+
+    @Override
+    public StudentProfile find(final String subKey, final String groupCode) {
+        return null;
+    }
+
+    @Override
+    public long getPagesCountForSearchCriteria(final String searchCriteria) {
+        return 0;
+    }
+
+    /*@Autowired
     private MongoOperations mongoOperations;
 
     @Override
@@ -105,5 +132,5 @@ public class DefaultStudentDao implements StudentDao {
         } else {
             return new Query();
         }
-    }
+    }*/
 }

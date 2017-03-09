@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.collect.Lists;
 
+import edu.hneu.studentsportal.model.type.UserRole;
 import edu.hneu.studentsportal.service.UserService;
 
 @Component
@@ -29,7 +30,7 @@ public class CustomAuthoritiesExtractor implements AuthoritiesExtractor {
         // @formatter:off
         return userService.extractUserEmailFromDetails(userDetails)
                     .map(email -> userService.getUserForId(email)
-                        .map(user -> user.getRole() == 1 ? new SimpleGrantedAuthority("ROLE_ADMIN") : null)
+                        .map(user -> UserRole.ADMIN == user.getRole() ? new SimpleGrantedAuthority("ROLE_ADMIN") : null)
                             .orElse(null)
                 ).orElse(new SimpleGrantedAuthority("ROLE_USER"));
         // @formatter:on

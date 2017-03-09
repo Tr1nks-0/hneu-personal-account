@@ -1,8 +1,8 @@
-package edu.hneu.studentsportal.model;
-
-import org.springframework.web.multipart.MultipartFile;
+package edu.hneu.studentsportal.pojo;
 
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public class FilesUploadModel {
 
@@ -12,7 +12,7 @@ public class FilesUploadModel {
         return files;
     }
 
-    public void setFiles(List<MultipartFile> files) {
+    public void setFiles(final List<MultipartFile> files) {
         this.files = files;
     }
 }

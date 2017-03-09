@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.model;
+package edu.hneu.studentsportal.pojo;
 
 
 public class Tag {
@@ -6,7 +6,7 @@ public class Tag {
     private String id;
     private String tagName;
 
-    public Tag(String id, String tagName) {
+    public Tag(final String id, final String tagName) {
         this.id = id;
         this.tagName = tagName;
     }
@@ -15,7 +15,7 @@ public class Tag {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -23,7 +23,7 @@ public class Tag {
         return tagName;
     }
 
-    public void setTagName(String tagName) {
+    public void setTagName(final String tagName) {
         this.tagName = tagName;
     }
 }

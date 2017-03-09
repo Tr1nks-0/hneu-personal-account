@@ -1,27 +1,35 @@
 package edu.hneu.studentsportal.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 import edu.hneu.studentsportal.model.type.DisciplineType;
 
-@Document(collection = "Discipline")
+@Entity
+@Table(name = "discipline")
 public class Discipline {
 
     @Id
     protected String id;
+    @NotEmpty
     protected String label;
+    @NotNull
+    protected DisciplineType type;
+    @NotNull
+    protected Integer rowInExcelFile;
     protected String credits;
     protected String controlForm;
     protected String mark;
-    protected DisciplineType type;
-    protected Integer rowInExcelFile;
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -64,7 +72,7 @@ public class Discipline {
     public void setType(final DisciplineType type) {
         this.type = type;
     }
-    
+
     public Integer getRowInExcelFile() {
         return rowInExcelFile;
     }
