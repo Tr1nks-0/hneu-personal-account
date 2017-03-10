@@ -1,0 +1,18 @@
+security:
+  oauth2:
+    client:
+      client-id: acme
+      client-secret: acmesecret
+      scope: read,write
+      auto-approve-scopes: '.*'
+google:
+  client:
+    clientId: 624736482499-j8aftskiu2rnpasgucc2fumgpulltka3.apps.googleusercontent.com
+    clientSecret: MXEPao9tGhk8l5fkTZ5zsqVH
+    accessTokenUri: https://www.googleapis.com/oauth2/v3/token
+    userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+    scope: email,https://www.googleapis.com/auth/gmail.send,https://mail.google.com/
+    auto-approve-scopes: '.*'
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://www.googleapis.com/plus/v1/people/me

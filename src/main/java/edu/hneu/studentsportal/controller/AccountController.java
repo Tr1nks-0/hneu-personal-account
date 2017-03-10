@@ -2,18 +2,15 @@ package edu.hneu.studentsportal.controller;
 
 import static java.util.Objects.isNull;
 
-import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.hneu.studentsportal.model.StudentProfile;
-import edu.hneu.studentsportal.model.User;
-import edu.hneu.studentsportal.model.type.UserRole;
+import edu.hneu.studentsportal.entity.StudentProfile;
+import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.pojo.Schedule;
 import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.TimeService;
@@ -119,9 +116,9 @@ public class AccountController {
     }
 
     private Map<Integer, Map<Integer, Schedule.ScheduleElements.ScheduleElement>> extractPairs(final Schedule schedule) {
-        final Map<Integer, Map<Integer, Schedule.ScheduleElements.ScheduleElement>> pairs = new HashedMap(7);
+        final Map<Integer, Map<Integer, Schedule.ScheduleElements.ScheduleElement>> pairs = new HashMap<>(7);
         for (byte i = 0; i < 7; i++) {
-            pairs.put(Integer.valueOf(i), new HashedMap(8));
+            pairs.put(Integer.valueOf(i), new HashMap(8));
         }
         for (final Schedule.ScheduleElements.ScheduleElement scheduleElement : schedule.getScheduleElements().getScheduleElement()) {
             final Map<Integer, Schedule.ScheduleElements.ScheduleElement> days = pairs.get(Integer.valueOf(scheduleElement.getPair()));
@@ -145,8 +142,8 @@ public class AccountController {
     }
 
     @RequestMapping("/sendEmail")
-    public String contactUs(@RequestParam final String message, final HttpSession session, final Principal principal) throws MessagingException, IOException {
-        //@formatter:off
+    public String contactUs(@RequestParam final String message, final HttpSession session, final Principal principal) {
+    /*    //@formatter:off
         final String userEmail = getProfile(session, principal).getEmail();
         final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(
                 userEmail, decanMail)
@@ -154,7 +151,7 @@ public class AccountController {
                 .setText(message, false)
                 .build();
         //@formatter:on
-        gmailService.api().users().messages().send(userEmail, gmailService.convertToGmailMessage(mimeMessage)).execute();
+        gmailService.api().users().messages().send(userEmail, gmailService.convertToGmailMessage(mimeMessage)).execute();*/
         return "redirect:contactUs?success=true";
     }
 

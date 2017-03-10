@@ -17,11 +17,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import edu.hneu.studentsportal.model.Course;
-import edu.hneu.studentsportal.model.Discipline;
-import edu.hneu.studentsportal.model.Semester;
-import edu.hneu.studentsportal.model.StudentProfile;
-import edu.hneu.studentsportal.model.type.DisciplineType;
+import edu.hneu.studentsportal.entity.Course;
+import edu.hneu.studentsportal.entity.Discipline;
+import edu.hneu.studentsportal.entity.Semester;
+import edu.hneu.studentsportal.entity.StudentProfile;
+import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.service.FileService;
 
 @Component

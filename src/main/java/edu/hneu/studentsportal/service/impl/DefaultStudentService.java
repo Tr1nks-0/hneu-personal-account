@@ -17,8 +17,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.mail.internet.MimeMessage;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -28,20 +26,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.google.common.collect.ImmutableMap;
-
-import edu.hneu.studentsportal.dao.GroupDao;
-import edu.hneu.studentsportal.dao.StudentDao;
-import edu.hneu.studentsportal.model.Course;
-import edu.hneu.studentsportal.model.Discipline;
-import edu.hneu.studentsportal.model.Group;
-import edu.hneu.studentsportal.model.Semester;
-import edu.hneu.studentsportal.model.StudentProfile;
-import edu.hneu.studentsportal.model.User;
-import edu.hneu.studentsportal.model.type.UserRole;
+import edu.hneu.studentsportal.entity.Course;
+import edu.hneu.studentsportal.entity.Discipline;
+import edu.hneu.studentsportal.entity.Group;
+import edu.hneu.studentsportal.entity.Semester;
+import edu.hneu.studentsportal.entity.StudentProfile;
+import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.PointsExcelParser;
 import edu.hneu.studentsportal.parser.StudentProfileExcelParser;
 import edu.hneu.studentsportal.parser.dto.PointsDto;
+import edu.hneu.studentsportal.repository.GroupDao;
+import edu.hneu.studentsportal.repository.StudentDao;
 import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.UserService;
 
@@ -203,7 +199,7 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void sendEmailAfterProfileCreation(final StudentProfile studentProfile) {
-        try {
+        /*try {
             final Map<String, Object> modelForVelocity = ImmutableMap.of("name", studentProfile.getName());
             //@formatter:off
             final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(
@@ -215,12 +211,12 @@ public class DefaultStudentService implements StudentService {
             gmailService.api().users().messages().send(supportMail, gmailService.convertToGmailMessage(mimeMessage)).execute();
         } catch (final Exception e) {
             LOG.warn(e);
-        }
+        }*/
     }
 
     @Override
     public void sendEmailAfterProfileUpdating(final StudentProfile studentProfile) {
-        try {
+        /*try {
             final Map<String, Object> modelForVelocity = ImmutableMap.of("message", "Ваш профіль був оновлений. Перейдійть у кабінет для перегляду.");
             final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(supportMail, studentProfile.getEmail())
                     .setSubject("Кабінет студента | Зміни в профілі")
@@ -228,7 +224,7 @@ public class DefaultStudentService implements StudentService {
             gmailService.api().users().messages().send(supportMail, gmailService.convertToGmailMessage(mimeMessage)).execute();
         } catch (final Exception e) {
             LOG.warn(e);
-        }
+        }*/
     }
 
     @Override

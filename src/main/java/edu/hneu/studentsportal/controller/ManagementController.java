@@ -29,11 +29,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.hneu.studentsportal.model.Course;
-import edu.hneu.studentsportal.model.Discipline;
-import edu.hneu.studentsportal.model.Semester;
-import edu.hneu.studentsportal.model.StudentProfile;
-import edu.hneu.studentsportal.model.type.DisciplineType;
+import edu.hneu.studentsportal.entity.Course;
+import edu.hneu.studentsportal.entity.Discipline;
+import edu.hneu.studentsportal.entity.Semester;
+import edu.hneu.studentsportal.entity.StudentProfile;
+import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.pojo.FilesUploadModel;
 import edu.hneu.studentsportal.pojo.StudentDiscipline;
 import edu.hneu.studentsportal.pojo.StudentDisciplines;

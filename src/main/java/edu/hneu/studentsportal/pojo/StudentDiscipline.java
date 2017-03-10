@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.pojo;
 
-import edu.hneu.studentsportal.model.Discipline;
+import edu.hneu.studentsportal.entity.Discipline;
 
 public class StudentDiscipline extends Discipline {
 
@@ -11,7 +11,7 @@ public class StudentDiscipline extends Discipline {
 
     public StudentDiscipline() {}
 
-    public StudentDiscipline(String studentId, String name, String surname, Integer number,  Discipline discipline) {
+    public StudentDiscipline(final String studentId, final String name, final String surname, final Integer number, final Discipline discipline) {
         this.name = name;
         this.studentId = studentId;
         this.surname = surname;
@@ -28,7 +28,7 @@ public class StudentDiscipline extends Discipline {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -36,7 +36,7 @@ public class StudentDiscipline extends Discipline {
         return surname;
     }
 
-    public void setSurname(String surname) {
+    public void setSurname(final String surname) {
         this.surname = surname;
     }
 
@@ -44,7 +44,7 @@ public class StudentDiscipline extends Discipline {
         return studentId;
     }
 
-    public void setStudentId(String studentId) {
+    public void setStudentId(final String studentId) {
         this.studentId = studentId;
     }
 
@@ -53,7 +53,7 @@ public class StudentDiscipline extends Discipline {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(final Integer number) {
         this.number = number;
     }
 }

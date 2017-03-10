@@ -1,0 +1,72 @@
+.products-list .product-description {
+    white-space: normal;
+}
+
+.products-list .product-info {
+    margin: 7px 20px;
+}
+
+.editor-input {
+    width: 100%;
+}
+
+.photo-editor {
+    height: 150px;
+    margin: 5px;
+    border: 2px solid gainsboro;
+}
+.float-right {
+    float: right;
+}
+
+.info-box-no-content .info-box-icon {
+    width: 100%;
+}
+
+.info-box-no-content .info-box-icon .text{
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: lighter;
+    color: black;
+}
+
+.info-box-no-content .info-box-icon .img{
+    line-height: 58px;
+    color: black;
+}
+
+.info-box-cropped {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bg-white {
+    background-color: white;
+    color: black;
+}
+.student-info {
+    background: white;
+}
+
+@media (min-width: 991px) {
+    .border-right {
+        border-right: 1px solid #f4f4f4;
+    }
+    .border-bottom {
+        border-bottom: 1px solid #f4f4f4;
+    }
+}
+
+@media (max-width: 991px) {
+    .border-bottom {
+        border-bottom: 1px solid #f4f4f4;
+    }
+}
+
+.info-box-no-content {
+    color: black;
+}
+.info-box-text-center {
+    padding-top: 27px;
+}

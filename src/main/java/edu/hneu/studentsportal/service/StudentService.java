@@ -1,10 +1,10 @@
 package edu.hneu.studentsportal.service;
 
-import edu.hneu.studentsportal.model.StudentProfile;
-
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+
+import edu.hneu.studentsportal.entity.StudentProfile;
 
 public interface StudentService {
 

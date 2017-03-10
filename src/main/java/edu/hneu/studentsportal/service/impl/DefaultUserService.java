@@ -6,11 +6,10 @@ import java.util.Optional;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import edu.hneu.studentsportal.dao.UserRepository;
-import edu.hneu.studentsportal.model.User;
+import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.repository.UserRepository;
 import edu.hneu.studentsportal.service.UserService;
 
 @Service
@@ -36,7 +35,7 @@ public class DefaultUserService implements UserService {
     @Override
     public Optional<String> extractUserEmailFromDetails(final LinkedHashMap userDetails) {
         final List emails = (List) userDetails.get("emails");
-        if (CollectionUtils.isNotEmpty(emails)) {
+        if (emails != null && !emails.isEmpty()) {
             return Optional.ofNullable((String) ((LinkedHashMap) emails.get(0)).get("value"));
         }
         return Optional.empty();

@@ -1,25 +1,13 @@
 package edu.hneu.studentsportal.service.impl;
 
-import java.util.Date;
-import java.util.Map;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
-import org.apache.velocity.app.VelocityEngine;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import edu.hneu.studentsportal.service.EmailService;
 
 @Service
 public class DefaultEmailService implements EmailService {
 
-    private static final String UTF_8 = "UTF-8";
+  /*  private static final String UTF_8 = "UTF-8";
 
     @Autowired
     private JavaMailSender mailSender;
@@ -74,6 +62,6 @@ public class DefaultEmailService implements EmailService {
                 throw new RuntimeException("Cannot create mime-message: ", e);
             }
         }
-    }
+    }*/
 
 }

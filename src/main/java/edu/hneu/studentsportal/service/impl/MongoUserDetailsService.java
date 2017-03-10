@@ -3,7 +3,8 @@ package edu.hneu.studentsportal.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,14 +12,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import edu.hneu.studentsportal.dao.UserDao;
-import edu.hneu.studentsportal.model.User;
+import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.enums.UserRole;
+import edu.hneu.studentsportal.repository.UserRepository;
 
 @Component
 public class MongoUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserDao userDao;
+    @Resource
+    private UserRepository userRepository;
 
     private org.springframework.security.core.userdetails.User userdetails;
 
@@ -34,22 +36,22 @@ public class MongoUserDetailsService implements UserDetailsService {
                 accountNonExpired,
                 credentialsNonExpired,
                 accountNonLocked,
-                getAuthorities(user.getRole().ordinal()));
+                getAuthorities(user.getRole()));
         return userdetails;
     }
 
-    public List<GrantedAuthority> getAuthorities(final Integer role) {
+    public List<GrantedAuthority> getAuthorities(final UserRole role) {
         final List<GrantedAuthority> authList = new ArrayList<>();
-        if (role.intValue() == 1) {
+        if (role == UserRole.ADMIN) {
             authList.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        } else if (role.intValue() == 2) {
+        } else if (role == UserRole.STUDENT) {
             authList.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
         }
         return authList;
     }
 
     public User getUserDetail(final String id) {
-        final User user = userDao.findOne(id);
+        final User user = userRepository.findOne(id);
         return user;
     }
 }
