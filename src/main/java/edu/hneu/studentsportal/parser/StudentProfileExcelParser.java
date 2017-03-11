@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.parser;
 
 
+import com.google.common.collect.Iterables;
 import edu.hneu.studentsportal.entity.*;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.service.FileService;
@@ -11,8 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         studentProfile.setStudentGroup(new Group(getStringCellValue(++rowNumber, 2)));
         studentProfile.setCourses(getCourses());
         studentProfile.setId(getId(studentProfile));
-        studentProfile.setProfileImage(getProfileImage(studentProfile));
+        studentProfile.setPhoto(getProfileImage());
         return studentProfile;
     }
 
@@ -136,7 +135,9 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
     }
 
     private boolean isNotSpecialityLabel(final Integer rowNumber) {
-        return isFalse(getStringCellValue(rowNumber, 0).contains("НАПРЯМ ПІДГОТОВКИ"));
+        String stringCellValue = getStringCellValue(rowNumber, 0);
+        return isFalse(stringCellValue.contains("НАПРЯМ ПІДГОТОВКИ"))
+                && isFalse(stringCellValue.contains("МАГІСТЕРСЬКА ПРОГРАМА"));
     }
 
     public boolean isCourseLabel(final Integer rowNumber) {
@@ -151,24 +152,10 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         return isFalse(getStringCellValue(semesterRow, cellrowNumber).contains("ВСЬОГО ЗА"));
     }
 
-    private String getProfileImage(final StudentProfile studentProfile) {
+    private byte[] getProfileImage() {
         final List<? extends PictureData> allPictures = workbook.getAllPictures();
         if (allPictures.isEmpty())
             return null;
-        try {
-            final PictureData profilePhoto = allPictures.get(allPictures.size() - 1);
-            final String profilePhotoFileName = studentProfile.getId() + "/" + "photo." + profilePhoto.suggestFileExtension();
-            final String classPath = this.getClass().getResource("/").getPath();
-            final String filePath = classPath + profilePhotoLocation + "/" + profilePhotoFileName;
-            final File file = new File(filePath);
-            fileService.createDirectoryIfNotExist(file.getParentFile());
-            final FileOutputStream out = new FileOutputStream(file);
-            out.write(profilePhoto.getData());
-            out.close();
-            return profilePhotoFileName;
-        } catch (final java.io.IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return Iterables.getLast(allPictures).getData();
     }
 }

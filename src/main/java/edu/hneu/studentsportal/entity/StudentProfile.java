@@ -18,15 +18,17 @@ public class StudentProfile {
     private String name;
     private String surname;
     private String faculty;
-    private Integer incomeYear;
     private String speciality;
-    private String password;
-    private String profileImage;
     private String passportNumber;
     private String filePath;
-    private long modificationTime;
+    private Long modificationTime;
     private Double average;
-    private Integer specialityPlace;
+    private Integer incomeYear;
+    private Integer rate;
+
+    @Lob
+    @Column(name = "photo", columnDefinition = "longblob")
+    private byte[] photo;
 
     @ManyToOne(cascade=CascadeType.ALL)
     private Group studentGroup;

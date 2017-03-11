@@ -1,18 +1,19 @@
 package edu.hneu.studentsportal.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import edu.hneu.studentsportal.entity.Group;
+import edu.hneu.studentsportal.repository.GroupDao;
+import edu.hneu.studentsportal.repository.GroupRepository;
+import edu.hneu.studentsportal.service.ScheduleService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import edu.hneu.studentsportal.entity.Group;
-import edu.hneu.studentsportal.repository.GroupDao;
-import edu.hneu.studentsportal.service.ScheduleService;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class DefaultScheduleService implements ScheduleService {
@@ -28,6 +29,9 @@ public class DefaultScheduleService implements ScheduleService {
     @Autowired
     private GroupDao groupDao;
 
+    @Resource
+    private GroupRepository groupRepository;
+
     @Override
     public void downloadGroups() {
         LOG.info("Groups downloading started");
@@ -40,7 +44,7 @@ public class DefaultScheduleService implements ScheduleService {
                     final List<String> groupIds = getListOfIds(response);
                     final List<String> groupName = getListOfNames(response);
                     for (int i = 0; i < groupIds.size(); i++) {
-                        groupDao.save(new Group(groupIds.get(i), groupName.get(i)));
+                        groupRepository.save(new Group(groupIds.get(i), groupName.get(i)));
                     }
                 }
             }

@@ -10,12 +10,12 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "student_group")
+@NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Group {
 
     @Id
-    @Generated
     private String id;
 
     @NonNull

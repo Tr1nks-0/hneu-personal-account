@@ -80,8 +80,7 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void save(final StudentProfile studentProfile) {
-        studentDao.remove(studentProfile.getId());
-        studentDao.save(studentProfile);
+        studentRepository.save(studentProfile);
     }
 
     @Override
@@ -174,8 +173,6 @@ public class DefaultStudentService implements StudentService {
             final User user = new User();
             user.setId(studentEmail.toLowerCase());
             studentProfile.setEmail(studentEmail.toLowerCase());
-            final String password = UUID.randomUUID().toString().substring(0, 8);
-            studentProfile.setPassword(password);
             user.setRole(UserRole.STUDENT);
             userService.save(user);
         } else {
@@ -241,7 +238,7 @@ public class DefaultStudentService implements StudentService {
             final String surname = studentProfile.getSurname().toLowerCase();
             final RestTemplate restTemplate = new RestTemplate();
             return restTemplate
-                    .getForEntity(String.format(emailsIntegrationServiceUrl + GET_STUDENT_EMAIL_URL, name, surname, studentProfile.getStudentGroup()), String.class)
+                    .getForEntity(String.format(emailsIntegrationServiceUrl + GET_STUDENT_EMAIL_URL, name, surname, studentProfile.getStudentGroup().getName()), String.class)
                     .getBody();
         } catch (final RuntimeException e) {
             LOG.warn("Cannot receive the email!", e);
@@ -264,7 +261,7 @@ public class DefaultStudentService implements StudentService {
                 }
             });
             Collections.sort(students, (s1, s2) -> NumberUtils.compare(s2.getAverage(), s1.getAverage()));
-            IntStream.range(0, students.size()).forEach(i -> students.get(i).setSpecialityPlace(i + 1));
+            IntStream.range(0, students.size()).forEach(i -> students.get(i).setRate(i + 1));
             students.forEach(studentDao::save);
         } );
     }
