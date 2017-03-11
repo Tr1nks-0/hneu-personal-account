@@ -1,22 +1,15 @@
 package edu.hneu.studentsportal.service.impl;
 
-import static java.util.Objects.nonNull;
-import static org.apache.commons.lang.BooleanUtils.isFalse;
-
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
+import edu.hneu.studentsportal.entity.*;
+import edu.hneu.studentsportal.enums.UserRole;
+import edu.hneu.studentsportal.parser.PointsExcelParser;
+import edu.hneu.studentsportal.parser.StudentProfileExcelParser;
+import edu.hneu.studentsportal.parser.dto.PointsDto;
+import edu.hneu.studentsportal.repository.GroupDao;
+import edu.hneu.studentsportal.repository.StudentDao;
+import edu.hneu.studentsportal.repository.StudentRepository;
+import edu.hneu.studentsportal.service.StudentService;
+import edu.hneu.studentsportal.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -26,20 +19,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import edu.hneu.studentsportal.entity.Course;
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.Group;
-import edu.hneu.studentsportal.entity.Semester;
-import edu.hneu.studentsportal.entity.StudentProfile;
-import edu.hneu.studentsportal.entity.User;
-import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.parser.PointsExcelParser;
-import edu.hneu.studentsportal.parser.StudentProfileExcelParser;
-import edu.hneu.studentsportal.parser.dto.PointsDto;
-import edu.hneu.studentsportal.repository.GroupDao;
-import edu.hneu.studentsportal.repository.StudentDao;
-import edu.hneu.studentsportal.service.StudentService;
-import edu.hneu.studentsportal.service.UserService;
+import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Service
 public class DefaultStudentService implements StudentService {
@@ -75,6 +64,9 @@ public class DefaultStudentService implements StudentService {
     private DefaultEmailService emailService;
     @Autowired
     private GmailService gmailService;
+    @Autowired
+    private StudentRepository studentRepository;
+
     @Value("${support.mail}")
     public String supportMail;
     @Value("${emails.integration.service.url}")
@@ -99,7 +91,7 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public Optional<StudentProfile> findStudentProfileByEmail(final String email) {
-        return studentDao.findByEmail(email);
+        return studentRepository.findByEmail(email);
     }
 
     public void updateStudentsScoresFromFile(final File file) {
@@ -193,8 +185,8 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void setGroupId(final StudentProfile studentProfile) {
-        final Group group = groupDao.findOne(studentProfile.getGroup());
-        studentProfile.setGroupId(group.getId());
+        //final Group group = groupDao.findOne(studentProfile.getStudentGroup());
+        //studentProfile.setStudentGroupId(group.getId());
     }
 
     @Override
@@ -249,7 +241,7 @@ public class DefaultStudentService implements StudentService {
             final String surname = studentProfile.getSurname().toLowerCase();
             final RestTemplate restTemplate = new RestTemplate();
             return restTemplate
-                    .getForEntity(String.format(emailsIntegrationServiceUrl + GET_STUDENT_EMAIL_URL, name, surname, studentProfile.getGroup()), String.class)
+                    .getForEntity(String.format(emailsIntegrationServiceUrl + GET_STUDENT_EMAIL_URL, name, surname, studentProfile.getStudentGroup()), String.class)
                     .getBody();
         } catch (final RuntimeException e) {
             LOG.warn("Cannot receive the email!", e);

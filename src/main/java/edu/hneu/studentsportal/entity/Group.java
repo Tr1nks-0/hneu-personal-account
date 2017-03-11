@@ -1,22 +1,24 @@
 package edu.hneu.studentsportal.entity;
 
+import lombok.*;
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.validator.constraints.NotBlank;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 @Data
 @Entity
-@Table(name = "group")
+@Table(name = "student_group")
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Group {
 
     @Id
+    @Generated
     private String id;
+
+    @NonNull
     @NotBlank
     private String name;
 

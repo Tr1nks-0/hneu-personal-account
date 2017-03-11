@@ -1,15 +1,9 @@
 package edu.hneu.studentsportal.parser;
 
 
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang.BooleanUtils.isFalse;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-
+import edu.hneu.studentsportal.entity.*;
+import edu.hneu.studentsportal.enums.DisciplineType;
+import edu.hneu.studentsportal.service.FileService;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +11,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import edu.hneu.studentsportal.entity.Course;
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.Semester;
-import edu.hneu.studentsportal.entity.StudentProfile;
-import edu.hneu.studentsportal.enums.DisciplineType;
-import edu.hneu.studentsportal.service.FileService;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 @Component
 @Scope("prototype")
@@ -57,7 +53,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         studentProfile.setIncomeYear(getIntegerCellValue(++rowNumber, 2));
         studentProfile.setContactInfo(getContactInfo());
         studentProfile.setSpeciality(getStringCellValue(rowNumber, 2));
-        studentProfile.setGroup(getStringCellValue(++rowNumber, 2));
+        studentProfile.setStudentGroup(new Group(getStringCellValue(++rowNumber, 2)));
         studentProfile.setCourses(getCourses());
         studentProfile.setId(getId(studentProfile));
         studentProfile.setProfileImage(getProfileImage(studentProfile));
@@ -65,7 +61,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
     }
 
     private String getId(final StudentProfile studentProfile) {
-        final String id = studentProfile.getSurname() + studentProfile.getName() + studentProfile.getGroup();
+        final String id = studentProfile.getSurname() + studentProfile.getName() + studentProfile.getStudentGroup();
         return id.replace(" ", "").toLowerCase().trim();
     }
 
@@ -113,11 +109,11 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
     private Discipline getDiscipline(final int rowNumber, final int collNumber) {
         final Discipline discipline = new Discipline();
         final String disciplineName = getStringCellValue(rowNumber, collNumber);
-        if("МАГ-МАЙНОР".equals(disciplineName))
+        if ("МАГ-МАЙНОР".equals(disciplineName))
             discipline.setType(DisciplineType.MAGMAYNOR);
-        else if("МАЙНОР".equals(disciplineName))
+        else if ("МАЙНОР".equals(disciplineName))
             discipline.setType(DisciplineType.MAYNOR);
-        else if("МЕЙДЖОР".equals(disciplineName))
+        else if ("МЕЙДЖОР".equals(disciplineName))
             discipline.setType(DisciplineType.MAJOR);
         else {
             discipline.setType(DisciplineType.REGULAR);
@@ -157,13 +153,13 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
 
     private String getProfileImage(final StudentProfile studentProfile) {
         final List<? extends PictureData> allPictures = workbook.getAllPictures();
-        if(allPictures.isEmpty())
+        if (allPictures.isEmpty())
             return null;
         try {
             final PictureData profilePhoto = allPictures.get(allPictures.size() - 1);
             final String profilePhotoFileName = studentProfile.getId() + "/" + "photo." + profilePhoto.suggestFileExtension();
             final String classPath = this.getClass().getResource("/").getPath();
-            final String filePath = classPath + profilePhotoLocation + "/" +profilePhotoFileName;
+            final String filePath = classPath + profilePhotoLocation + "/" + profilePhotoFileName;
             final File file = new File(filePath);
             fileService.createDirectoryIfNotExist(file.getParentFile());
             final FileOutputStream out = new FileOutputStream(file);

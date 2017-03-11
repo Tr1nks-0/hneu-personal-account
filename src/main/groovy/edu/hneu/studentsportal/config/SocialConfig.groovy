@@ -1,7 +1,5 @@
 package edu.hneu.studentsportal.config
 
-import com.google.common.collect.Lists
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices
@@ -19,77 +17,68 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client
 import org.springframework.web.filter.CompositeFilter
 
+import javax.annotation.Resource
 import javax.servlet.Filter
 
 @Configuration
 @EnableOAuth2Client
 @EnableAuthorizationServer
-public class SocialConfig {
+class SocialConfig {
 
-    @Autowired
-    private OAuth2ClientContext oauth2ClientContext;
-    @Autowired
-    private AuthoritiesExtractor authoritiesExtractor;
+    @Resource
+    OAuth2ClientContext oauth2ClientContext
+    @Resource
+    AuthoritiesExtractor authoritiesExtractor
 
     @Bean
-    public FilterRegistrationBean oauth2ClientFilterRegistration(final OAuth2ClientContextFilter filter) {
-        print "======================================"
-        final FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setFilter(filter);
-        registration.setOrder(-100);
-        return registration;
+    FilterRegistrationBean oauth2ClientFilterRegistration(final OAuth2ClientContextFilter filter) {
+        new FilterRegistrationBean(
+                filter: filter,
+                order: -100
+        )
     }
 
     @Bean
-    @ConfigurationProperties("google")
-    public ClientResources google() {
-        return new ClientResources();
+    @ConfigurationProperties('google')
+    ClientResources google() {
+        new ClientResources()
     }
 
     @Bean
-    public Filter ssoFilter() {
-        final CompositeFilter filter = new CompositeFilter();
-        filter.setFilters(Lists.newArrayList(getSsoFilter(google(), "/connect/google")));
-        return filter;
+    Filter ssoFilter() {
+        new CompositeFilter(
+                filters: [oAuth2ClientAuthenticationProcessingFilter()]
+        )
     }
 
-    private Filter getSsoFilter(final ClientResources client, final String path) {
-        final OAuth2ClientAuthenticationProcessingFilter clientAuthenticationProcessingFilter = new OAuth2ClientAuthenticationProcessingFilter(path);
-        final OAuth2RestTemplate oAuth2RestTemplate = oAuth2RestTemplate(client);
-        clientAuthenticationProcessingFilter.setRestTemplate(oAuth2RestTemplate);
-        clientAuthenticationProcessingFilter.setTokenServices(userInfoTokenServices(client, oAuth2RestTemplate));
-        return clientAuthenticationProcessingFilter;
-    }
-
-    @Bean
-    public UserInfoTokenServices userInfoTokenServices(final ClientResources client, final OAuth2RestTemplate oAuth2RestTemplate) {
-        final UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(), client.getClient().getClientId());
-        tokenServices.setAuthoritiesExtractor(authoritiesExtractor);
-        tokenServices.setRestTemplate(oAuth2RestTemplate);
-        return tokenServices;
+    private Filter oAuth2ClientAuthenticationProcessingFilter() {
+        def clientAuthenticationProcessingFilter = new OAuth2ClientAuthenticationProcessingFilter('/connect/google')
+        clientAuthenticationProcessingFilter.setRestTemplate(oAuth2RestTemplate())
+        clientAuthenticationProcessingFilter.setTokenServices(userInfoTokenServices())
+        clientAuthenticationProcessingFilter
     }
 
     @Bean
-    public OAuth2RestTemplate oAuth2RestTemplate(final ClientResources client) {
-        return new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
+    UserInfoTokenServices userInfoTokenServices() {
+        def tokenServices = new UserInfoTokenServices(google().getResource().getUserInfoUri(), google().getClient().getClientId());
+        tokenServices.setAuthoritiesExtractor(authoritiesExtractor)
+        tokenServices.setRestTemplate(oAuth2RestTemplate())
+        tokenServices
+    }
+
+    @Bean
+    OAuth2RestTemplate oAuth2RestTemplate() {
+        new OAuth2RestTemplate(google().getClient(), oauth2ClientContext)
     }
 
 
     private class ClientResources {
 
         @NestedConfigurationProperty
-        private final AuthorizationCodeResourceDetails client = new AuthorizationCodeResourceDetails();
+        AuthorizationCodeResourceDetails client = new AuthorizationCodeResourceDetails()
 
         @NestedConfigurationProperty
-        private final ResourceServerProperties resource = new ResourceServerProperties();
-
-        public AuthorizationCodeResourceDetails getClient() {
-            return client;
-        }
-
-        public ResourceServerProperties getResource() {
-            return resource;
-        }
+        ResourceServerProperties resource = new ResourceServerProperties()
     }
 
 }

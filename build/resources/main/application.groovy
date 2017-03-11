@@ -1,29 +1,29 @@
-import org.springframework.jdbc.datasource.DriverManagerDataSource
-import org.springframework.orm.jpa.JpaTransactionManager
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
+import org.springframework.context.support.ReloadableResourceBundleMessageSource
+import org.springframework.web.multipart.commons.CommonsMultipartResolver
 
 beans {
 
-    dataSource(DriverManagerDataSource) {
-        driverClassName = "com.mysql.jdbc.Driver"
-        url = "jdbc:mysql://localhost:3306/stud_portal"
-        username = "root"
-        password = "root"
+    xmlns([
+            context: 'http://www.springframework.org/schema/context',
+            mvc    : 'http://www.springframework.org/schema/mvc'
+    ])
+
+    context.'annotation-config'()
+    context.'component-scan'('base-package': 'edu.hneu.studentsportal.config')
+    context.'component-scan'('base-package': 'edu.hneu.studentsportal.repository')
+    context.'component-scan'('base-package': 'edu.hneu.studentsportal.service')
+    context.'component-scan'('base-package': 'edu.hneu.studentsportal.controller')
+    context.'component-scan'('base-package': 'edu.hneu.studentsportal.parser')
+    context.'component-scan'('base-package': 'edu.hneu.studentsportal.listener')
+
+    mvc.'resources'(mapping: '/resources/**', location: 'classpath:/theme/')
+    mvc.'resources'(mapping: '/profile/**', location: 'classpath:${profile.photo.location}')
+    mvc.'resources'(mapping: '/individual-plan/**', location: 'classpath:${uploaded.files.location}')
+
+    messageSource(ReloadableResourceBundleMessageSource) {
+        basename = 'classpath:messages'
+        defaultEncoding = 'UTF-8'
     }
 
-    entityManagerFactory(LocalContainerEntityManagerFactoryBean) {
-        dataSource = dataSource
-        packagesToScan = "edu.hneu.studentsportal.entity"
-        jpaProperties = [
-                "hibernate.dialect"     : "org.hibernate.dialect.MySQL5InnoDBDialect",
-                "hibernate.hbm2ddl.auto": "create-update",
-                "hibernate.show_sql"    : true,
-                "hibernate.format_sql"  : true
-        ]
-    }
-
-    transactionManager(JpaTransactionManager) {
-        entityManagerFactory = entityManagerFactory
-    }
-
+    multipartResolver(CommonsMultipartResolver)
 }

@@ -1,31 +1,36 @@
 package edu.hneu.studentsportal.config
 
-import com.google.common.collect.Lists
 import edu.hneu.studentsportal.enums.UserRole
+import edu.hneu.studentsportal.service.UserService
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Component
 
+import javax.annotation.Resource
+
 @Component
-public class CustomAuthoritiesExtractor implements AuthoritiesExtractor {
+class CustomAuthoritiesExtractor implements AuthoritiesExtractor {
+
+    @Resource
+    UserService userService
 
     @Override
-    public List<GrantedAuthority> extractAuthorities(final Map<String, Object> userDetails) {
-        return Lists.newArrayList(getSimpleGrantedAuthority((LinkedHashMap) userDetails));
+    List<GrantedAuthority> extractAuthorities(final Map<String, Object> userDetails) {
+        [ getSimpleGrantedAuthority((LinkedHashMap) userDetails) ]
     }
 
-    private SimpleGrantedAuthority getSimpleGrantedAuthority(final LinkedHashMap userDetails) {
-        def email = userService.extractUserEmailFromDetails(userDetails);
+    def getSimpleGrantedAuthority(final LinkedHashMap userDetails) {
+        def email = userService.extractUserEmailFromDetails(userDetails)
         if (email) {
-            def user = userService.getUserForId(email.get());
+            def user = userService.getUserForId(email.get())
             if (user && user.get().getRole() == UserRole.ADMIN) {
-                return new SimpleGrantedAuthority("ROLE_ADMIN");
+                return new SimpleGrantedAuthority("ROLE_ADMIN")
             } else {
-                return new SimpleGrantedAuthority("ROLE_USER");
+                return new SimpleGrantedAuthority("ROLE_USER")
             }
         } else {
-            return new SimpleGrantedAuthority("ROLE_USER");
+            return new SimpleGrantedAuthority("ROLE_USER")
         }
     }
 }

@@ -1,19 +1,9 @@
 package edu.hneu.studentsportal.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-
 import lombok.Data;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -30,8 +20,6 @@ public class StudentProfile {
     private String faculty;
     private Integer incomeYear;
     private String speciality;
-    private String group;
-    private String groupId;
     private String password;
     private String profileImage;
     private String passportNumber;
@@ -39,6 +27,9 @@ public class StudentProfile {
     private long modificationTime;
     private Double average;
     private Integer specialityPlace;
+
+    @ManyToOne(cascade=CascadeType.ALL)
+    private Group studentGroup;
 
     @ElementCollection
     @CollectionTable(name="student2contacts", joinColumns=@JoinColumn(name="STUDENT_ID"))

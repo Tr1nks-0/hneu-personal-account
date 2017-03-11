@@ -1,16 +1,14 @@
 package edu.hneu.studentsportal.controller;
 
-import static java.util.Objects.isNull;
-
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.servlet.http.HttpSession;
-
+import edu.hneu.studentsportal.entity.StudentProfile;
+import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.enums.UserRole;
+import edu.hneu.studentsportal.pojo.Schedule;
+import edu.hneu.studentsportal.service.StudentService;
+import edu.hneu.studentsportal.service.TimeService;
+import edu.hneu.studentsportal.service.UserService;
+import edu.hneu.studentsportal.service.impl.DefaultEmailService;
+import edu.hneu.studentsportal.service.impl.GmailService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,15 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.hneu.studentsportal.entity.StudentProfile;
-import edu.hneu.studentsportal.entity.User;
-import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.pojo.Schedule;
-import edu.hneu.studentsportal.service.StudentService;
-import edu.hneu.studentsportal.service.TimeService;
-import edu.hneu.studentsportal.service.UserService;
-import edu.hneu.studentsportal.service.impl.DefaultEmailService;
-import edu.hneu.studentsportal.service.impl.GmailService;
+import javax.servlet.http.HttpSession;
+import java.security.Principal;
+import java.util.*;
+
+import static java.util.Objects.isNull;
 
 @Controller
 @RequestMapping("/account")
@@ -69,7 +63,7 @@ public class AccountController {
                 final StudentProfile studentProfile = profile.get();
                 model.addAttribute("title", "top.menu.home");
                 model.addAttribute("currentCourse", getCurrentCourse(studentProfile));
-                session.setAttribute("groupId", studentProfile.getGroupId());
+                session.setAttribute("groupId", studentProfile.getStudentGroup().getId());
                 session.setAttribute("email", studentProfile.getEmail());
                 return new ModelAndView("student/account", "profile", studentProfile);
             }
@@ -97,7 +91,7 @@ public class AccountController {
         try {
             if (isNull(week))
                 week = timeService.getCurrentEducationWeek();
-            final String groupCode = getProfile(session, principal).getGroupId();
+            final String groupCode = getProfile(session, principal).getStudentGroup().getId();
             final String url = String.format(scheduleUrl, groupCode, week);
 
             final Schedule schedule = new RestTemplate().getForObject(url, Schedule.class);

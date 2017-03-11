@@ -1,14 +1,10 @@
 package edu.hneu.studentsportal.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
 import edu.hneu.studentsportal.enums.UserRole;
 import lombok.Data;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Entity

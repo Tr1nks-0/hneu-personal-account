@@ -1,34 +1,5 @@
 package edu.hneu.studentsportal.controller;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.servlet.ServletContext;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import edu.hneu.studentsportal.entity.Course;
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Semester;
@@ -40,6 +11,24 @@ import edu.hneu.studentsportal.pojo.StudentDisciplines;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.StudentService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Controller
 @RequestMapping("/management")
@@ -131,15 +120,15 @@ public class ManagementController {
         model.addAttribute("group", group);
         if(nonNull(group) && !group.isEmpty()) {
             model.addAttribute("groups", studentService.find().stream()
-                    .map(StudentProfile::getGroup)
-                    .filter(userGroup -> userGroup.contains(group))
+                    .map(StudentProfile::getStudentGroup)
+                    .filter(userGroup -> userGroup.getName().contains(group))
                     .sorted()
                     .collect(Collectors.toSet()));
 
         }else {
             model.addAttribute("groups",
                     studentService.find().stream()
-                            .map(StudentProfile::getGroup)
+                            .map(StudentProfile::getStudentGroup)
                             .sorted()
                             .collect(Collectors.toSet()));
         }
@@ -150,7 +139,7 @@ public class ManagementController {
     public String choseSemesterForSpecialDisciplines(@PathVariable final String group, final Model model) {
         model.addAttribute("group", group);
         final Optional<StudentProfile> studentProfile = studentService.find().stream()
-                .filter(student -> student.getGroup().contains(group)).findAny();
+                .filter(student -> student.getStudentGroup().getName().contains(group)).findAny();
         model.addAttribute("coursesCount", studentProfile.map(profile -> profile.getCourses().size()).orElse(0));
         return "management/semesterPerGroup";
     }
@@ -186,7 +175,7 @@ public class ManagementController {
 
     private List<StudentDiscipline> getSpecialDisciplines(final String group, final Integer course, final Integer semester, final DisciplineType type) {
         final List<StudentDiscipline> disciplines = studentService.find().stream()
-                .filter(student -> student.getGroup().contains(group))
+                .filter(student -> student.getStudentGroup().getName().contains(group))
                 .map(student -> {
                     Course courseModel = student.getCourses().get(course);
                     Semester semesterModel = courseModel.getSemesters().get(semester);
@@ -216,7 +205,7 @@ public class ManagementController {
             studentProfile.setSurname(editedProfile.getSurname());
             studentProfile.setFaculty(editedProfile.getFaculty());
             studentProfile.setSpeciality(editedProfile.getSpeciality());
-            studentProfile.setGroup(editedProfile.getGroup());
+            studentProfile.setStudentGroup(editedProfile.getStudentGroup());
             studentProfile.setContactInfo(editedProfile.getContactInfo());
             studentService.save(studentProfile);
         }

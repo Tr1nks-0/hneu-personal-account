@@ -31,8 +31,7 @@
         <property name="defaultLocale" value="ua"/>
     </bean>
 
-    <bean
-            class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <property name="exceptionMappings">
             <props>
                 <prop key="java.lang.Exception">error_page</prop>

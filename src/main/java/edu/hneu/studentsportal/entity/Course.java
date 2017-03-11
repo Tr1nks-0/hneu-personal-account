@@ -1,18 +1,10 @@
 package edu.hneu.studentsportal.entity;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-
+import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
-import lombok.Data;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity

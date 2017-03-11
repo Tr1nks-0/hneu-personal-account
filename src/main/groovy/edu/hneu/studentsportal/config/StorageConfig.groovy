@@ -19,7 +19,7 @@ import javax.sql.DataSource
 class StorageConfig {
 
     @Resource
-    Environment env;
+    Environment env
 
     @Bean
     DataSource dataSource() {

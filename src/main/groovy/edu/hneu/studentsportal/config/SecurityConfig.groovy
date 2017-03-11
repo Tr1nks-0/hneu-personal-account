@@ -12,31 +12,33 @@ import javax.servlet.Filter
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
-    private Filter ssoFilter;
+    Filter ssoFilter
 
     @Override
-    protected void configure(final HttpSecurity http) throws Exception {
-        //@formatter:off
+    void configure(final HttpSecurity http) {
         http.authorizeRequests()
-                .antMatchers("/management/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/account/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+                .antMatchers('/management/**')
+                    .access("hasRole('ROLE_ADMIN')")
+                .antMatchers('/account/**')
+                    .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/account", false)
-                .failureUrl("/login?error=true")
+                    .formLogin()
+                        .loginPage('/login')
+                        .defaultSuccessUrl('/account', false)
+                        .failureUrl('/login?error=true')
                 .and()
-                .logout()
-                .logoutSuccessUrl("/login")
+                    .logout()
+                        .logoutSuccessUrl('/login')
                 .and()
-                .addFilterBefore(ssoFilter, BasicAuthenticationFilter.class)
-                .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
+                    .addFilterBefore(ssoFilter, BasicAuthenticationFilter.class)
+                        .exceptionHandling()
+                            .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint('/'))
                 .and()
-                .csrf().disable();
-        //@formatter:on
+                    .csrf()
+                        .disable()
     }
 
 }
