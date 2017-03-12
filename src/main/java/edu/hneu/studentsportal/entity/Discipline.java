@@ -13,19 +13,18 @@ import javax.validation.constraints.NotNull;
 public class Discipline {
 
     @Id
-    protected String id;
+    @GeneratedValue
+    private long id;
 
-    protected String credits;
-    protected String controlForm;
-    protected String mark;
+    private String credits;
+    private String controlForm;
+    private String mark;
 
     @NotEmpty
-    protected String label;
-    @NotNull
-    protected Integer rowInExcelFile;
+    private String label;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)
-    protected DisciplineType type;
+    private DisciplineType type;
 
 }

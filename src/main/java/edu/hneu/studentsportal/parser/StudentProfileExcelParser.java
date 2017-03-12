@@ -2,9 +2,15 @@ package edu.hneu.studentsportal.parser;
 
 
 import com.google.common.collect.Iterables;
-import edu.hneu.studentsportal.entity.*;
+import com.google.common.collect.Lists;
+import edu.hneu.studentsportal.entity.Course;
+import edu.hneu.studentsportal.entity.Discipline;
+import edu.hneu.studentsportal.entity.Semester;
+import edu.hneu.studentsportal.entity.StudentProfile;
 import edu.hneu.studentsportal.enums.DisciplineType;
+import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.service.FileService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +18,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
@@ -30,6 +38,8 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
 
     @Autowired
     private FileService fileService;
+    @Resource
+    private GroupRepository groupRepository;
 
     @Value("${profile.photo.location}")
     public String profilePhotoLocation;
@@ -52,16 +62,19 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         studentProfile.setIncomeYear(getIntegerCellValue(++rowNumber, 2));
         studentProfile.setContactInfo(getContactInfo());
         studentProfile.setSpeciality(getStringCellValue(rowNumber, 2));
-        studentProfile.setStudentGroup(new Group(getStringCellValue(++rowNumber, 2)));
+        studentProfile.setEducationProgram(getEducationProgram(++rowNumber));
+        studentProfile.setStudentGroup(groupRepository.findByName(getStringCellValue(++rowNumber, 2)));
         studentProfile.setCourses(getCourses());
-        studentProfile.setId(getId(studentProfile));
         studentProfile.setPhoto(getProfileImage());
         return studentProfile;
     }
 
-    private String getId(final StudentProfile studentProfile) {
-        final String id = studentProfile.getSurname() + studentProfile.getName() + studentProfile.getStudentGroup();
-        return id.replace(" ", "").toLowerCase().trim();
+    private String getEducationProgram(Integer row) {
+        String rowValue = getStringCellValue(row, 0);
+        if(rowValue.contains("МАГІСТЕРСЬКА ПРОГРАМА")) {
+            return getStringCellValue(row, 1);
+        }
+        return null;
     }
 
     private List<Course> getCourses() {
@@ -82,27 +95,34 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         return course;
     }
 
-    private ArrayList<Semester> getSemesters(final Integer rowNumber) {
-        final Semester semesterLeft = getSemester(rowNumber, LEFT_SEMESTER_COLL);
-        final Semester semesterRight = getSemester(rowNumber, RIGHT_SEMESTER_COLL);
-        return new ArrayList<>(asList(semesterLeft, semesterRight));
+    private List<Semester> getSemesters(final Integer rowNumber) {
+        final Optional<Semester> semesterLeft = getSemester(rowNumber, LEFT_SEMESTER_COLL);
+        final Optional<Semester> semesterRight = getSemester(rowNumber, RIGHT_SEMESTER_COLL);
+        return Lists.newArrayList(semesterLeft, semesterRight).stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
-    private Semester getSemester(int rowNumber, final Integer collNumber) {
-        final Semester semester = new Semester();
-        semester.setLabel(getStringCellValue(rowNumber, collNumber));
-        final List<Discipline> disciplines = new ArrayList<>();
-        rowNumber += 2;
-        while (isNotSemesterEnd(rowNumber, collNumber + 1)) {
-            if (isNotEmpty(getStringCellValue(rowNumber, collNumber + 1)))
-                disciplines.add(getDiscipline(rowNumber, collNumber + 1));
-            rowNumber++;
+    private Optional<Semester> getSemester(int rowNumber, final Integer collNumber) {
+        String semesterLabel = getStringCellValue(rowNumber, collNumber);
+        if (StringUtils.isNotBlank(semesterLabel)) {
+            final Semester semester = new Semester();
+            semester.setLabel(semesterLabel);
+            final List<Discipline> disciplines = new ArrayList<>();
+            rowNumber += 2;
+            while (isNotSemesterEnd(rowNumber, collNumber + 1)) {
+                if (isNotEmpty(getStringCellValue(rowNumber, collNumber + 1)))
+                    disciplines.add(getDiscipline(rowNumber, collNumber + 1));
+                rowNumber++;
+            }
+            if (disciplines.isEmpty())
+                throw new RuntimeException("Disciplines were not found");
+            semester.setDisciplines(disciplines);
+            semester.setTotal(getIntegerCellValue(rowNumber, collNumber + 2));
+            return Optional.of(semester);
         }
-        if (disciplines.isEmpty())
-            throw new RuntimeException("Disciplines were not found");
-        semester.setDisciplines(disciplines);
-        semester.setTotal(getIntegerCellValue(rowNumber, collNumber + 2));
-        return semester;
+        return Optional.empty();
     }
 
     private Discipline getDiscipline(final int rowNumber, final int collNumber) {
@@ -120,7 +140,6 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         }
         discipline.setCredits(getStringCellValue(rowNumber, collNumber + 1));
         discipline.setControlForm(getStringCellValue(rowNumber, collNumber + 2));
-        discipline.setRowInExcelFile(rowNumber);
         return discipline;
     }
 
@@ -137,11 +156,12 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
     private boolean isNotSpecialityLabel(final Integer rowNumber) {
         String stringCellValue = getStringCellValue(rowNumber, 0);
         return isFalse(stringCellValue.contains("НАПРЯМ ПІДГОТОВКИ"))
-                && isFalse(stringCellValue.contains("МАГІСТЕРСЬКА ПРОГРАМА"));
+                && isFalse(stringCellValue.contains("СПЕЦІАЛЬНІСТЬ"));
     }
 
     public boolean isCourseLabel(final Integer rowNumber) {
-        return getStringCellValue(rowNumber, 0).contains("КУРС");
+        String stringCellValue = getStringCellValue(rowNumber, 0);
+        return stringCellValue.contains("КУРС") || stringCellValue.contains("РІК НАВЧАННЯ");
     }
 
     public boolean isFileEnd(final Integer rowNumber) {

@@ -5,7 +5,7 @@ import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.PointsExcelParser;
 import edu.hneu.studentsportal.parser.StudentProfileExcelParser;
 import edu.hneu.studentsportal.parser.dto.PointsDto;
-import edu.hneu.studentsportal.repository.GroupDao;
+import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentDao;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.StudentService;
@@ -59,7 +59,7 @@ public class DefaultStudentService implements StudentService {
     @Autowired
     private WebApplicationContext context;
     @Autowired
-    private GroupDao groupDao;
+    private GroupRepository groupRepository;
     @Autowired
     private DefaultEmailService emailService;
     @Autowired
@@ -85,7 +85,7 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public StudentProfile findStudentProfileById(final String id) {
-        return studentDao.findById(id);
+        return studentRepository.findOne(id);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public List<StudentProfile> find() {
-        return studentDao.findAll();
+        return studentRepository.findAll();
     }
 
     @Override
@@ -228,7 +228,7 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void remove(final String id) {
-        studentDao.remove(id);
+        studentRepository.delete(id);
     }
 
 
@@ -248,7 +248,7 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void refreshMarks() {
-        final Map<String, List<StudentProfile>> studentsPerSpecialityAndCourse = studentDao.findAll().stream()
+        final Map<String, List<StudentProfile>> studentsPerSpecialityAndCourse = studentRepository.findAll().stream()
                 .collect(Collectors.groupingBy(s -> s.getIncomeYear() + "$" + s.getSpeciality(), Collectors.mapping(s -> s, Collectors.toList())));
         studentsPerSpecialityAndCourse.values().forEach(students -> {
             students.forEach(student -> {
@@ -262,7 +262,7 @@ public class DefaultStudentService implements StudentService {
             });
             Collections.sort(students, (s1, s2) -> NumberUtils.compare(s2.getAverage(), s1.getAverage()));
             IntStream.range(0, students.size()).forEach(i -> students.get(i).setRate(i + 1));
-            students.forEach(studentDao::save);
+            students.forEach(studentRepository::save);
         } );
     }
 

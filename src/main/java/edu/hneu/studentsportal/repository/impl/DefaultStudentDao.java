@@ -1,42 +1,15 @@
 package edu.hneu.studentsportal.repository.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Repository;
-
 import edu.hneu.studentsportal.entity.StudentProfile;
 import edu.hneu.studentsportal.repository.StudentDao;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class DefaultStudentDao implements StudentDao {
 
     private static final int ITEMS_ON_PAGE_COUNT = 10;
-
-    @Override
-    public StudentProfile findById(final String id) {
-        return null;
-    }
-
-    @Override
-    public void save(final StudentProfile studentProfile) {
-
-    }
-
-    @Override
-    public Optional<StudentProfile> findByEmail(final String email) {
-        return null;
-    }
-
-    @Override
-    public void remove(final String id) {
-
-    }
-
-    @Override
-    public List<StudentProfile> findAll() {
-        return null;
-    }
 
     @Override
     public List<StudentProfile> find(final String fullName, final Integer page) {

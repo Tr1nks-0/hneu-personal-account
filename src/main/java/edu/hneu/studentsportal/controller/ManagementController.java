@@ -63,8 +63,6 @@ public class ManagementController {
         final List<MultipartFile> filesToUpload = uploadForm.getFiles();
         final Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload, uploadedFile -> {
             final StudentProfile studentProfile = studentService.readStudentProfilesFromFile(uploadedFile);
-            studentProfile.setFilePath("/individual-plan/" + uploadedFile.getName());
-            studentService.setGroupId(studentProfile);
             studentService.setCredentials(studentProfile);
             studentService.save(studentProfile);
             studentService.sendEmailAfterProfileCreation(studentProfile);
@@ -181,8 +179,14 @@ public class ManagementController {
                     Semester semesterModel = courseModel.getSemesters().get(semester);
                     return IntStream.range(0, semesterModel.getDisciplines().size())
                             .filter(i -> type.equals(semesterModel.getDisciplines().get(i).getType()))
-                            .mapToObj(i -> new StudentDiscipline(student.getId(), student.getName(), student.getSurname(), i, semesterModel.getDisciplines().get(i)))
-                            .collect(Collectors.toList());
+                            .mapToObj(i -> new StudentDiscipline(
+                                    student.getEmail(),
+                                    student.getName(),
+                                    student.getSurname(),
+                                    i,
+                                    semesterModel.getDisciplines().get(i)
+                                )
+                            ).collect(Collectors.toList());
                 })
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());

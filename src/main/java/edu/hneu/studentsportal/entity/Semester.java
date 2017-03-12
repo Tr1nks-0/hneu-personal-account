@@ -12,16 +12,19 @@ import java.util.List;
 public class Semester {
 
     @Id
-    private String id;
+    @GeneratedValue
+    private long id;
+
     @NotBlank
     private String label;
+
     private Integer total;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "semester2discipline",
-            joinColumns = @JoinColumn(name = "SEMESTER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "DISCIPLINE_ID")
+            joinColumns = @JoinColumn(name = "semester_id"),
+            inverseJoinColumns = @JoinColumn(name = "discipline_id")
     )
     private List<Discipline> disciplines;
 

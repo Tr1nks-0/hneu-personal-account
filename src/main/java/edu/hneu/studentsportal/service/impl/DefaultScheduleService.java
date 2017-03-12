@@ -1,11 +1,9 @@
 package edu.hneu.studentsportal.service.impl;
 
 import edu.hneu.studentsportal.entity.Group;
-import edu.hneu.studentsportal.repository.GroupDao;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.service.ScheduleService;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,9 +24,6 @@ public class DefaultScheduleService implements ScheduleService {
     private static final String SPECIALITIES_URL = "http://services.ksue.edu.ua:8081/schedule/xmlmetadata?q=specialities&facultyid=%s&auth=test";
     private static final String GROUPS_URL = "http://services.ksue.edu.ua:8081/schedule/xmlmetadata?q=groups&facultyid=%s&specialityid=%s&course=%s&auth=test";
 
-    @Autowired
-    private GroupDao groupDao;
-
     @Resource
     private GroupRepository groupRepository;
 
@@ -44,7 +39,7 @@ public class DefaultScheduleService implements ScheduleService {
                     final List<String> groupIds = getListOfIds(response);
                     final List<String> groupName = getListOfNames(response);
                     for (int i = 0; i < groupIds.size(); i++) {
-                        groupRepository.save(new Group(groupIds.get(i), groupName.get(i)));
+                        groupRepository.save(new Group(Integer.valueOf(groupIds.get(i)), groupName.get(i)));
                     }
                 }
             }

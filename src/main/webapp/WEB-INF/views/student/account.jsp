@@ -1,6 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="html" uri="http://struts.apache.org/tags-html" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <%@ include file="../jspf/header.jspf" %>
@@ -33,7 +32,7 @@
                                 <spring:message code="form.label.student.profile.incomeYear"/> <c:out value="${profile.incomeYear}"/>
                             </span>
                             <span class="info-box-text">
-                                <spring:message code="form.label.student.profile.group"/> <c:out value="${profile.group}"/>
+                                <spring:message code="form.label.student.profile.group"/> <c:out value="${profile.studentGroup.name}"/>
                             </span>
                         </div>
                     </div>
@@ -71,17 +70,17 @@
                         </div>
                     </div>
                     <div class="col-md-4 hidden-xs hidden-sm info-box-no-content border-right">
-                        <a class="info-box-icon bg-white" href="${profile.filePath}" download>
+                        <a class="info-box-icon bg-white" href="#" download>
                             <div class="img"><i class="ion-ios-download-outline"></i></div>
                             <div class="text"><span>Завантажити план</span></div>
                         </a>
                     </div>
                     <div class="col-sm-12 col-xs-12 hidden-md hidden-lg border-right border-bottom">
-                        <a class="info-box-icon bg-white" href="${profile.filePath}" download>
+                        <a class="info-box-icon bg-white" href="#" download>
                             <span class="info-box-icon bg-white"><i class="ion-ios-download-outline"></i></span>
                         </a>
                         <div class="info-box-content">
-                            <a class="info-box-text info-box-text-center bg-white" href="${profile.filePath}" download>
+                            <a class="info-box-text info-box-text-center bg-white" href="#" download>
                                 Завантажити план
                             </a>
                         </div>
@@ -90,7 +89,7 @@
                     <c:if test="${0 ne profile.average }">
                         <div class="col-md-4 col-sm-12 col-xs-12 border-right average-mark">
                             <div class="col-md-6 col-sm-6 col-xs-6 bg-white text" style="padding-top: 8px">
-                                <div>${profile.specialityPlace}</div>
+                                <div>${profile.rate}</div>
                                 <div style="font-size: 18px;">Rating</div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6 bg-white text" style="padding-top: 8px">

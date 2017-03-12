@@ -21,11 +21,13 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini <c:if test="${'top.menu.schedule' eq title}">sidebar-collapse</c:if> ">
 
-    <c:set var="profileImage" value="/profile/${profile.profileImage}"/>
-    <c:if test="${empty profile.profileImage}">
+    <c:set var="profileImage" value="/profile/"/>
+    <%--
+    <c:set var="profileImage" value="/profile/${profile.profileImage}"/>--%>
+    <%--<c:if test="${empty profile.profileImage}">
         <c:set var="profileImage" value="/resources/img/student_photo_default.png"/>
     </c:if>
-
+--%>
     <div class="wrapper">
         <header class="main-header">
             <a href="/account" class="logo">
@@ -49,7 +51,7 @@
                                     <img src="${profileImage}" class="img-circle profile-photo-large" alt="User Image">
                                     <p>
                                         <c:out value="${profile.surname} ${profile.name}"/> - <c:out value="${profile.faculty}"/>
-                                        <small><c:out value="${profile.group}"/></small>
+                                        <small><c:out value="${profile.studentGroup.name}"/></small>
                                     </p>
                                 </li>
                                 <li class="user-footer">
@@ -75,7 +77,7 @@
                     </div>
                     <div class="info">
                         <p><c:out value="${profile.surname} ${profile.name}"/></p>
-                        <c:out value="${profile.group}"/>
+                        <c:out value="${profile.studentGroup.name}"/>
                     </div>
                 </div>
 

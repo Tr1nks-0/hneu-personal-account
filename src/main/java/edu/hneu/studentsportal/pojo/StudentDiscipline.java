@@ -8,20 +8,17 @@ public class StudentDiscipline extends Discipline {
     private String surname;
     private String studentId;
     private Integer number;
+    private Discipline discipline;
 
-    public StudentDiscipline() {}
+    public StudentDiscipline() {
+    }
 
     public StudentDiscipline(final String studentId, final String name, final String surname, final Integer number, final Discipline discipline) {
         this.name = name;
         this.studentId = studentId;
         this.surname = surname;
         this.number = number;
-        label = discipline.getLabel();
-        credits = discipline.getCredits();
-        controlForm = discipline.getControlForm();
-        mark = discipline.getMark();
-        type = discipline.getType();
-        rowInExcelFile = discipline.getRowInExcelFile();
+        this.discipline = discipline;
     }
 
     public String getName() {

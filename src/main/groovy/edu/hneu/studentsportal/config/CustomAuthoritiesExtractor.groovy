@@ -24,7 +24,7 @@ class CustomAuthoritiesExtractor implements AuthoritiesExtractor {
         def email = userService.extractUserEmailFromDetails(userDetails)
         if (email) {
             def user = userService.getUserForId(email.get())
-            if (user && user.get().getRole() == UserRole.ADMIN) {
+            if (user.isPresent() && user.get().getRole() == UserRole.ADMIN) {
                 return new SimpleGrantedAuthority("ROLE_ADMIN")
             } else {
                 return new SimpleGrantedAuthority("ROLE_USER")

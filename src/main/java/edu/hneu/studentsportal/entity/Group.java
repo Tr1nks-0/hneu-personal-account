@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class Group {
 
     @Id
-    private String id;
+    private long id;
 
     @NonNull
     @NotBlank

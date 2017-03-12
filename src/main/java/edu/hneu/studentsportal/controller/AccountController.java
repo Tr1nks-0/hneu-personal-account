@@ -10,7 +10,6 @@ import edu.hneu.studentsportal.service.UserService;
 import edu.hneu.studentsportal.service.impl.DefaultEmailService;
 import edu.hneu.studentsportal.service.impl.GmailService;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.*;
@@ -32,15 +32,15 @@ import static java.util.Objects.isNull;
 @RequestMapping("/account")
 public class AccountController {
 
-    @Autowired
+    @Resource
     private StudentService studentService;
-    @Autowired
+    @Resource
     private TimeService timeService;
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private GmailService gmailService;
-    @Autowired
+    @Resource
     private DefaultEmailService emailService;
 
     @Value("${decan.mail}")
@@ -91,8 +91,8 @@ public class AccountController {
         try {
             if (isNull(week))
                 week = timeService.getCurrentEducationWeek();
-            final String groupCode = getProfile(session, principal).getStudentGroup().getId();
-            final String url = String.format(scheduleUrl, groupCode, week);
+            final long groupId = getProfile(session, principal).getStudentGroup().getId();
+            final String url = String.format(scheduleUrl, groupId, week);
 
             final Schedule schedule = new RestTemplate().getForObject(url, Schedule.class);
 

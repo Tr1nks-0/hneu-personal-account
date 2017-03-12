@@ -11,38 +11,38 @@ import java.util.List;
 public class StudentProfile {
 
     @Id
-    private String id;
-
     private String email;
-    private String role;
+
     private String name;
     private String surname;
+    private String passportNumber;
+
     private String faculty;
     private String speciality;
-    private String passportNumber;
-    private String filePath;
-    private Long modificationTime;
-    private Double average;
+    private String educationProgram;
+
     private Integer incomeYear;
     private Integer rate;
+    private Double average;
+    private Long modificationTime;
 
     @Lob
     @Column(name = "photo", columnDefinition = "longblob")
     private byte[] photo;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Group studentGroup;
 
     @ElementCollection
-    @CollectionTable(name="student2contacts", joinColumns=@JoinColumn(name="STUDENT_ID"))
-    @Column(name="contact")
+    @CollectionTable(name = "student2contact", joinColumns = @JoinColumn(name = "student_email"))
+    @Column(name = "contact")
     private List<String> contactInfo;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "student2course",
-            joinColumns = @JoinColumn(name = "STUDENT_ID"),
-            inverseJoinColumns = @JoinColumn(name = "COURSE_ID")
+            joinColumns = @JoinColumn(name = "student_email"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private List<Course> courses;
 }
