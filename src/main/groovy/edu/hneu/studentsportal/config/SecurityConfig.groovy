@@ -18,12 +18,12 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     Filter ssoFilter
 
     @Override
-    void configure(final HttpSecurity http) {
+    void configure(HttpSecurity http) {
         http.authorizeRequests()
                 .antMatchers('/management/**')
                     .access("hasRole('ROLE_ADMIN')")
                 .antMatchers('/account/**')
-                    .access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+                    .access("hasAnyRole('ROLE_STUDENT', 'ROLE_ADMIN')")
                 .and()
                     .formLogin()
                         .loginPage('/login')

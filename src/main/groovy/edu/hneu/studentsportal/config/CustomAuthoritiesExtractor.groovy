@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.config
 
-import edu.hneu.studentsportal.enums.UserRole
+import com.google.common.collect.Lists
+import edu.hneu.studentsportal.service.CustomUserDetailsService
 import edu.hneu.studentsportal.service.UserService
 import org.springframework.boot.autoconfigure.security.oauth2.resource.AuthoritiesExtractor
 import org.springframework.security.core.GrantedAuthority
@@ -13,24 +14,16 @@ import javax.annotation.Resource
 class CustomAuthoritiesExtractor implements AuthoritiesExtractor {
 
     @Resource
+    CustomUserDetailsService userDetailsService
+    @Resource
     UserService userService
 
     @Override
-    List<GrantedAuthority> extractAuthorities(final Map<String, Object> userDetails) {
-        [ getSimpleGrantedAuthority((LinkedHashMap) userDetails) ]
+    List<GrantedAuthority> extractAuthorities(Map<String, Object> userDetails) {
+        userDetailsService.extractUserEmail(userDetails)
+                .map { email -> userService.getUserForId(email) }
+                .map { user -> userDetailsService.getGrantedAuthorities(user)}
+                .orElse(Lists.newArrayList(new SimpleGrantedAuthority("ROLE_STUDENT")))
     }
 
-    def getSimpleGrantedAuthority(final LinkedHashMap userDetails) {
-        def email = userService.extractUserEmailFromDetails(userDetails)
-        if (email) {
-            def user = userService.getUserForId(email.get())
-            if (user.isPresent() && user.get().getRole() == UserRole.ADMIN) {
-                return new SimpleGrantedAuthority("ROLE_ADMIN")
-            } else {
-                return new SimpleGrantedAuthority("ROLE_USER")
-            }
-        } else {
-            return new SimpleGrantedAuthority("ROLE_USER")
-        }
-    }
 }

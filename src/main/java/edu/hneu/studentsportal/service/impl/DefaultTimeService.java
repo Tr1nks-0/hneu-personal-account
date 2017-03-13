@@ -1,15 +1,16 @@
 package edu.hneu.studentsportal.service.impl;
 
-import edu.hneu.studentsportal.service.TimeService;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 
-@Component
+import org.springframework.stereotype.Service;
+
+import edu.hneu.studentsportal.service.TimeService;
+
+@Service
 public class DefaultTimeService implements TimeService {
 
 

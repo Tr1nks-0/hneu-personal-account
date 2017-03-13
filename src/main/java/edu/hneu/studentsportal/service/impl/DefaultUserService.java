@@ -1,9 +1,5 @@
 package edu.hneu.studentsportal.service.impl;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Optional;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -24,21 +20,8 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public Optional<User> getUserForId(final String id){
-        try {
-            return Optional.ofNullable(userRepository.findOne(id));
-        } catch (final RuntimeException e) {
-            return Optional.empty();
-        }
-    }
-    
-    @Override
-    public Optional<String> extractUserEmailFromDetails(final LinkedHashMap userDetails) {
-        final List emails = (List) userDetails.get("emails");
-        if (emails != null && !emails.isEmpty()) {
-            return Optional.ofNullable((String) ((LinkedHashMap) emails.get(0)).get("value"));
-        }
-        return Optional.empty();
+    public User getUserForId(final String id){
+        return userRepository.findOne(id);
     }
 
 }

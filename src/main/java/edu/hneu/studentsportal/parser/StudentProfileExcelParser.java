@@ -1,31 +1,31 @@
 package edu.hneu.studentsportal.parser;
 
 
+import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.PictureData;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+
 import edu.hneu.studentsportal.entity.Course;
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Semester;
 import edu.hneu.studentsportal.entity.StudentProfile;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.repository.GroupRepository;
-import edu.hneu.studentsportal.service.FileService;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.PictureData;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.apache.commons.lang.BooleanUtils.isFalse;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 @Component
 @Scope("prototype")
@@ -36,13 +36,8 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
     private static final int LEFT_SEMESTER_COLL = 0;
     private static final int RIGHT_SEMESTER_COLL = 6;
 
-    @Autowired
-    private FileService fileService;
     @Resource
     private GroupRepository groupRepository;
-
-    @Value("${profile.photo.location}")
-    public String profilePhotoLocation;
 
     private Integer rowNumber;
 
@@ -69,8 +64,8 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         return studentProfile;
     }
 
-    private String getEducationProgram(Integer row) {
-        String rowValue = getStringCellValue(row, 0);
+    private String getEducationProgram(final Integer row) {
+        final String rowValue = getStringCellValue(row, 0);
         if(rowValue.contains("МАГІСТЕРСЬКА ПРОГРАМА")) {
             return getStringCellValue(row, 1);
         }
@@ -105,7 +100,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
     }
 
     private Optional<Semester> getSemester(int rowNumber, final Integer collNumber) {
-        String semesterLabel = getStringCellValue(rowNumber, collNumber);
+        final String semesterLabel = getStringCellValue(rowNumber, collNumber);
         if (StringUtils.isNotBlank(semesterLabel)) {
             final Semester semester = new Semester();
             semester.setLabel(semesterLabel);
@@ -154,13 +149,13 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
     }
 
     private boolean isNotSpecialityLabel(final Integer rowNumber) {
-        String stringCellValue = getStringCellValue(rowNumber, 0);
+        final String stringCellValue = getStringCellValue(rowNumber, 0);
         return isFalse(stringCellValue.contains("НАПРЯМ ПІДГОТОВКИ"))
                 && isFalse(stringCellValue.contains("СПЕЦІАЛЬНІСТЬ"));
     }
 
     public boolean isCourseLabel(final Integer rowNumber) {
-        String stringCellValue = getStringCellValue(rowNumber, 0);
+        final String stringCellValue = getStringCellValue(rowNumber, 0);
         return stringCellValue.contains("КУРС") || stringCellValue.contains("РІК НАВЧАННЯ");
     }
 

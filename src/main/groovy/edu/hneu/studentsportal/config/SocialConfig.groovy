@@ -31,7 +31,7 @@ class SocialConfig {
     AuthoritiesExtractor authoritiesExtractor
 
     @Bean
-    FilterRegistrationBean oauth2ClientFilterRegistration(final OAuth2ClientContextFilter filter) {
+    FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
         new FilterRegistrationBean(
                 filter: filter,
                 order: -100
@@ -60,7 +60,7 @@ class SocialConfig {
 
     @Bean
     UserInfoTokenServices userInfoTokenServices() {
-        def tokenServices = new UserInfoTokenServices(google().getResource().getUserInfoUri(), google().getClient().getClientId());
+        def tokenServices = new UserInfoTokenServices(google().resource.userInfoUri, google().client.clientId);
         tokenServices.setAuthoritiesExtractor(authoritiesExtractor)
         tokenServices.setRestTemplate(oAuth2RestTemplate())
         tokenServices
@@ -68,7 +68,7 @@ class SocialConfig {
 
     @Bean
     OAuth2RestTemplate oAuth2RestTemplate() {
-        new OAuth2RestTemplate(google().getClient(), oauth2ClientContext)
+        new OAuth2RestTemplate(google().client, oauth2ClientContext)
     }
 
 

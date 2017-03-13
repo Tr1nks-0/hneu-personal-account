@@ -1,14 +1,16 @@
 package edu.hneu.studentsportal.controller;
 
-import edu.hneu.studentsportal.entity.StudentProfile;
-import edu.hneu.studentsportal.entity.User;
-import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.pojo.Schedule;
-import edu.hneu.studentsportal.service.StudentService;
-import edu.hneu.studentsportal.service.TimeService;
-import edu.hneu.studentsportal.service.UserService;
-import edu.hneu.studentsportal.service.impl.DefaultEmailService;
-import edu.hneu.studentsportal.service.impl.GmailService;
+import static java.util.Objects.isNull;
+
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,12 +23,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-import java.security.Principal;
-import java.util.*;
-
-import static java.util.Objects.isNull;
+import edu.hneu.studentsportal.entity.StudentProfile;
+import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.enums.UserRole;
+import edu.hneu.studentsportal.pojo.Schedule;
+import edu.hneu.studentsportal.service.CustomUserDetailsService;
+import edu.hneu.studentsportal.service.StudentService;
+import edu.hneu.studentsportal.service.TimeService;
+import edu.hneu.studentsportal.service.UserService;
+import edu.hneu.studentsportal.service.impl.DefaultEmailService;
+import edu.hneu.studentsportal.service.impl.GmailService;
 
 @Controller
 @RequestMapping("/account")
@@ -38,6 +44,8 @@ public class AccountController {
     private TimeService timeService;
     @Resource
     private UserService userService;
+    @Resource
+    private CustomUserDetailsService userDetailsService;
     @Resource
     private GmailService gmailService;
     @Resource
@@ -52,10 +60,9 @@ public class AccountController {
 
     @RequestMapping
     public ModelAndView account(final HttpSession session, final Model model, final Principal principal) {
-        final Optional<String> email = userService
-                .extractUserEmailFromDetails((LinkedHashMap) ((OAuth2Authentication) principal).getUserAuthentication().getDetails());
+        final Optional<String> email = userDetailsService.extractUserEmail((Map<String, List<Object>>) ((OAuth2Authentication) principal).getUserAuthentication().getDetails());
         if (email.isPresent()) {
-            final Optional<User> currentUser = userService.getUserForId(email.get());
+            final Optional<User> currentUser = Optional.ofNullable(userService.getUserForId(email.get()));
             if (currentUser.isPresent() && currentUser.get().getRole() == UserRole.ADMIN)
                 return new ModelAndView("redirect:management/uploadStudentProfilesFromExcel");
             final Optional<StudentProfile> profile = studentService.findStudentProfileByEmail(email.get());
@@ -80,8 +87,8 @@ public class AccountController {
     public StudentProfile getProfile(final HttpSession session, final Principal principal) {
         String email = (String) session.getAttribute("email");
         if (isNull(email)) {
-            final LinkedHashMap details = (LinkedHashMap) ((OAuth2Authentication) principal).getUserAuthentication().getDetails();
-            email = userService.extractUserEmailFromDetails(details).orElse(StringUtils.EMPTY);
+            final Map<String, List<Object>> details = (Map<String, List<Object>>) ((OAuth2Authentication) principal).getUserAuthentication().getDetails();
+            email = userDetailsService.extractUserEmail(details).orElse(StringUtils.EMPTY);
         }
         return studentService.findStudentProfileByEmail(email).orElse(null);
     }
@@ -137,7 +144,7 @@ public class AccountController {
 
     @RequestMapping("/sendEmail")
     public String contactUs(@RequestParam final String message, final HttpSession session, final Principal principal) {
-    /*    //@formatter:off
+        /*    //@formatter:off
         final String userEmail = getProfile(session, principal).getEmail();
         final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(
                 userEmail, decanMail)

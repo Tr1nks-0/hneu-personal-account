@@ -55,7 +55,7 @@ dependencies {
 
     compile "javax.validation:validation-api:1.1.0.Final"
     compile "org.hibernate:hibernate-validator:5.0.1.Final"
-    compile"com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.8.7"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-hibernate4:2.8.7"
 
     // Emails
 /*    compile "javax.mail:mail:1.4.7"
@@ -64,6 +64,7 @@ dependencies {
 
     compile 'org.codehaus.groovy:groovy-all:2.4.9'
     compile "org.apache.poi:poi-ooxml:3.9"
+    compile "org.apache.commons:commons-collections4:4.0"
     compile "com.google.guava:guava:18.0"
     compile "commons-lang:commons-lang:2.6"
     compile "commons-fileupload:commons-fileupload:1.2.2"
