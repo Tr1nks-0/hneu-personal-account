@@ -1,31 +1,28 @@
 package edu.hneu.studentsportal.parser;
 
 
-import static org.apache.commons.lang.BooleanUtils.isFalse;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.PictureData;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
 import edu.hneu.studentsportal.entity.Course;
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Semester;
 import edu.hneu.studentsportal.entity.StudentProfile;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.repository.GroupRepository;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.PictureData;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 @Component
 @Scope("prototype")
@@ -57,19 +54,13 @@ public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfil
         studentProfile.setIncomeYear(getIntegerCellValue(++rowNumber, 2));
         studentProfile.setContactInfo(getContactInfo());
         studentProfile.setSpeciality(getStringCellValue(rowNumber, 2));
-        studentProfile.setEducationProgram(getEducationProgram(++rowNumber));
+        if(getStringCellValue(rowNumber + 1, 0).contains("МАГІСТЕРСЬКА ПРОГРАМА")) {
+            studentProfile.setEducationProgram(getStringCellValue(++rowNumber, 2));
+        }
         studentProfile.setStudentGroup(groupRepository.findByName(getStringCellValue(++rowNumber, 2)));
         studentProfile.setCourses(getCourses());
         studentProfile.setPhoto(getProfileImage());
         return studentProfile;
-    }
-
-    private String getEducationProgram(final Integer row) {
-        final String rowValue = getStringCellValue(row, 0);
-        if(rowValue.contains("МАГІСТЕРСЬКА ПРОГРАМА")) {
-            return getStringCellValue(row, 1);
-        }
-        return null;
     }
 
     private List<Course> getCourses() {
