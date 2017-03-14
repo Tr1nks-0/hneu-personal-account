@@ -1,34 +1,34 @@
 package edu.hneu.studentsportal.service;
 
+import edu.hneu.studentsportal.entity.Student;
+
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-import edu.hneu.studentsportal.entity.StudentProfile;
-
 public interface StudentService {
 
-    StudentProfile readStudentProfilesFromFile(File file);
+    Student readStudentProfilesFromFile(File file);
 
-    void save(StudentProfile studentProfile);
+    void save(Student studentProfile);
 
-    StudentProfile findStudentProfileById(String id);
+    Student findStudentProfileById(String id);
 
-    Optional<StudentProfile> findStudentProfileByEmail(String email);
+    Optional<Student> findStudentProfileByEmail(String email);
 
     void updateStudentsScoresFromFile(File file);
 
-    List<StudentProfile> find();
+    List<Student> find();
 
-    void setCredentials(StudentProfile studentProfile);
+    void setCredentials(Student studentProfile);
 
-    void setGroupId(StudentProfile studentProfile);
+    void setGroupId(Student studentProfile);
 
-    void sendEmailAfterProfileCreation(StudentProfile studentProfile);
+    void sendEmailAfterProfileCreation(Student studentProfile);
 
-    void sendEmailAfterProfileUpdating(StudentProfile studentProfile);
+    void sendEmailAfterProfileUpdating(Student studentProfile);
 
-    List<StudentProfile> find(String fullName, Integer page);
+    List<Student> find(String fullName, Integer page);
 
     long getPagesCountForSearchCriteria(String searchCriteria);
 

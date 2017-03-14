@@ -1,5 +1,10 @@
 package edu.hneu.studentsportal.parser;
 
+import static java.util.Objects.nonNull;
+
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
@@ -7,15 +12,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import java.io.File;
-import java.io.IOException;
-
-import static java.util.Objects.nonNull;
+import lombok.Data;
 
 public abstract class AbstractExcelParser<E> {
 
-    protected Sheet sheet;
-    protected Workbook workbook;
+    Sheet sheet;
+    Workbook workbook;
 
     public E parse(File file) {
         try {
@@ -29,19 +31,49 @@ public abstract class AbstractExcelParser<E> {
 
     public abstract E extractModel();
 
-    protected Row getRow(int rowNumber) {
+    Row getRow(int rowNumber) {
         return sheet.getRow(rowNumber);
     }
 
-    protected String getStringCellValue(int rowNumber, int cellNumber) {
+    String getStringCellValue(int rowNumber, int cellNumber) {
         Row row = getRow(rowNumber);
         if (nonNull(row) && nonNull(row.getCell(cellNumber)))
             return row.getCell(cellNumber).toString();
         return StringUtils.EMPTY;
     }
 
-    protected Integer getIntegerCellValue(int row, int cell) {
+    String getStringCellValue(int rowNumber) {
+        return getStringCellValue(rowNumber, 0);
+    }
+
+    String getString1CellValue(int rowNumber) {
+        return getStringCellValue(rowNumber, 1);
+    }
+
+    String getString2CellValue(int rowNumber) {
+        return getStringCellValue(rowNumber, 2);
+    }
+
+    Integer getIntegerCellValue(int row, int cell) {
         return (int) sheet.getRow(row).getCell(cell).getNumericCellValue();
+    }
+
+    @Data
+    static class Indexer {
+
+        int value = 0;
+
+        private Indexer(int start) {
+            value = start;
+        }
+
+        public static Indexer of(int start) {
+            return new Indexer(start);
+        }
+
+        int next() {
+            return ++value;
+        }
     }
 
 }

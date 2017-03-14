@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.repository.impl;
 
-import edu.hneu.studentsportal.entity.StudentProfile;
+import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.repository.StudentDao;
 import org.springframework.stereotype.Repository;
 
@@ -12,12 +12,12 @@ public class DefaultStudentDao implements StudentDao {
     private static final int ITEMS_ON_PAGE_COUNT = 10;
 
     @Override
-    public List<StudentProfile> find(final String fullName, final Integer page) {
+    public List<Student> find(final String fullName, final Integer page) {
         return null;
     }
 
     @Override
-    public StudentProfile find(final String subKey, final String groupCode) {
+    public Student find(final String subKey, final String groupCode) {
         return null;
     }
 
@@ -30,12 +30,12 @@ public class DefaultStudentDao implements StudentDao {
     private MongoOperations mongoOperations;
 
     @Override
-    public StudentProfile findById(String id) {
+    public Student findById(String id) {
         return mongoOperations.findOne(Query.query(Criteria.where("id").is(id)), StudentProfile.class);
     }
 
     @Override
-    public void save(StudentProfile studentProfile) {
+    public void save(Student studentProfile) {
         studentProfile.setModificationTime(System.nanoTime());
         mongoOperations.save(studentProfile);
     }
@@ -48,7 +48,7 @@ public class DefaultStudentDao implements StudentDao {
 
     @Override
     public void remove(String id) {
-        StudentProfile profile = mongoOperations.findById(id, StudentProfile.class);
+        Student profile = mongoOperations.findById(id, StudentProfile.class);
         mongoOperations.remove(profile);
     }
 
@@ -58,7 +58,7 @@ public class DefaultStudentDao implements StudentDao {
     }
 
     @Override
-    public StudentProfile find(String subKey, String groupCode) {
+    public Student find(String subKey, String groupCode) {
         Pattern subKeyPattern = Pattern.compile(subKey, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
         Query query = Query.query(new Criteria().andOperator(Criteria.where("id").regex(subKeyPattern), Criteria.where("group").is(groupCode)));
         return mongoOperations.findOne(query, StudentProfile.class);

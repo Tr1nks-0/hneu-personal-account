@@ -1,16 +1,15 @@
 package edu.hneu.studentsportal.controller;
 
-import static java.util.Objects.isNull;
-
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpSession;
-
+import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.enums.UserRole;
+import edu.hneu.studentsportal.pojo.Schedule;
+import edu.hneu.studentsportal.service.CustomUserDetailsService;
+import edu.hneu.studentsportal.service.StudentService;
+import edu.hneu.studentsportal.service.TimeService;
+import edu.hneu.studentsportal.service.UserService;
+import edu.hneu.studentsportal.service.impl.DefaultEmailService;
+import edu.hneu.studentsportal.service.impl.GmailService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,16 +22,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import edu.hneu.studentsportal.entity.StudentProfile;
-import edu.hneu.studentsportal.entity.User;
-import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.pojo.Schedule;
-import edu.hneu.studentsportal.service.CustomUserDetailsService;
-import edu.hneu.studentsportal.service.StudentService;
-import edu.hneu.studentsportal.service.TimeService;
-import edu.hneu.studentsportal.service.UserService;
-import edu.hneu.studentsportal.service.impl.DefaultEmailService;
-import edu.hneu.studentsportal.service.impl.GmailService;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static java.util.Objects.isNull;
 
 @Controller
 @RequestMapping("/account")
@@ -65,9 +63,9 @@ public class AccountController {
             final Optional<User> currentUser = Optional.ofNullable(userService.getUserForId(email.get()));
             if (currentUser.isPresent() && currentUser.get().getRole() == UserRole.ADMIN)
                 return new ModelAndView("redirect:management/uploadStudentProfilesFromExcel");
-            final Optional<StudentProfile> profile = studentService.findStudentProfileByEmail(email.get());
+            final Optional<Student> profile = studentService.findStudentProfileByEmail(email.get());
             if (profile.isPresent()) {
-                final StudentProfile studentProfile = profile.get();
+                final Student studentProfile = profile.get();
                 model.addAttribute("title", "top.menu.home");
                 model.addAttribute("currentCourse", getCurrentCourse(studentProfile));
                 session.setAttribute("groupId", studentProfile.getStudentGroup().getId());
@@ -79,12 +77,12 @@ public class AccountController {
         return new ModelAndView("redirect:login?error");
     }
 
-    private int getCurrentCourse(final StudentProfile studentProfile) {
+    private int getCurrentCourse(final Student studentProfile) {
         return timeService.getCurrentDate().getYear() - studentProfile.getIncomeYear() + 1;
     }
 
     @ModelAttribute(value = "profile")
-    public StudentProfile getProfile(final HttpSession session, final Principal principal) {
+    public Student getProfile(final HttpSession session, final Principal principal) {
         String email = (String) session.getAttribute("email");
         if (isNull(email)) {
             final Map<String, List<Object>> details = (Map<String, List<Object>>) ((OAuth2Authentication) principal).getUserAuthentication().getDetails();

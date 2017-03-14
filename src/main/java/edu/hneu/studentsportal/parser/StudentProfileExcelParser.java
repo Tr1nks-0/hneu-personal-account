@@ -1,165 +1,180 @@
 package edu.hneu.studentsportal.parser;
 
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import edu.hneu.studentsportal.entity.Course;
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.Semester;
-import edu.hneu.studentsportal.entity.StudentProfile;
+import edu.hneu.studentsportal.entity.*;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.repository.GroupRepository;
+import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
+@Log4j
 @Component
 @Scope("prototype")
-public class StudentProfileExcelParser extends AbstractExcelParser<StudentProfile> {
-
-    private static final Logger LOG = Logger.getLogger(StudentProfileExcelParser.class);
+public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     private static final int LEFT_SEMESTER_COLL = 0;
     private static final int RIGHT_SEMESTER_COLL = 6;
+    private static final String MASTER_PROGRAM_HOLDER = "МАГІСТЕРСЬКА ПРОГРАМА";
+    private static final String SPECIALITY_HOLDER = "СПЕЦІАЛЬНІСТЬ";
+    private static final String COURSER_DIRECTION_HOLDER = "НАПРЯМ ПІДГОТОВКИ";
+    private static final String HEADER_HOLDER = "ІНДИВІДУАЛЬНИЙ НАВЧАЛЬНИЙ ПЛАН";
+    private static final String COURSER_HOLDER = "КУРС";
+    private static final String INCOME_YEAR_HOLDER = "РІК НАВЧАННЯ";
+    private static final String FACULTY_DIRECTOR_HOLDER = "Декан факультету";
+    private static final String SEMESTER_END_HOLDER = "ВСЬОГО ЗА";
+
+    private static final Map<String, DisciplineType> DISCIPLINE_TYPES_MAP = ImmutableMap.of(
+            "МАГ-МАЙНОР", DisciplineType.MAGMAYNOR,
+            "МАЙНОР", DisciplineType.MAYNOR,
+            "МЕЙДЖОР", DisciplineType.MAJOR
+    );
 
     @Resource
     private GroupRepository groupRepository;
 
-    private Integer rowNumber;
-
     @Override
-    public StudentProfile extractModel() {
-        final String header = getStringCellValue(3, 0);
-        if (!header.contains("ІНДИВІДУАЛЬНИЙ НАВЧАЛЬНИЙ ПЛАН")) {
-            LOG.info("File is not valid. Header :" + header);
+    public Student extractModel() {
+        Indexer indexer = Indexer.of(3);
+        String header = getStringCellValue(indexer.value);
+        if (isFalse(header.contains(HEADER_HOLDER))) {
+            log.info("File is not valid. Header :" + header);
             throw new RuntimeException("Student profile is not valid");
         }
-        rowNumber = 5;
-        final StudentProfile studentProfile = new StudentProfile();
-        studentProfile.setSurname(getStringCellValue(rowNumber, 2));
-        studentProfile.setName(getStringCellValue(++rowNumber, 2));
-        studentProfile.setPassportNumber(getStringCellValue(++rowNumber, 2).split("\\.")[0]);
-        studentProfile.setFaculty(getStringCellValue(++rowNumber, 2));
-        studentProfile.setIncomeYear(getIntegerCellValue(++rowNumber, 2));
-        studentProfile.setContactInfo(getContactInfo());
-        studentProfile.setSpeciality(getStringCellValue(rowNumber, 2));
-        if(getStringCellValue(rowNumber + 1, 0).contains("МАГІСТЕРСЬКА ПРОГРАМА")) {
-            studentProfile.setEducationProgram(getStringCellValue(++rowNumber, 2));
-        }
-        studentProfile.setStudentGroup(groupRepository.findByName(getStringCellValue(++rowNumber, 2)));
-        studentProfile.setCourses(getCourses());
-        studentProfile.setPhoto(getProfileImage());
-        return studentProfile;
+
+        indexer.next();
+        Student student = Student.builder()
+                .surname(getString2CellValue(indexer.next()))
+                .name(getString2CellValue(indexer.next()))
+                .passportNumber(getString2CellValue(indexer.next()).split("\\.")[0])
+                .faculty(getString2CellValue(indexer.next()))
+                .incomeYear(getIntegerCellValue(indexer.next(), 2))
+                .contactInfo(extractContacts(indexer))
+                .speciality(getString2CellValue(indexer.next()))
+                .educationProgram(extractMasterEducationProgram(indexer))
+                .studentGroup(extractGroup(indexer))
+                .courses(extractCourses(indexer))
+                .photo(extractProfileImage())
+                .build();
+
+        return student;
     }
 
-    private List<Course> getCourses() {
-        final List<Course> courses = new ArrayList<>();
-        while (++rowNumber < 100) {
-            if (isCourseLabel(rowNumber))
-                courses.add(getCourse(rowNumber));
-            if (isFileEnd(rowNumber))
-                break;
-        }
+    private List<String> extractContacts(Indexer indexer) {
+        List<String> contacts = Lists.newArrayList();
+        while (indexer.value < 100 && isNotSpecialityLabel(indexer.value + 1))
+            contacts.add(getString2CellValue(indexer.next()));
+        return contacts;
+    }
+
+    private boolean isNotSpecialityLabel(int row) {
+        String stringCellValue = getStringCellValue(row);
+        return isFalse(stringCellValue.contains(COURSER_DIRECTION_HOLDER)) && isFalse(stringCellValue.contains(SPECIALITY_HOLDER));
+    }
+
+    private String extractMasterEducationProgram(Indexer indexer) {
+        boolean isMasterProgram = getStringCellValue(indexer.value + 1).contains(MASTER_PROGRAM_HOLDER);
+        return isMasterProgram ? getString2CellValue(indexer.next()) : null;
+    }
+
+    private Group extractGroup(Indexer indexer) {
+        String groupName = getString2CellValue(indexer.next());
+        return groupRepository.findByName(groupName);
+    }
+
+    private List<Course> extractCourses(Indexer indexer) {
+        List<Course> courses = Lists.newArrayList();
+        while (isNotFileEnd(indexer.next()))
+            if (isCourseLabel(indexer))
+                courses.add(extractCourse(indexer));
         return courses;
     }
 
-    private Course getCourse(Integer rowNumber) {
-        final Course course = new Course();
-        course.setLabel(getStringCellValue(rowNumber, 0));
-        course.setSemesters(getSemesters(++rowNumber));
+    private boolean isCourseLabel(Indexer indexer) {
+        String stringCellValue = getStringCellValue(indexer.value);
+        return stringCellValue.contains(COURSER_HOLDER) || stringCellValue.contains(INCOME_YEAR_HOLDER);
+    }
+
+    private boolean isNotFileEnd(int row) {
+        return row < 100 && isFalse(getString1CellValue(row).contains(FACULTY_DIRECTOR_HOLDER));
+    }
+
+    private Course extractCourse(Indexer indexer) {
+        Course course = new Course();
+        course.setLabel(getStringCellValue(indexer.value));
+        course.setSemesters(extractSemesters(indexer));
         return course;
     }
 
-    private List<Semester> getSemesters(final Integer rowNumber) {
-        final Optional<Semester> semesterLeft = getSemester(rowNumber, LEFT_SEMESTER_COLL);
-        final Optional<Semester> semesterRight = getSemester(rowNumber, RIGHT_SEMESTER_COLL);
-        return Lists.newArrayList(semesterLeft, semesterRight).stream()
+    private List<Semester> extractSemesters(Indexer indexer) {
+        indexer.next();
+        return Lists.newArrayList(extractSemester(indexer, LEFT_SEMESTER_COLL), extractSemester(indexer, RIGHT_SEMESTER_COLL))
+                .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private Optional<Semester> getSemester(int rowNumber, final Integer collNumber) {
-        final String semesterLabel = getStringCellValue(rowNumber, collNumber);
+    private Optional<Semester> extractSemester(Indexer indexer, int col) {
+        Indexer internalSemesterIndex = Indexer.of(indexer.value);
+        String semesterLabel = getStringCellValue(internalSemesterIndex.value, col);
         if (StringUtils.isNotBlank(semesterLabel)) {
-            final Semester semester = new Semester();
+            Semester semester = new Semester();
             semester.setLabel(semesterLabel);
-            final List<Discipline> disciplines = new ArrayList<>();
-            rowNumber += 2;
-            while (isNotSemesterEnd(rowNumber, collNumber + 1)) {
-                if (isNotEmpty(getStringCellValue(rowNumber, collNumber + 1)))
-                    disciplines.add(getDiscipline(rowNumber, collNumber + 1));
-                rowNumber++;
-            }
-            if (disciplines.isEmpty())
-                throw new RuntimeException("Disciplines were not found");
-            semester.setDisciplines(disciplines);
-            semester.setTotal(getIntegerCellValue(rowNumber, collNumber + 2));
+
+            internalSemesterIndex.next();
+            internalSemesterIndex.next();
+
+            semester.setDisciplines(extractDisciplines(internalSemesterIndex, col));
+            semester.setTotal(getIntegerCellValue(internalSemesterIndex.value, col + 2));
             return Optional.of(semester);
         }
         return Optional.empty();
     }
 
-    private Discipline getDiscipline(final int rowNumber, final int collNumber) {
-        final Discipline discipline = new Discipline();
-        final String disciplineName = getStringCellValue(rowNumber, collNumber);
-        if ("МАГ-МАЙНОР".equals(disciplineName))
-            discipline.setType(DisciplineType.MAGMAYNOR);
-        else if ("МАЙНОР".equals(disciplineName))
-            discipline.setType(DisciplineType.MAYNOR);
-        else if ("МЕЙДЖОР".equals(disciplineName))
-            discipline.setType(DisciplineType.MAJOR);
-        else {
-            discipline.setType(DisciplineType.REGULAR);
-            discipline.setLabel(disciplineName);
+    private List<Discipline> extractDisciplines(Indexer internalSemesterIndex, int col) {
+        final List<Discipline> disciplines = Lists.newArrayList();
+        while (isNotSemesterEnd(internalSemesterIndex.value, col + 1)) {
+            if (isNotEmpty(getStringCellValue(internalSemesterIndex.value, col + 1)))
+                disciplines.add(extractDiscipline(internalSemesterIndex.value, col + 1));
+            internalSemesterIndex.next();
         }
-        discipline.setCredits(getStringCellValue(rowNumber, collNumber + 1));
-        discipline.setControlForm(getStringCellValue(rowNumber, collNumber + 2));
+        return disciplines;
+    }
+
+    private boolean isNotSemesterEnd(int row, int col) {
+        return isFalse(getStringCellValue(row, col).contains(SEMESTER_END_HOLDER));
+    }
+
+    private Discipline extractDiscipline(int row, int col) {
+        Discipline discipline = new Discipline();
+        String disciplineNameOrType = getStringCellValue(row, col);
+        DisciplineType disciplineType = DISCIPLINE_TYPES_MAP.getOrDefault(disciplineNameOrType, DisciplineType.REGULAR);
+        discipline.setType(disciplineType);
+        discipline.setCredits(getStringCellValue(row, col + 1));
+        discipline.setControlForm(getStringCellValue(row, col + 2));
+        if (disciplineType == DisciplineType.REGULAR)
+            discipline.setLabel(disciplineNameOrType);
         return discipline;
     }
 
-    private List<String> getContactInfo() {
-        final List<String> contacts = new ArrayList<>();
-        while (++rowNumber < 100 && isNotSpecialityLabel(rowNumber)) {
-            contacts.add(getStringCellValue(rowNumber, 2));
-        }
-        if (contacts.isEmpty())
-            throw new RuntimeException("Contacts were not found");
-        return contacts;
-    }
 
-    private boolean isNotSpecialityLabel(final Integer rowNumber) {
-        final String stringCellValue = getStringCellValue(rowNumber, 0);
-        return isFalse(stringCellValue.contains("НАПРЯМ ПІДГОТОВКИ"))
-                && isFalse(stringCellValue.contains("СПЕЦІАЛЬНІСТЬ"));
-    }
-
-    public boolean isCourseLabel(final Integer rowNumber) {
-        final String stringCellValue = getStringCellValue(rowNumber, 0);
-        return stringCellValue.contains("КУРС") || stringCellValue.contains("РІК НАВЧАННЯ");
-    }
-
-    public boolean isFileEnd(final Integer rowNumber) {
-        return getStringCellValue(rowNumber, 1).contains("Декан факультету");
-    }
-
-    public boolean isNotSemesterEnd(final Integer semesterRow, final int cellrowNumber) {
-        return isFalse(getStringCellValue(semesterRow, cellrowNumber).contains("ВСЬОГО ЗА"));
-    }
-
-    private byte[] getProfileImage() {
-        final List<? extends PictureData> allPictures = workbook.getAllPictures();
+    private byte[] extractProfileImage() {
+        List<? extends PictureData> allPictures = workbook.getAllPictures();
         if (allPictures.isEmpty())
             return null;
         return Iterables.getLast(allPictures).getData();

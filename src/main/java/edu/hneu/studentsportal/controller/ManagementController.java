@@ -1,9 +1,6 @@
 package edu.hneu.studentsportal.controller;
 
-import edu.hneu.studentsportal.entity.Course;
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.Semester;
-import edu.hneu.studentsportal.entity.StudentProfile;
+import edu.hneu.studentsportal.entity.*;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.pojo.FilesUploadModel;
 import edu.hneu.studentsportal.pojo.StudentDiscipline;
@@ -62,7 +59,7 @@ public class ManagementController {
         LOG.info("Files are going to upload");
         final List<MultipartFile> filesToUpload = uploadForm.getFiles();
         final Map<String, Boolean> uploadedFilesNames = fileService.reduceForEachUploadedFile(filesToUpload, uploadedFile -> {
-            final StudentProfile studentProfile = studentService.readStudentProfilesFromFile(uploadedFile);
+            final Student studentProfile = studentService.readStudentProfilesFromFile(uploadedFile);
             studentService.setCredentials(studentProfile);
             studentService.save(studentProfile);
             studentService.sendEmailAfterProfileCreation(studentProfile);
@@ -118,7 +115,7 @@ public class ManagementController {
         model.addAttribute("group", group);
         if(nonNull(group) && !group.isEmpty()) {
             model.addAttribute("groups", studentService.find().stream()
-                    .map(StudentProfile::getStudentGroup)
+                    .map(Student::getStudentGroup)
                     .filter(userGroup -> userGroup.getName().contains(group))
                     .sorted()
                     .collect(Collectors.toSet()));
@@ -126,7 +123,7 @@ public class ManagementController {
         }else {
             model.addAttribute("groups",
                     studentService.find().stream()
-                            .map(StudentProfile::getStudentGroup)
+                            .map(Student::getStudentGroup)
                             .sorted()
                             .collect(Collectors.toSet()));
         }
@@ -136,7 +133,7 @@ public class ManagementController {
     @RequestMapping(value = "/groups/{group:.+}")
     public String choseSemesterForSpecialDisciplines(@PathVariable final String group, final Model model) {
         model.addAttribute("group", group);
-        final Optional<StudentProfile> studentProfile = studentService.find().stream()
+        final Optional<Student> studentProfile = studentService.find().stream()
                 .filter(student -> student.getStudentGroup().getName().contains(group)).findAny();
         model.addAttribute("coursesCount", studentProfile.map(profile -> profile.getCourses().size()).orElse(0));
         return "management/semesterPerGroup";
@@ -160,7 +157,7 @@ public class ManagementController {
         final int courseNumber = course - 1;
         final int semesterNumber = semester - 1;
         disciplines.getList().forEach(discipline -> {
-            final StudentProfile studentProfile = studentService.findStudentProfileById(discipline.getStudentId());
+            final Student studentProfile = studentService.findStudentProfileById(discipline.getStudentId());
             final Discipline studentDiscipline = studentProfile.getCourses().get(courseNumber)
                     .getSemesters().get(semesterNumber)
                     .getDisciplines().get(discipline.getNumber());
@@ -197,13 +194,13 @@ public class ManagementController {
 
     @RequestMapping(value = "/students/{id:.+}")
     public ModelAndView editStudent(@PathVariable("id") final String id) {
-        final StudentProfile studentProfile = studentService.findStudentProfileById(id);
+        final Student studentProfile = studentService.findStudentProfileById(id);
         return new ModelAndView("management/studentEditor", "profile", studentProfile);
     }
 
     @RequestMapping(value = "/students/{id:.+}", method = RequestMethod.POST)
-    public String editStudent(@PathVariable("id") final String id, @ModelAttribute("profile") final StudentProfile editedProfile) {
-        final StudentProfile studentProfile = studentService.findStudentProfileById(id);
+    public String editStudent(@PathVariable("id") final String id, @ModelAttribute("profile") final Student editedProfile) {
+        final Student studentProfile = studentService.findStudentProfileById(id);
         if (nonNull(studentProfile)){
             studentProfile.setName(editedProfile.getName());
             studentProfile.setSurname(editedProfile.getSurname());

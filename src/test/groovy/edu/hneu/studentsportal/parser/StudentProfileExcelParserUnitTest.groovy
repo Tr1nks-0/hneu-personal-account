@@ -158,6 +158,20 @@ class StudentProfileExcelParserUnitTest extends Specification {
             BACHELOR_STUDENT_PROFILE | 4      | 2        | 5
     }
 
+    @Unroll
+    def 'student from #excelFileName should have photo'() {
+        given:
+            def excelFile = loadResource excelFileName
+        when:
+            def profile = studentProfileExcelParser.parse(excelFile)
+        then:
+            profile.getPhoto() != null
+        where:
+            excelFileName            | _
+            MASTER_STUDENT_PROFILE   | _
+            BACHELOR_STUDENT_PROFILE | _
+    }
+
     def loadResource = { resourceName ->
         new File(this.class.classLoader.getResource(resourceName).getFile())
     }

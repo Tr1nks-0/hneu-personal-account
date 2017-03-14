@@ -73,30 +73,30 @@ public class DefaultStudentService implements StudentService {
     public String emailsIntegrationServiceUrl;
 
     @Override
-    public StudentProfile readStudentProfilesFromFile(final File file) {
+    public Student readStudentProfilesFromFile(final File file) {
         LOG.info("Create new profile from : " + file.getAbsolutePath());
         return ((StudentProfileExcelParser) context.getBean("studentProfileExcelParser")).parse(file);
     }
 
     @Override
-    public void save(final StudentProfile studentProfile) {
+    public void save(final Student studentProfile) {
         studentRepository.save(studentProfile);
     }
 
     @Override
-    public StudentProfile findStudentProfileById(final String id) {
+    public Student findStudentProfileById(final String id) {
         return studentRepository.findOne(id);
     }
 
     @Override
-    public Optional<StudentProfile> findStudentProfileByEmail(final String email) {
+    public Optional<Student> findStudentProfileByEmail(final String email) {
         return studentRepository.findByEmail(email);
     }
 
     public void updateStudentsScoresFromFile(final File file) {
         final PointsDto studentsPoints = new PointsExcelParser().parse(file);
         for (final Map.Entry<String, Map<String, String>> studentScore : studentsPoints.getMap().entrySet()) {
-            final StudentProfile studentProfile = getStudentProfile(studentScore);
+            final Student studentProfile = getStudentProfile(studentScore);
             if (nonNull(studentProfile)) {
                 final String semesterId = studentsPoints.getSemester();
                 updateStudentProfileSemester(studentProfile, semesterId, studentScore.getValue());
@@ -106,7 +106,7 @@ public class DefaultStudentService implements StudentService {
         }
     }
 
-    private StudentProfile getStudentProfile(final Map.Entry<String, Map<String, String>> studentScore) {
+    private Student getStudentProfile(final Map.Entry<String, Map<String, String>> studentScore) {
         final String[] keys = studentScore.getKey().split("\\$");
         if (keys.length == 2) {
             final String subKey = keys[0];
@@ -116,11 +116,11 @@ public class DefaultStudentService implements StudentService {
         return null;
     }
 
-    private StudentProfile findStudentProfile(final String subKey, final String groupCode) {
+    private Student findStudentProfile(final String subKey, final String groupCode) {
         return studentDao.find(subKey, groupCode);
     }
 
-    private void updateStudentProfileSemester(final StudentProfile studentProfile, final String semesterId, final Map<String, String> studentScore) {
+    private void updateStudentProfileSemester(final Student studentProfile, final String semesterId, final Map<String, String> studentScore) {
         final Optional<Semester> semester = findSemesterForLabel(studentProfile, semesterId);
         if (semester.isPresent()) {
             final List<Discipline> disciplines = semester.get().getDisciplines();
@@ -135,7 +135,7 @@ public class DefaultStudentService implements StudentService {
         return disciplines.stream().filter(discipline -> StringUtils.isEmpty(discipline.getLabel())).findFirst().orElse(new Discipline());
     }
 
-    private Optional<Semester> findSemesterForLabel(final StudentProfile studentProfile, final String semesterId) {
+    private Optional<Semester> findSemesterForLabel(final Student studentProfile, final String semesterId) {
         for (final Course course : studentProfile.getCourses())
             for (final Semester semester : course.getSemesters())
                 if (Objects.equals(semesters.get(semesterId), semester.getLabel()))
@@ -162,12 +162,12 @@ public class DefaultStudentService implements StudentService {
     }
 
     @Override
-    public List<StudentProfile> find() {
+    public List<Student> find() {
         return studentRepository.findAll();
     }
 
     @Override
-    public void setCredentials(final StudentProfile studentProfile) {
+    public void setCredentials(final Student studentProfile) {
         final String studentEmail = getStudentEmail(studentProfile);
         if (StringUtils.isNotBlank(studentEmail)) {
             final User user = new User();
@@ -181,13 +181,13 @@ public class DefaultStudentService implements StudentService {
     }
 
     @Override
-    public void setGroupId(final StudentProfile studentProfile) {
+    public void setGroupId(final Student studentProfile) {
         //final Group group = groupDao.findOne(studentProfile.getStudentGroup());
         //studentProfile.setStudentGroupId(group.getId());
     }
 
     @Override
-    public void sendEmailAfterProfileCreation(final StudentProfile studentProfile) {
+    public void sendEmailAfterProfileCreation(final Student studentProfile) {
         /*try {
             final Map<String, Object> modelForVelocity = ImmutableMap.of("name", studentProfile.getName());
             //@formatter:off
@@ -204,7 +204,7 @@ public class DefaultStudentService implements StudentService {
     }
 
     @Override
-    public void sendEmailAfterProfileUpdating(final StudentProfile studentProfile) {
+    public void sendEmailAfterProfileUpdating(final Student studentProfile) {
         /*try {
             final Map<String, Object> modelForVelocity = ImmutableMap.of("message", "Ваш профіль був оновлений. Перейдійть у кабінет для перегляду.");
             final MimeMessage mimeMessage = emailService.new MimeMessageBuilder(supportMail, studentProfile.getEmail())
@@ -217,7 +217,7 @@ public class DefaultStudentService implements StudentService {
     }
 
     @Override
-    public List<StudentProfile> find(final String searchCriteria, final Integer page) {
+    public List<Student> find(final String searchCriteria, final Integer page) {
         return studentDao.find(searchCriteria, page);
     }
 
@@ -232,7 +232,7 @@ public class DefaultStudentService implements StudentService {
     }
 
 
-    private String getStudentEmail(final StudentProfile studentProfile) {
+    private String getStudentEmail(final Student studentProfile) {
         try {
             final String name = studentProfile.getName().toLowerCase().split(" ")[0];
             final String surname = studentProfile.getSurname().toLowerCase();
@@ -248,7 +248,7 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void refreshMarks() {
-        final Map<String, List<StudentProfile>> studentsPerSpecialityAndCourse = studentRepository.findAll().stream()
+        final Map<String, List<Student>> studentsPerSpecialityAndCourse = studentRepository.findAll().stream()
                 .collect(Collectors.groupingBy(s -> s.getIncomeYear() + "$" + s.getSpeciality(), Collectors.mapping(s -> s, Collectors.toList())));
         studentsPerSpecialityAndCourse.values().forEach(students -> {
             students.forEach(student -> {
@@ -271,7 +271,7 @@ public class DefaultStudentService implements StudentService {
         return total / disciplines.size();
     };
 
-    Function<StudentProfile, List<Discipline>> extractDisciplinesFunction = student -> student
+    Function<Student, List<Discipline>> extractDisciplinesFunction = student -> student
             .getCourses().stream()
             .flatMap(c -> c.getSemesters().stream())
             .flatMap(s -> s.getDisciplines().stream())

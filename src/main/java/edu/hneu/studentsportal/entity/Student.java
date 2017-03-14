@@ -1,14 +1,16 @@
 package edu.hneu.studentsportal.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Data
+@Builder
 @Entity
 @Table(name = "student")
-public class StudentProfile {
+public class Student {
 
     @Id
     private String email;
