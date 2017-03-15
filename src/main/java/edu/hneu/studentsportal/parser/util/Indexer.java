@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.parser;
+package edu.hneu.studentsportal.parser.util;
 
 public class Indexer {
 

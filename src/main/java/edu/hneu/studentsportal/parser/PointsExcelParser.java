@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
-import edu.hneu.studentsportal.parser.dto.PointsDto;
+import edu.hneu.studentsportal.parser.pojo.PointsDto;
 
 public class PointsExcelParser extends AbstractExcelParser<PointsDto> {
 

@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8080
 db:
   driver: com.mysql.jdbc.Driver
   username: root

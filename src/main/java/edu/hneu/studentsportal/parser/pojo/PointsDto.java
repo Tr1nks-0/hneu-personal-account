@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.parser.dto;
+package edu.hneu.studentsportal.parser.pojo;
 
 import java.util.Map;
 

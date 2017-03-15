@@ -17,7 +17,7 @@ public class GmailService {
 
     public Gmail api() {
         final GoogleCredential credential = new GoogleCredential().setAccessToken(oauth2RestTemplate.getAccessToken().getValue());
-        return new Gmail.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("henu-students").build();
+        return new Gmail.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), credential).setApplicationName("hneu-students").build();
     }
 
 /*    public Message convertToGmailMessage(final MimeMessage email) throws MessagingException, IOException {

@@ -1,15 +1,23 @@
 package edu.hneu.studentsportal.service.impl;
 
-import edu.hneu.studentsportal.entity.*;
-import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.parser.PointsExcelParser;
-import edu.hneu.studentsportal.parser.StudentProfileExcelParser;
-import edu.hneu.studentsportal.parser.dto.PointsDto;
-import edu.hneu.studentsportal.repository.GroupRepository;
-import edu.hneu.studentsportal.repository.StudentDao;
-import edu.hneu.studentsportal.repository.StudentRepository;
-import edu.hneu.studentsportal.service.StudentService;
-import edu.hneu.studentsportal.service.UserService;
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
@@ -19,16 +27,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static java.util.Objects.nonNull;
-import static org.apache.commons.lang.BooleanUtils.isFalse;
+import edu.hneu.studentsportal.entity.Course;
+import edu.hneu.studentsportal.entity.Discipline;
+import edu.hneu.studentsportal.entity.Semester;
+import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.enums.UserRole;
+import edu.hneu.studentsportal.parser.PointsExcelParser;
+import edu.hneu.studentsportal.parser.factory.ExcelParserFactory;
+import edu.hneu.studentsportal.parser.pojo.PointsDto;
+import edu.hneu.studentsportal.repository.GroupRepository;
+import edu.hneu.studentsportal.repository.StudentDao;
+import edu.hneu.studentsportal.repository.StudentRepository;
+import edu.hneu.studentsportal.service.StudentService;
+import edu.hneu.studentsportal.service.UserService;
 
 @Service
 public class DefaultStudentService implements StudentService {
@@ -72,10 +84,13 @@ public class DefaultStudentService implements StudentService {
     @Value("${emails.integration.service.url}")
     public String emailsIntegrationServiceUrl;
 
+    @Resource
+    private ExcelParserFactory excelParserFactory;
+
     @Override
     public Student readStudentProfilesFromFile(final File file) {
         LOG.info("Create new profile from : " + file.getAbsolutePath());
-        return ((StudentProfileExcelParser) context.getBean("studentProfileExcelParser")).parse(file);
+        return excelParserFactory.newStudentProfileExcelParser().parse(file);
     }
 
     @Override
