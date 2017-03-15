@@ -1,14 +1,14 @@
 package edu.hneu.studentsportal.service;
 
-import edu.hneu.studentsportal.entity.Student;
-
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
+import edu.hneu.studentsportal.entity.Student;
+
 public interface StudentService {
 
-    Student readStudentProfilesFromFile(File file);
+    Student parseStudentProfile(File file);
 
     void save(Student studentProfile);
 
@@ -19,8 +19,6 @@ public interface StudentService {
     void updateStudentsScoresFromFile(File file);
 
     List<Student> find();
-
-    void setCredentials(Student studentProfile);
 
     void setGroupId(Student studentProfile);
 

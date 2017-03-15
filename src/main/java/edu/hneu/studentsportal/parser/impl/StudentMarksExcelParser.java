@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.parser;
+package edu.hneu.studentsportal.parser.impl;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -7,10 +7,17 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-import edu.hneu.studentsportal.parser.pojo.PointsDto;
+import edu.hneu.studentsportal.parser.AbstractExcelParser;
+import edu.hneu.studentsportal.parser.pojo.PointsWrapper;
+import lombok.extern.log4j.Log4j;
 
-public class PointsExcelParser extends AbstractExcelParser<PointsDto> {
+@Log4j
+@Component
+@Scope("prototype")
+public class StudentMarksExcelParser extends AbstractExcelParser<PointsWrapper> {
 
     private static final int MAX_NUMBER_OF_ITERATIONS = 100;
     private static final int GROUP_ID_ROW_INDEX = 5;
@@ -26,11 +33,11 @@ public class PointsExcelParser extends AbstractExcelParser<PointsDto> {
     private int currentIndex = 0;
 
     @Override
-    public PointsDto extractModel() {
-        final PointsDto pointsDto = new PointsDto();
-        pointsDto.setMap(getStudentsDisciplinesScores());
-        pointsDto.setSemester(getSemester());
-        return pointsDto;
+    public PointsWrapper extractModel() {
+        final PointsWrapper pointsWrapper = new PointsWrapper();
+        pointsWrapper.setMap(getStudentsDisciplinesScores());
+        pointsWrapper.setSemester(getSemester());
+        return pointsWrapper;
     }
 
     private Map<String, Map<String, String>> getStudentsDisciplinesScores() {

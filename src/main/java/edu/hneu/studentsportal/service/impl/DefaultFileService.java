@@ -1,18 +1,20 @@
 package edu.hneu.studentsportal.service.impl;
 
-import edu.hneu.studentsportal.service.FileService;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.function.Consumer;
-
-import static java.util.Objects.nonNull;
+import edu.hneu.studentsportal.service.FileService;
+import lombok.SneakyThrows;
 
 @Service
 public class DefaultFileService implements FileService {
@@ -24,21 +26,16 @@ public class DefaultFileService implements FileService {
     private static Logger LOG = Logger.getLogger(DefaultFileService.class.getName());
 
     @Override
-    public Map<String, Boolean> reduceForEachUploadedFile(List<MultipartFile> filesToUpload,
+    public Map<String, Boolean> reduceForEachUploadedFile(MultipartFile filesToUpload,
                                                           Consumer<File> forEachFileConsumer) throws IOException {
-        if (nonNull(filesToUpload) && filesToUpload.size() > 0) {
-            return reduceForEachUploadedFileWithResults(filesToUpload, forEachFileConsumer);
-        }
-        return Collections.emptyMap();
+        return reduceForEachUploadedFileWithResults(filesToUpload, forEachFileConsumer);
     }
 
-    private Map<String, Boolean> reduceForEachUploadedFileWithResults(List<MultipartFile> filesToUpload,
+    private Map<String, Boolean> reduceForEachUploadedFileWithResults(MultipartFile filesToUpload,
                                                                       Consumer<File> forEachFileConsumer) throws IOException {
         Map<String, Boolean> fileNames = new LinkedHashMap<>();
-        for (MultipartFile multipartFile : filesToUpload) {
-            boolean result = reduceForUploadedFileWithResult(multipartFile, forEachFileConsumer);
-            fileNames.put(multipartFile.getOriginalFilename(), result);
-        }
+        boolean result = reduceForUploadedFileWithResult(filesToUpload, forEachFileConsumer);
+        fileNames.put(filesToUpload.getOriginalFilename(), result);
         return fileNames;
     }
 
@@ -68,8 +65,14 @@ public class DefaultFileService implements FileService {
 
     @Override
     public boolean createDirectoryIfNotExist(File file) {
-        if (file.exists())
-            return false;
-        return file.mkdirs();
+        return !file.exists() && file.mkdirs();
+    }
+
+    @Override
+    @SneakyThrows
+    public File getFile(MultipartFile multipartFile) {
+        File file = new File(multipartFile.getOriginalFilename());
+        multipartFile.transferTo(file);
+        return file;
     }
 }

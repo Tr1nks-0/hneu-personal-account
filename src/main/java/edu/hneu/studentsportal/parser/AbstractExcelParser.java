@@ -12,12 +12,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import lombok.Data;
+import edu.hneu.studentsportal.parser.exception.ParseErrorCodes;
+import edu.hneu.studentsportal.parser.exception.ParseException;
 
 public abstract class AbstractExcelParser<E> {
 
-    Sheet sheet;
-    Workbook workbook;
+    protected Sheet sheet;
+    protected Workbook workbook;
 
     public E parse(File file) {
         try {
@@ -25,55 +26,37 @@ public abstract class AbstractExcelParser<E> {
             sheet = workbook.getSheetAt(0);
             return extractModel();
         } catch (InvalidFormatException | IOException e) {
-            throw new RuntimeException(e);
+            throw new ParseException(ParseErrorCodes.NOT_SUPPORTED_FORMAT);
         }
     }
 
     public abstract E extractModel();
 
-    Row getRow(int rowNumber) {
-        return sheet.getRow(rowNumber);
-    }
-
-    String getStringCellValue(int rowNumber, int cellNumber) {
-        Row row = getRow(rowNumber);
-        if (nonNull(row) && nonNull(row.getCell(cellNumber)))
-            return row.getCell(cellNumber).toString();
+    protected String getStringCellValue(int row, int col) {
+        Row rowValue = getRow(row);
+        if (nonNull(rowValue) && nonNull(rowValue.getCell(col)))
+            return rowValue.getCell(col).toString();
         return StringUtils.EMPTY;
     }
 
-    String getStringCellValue(int rowNumber) {
-        return getStringCellValue(rowNumber, 0);
+    private Row getRow(int row) {
+        return sheet.getRow(row);
     }
 
-    String getString1CellValue(int rowNumber) {
-        return getStringCellValue(rowNumber, 1);
+    protected String getStringCellValue(int row) {
+        return getStringCellValue(row, 0);
     }
 
-    String getString2CellValue(int rowNumber) {
-        return getStringCellValue(rowNumber, 2);
+    protected String getString1CellValue(int row) {
+        return getStringCellValue(row, 1);
     }
 
-    Integer getIntegerCellValue(int row, int cell) {
-        return (int) sheet.getRow(row).getCell(cell).getNumericCellValue();
+    protected String getString2CellValue(int row) {
+        return getStringCellValue(row, 2);
     }
 
-    @Data
-    static class Indexer {
-
-        int value = 0;
-
-        private Indexer(int start) {
-            value = start;
-        }
-
-        public static Indexer of(int start) {
-            return new Indexer(start);
-        }
-
-        int next() {
-            return ++value;
-        }
+    protected Integer getIntegerCellValue(int row, int col) {
+        return (int) sheet.getRow(row).getCell(col).getNumericCellValue();
     }
 
 }

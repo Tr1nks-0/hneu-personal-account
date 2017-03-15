@@ -1,6 +1,8 @@
 package edu.hneu.studentsportal.parser
 
 import edu.hneu.studentsportal.entity.Group
+import edu.hneu.studentsportal.parser.impl.StudentProfileExcelParser
+import edu.hneu.studentsportal.repository.DisciplineRepository
 import edu.hneu.studentsportal.repository.GroupRepository
 import spock.lang.Shared
 import spock.lang.Specification
@@ -14,9 +16,17 @@ class StudentProfileExcelParserUnitTest extends Specification {
     @Shared def bachelorGroupMock = Mock(Group)
     @Shared def masterGroupMock = Mock(Group)
     def groupRepositoryMock = Mock(GroupRepository)
+    def disciplineRepositoryMock = Mock(DisciplineRepository)
     def studentProfileExcelParser = new StudentProfileExcelParser(
-            groupRepository: groupRepositoryMock
+            groupRepository: groupRepositoryMock,
+            disciplineRepository: disciplineRepositoryMock
     )
+
+    def setup() {
+        groupRepositoryMock.findByName('6.04.51.16.03') >> Optional.of(bachelorGroupMock)
+        groupRepositoryMock.findByName('8.04.51.16.04') >> Optional.of(masterGroupMock)
+        disciplineRepositoryMock.findOne(any()) >> Optional.empty()
+    }
 
     @Unroll
     def 'student from #excelFileName should have full name[#studentFullName]'() {
@@ -109,8 +119,6 @@ class StudentProfileExcelParserUnitTest extends Specification {
     def 'student from #excelFileName should have group[#studentGroup]'() {
         given:
             def excelFile = loadResource excelFileName
-            groupRepositoryMock.findByName('6.04.51.16.03') >> bachelorGroupMock
-            groupRepositoryMock.findByName('8.04.51.16.04') >> masterGroupMock
         when:
             def profile = studentProfileExcelParser.parse(excelFile)
         then:

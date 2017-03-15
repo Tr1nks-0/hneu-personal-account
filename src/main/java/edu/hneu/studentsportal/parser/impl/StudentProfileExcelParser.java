@@ -1,26 +1,40 @@
-package edu.hneu.studentsportal.parser;
+package edu.hneu.studentsportal.parser.impl;
 
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import edu.hneu.studentsportal.entity.*;
-import edu.hneu.studentsportal.enums.DisciplineType;
-import edu.hneu.studentsportal.repository.GroupRepository;
-import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.PictureData;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang.BooleanUtils.isFalse;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.PictureData;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Example;
+import org.springframework.stereotype.Component;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
+import edu.hneu.studentsportal.entity.Course;
+import edu.hneu.studentsportal.entity.Discipline;
+import edu.hneu.studentsportal.entity.Group;
+import edu.hneu.studentsportal.entity.Semester;
+import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.enums.DisciplineType;
+import edu.hneu.studentsportal.parser.AbstractExcelParser;
+import edu.hneu.studentsportal.parser.Indexer;
+import edu.hneu.studentsportal.parser.exception.ParseErrorCodes;
+import edu.hneu.studentsportal.parser.exception.ParseException;
+import edu.hneu.studentsportal.parser.util.validation.StudentProfileValidationUtils;
+import edu.hneu.studentsportal.repository.DisciplineRepository;
+import edu.hneu.studentsportal.repository.GroupRepository;
+import lombok.extern.log4j.Log4j;
 
 @Log4j
 @Component
@@ -32,7 +46,6 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
     private static final String MASTER_PROGRAM_HOLDER = "МАГІСТЕРСЬКА ПРОГРАМА";
     private static final String SPECIALITY_HOLDER = "СПЕЦІАЛЬНІСТЬ";
     private static final String COURSER_DIRECTION_HOLDER = "НАПРЯМ ПІДГОТОВКИ";
-    private static final String HEADER_HOLDER = "ІНДИВІДУАЛЬНИЙ НАВЧАЛЬНИЙ ПЛАН";
     private static final String COURSER_HOLDER = "КУРС";
     private static final String INCOME_YEAR_HOLDER = "РІК НАВЧАННЯ";
     private static final String FACULTY_DIRECTOR_HOLDER = "Декан факультету";
@@ -46,18 +59,15 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     @Resource
     private GroupRepository groupRepository;
+    @Resource
+    private DisciplineRepository disciplineRepository;
 
     @Override
     public Student extractModel() {
         Indexer indexer = Indexer.of(3);
-        String header = getStringCellValue(indexer.value);
-        if (isFalse(header.contains(HEADER_HOLDER))) {
-            log.info("File is not valid. Header :" + header);
-            throw new RuntimeException("Student profile is not valid");
-        }
-
+        StudentProfileValidationUtils.validateStudentProfileFile(getStringCellValue(indexer.getValue()));
         indexer.next();
-        Student student = Student.builder()
+        return Student.builder()
                 .surname(getString2CellValue(indexer.next()))
                 .name(getString2CellValue(indexer.next()))
                 .passportNumber(getString2CellValue(indexer.next()).split("\\.")[0])
@@ -70,13 +80,11 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
                 .courses(extractCourses(indexer))
                 .photo(extractProfileImage())
                 .build();
-
-        return student;
     }
 
     private List<String> extractContacts(Indexer indexer) {
         List<String> contacts = Lists.newArrayList();
-        while (indexer.value < 100 && isNotSpecialityLabel(indexer.value + 1))
+        while (indexer.getValue() < 100 && isNotSpecialityLabel(indexer.getValue() + 1))
             contacts.add(getString2CellValue(indexer.next()));
         return contacts;
     }
@@ -87,13 +95,13 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
     }
 
     private String extractMasterEducationProgram(Indexer indexer) {
-        boolean isMasterProgram = getStringCellValue(indexer.value + 1).contains(MASTER_PROGRAM_HOLDER);
+        boolean isMasterProgram = getStringCellValue(indexer.getValue() + 1).contains(MASTER_PROGRAM_HOLDER);
         return isMasterProgram ? getString2CellValue(indexer.next()) : null;
     }
 
     private Group extractGroup(Indexer indexer) {
         String groupName = getString2CellValue(indexer.next());
-        return groupRepository.findByName(groupName);
+        return groupRepository.findByName(groupName).orElseThrow(() -> new ParseException(ParseErrorCodes.GROUP_WAS_NOT_FOUND));
     }
 
     private List<Course> extractCourses(Indexer indexer) {
@@ -101,11 +109,12 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         while (isNotFileEnd(indexer.next()))
             if (isCourseLabel(indexer))
                 courses.add(extractCourse(indexer));
+        StudentProfileValidationUtils.validateCourses(courses);
         return courses;
     }
 
     private boolean isCourseLabel(Indexer indexer) {
-        String stringCellValue = getStringCellValue(indexer.value);
+        String stringCellValue = getStringCellValue(indexer.getValue());
         return stringCellValue.contains(COURSER_HOLDER) || stringCellValue.contains(INCOME_YEAR_HOLDER);
     }
 
@@ -115,8 +124,9 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     private Course extractCourse(Indexer indexer) {
         Course course = new Course();
-        course.setLabel(getStringCellValue(indexer.value));
+        course.setLabel(getStringCellValue(indexer.getValue()));
         course.setSemesters(extractSemesters(indexer));
+        StudentProfileValidationUtils.validateCourse(course);
         return course;
     }
 
@@ -130,17 +140,16 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
     }
 
     private Optional<Semester> extractSemester(Indexer indexer, int col) {
-        Indexer internalSemesterIndex = Indexer.of(indexer.value);
-        String semesterLabel = getStringCellValue(internalSemesterIndex.value, col);
+        Indexer internalSemesterIndex = Indexer.of(indexer.getValue());
+        String semesterLabel = getStringCellValue(internalSemesterIndex.getValue(), col);
         if (StringUtils.isNotBlank(semesterLabel)) {
             Semester semester = new Semester();
             semester.setLabel(semesterLabel);
-
             internalSemesterIndex.next();
             internalSemesterIndex.next();
-
             semester.setDisciplines(extractDisciplines(internalSemesterIndex, col));
-            semester.setTotal(getIntegerCellValue(internalSemesterIndex.value, col + 2));
+            semester.setTotal(getIntegerCellValue(internalSemesterIndex.getValue(), col + 2));
+            StudentProfileValidationUtils.validateSemester(semester);
             return Optional.of(semester);
         }
         return Optional.empty();
@@ -148,9 +157,9 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     private List<Discipline> extractDisciplines(Indexer internalSemesterIndex, int col) {
         final List<Discipline> disciplines = Lists.newArrayList();
-        while (isNotSemesterEnd(internalSemesterIndex.value, col + 1)) {
-            if (isNotEmpty(getStringCellValue(internalSemesterIndex.value, col + 1)))
-                disciplines.add(extractDiscipline(internalSemesterIndex.value, col + 1));
+        while (isNotSemesterEnd(internalSemesterIndex.getValue(), col + 1)) {
+            if (isNotEmpty(getStringCellValue(internalSemesterIndex.getValue(), col + 1)))
+                disciplines.add(extractDiscipline(internalSemesterIndex.getValue(), col + 1));
             internalSemesterIndex.next();
         }
         return disciplines;
@@ -169,14 +178,14 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         discipline.setControlForm(getStringCellValue(row, col + 2));
         if (disciplineType == DisciplineType.REGULAR)
             discipline.setLabel(disciplineNameOrType);
-        return discipline;
+        StudentProfileValidationUtils.validateDiscipline(discipline);
+        return Optional.ofNullable(disciplineRepository.findOne(Example.of(discipline))).orElse(discipline);
     }
-
 
     private byte[] extractProfileImage() {
         List<? extends PictureData> allPictures = workbook.getAllPictures();
         if (allPictures.isEmpty())
-            return null;
+            throw new ParseException(ParseErrorCodes.STUDENT_PHOTO_NOT_FOUND);
         return Iterables.getLast(allPictures).getData();
     }
 }

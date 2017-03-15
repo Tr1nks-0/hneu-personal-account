@@ -1,15 +1,33 @@
 package edu.hneu.studentsportal.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import javax.persistence.*;
-import java.util.List;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Builder
 @Entity
 @Table(name = "student")
+@ToString(of = "email")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Student {
 
     @Id
@@ -47,4 +65,5 @@ public class Student {
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private List<Course> courses;
+
 }
