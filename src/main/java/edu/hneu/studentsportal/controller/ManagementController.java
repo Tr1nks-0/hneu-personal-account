@@ -1,33 +1,5 @@
 package edu.hneu.studentsportal.controller;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.servlet.ServletContext;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import edu.hneu.studentsportal.entity.Course;
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Semester;
@@ -38,6 +10,21 @@ import edu.hneu.studentsportal.pojo.StudentDisciplines;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.StudentService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.ServletContext;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Controller
 @RequestMapping("/management")
@@ -60,20 +47,6 @@ public class ManagementController {
     @Autowired
     private ScheduleService scheduleService;
 
-    @RequestMapping(value = "/uploadStudentProfilesFromExcel")
-    public String addUserProfilesFromExcel() {
-        return "management/uploadUserProfilesFromExcel";
-    }
-
-    @RequestMapping(value = "/uploadStudentProfilesFromExcel", method = RequestMethod.POST)
-    public String uploadFiles(@RequestParam("file") MultipartFile multipartFile, RedirectAttributes redirectAttributes) {
-        File file = fileService.getFile(multipartFile);
-        Student student = studentService.parseStudentProfile(file);
-        studentService.sendEmailAfterProfileCreation(student);
-        redirectAttributes.addFlashAttribute("student", student);
-        return "redirect:successfullyUploaded";
-    }
-
    /* @RequestMapping(value = "/uploadTotalsFromExcel", method = RequestMethod.POST)
     public String uploadTotalsFromExcel(@ModelAttribute("uploadForm") final FilesUploadModel uploadForm,
                                         final RedirectAttributes redirectAttributes) throws IllegalStateException, IOException {
@@ -89,11 +62,6 @@ public class ManagementController {
     @RequestMapping(value = "/uploadTotalsFromExcel")
     public String uploadTotalsFromExcel() {
         return "management/uploadTotalsFromExcel";
-    }
-
-    @RequestMapping(value = "/successfullyUploaded")
-    public String successfullyUploaded() {
-        return "management/successfullyUploaded";
     }
 
     @RequestMapping(value = "/synchronizeSchedule")

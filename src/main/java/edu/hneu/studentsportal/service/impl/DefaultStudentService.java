@@ -1,32 +1,5 @@
 package edu.hneu.studentsportal.service.impl;
 
-import static java.lang.String.format;
-import static java.util.Objects.nonNull;
-import static org.apache.commons.lang.BooleanUtils.isFalse;
-
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.WebApplicationContext;
-
 import edu.hneu.studentsportal.entity.Course;
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Semester;
@@ -41,6 +14,26 @@ import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.UserService;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.WebApplicationContext;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.lang.String.format;
+import static java.util.Objects.nonNull;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Log4j
 @Service
@@ -93,7 +86,7 @@ public class DefaultStudentService implements StudentService {
         userService.create(student.getEmail(), UserRole.STUDENT);
         // TODO: change to saving after confirmation
         save(student);
-        log.info(format("New student[%s] was created.", student));
+        log.info(format("New %s has been created.", student));
         return student;
     }
 

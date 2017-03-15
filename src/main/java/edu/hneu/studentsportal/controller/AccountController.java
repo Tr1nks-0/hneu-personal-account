@@ -62,7 +62,7 @@ public class AccountController {
         if (email.isPresent()) {
             final Optional<User> currentUser = Optional.ofNullable(userService.getUserForId(email.get()));
             if (currentUser.isPresent() && currentUser.get().getRole() == UserRole.ADMIN)
-                return new ModelAndView("redirect:management/uploadStudentProfilesFromExcel");
+                return new ModelAndView("redirect:management/import/student");
             final Optional<Student> profile = studentService.findStudentProfileByEmail(email.get());
             if (profile.isPresent()) {
                 final Student studentProfile = profile.get();

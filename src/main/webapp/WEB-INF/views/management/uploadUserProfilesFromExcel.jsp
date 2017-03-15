@@ -13,7 +13,7 @@
                     <spring:message code="form.label.management.add.profiles.message"/>
                 </div>
                 <div class="box-body">
-                    <form method="post" action="/management/uploadStudentProfilesFromExcel" enctype="multipart/form-data">
+                    <form method="post" action="/management/import/student" enctype="multipart/form-data">
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <span class="btn btn-primary btn-file">
@@ -26,7 +26,6 @@
                                 <input type="submit" value="<spring:message code="form.label.management.download"/>" class="btn btn-default"/>
                             </span>
                         </div>
-                        <input type="hidden"  name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     </form>
                 </div>
             </div>
