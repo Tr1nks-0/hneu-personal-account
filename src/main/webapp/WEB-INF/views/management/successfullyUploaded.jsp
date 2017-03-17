@@ -114,11 +114,11 @@
                                     <table class="table no-margin">
                                         <c:forEach items="${semester.disciplines}" var="discipline" varStatus="k">
                                             <tr>
-                                                <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].label" cssClass="editor-input"/></td>
-                                                <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].credits" cssClass="editor-input"/></td>
-                                                <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].controlForm" cssClass="editor-input"/></td>
-                                                <td><form:select path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].type" items="${disciplineTypes}" />
-                                                <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].mark" cssClass="editor-input"/></td>
+                                                <td class="col-md-6"><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].label" cssClass="form-control"/></td>
+                                                <td class="col-md-1"><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].credits" cssClass="form-control" type="number"/></td>
+                                                <td class="col-md-2"><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].controlForm" cssClass="form-control"/></td>
+                                                <td class="col-md-2"><form:select path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].type" items="${disciplineTypes}" cssClass="form-control"/>
+                                                <td class="col-md-1"><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].mark" cssClass="form-control" type="number"/></td>
                                             </tr>
                                             <form:hidden path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].id"/>
                                         </c:forEach>
