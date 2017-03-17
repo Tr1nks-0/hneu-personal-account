@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.DisciplineType;
@@ -30,9 +31,10 @@ public class StudentsController {
     }
 
     @PostMapping("/{id}")
-    public String saveStudent(@ModelAttribute Student student) {
+    public String saveStudent(@ModelAttribute Student student, RedirectAttributes redirectAttributes) {
         studentService.save(student);
-        return "redirect:/management/import/student";
+        redirectAttributes.addFlashAttribute("success", "Success");
+        return "redirect:/management/students/" + student.getId();
     }
 
 }
