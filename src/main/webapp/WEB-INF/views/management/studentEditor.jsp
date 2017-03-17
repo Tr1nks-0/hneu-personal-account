@@ -9,7 +9,7 @@
             <spring:message code="form.label.student.profile.head"/>
             <small><spring:message code="form.label.student.profile.head.second"/></small>
         </h1>
-        <form:form modelAttribute="student" action="/management/students/${profile.id}" method="post">
+        <form:form modelAttribute="student" action="/management/students/${student.id}" method="post">
             <div class="content">
                 <div class="box box-info">
                     <div class="box-body">

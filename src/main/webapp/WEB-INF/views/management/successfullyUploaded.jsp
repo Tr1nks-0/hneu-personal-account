@@ -7,9 +7,10 @@
 <div class="content-wrapper">
     <div class="content">
         <div class="box box-primary">
-            <form:form modelAttribute="student" action="/management/students/${profile.id}" method="post">
+            <form:form modelAttribute="student" action="/management/students/${student.id}" method="post">
                 <div class="box-header with-border">
                     ${student.email}
+                    <input type = "submit" value = "Submit"/>
                 </div>
                 <div class="box-body">
                     <div class="row">
@@ -71,7 +72,7 @@
                                                 <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].label" cssClass="editor-input"/></td>
                                                 <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].credits" cssClass="editor-input"/></td>
                                                 <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].controlForm" cssClass="editor-input"/></td>
-                                                <td>${discipline.type}</td>
+                                                <td><form:select path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].type" items="${disciplineTypes}" />
                                                 <td><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].mark" cssClass="editor-input"/></td>
                                             </tr>
                                             <form:hidden path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].id"/>
@@ -80,14 +81,18 @@
                                 </div>
                                 <form:hidden path="courses[${i.index}].semesters[${j.index}].id"/>
                                 <form:hidden path="courses[${i.index}].semesters[${j.index}].total"/>
+                                <form:hidden path="courses[${i.index}].semesters[${j.index}].label"/>
                             </c:forEach>
                             <form:hidden path="courses[${i.index}].id"/>
+                            <form:hidden path="courses[${i.index}].label"/>
                         </c:forEach>
                     </div>
 
                     <form:hidden path="average"/>
                     <form:hidden path="rate"/>
                     <form:hidden path="photo"/>
+                    <form:hidden path="email"/>
+                    <form:hidden path="studentGroup.id"/>
                 </div>
             </form:form>
         </div>

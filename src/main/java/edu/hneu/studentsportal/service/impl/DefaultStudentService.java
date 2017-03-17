@@ -1,5 +1,25 @@
 package edu.hneu.studentsportal.service.impl;
 
+import static java.lang.String.format;
+import static java.util.Objects.nonNull;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.WebApplicationContext;
+
 import edu.hneu.studentsportal.entity.Course;
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Semester;
@@ -14,26 +34,6 @@ import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.UserService;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.WebApplicationContext;
-
-import javax.annotation.Resource;
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static java.lang.String.format;
-import static java.util.Objects.nonNull;
-import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Log4j
 @Service
@@ -106,7 +106,7 @@ public class DefaultStudentService implements StudentService {
     }
 
     @Override
-    public Student findStudentProfileById(final String id) {
+    public Student findStudentProfileById(final long id) {
         return studentRepository.findOne(id);
     }
 
@@ -121,7 +121,7 @@ public class DefaultStudentService implements StudentService {
             final Student studentProfile = getStudentProfile(studentScore);
             if (nonNull(studentProfile)) {
                 final String semesterId = studentsPointsWrapper.getSemester();
-                updateStudentProfileSemester(studentProfile, semesterId, studentScore.getValue());
+                //updateStudentProfileSemester(studentProfile, semesterId, studentScore.getValue());
                 save(studentProfile);
                 sendEmailAfterProfileUpdating(studentProfile);
             }
@@ -142,6 +142,7 @@ public class DefaultStudentService implements StudentService {
         return studentDao.find(subKey, groupCode);
     }
 
+/*
     private void updateStudentProfileSemester(final Student studentProfile, final String semesterId, final Map<String, String> studentScore) {
         final Optional<Semester> semester = findSemesterForLabel(studentProfile, semesterId);
         if (semester.isPresent()) {
@@ -152,6 +153,7 @@ public class DefaultStudentService implements StudentService {
                 throw new RuntimeException("Some disciplines were not found");
         }
     }
+*/
 
     private Discipline getEmptyDiscipline(final List<Discipline> disciplines) {
         return disciplines.stream().filter(discipline -> StringUtils.isEmpty(discipline.getLabel())).findFirst().orElse(new Discipline());
@@ -233,13 +235,13 @@ public class DefaultStudentService implements StudentService {
     }
 
     @Override
-    public void remove(final String id) {
+    public void remove(final long id) {
         studentRepository.delete(id);
     }
 
     @Override
     public void refreshMarks() {
-        final Map<String, List<Student>> studentsPerSpecialityAndCourse = studentRepository.findAll().stream()
+        /*final Map<String, List<Student>> studentsPerSpecialityAndCourse = studentRepository.findAll().stream()
                 .collect(Collectors.groupingBy(s -> s.getIncomeYear() + "$" + s.getSpeciality(), Collectors.mapping(s -> s, Collectors.toList())));
         studentsPerSpecialityAndCourse.values().forEach(students -> {
             students.forEach(student -> {
@@ -254,7 +256,7 @@ public class DefaultStudentService implements StudentService {
             Collections.sort(students, (s1, s2) -> NumberUtils.compare(s2.getAverage(), s1.getAverage()));
             IntStream.range(0, students.size()).forEach(i -> students.get(i).setRate(i + 1));
             students.forEach(studentRepository::save);
-        });
+        });*/
     }
 
     Function<List<Discipline>, Double> calculateAverageFunction = disciplines -> {
@@ -262,6 +264,6 @@ public class DefaultStudentService implements StudentService {
         return total / disciplines.size();
     };
 
-    Function<Student, List<Discipline>> extractDisciplinesFunction = student -> student.getCourses().stream().flatMap(c -> c.getSemesters().stream())
-            .flatMap(s -> s.getDisciplines().stream()).filter(d -> NumberUtils.isNumber(d.getMark())).collect(Collectors.toList());
+/*    Function<Student, List<Discipline>> extractDisciplinesFunction = student -> student.getCourses().stream().flatMap(c -> c.getSemesters().stream())
+            .flatMap(s -> s.getDisciplines().stream()).filter(d -> NumberUtils.isNumber(d.getMark())).collect(Collectors.toList());*/
 }

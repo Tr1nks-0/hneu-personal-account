@@ -171,15 +171,28 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     private Discipline extractDiscipline(int row, int col) {
         Discipline discipline = new Discipline();
-        String disciplineNameOrType = getStringCellValue(row, col);
-        DisciplineType disciplineType = DISCIPLINE_TYPES_MAP.getOrDefault(disciplineNameOrType, DisciplineType.REGULAR);
-        discipline.setType(disciplineType);
-        discipline.setCredits(getStringCellValue(row, col + 1));
-        discipline.setControlForm(getStringCellValue(row, col + 2));
-        if (disciplineType == DisciplineType.REGULAR)
-            discipline.setLabel(disciplineNameOrType);
+        Indexer columnIndex = Indexer.of(col);
+        populateDisciplineLabelAndType(discipline, getStringCellValue(row, columnIndex.getValue()));
+        discipline.setCredits(getIntegerCellValue(row, columnIndex.next()));
+        discipline.setControlForm(getStringCellValue(row, columnIndex.next()));
+        discipline.setMark(getDisciplineMark(row, columnIndex));
         StudentProfileValidationUtils.validateDiscipline(discipline);
         return Optional.ofNullable(disciplineRepository.findOne(Example.of(discipline))).orElse(discipline);
+    }
+
+    private Integer getDisciplineMark(int row, Indexer columnIndex) {
+        final String stringCellValue = getStringCellValue(row, columnIndex.next());
+        return Optional.ofNullable(stringCellValue).filter(StringUtils::isNotBlank).map(value -> {
+            StudentProfileValidationUtils.validateDisciplineMark(value);
+            return Integer.valueOf(stringCellValue);
+        }).orElse(null);
+    }
+
+    private void populateDisciplineLabelAndType(Discipline discipline, String disciplineLabelOrType) {
+        DisciplineType disciplineType = DISCIPLINE_TYPES_MAP.getOrDefault(disciplineLabelOrType, DisciplineType.REGULAR);
+        if (disciplineType == DisciplineType.REGULAR)
+            discipline.setLabel(disciplineLabelOrType);
+        discipline.setType(disciplineType);
     }
 
     private byte[] extractProfileImage() {

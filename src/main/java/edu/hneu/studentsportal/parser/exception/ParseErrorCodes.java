@@ -10,8 +10,10 @@ public class ParseErrorCodes {
     public static final String INVALID_CONTENT = "2";
     public static final String GROUP_WAS_NOT_FOUND = "3";
     public static final String STUDENT_PHOTO_NOT_FOUND = "4";
-    public static final String EMPTY_COURSES = "4";
-    public static final String COURSE_WITHOUT_SEMESTERS = "4";
-    public static final String SEMESTER_WITHOUT_DISCIPLINES = "4";
-    public static final String INVALID_DISCIPLINE_NAME = "4";
+    public static final String EMPTY_COURSES = "5";
+    public static final String COURSE_WITHOUT_SEMESTERS = "6";
+    public static final String SEMESTER_WITHOUT_DISCIPLINES = "7";
+    public static final String INVALID_DISCIPLINE_NAME = "8";
+    public static final String INVALID_DISCIPLINE_MARK = "9";
+
 }

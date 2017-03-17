@@ -7,6 +7,8 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 import java.util.List;
 
+import org.apache.commons.lang.math.NumberUtils;
+
 import edu.hneu.studentsportal.entity.Course;
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Semester;
@@ -44,5 +46,10 @@ public class StudentProfileValidationUtils {
     public static void validateDiscipline(Discipline discipline) {
         if(discipline.getType() == DisciplineType.REGULAR && isBlank(discipline.getLabel()))
             throw new ParseException(ParseErrorCodes.INVALID_DISCIPLINE_NAME);
+    }
+
+    public static void validateDisciplineMark(String mark) {
+        if(isFalse(NumberUtils.isNumber(mark)))
+            throw new ParseException(ParseErrorCodes.INVALID_DISCIPLINE_MARK);
     }
 }

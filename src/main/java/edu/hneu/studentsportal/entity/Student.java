@@ -7,6 +7,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -31,6 +32,10 @@ import lombok.ToString;
 public class Student {
 
     @Id
+    @GeneratedValue
+    private long id;
+
+    @Column(unique = true)
     private String email;
 
     private String name;

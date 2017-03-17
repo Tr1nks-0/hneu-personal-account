@@ -1,11 +1,17 @@
 package edu.hneu.studentsportal.entity;
 
-import edu.hneu.studentsportal.enums.DisciplineType;
-import lombok.Data;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import edu.hneu.studentsportal.enums.DisciplineType;
+import lombok.Data;
 
 @Data
 @Entity
@@ -16,9 +22,9 @@ public class Discipline {
     @GeneratedValue
     private long id;
 
-    private String credits;
+    private Integer mark;
+    private Integer credits;
     private String controlForm;
-    private String mark;
 
     @NotEmpty
     private String label;

@@ -1,7 +1,29 @@
 package edu.hneu.studentsportal.controller;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import javax.servlet.ServletContext;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
 import edu.hneu.studentsportal.entity.Course;
-import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Semester;
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.DisciplineType;
@@ -10,21 +32,6 @@ import edu.hneu.studentsportal.pojo.StudentDisciplines;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.StudentService;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.ServletContext;
-import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 
 @Controller
 @RequestMapping("/management")
@@ -123,7 +130,7 @@ public class ManagementController {
         return new ModelAndView("management/specialDisciplines");
     }
 
-    @RequestMapping(value = "/maynors/{group:.+}/{course}/{semester}", method = RequestMethod.POST)
+  /*  @RequestMapping(value = "/maynors/{group:.+}/{course}/{semester}", method = RequestMethod.POST)
     public String studentListForSpecialDisciplinesPost(@PathVariable final String group, @PathVariable final Integer course,
                                                        @PathVariable final Integer semester, final Model model,
                                                        @ModelAttribute final StudentDisciplines disciplines) {
@@ -139,7 +146,7 @@ public class ManagementController {
             studentService.save(studentProfile);
         });
         return String.format("redirect:/management/groups/%s/%s/%s", group, course, semester);
-    }
+    }*/
 
     private List<StudentDiscipline> getSpecialDisciplines(final String group, final Integer course, final Integer semester, final DisciplineType type) {
         final List<StudentDiscipline> disciplines = studentService.find().stream()
@@ -165,7 +172,7 @@ public class ManagementController {
     }
 
 
-    @RequestMapping(value = "/students/{id:.+}")
+   /* @RequestMapping(value = "/students/{id:.+}")
     public ModelAndView editStudent(@PathVariable("id") final String id) {
         final Student studentProfile = studentService.findStudentProfileById(id);
         return new ModelAndView("management/studentEditor", "profile", studentProfile);
@@ -191,7 +198,7 @@ public class ManagementController {
         studentService.remove(id);
         return "redirect:students";
     }
-
+*/
     @RequestMapping(value = "/downloadGroups")
     public String downloadGroups() {
         Executors.newSingleThreadExecutor().execute( () -> scheduleService.downloadGroups());

@@ -12,7 +12,7 @@ public interface StudentService {
 
     void save(Student studentProfile);
 
-    Student findStudentProfileById(String id);
+    Student findStudentProfileById(long id);
 
     Optional<Student> findStudentProfileByEmail(String email);
 
@@ -30,7 +30,7 @@ public interface StudentService {
 
     long getPagesCountForSearchCriteria(String searchCriteria);
 
-    void remove(String id);
+    void remove(long id);
 
     void refreshMarks();
 }
