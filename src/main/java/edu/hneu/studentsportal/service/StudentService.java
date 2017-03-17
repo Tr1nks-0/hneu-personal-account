@@ -12,7 +12,7 @@ public interface StudentService {
 
     void save(Student studentProfile);
 
-    Student findStudentProfileById(long id);
+    Student getStudent(long id);
 
     Optional<Student> findStudentProfileByEmail(String email);
 

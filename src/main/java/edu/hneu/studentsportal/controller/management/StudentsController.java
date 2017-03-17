@@ -17,21 +17,22 @@ import edu.hneu.studentsportal.service.StudentService;
 
 @Controller
 @RequestMapping("/management/students")
-public class EditStudentController {
+public class StudentsController {
 
     @Resource
     private StudentService studentService;
 
     @GetMapping("/{id}")
     public ModelAndView getStudent(@PathVariable long id, Model model) {
-        Student student = studentService.findStudentProfileById(id);
+        Student student = studentService.getStudent(id);
         model.addAttribute("disciplineTypes", DisciplineType.values());
         return new ModelAndView("management/successfullyUploaded", "student", student);
     }
 
     @PostMapping("/{id}")
-    public String saveStudent(@ModelAttribute("student") Student s) {
-        return null;
+    public String saveStudent(@ModelAttribute Student student) {
+        studentService.save(student);
+        return "redirect:/management/import/student";
     }
 
 }

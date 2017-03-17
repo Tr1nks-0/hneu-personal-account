@@ -32,6 +32,7 @@ import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentDao;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.StudentService;
+import edu.hneu.studentsportal.service.TimeService;
 import edu.hneu.studentsportal.service.UserService;
 import lombok.extern.log4j.Log4j;
 
@@ -78,13 +79,14 @@ public class DefaultStudentService implements StudentService {
 
     @Resource
     private ParserFactory parserFactory;
+    @Resource
+    private TimeService timeService;
 
     @Override
     public Student parseStudentProfile(File file) {
         Student student = parserFactory.newStudentProfileExcelParser().parse(file);
         student.setEmail(retrieveStudentEmailFromThirdPartyService(student.getName(), student.getSurname(), student.getStudentGroup().getName()));
         userService.create(student.getEmail(), UserRole.STUDENT);
-        // TODO: change to saving after confirmation
         save(student);
         log.info(format("New %s has been created.", student));
         return student;
@@ -97,18 +99,17 @@ public class DefaultStudentService implements StudentService {
         return new RestTemplate().getForEntity(url, String.class).getBody().toLowerCase();
     }
 
-
-
-
     @Override
-    public void save(final Student studentProfile) {
+    public void save(Student studentProfile) {
+        studentProfile.setModificationTime(timeService.getCurrentTime());
         studentRepository.save(studentProfile);
     }
 
     @Override
-    public Student findStudentProfileById(final long id) {
+    public Student getStudent(long id) {
         return studentRepository.findOne(id);
     }
+
 
     @Override
     public Optional<Student> findStudentProfileByEmail(final String email) {

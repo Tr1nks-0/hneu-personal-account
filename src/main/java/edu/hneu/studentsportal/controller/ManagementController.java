@@ -137,7 +137,7 @@ public class ManagementController {
         final int courseNumber = course - 1;
         final int semesterNumber = semester - 1;
         disciplines.getList().forEach(discipline -> {
-            final Student studentProfile = studentService.findStudentProfileById(discipline.getStudentId());
+            final Student studentProfile = studentService.geStudent(discipline.getStudentId());
             final Discipline studentDiscipline = studentProfile.getCourses().get(courseNumber)
                     .getSemesters().get(semesterNumber)
                     .getDisciplines().get(discipline.getNumber());

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
+import java.util.Date;
 import java.util.Locale;
 
 import org.springframework.stereotype.Service;
@@ -13,6 +14,11 @@ import edu.hneu.studentsportal.service.TimeService;
 @Service
 public class DefaultTimeService implements TimeService {
 
+
+    @Override
+    public long getCurrentTime() {
+        return new Date().getTime();
+    }
 
     @Override
     public LocalDate getCurrentDate() {
