@@ -1,28 +1,6 @@
 package edu.hneu.studentsportal.service.impl;
 
-import static java.lang.String.format;
-import static java.util.Objects.nonNull;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.WebApplicationContext;
-
-import edu.hneu.studentsportal.entity.Course;
 import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.Semester;
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.factory.ParserFactory;
@@ -35,6 +13,23 @@ import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.TimeService;
 import edu.hneu.studentsportal.service.UserService;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.WebApplicationContext;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+
+import static java.lang.String.format;
+import static java.util.Objects.nonNull;
 
 @Log4j
 @Service
@@ -159,6 +154,7 @@ public class DefaultStudentService implements StudentService {
     private Discipline getEmptyDiscipline(final List<Discipline> disciplines) {
         return disciplines.stream().filter(discipline -> StringUtils.isEmpty(discipline.getLabel())).findFirst().orElse(new Discipline());
     }
+/*
 
     private Optional<Semester> findSemesterForLabel(final Student studentProfile, final String semesterId) {
         for (final Course course : studentProfile.getCourses())
@@ -167,6 +163,7 @@ public class DefaultStudentService implements StudentService {
                     return Optional.of(semester);
         return Optional.empty();
     }
+*/
 
     private String getDisciplineScore(final Map<String, String> studentScore, final String discipline) {
         for (final String disciplineName : studentScore.keySet()) {

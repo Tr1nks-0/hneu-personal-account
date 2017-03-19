@@ -33,8 +33,8 @@
                             <td class="col-md-5">
                                <form:input path="name" cssClass="form-control"/>
                             </td>
-                            <td class="col-md-5" rowspan="4" colspan=2>
-
+                            <td class="col-md-5 center" rowspan="4" colspan="2">
+                                <img src="/management/students/${student.id}/img" class="img-thumbnail" style="width: 150px">
                             </td>
                         </tr>
                         <tr>
@@ -63,10 +63,11 @@
                         </tr>
                         <tr>
                             <td class="col-md-2">
-                                <label for="faculty" class="control-label"><spring:message code="form.label.student.faculty"/></label>
+                                <label for="faculty.name" class="control-label"><spring:message code="form.label.student.faculty"/></label>
                             </td>
                             <td class="col-md-5">
-                                <form:input path="faculty" cssClass="form-control"/>
+                                <form:input path="faculty.name" cssClass="form-control"/>
+                                <form:hidden path="faculty.id"/>
                             </td>
                             <td class="col-md-2">
                                  <label for="incomeYear" class="control-label"><spring:message code="form.label.student.incomeYear"/></label>
@@ -77,10 +78,11 @@
                         </tr>
                         <tr>
                             <td class="col-md-2">
-                                <label for="speciality" class="control-label"><spring:message code="form.label.student.speciality"/></label>
+                                <label for="speciality.name" class="control-label"><spring:message code="form.label.student.speciality"/></label>
                             </td>
                             <td class="col-md-5">
-                                <form:input path="speciality" cssClass="form-control"/>
+                                <form:input path="speciality.name" cssClass="form-control"/>
+                                <form:hidden path="speciality.id"/>
                             </td>
                             <td class="col-md-2">
                                  <label for="studentGroup.name" class="control-label"><spring:message code="form.label.student.studentGroup"/></label>
@@ -92,47 +94,48 @@
                         <c:if test="${not empty student.educationProgram}">
                             <tr>
                                 <td class="col-md-2">
-                                    <label for="educationProgram" class="control-label"><spring:message code="form.label.student.educationProgram"/></label>
+                                    <label for="educationProgram.name" class="control-label"><spring:message code="form.label.student.educationProgram"/></label>
                                 </td>
                                 <td class="col-md-5" colspan=3>
-                                    <form:input path="educationProgram" cssClass="form-control"/>
+                                    <form:input path="educationProgram.name" cssClass="form-control"/>
+                                    <form:hidden path="educationProgram.id"/>
                                 </td>
                             </tr>
                         </c:if>
                     </table>
 
                     <div class="col-md-12">
-                        <c:forEach items="${student.courses}" var="course" varStatus="i">
-                            <div class="col-md-12">
-                                <span class="label label-info">${course.label}</span>
-                            </div>
-                            <c:forEach items="${course.semesters}" var="semester" varStatus="j">
-                                <div class="col-md-12">
-                                    <div class="label label-success">${semester.label}</div>
-                                </div>
-                                <div class="col-md-12">
-                                    <table class="table no-margin">
-                                        <c:forEach items="${semester.disciplines}" var="discipline" varStatus="k">
-                                            <tr>
-                                                <td class="col-md-6"><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].label" cssClass="form-control"/></td>
-                                                <td class="col-md-1"><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].credits" cssClass="form-control" type="number"/></td>
-                                                <td class="col-md-2"><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].controlForm" cssClass="form-control"/></td>
-                                                <td class="col-md-2"><form:select path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].type" items="${disciplineTypes}" cssClass="form-control"/>
-                                                <td class="col-md-1"><form:input path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].mark" cssClass="form-control" type="number"/></td>
-                                            </tr>
-                                            <form:hidden path="courses[${i.index}].semesters[${j.index}].disciplines[${k.index}].id"/>
-                                        </c:forEach>
-                                    </table>
-                                </div>
-                                <form:hidden path="courses[${i.index}].semesters[${j.index}].id"/>
-                                <form:hidden path="courses[${i.index}].semesters[${j.index}].total"/>
-                                <form:hidden path="courses[${i.index}].semesters[${j.index}].label"/>
+                        <table class="table no-margin">
+                            <c:set var="course" value="0"/>
+                            <c:set var="semester" value="0"/>
+                            <c:forEach items="${student.disciplines}" var="discipline" varStatus="i">
+                                <c:if test="${discipline.course ne course}">
+                                    <c:set var="course" value="${discipline.course}"/>
+                                    <tr>
+                                        <td colspan="5"><span class="label label-primary">Курс №${course}</span></td>
+                                    </tr>
+                                </c:if>
+                                <c:if test="${discipline.semester ne semester}">
+                                    <c:set var="semester" value="${discipline.semester}"/>
+                                    <tr>
+                                        <td colspan="5"><span class="label label-default">СЕМЕСТР №${semester}</span></td>
+                                    </tr>
+                                </c:if>
+                                <tr>
+                                    <td class="col-md-6"><form:input path="disciplines[${i.index}].label" cssClass="form-control"/></td>
+                                    <td class="col-md-1"><form:input path="disciplines[${i.index}].credits" cssClass="form-control" type="number"/></td>
+                                    <td class="col-md-2"><form:select path="disciplines[${i.index}].controlForm" items="${disciplineFormControls}" cssClass="form-control"/>
+                                    <td class="col-md-2"><form:select path="disciplines[${i.index}].type" items="${disciplineTypes}" cssClass="form-control"/>
+                                    <td class="col-md-1"><form:input path="disciplines[${i.index}].mark" cssClass="form-control" type="number"/></td>
+                                    <form:hidden path="disciplines[${i.index}].id"/>
+                                    <form:hidden path="disciplines[${i.index}].speciality"/>
+                                    <form:hidden path="disciplines[${i.index}].educationProgram"/>
+                                    <form:hidden path="disciplines[${i.index}].course"/>
+                                    <form:hidden path="disciplines[${i.index}].semester"/>
+                                </tr>
                             </c:forEach>
-                            <form:hidden path="courses[${i.index}].id"/>
-                            <form:hidden path="courses[${i.index}].label"/>
-                        </c:forEach>
+                        </table>
                     </div>
-
                     <form:hidden path="average"/>
                     <form:hidden path="rate"/>
                     <form:hidden path="photo"/>

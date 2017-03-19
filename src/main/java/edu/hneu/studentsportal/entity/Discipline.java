@@ -1,21 +1,19 @@
 package edu.hneu.studentsportal.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
+import edu.hneu.studentsportal.enums.DisciplineFormControl;
+import edu.hneu.studentsportal.enums.DisciplineType;
+import lombok.*;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import edu.hneu.studentsportal.enums.DisciplineType;
-import lombok.Data;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Data
+@Builder
 @Entity
 @Table(name = "discipline")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Discipline {
 
     @Id
@@ -24,7 +22,32 @@ public class Discipline {
 
     private Integer mark;
     private Integer credits;
-    private String controlForm;
+
+    @NonNull
+    private int course;
+    @NonNull
+    private int semester;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "discipline2education_program",
+            joinColumns = @JoinColumn(name = "discipline_id"),
+            inverseJoinColumns = @JoinColumn(name = "education_program_id")
+    )
+    private EducationProgram educationProgram;
+
+    @NonNull
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "discipline2speciality",
+            joinColumns = @JoinColumn(name = "discipline_id"),
+            inverseJoinColumns = @JoinColumn(name = "speciality_id")
+    )
+    private Speciality speciality;
+
+    @NotNull
+    @Enumerated(EnumType.ORDINAL)
+    private DisciplineFormControl controlForm;
 
     @NotEmpty
     private String label;

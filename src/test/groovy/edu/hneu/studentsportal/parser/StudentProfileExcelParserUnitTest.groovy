@@ -1,9 +1,11 @@
 package edu.hneu.studentsportal.parser
 
+import edu.hneu.studentsportal.entity.EducationProgram
+import edu.hneu.studentsportal.entity.Faculty
 import edu.hneu.studentsportal.entity.Group
+import edu.hneu.studentsportal.entity.Speciality
 import edu.hneu.studentsportal.parser.impl.StudentProfileExcelParser
-import edu.hneu.studentsportal.repository.DisciplineRepository
-import edu.hneu.studentsportal.repository.GroupRepository
+import edu.hneu.studentsportal.repository.*
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -15,16 +17,29 @@ class StudentProfileExcelParserUnitTest extends Specification {
 
     @Shared def bachelorGroupMock = Mock(Group)
     @Shared def masterGroupMock = Mock(Group)
+    @Shared def facultyMock = Mock(Faculty)
+    @Shared def specialityMock = Mock(Speciality)
+    @Shared def educationProgramMock = Mock(EducationProgram)
+
     def groupRepositoryMock = Mock(GroupRepository)
     def disciplineRepositoryMock = Mock(DisciplineRepository)
+    def facultyRepositoryMock = Mock(FacultyRepository)
+    def specialityRepositoryMock = Mock(SpecialityRepository)
+    def educationProgramRepositoryMock = Mock(EducationProgramRepository)
     def studentProfileExcelParser = new StudentProfileExcelParser(
             groupRepository: groupRepositoryMock,
-            disciplineRepository: disciplineRepositoryMock
+            disciplineRepository: disciplineRepositoryMock,
+            facultyRepository: facultyRepositoryMock,
+            specialityRepository: specialityRepositoryMock,
+            educationProgramRepository: educationProgramRepositoryMock,
     )
 
     def setup() {
         groupRepositoryMock.findByName('6.04.51.16.03') >> Optional.of(bachelorGroupMock)
         groupRepositoryMock.findByName('8.04.51.16.04') >> Optional.of(masterGroupMock)
+        facultyRepositoryMock.findByName('Економічної інформатики') >> Optional.of(facultyMock)
+        specialityRepositoryMock.findByNameAndFaculty('122 КОМП\'ЮТЕРНІ НАУКИ ТА ІНФОРМАЦІЙНІ ТЕХНОЛОГІЇ', facultyMock) >> Optional.of(specialityMock)
+        educationProgramRepositoryMock.findByName('ІНФОРМАЦІЙНІ СИСТЕМИ УПРАВЛІННЯ ТА ТЕХНОЛОГІЇ ОБРОБКИ ДАНИХ') >> Optional.of(educationProgramMock)
         disciplineRepositoryMock.findOne(any()) >> Optional.empty()
     }
 
@@ -57,15 +72,14 @@ class StudentProfileExcelParserUnitTest extends Specification {
     }
 
     @Unroll
-    def 'student from #excelFileName should have faculty[#expectedFaculty]'() {
+    def 'student from #excelFileName should have faculty'() {
         given:
             def excelFile = loadResource excelFileName
         when:
             def profile = studentProfileExcelParser.parse(excelFile)
         then:
-            profile.faculty == expectedFaculty
+            profile.faculty == facultyMock
         where:
-            expectedFaculty = 'Економічної інформатики'
             excelFileName            | _
             MASTER_STUDENT_PROFILE   | _
             BACHELOR_STUDENT_PROFILE | _
@@ -87,15 +101,14 @@ class StudentProfileExcelParserUnitTest extends Specification {
     }
 
     @Unroll
-    def 'student from #excelFileName should have speciality[#expectedSpeciality]'() {
+    def 'student from #excelFileName should have speciality'() {
         given:
             def excelFile = loadResource excelFileName
         when:
             def profile = studentProfileExcelParser.parse(excelFile)
         then:
-            profile.speciality == expectedSpeciality
+            profile.speciality == specialityMock
         where:
-            expectedSpeciality = '122 КОМП\'ЮТЕРНІ НАУКИ ТА ІНФОРМАЦІЙНІ ТЕХНОЛОГІЇ'
             excelFileName            | _
             MASTER_STUDENT_PROFILE   | _
             BACHELOR_STUDENT_PROFILE | _
@@ -130,27 +143,14 @@ class StudentProfileExcelParserUnitTest extends Specification {
     }
 
     @Unroll
-    def 'student from #excelFileName should have [#numberOfCourses] courses'() {
-        given:
-           def excelFile = loadResource excelFileName
-        when:
-            def profile = studentProfileExcelParser.parse(excelFile)
-        then:
-            profile.getCourses().size() == numberOfCourses
-        where:
-            excelFileName            | numberOfCourses
-            MASTER_STUDENT_PROFILE   | 2
-            BACHELOR_STUDENT_PROFILE | 4
-    }
-
-    @Unroll
     def 'student from #excelFileName should have [#numberOfDisciplines] disciplines on the [#course] course in the [#semester] semester'() {
         given:
             def excelFile = loadResource excelFileName
         when:
             def profile = studentProfileExcelParser.parse(excelFile)
         then:
-            profile.getCourses().get(course - 1).getSemesters().get(semester - 1).getDisciplines().size() == numberOfDisciplines
+
+            profile.disciplines.stream().filter{ discipline -> discipline.course == course && discipline.semester == semester}.count() == numberOfDisciplines
         where:
             excelFileName            | course | semester | numberOfDisciplines
             MASTER_STUDENT_PROFILE   | 1      | 1        | 4

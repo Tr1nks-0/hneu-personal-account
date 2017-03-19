@@ -1,40 +1,31 @@
 package edu.hneu.studentsportal.parser.impl;
 
 
-import static org.apache.commons.lang.BooleanUtils.isFalse;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.PictureData;
-import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Example;
-import org.springframework.stereotype.Component;
-
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
-import edu.hneu.studentsportal.entity.Course;
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.Group;
-import edu.hneu.studentsportal.entity.Semester;
-import edu.hneu.studentsportal.entity.Student;
-import edu.hneu.studentsportal.enums.DisciplineType;
+import edu.hneu.studentsportal.entity.*;
+import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.parser.AbstractExcelParser;
 import edu.hneu.studentsportal.parser.Indexer;
 import edu.hneu.studentsportal.parser.exception.ParseErrorCodes;
 import edu.hneu.studentsportal.parser.exception.ParseException;
 import edu.hneu.studentsportal.parser.util.validation.StudentProfileValidationUtils;
-import edu.hneu.studentsportal.repository.DisciplineRepository;
-import edu.hneu.studentsportal.repository.GroupRepository;
+import edu.hneu.studentsportal.repository.*;
 import lombok.extern.log4j.Log4j;
+import org.apache.poi.ss.usermodel.PictureData;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Example;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 @Log4j
 @Component
@@ -51,35 +42,40 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
     private static final String FACULTY_DIRECTOR_HOLDER = "Декан факультету";
     private static final String SEMESTER_END_HOLDER = "ВСЬОГО ЗА";
 
-    private static final Map<String, DisciplineType> DISCIPLINE_TYPES_MAP = ImmutableMap.of(
-            "МАГ-МАЙНОР", DisciplineType.MAGMAYNOR,
-            "МАЙНОР", DisciplineType.MAYNOR,
-            "МЕЙДЖОР", DisciplineType.MAJOR
-    );
-
     @Resource
     private GroupRepository groupRepository;
     @Resource
     private DisciplineRepository disciplineRepository;
+    @Resource
+    private FacultyRepository facultyRepository;
+    @Resource
+    private SpecialityRepository specialityRepository;
+    @Resource
+    private EducationProgramRepository educationProgramRepository;
 
     @Override
     public Student extractModel() {
         Indexer indexer = Indexer.of(3);
         StudentProfileValidationUtils.validateStudentProfileFile(getStringCellValue(indexer.getValue()));
         indexer.next();
-        return Student.builder()
-                .surname(getString2CellValue(indexer.next()))
-                .name(getString2CellValue(indexer.next()))
-                .passportNumber(getString2CellValue(indexer.next()).split("\\.")[0])
-                .faculty(getString2CellValue(indexer.next()))
-                .incomeYear(getIntegerCellValue(indexer.next(), 2))
-                .contactInfo(extractContacts(indexer))
-                .speciality(getString2CellValue(indexer.next()))
-                .educationProgram(extractMasterEducationProgram(indexer))
-                .studentGroup(extractGroup(indexer))
-                .courses(extractCourses(indexer))
-                .photo(extractProfileImage())
-                .build();
+        Student student = new Student();
+        student.setSurname(getString2CellValue(indexer.next()));
+        student.setName(getString2CellValue(indexer.next()));
+        student.setPassportNumber(getString2CellValue(indexer.next()).split("\\.")[0]);
+        student.setFaculty(extractFaculty(indexer));
+        student.setIncomeYear(getIntegerCellValue(indexer.next(), 2));
+        student.setContactInfo(extractContacts(indexer));
+        student.setSpeciality(extractSpeciality(indexer, student.getFaculty()));
+        student.setEducationProgram(extractMasterEducationProgram(indexer));
+        student.setStudentGroup(extractGroup(indexer));
+        student.setDisciplines(extractDisciplinesInternal(student.getSpeciality(), student.getEducationProgram(), indexer));
+        student.setPhoto(extractProfileImage());
+        return student;
+    }
+
+    private Faculty extractFaculty(Indexer indexer) {
+        String facultyName = getString2CellValue(indexer.next());
+        return facultyRepository.findByName(facultyName).orElseThrow(() -> new ParseException(""));
     }
 
     private List<String> extractContacts(Indexer indexer) {
@@ -89,14 +85,18 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         return contacts;
     }
 
-    private boolean isNotSpecialityLabel(int row) {
-        String stringCellValue = getStringCellValue(row);
-        return isFalse(stringCellValue.contains(COURSER_DIRECTION_HOLDER)) && isFalse(stringCellValue.contains(SPECIALITY_HOLDER));
+    private Speciality extractSpeciality(Indexer indexer, Faculty faculty) {
+        String specialityName = getString2CellValue(indexer.next());
+        return specialityRepository.findByNameAndFaculty(specialityName, faculty).orElseThrow(() -> new ParseException(""));
     }
 
-    private String extractMasterEducationProgram(Indexer indexer) {
+    private EducationProgram extractMasterEducationProgram(Indexer indexer) {
         boolean isMasterProgram = getStringCellValue(indexer.getValue() + 1).contains(MASTER_PROGRAM_HOLDER);
-        return isMasterProgram ? getString2CellValue(indexer.next()) : null;
+        if (isMasterProgram) {
+            String educationProgramName = getString2CellValue(indexer.next());
+            return educationProgramRepository.findByName(educationProgramName).orElseThrow(() -> new ParseException(""));
+        }
+        return null;
     }
 
     private Group extractGroup(Indexer indexer) {
@@ -104,13 +104,51 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         return groupRepository.findByName(groupName).orElseThrow(() -> new ParseException(ParseErrorCodes.GROUP_WAS_NOT_FOUND));
     }
 
-    private List<Course> extractCourses(Indexer indexer) {
-        List<Course> courses = Lists.newArrayList();
-        while (isNotFileEnd(indexer.next()))
-            if (isCourseLabel(indexer))
-                courses.add(extractCourse(indexer));
-        StudentProfileValidationUtils.validateCourses(courses);
-        return courses;
+    private List<Discipline> extractDisciplinesInternal(Speciality speciality, EducationProgram educationProgram, Indexer indexer) {
+        List<Discipline> allDisciplines = Lists.newArrayList();
+        int course = 1;
+        while (isNotFileEnd(indexer.next())) {
+            if (isCourseLabel(indexer)) {
+                indexer.next();
+                indexer.next();
+
+                List<Discipline> disciplinesPerCourse = extractSemesters(indexer, course).stream()
+                        .map(populateDisciplineSpeciality(speciality))
+                        .map(populateDisciplineEducationProgram(educationProgram))
+                        .map(findDisciplineByExample())
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
+                allDisciplines.addAll(disciplinesPerCourse);
+                course++;
+            }
+        }
+        return allDisciplines;
+    }
+
+    private Function<Discipline, Discipline> populateDisciplineSpeciality(Speciality speciality) {
+        return discipline -> {
+            discipline.setSpeciality(speciality);
+            return discipline;
+        };
+    }
+
+    private Function<Discipline, Discipline> populateDisciplineEducationProgram(EducationProgram educationProgram) {
+        return discipline -> {
+            discipline.setEducationProgram(educationProgram);
+            return discipline;
+        };
+    }
+
+    private Function<Discipline, Optional<Discipline>> findDisciplineByExample() {
+        return discipline -> disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgramAndCreditsAndControlForm(
+                discipline.getLabel(), discipline.getCourse(), discipline.getSemester(),
+                discipline.getSpeciality(), discipline.getEducationProgram(),
+                discipline.getCredits(), discipline.getControlForm());
+    }
+
+    private boolean isNotFileEnd(int row) {
+        return row < 100 && isFalse(getString1CellValue(row).contains(FACULTY_DIRECTOR_HOLDER));
     }
 
     private boolean isCourseLabel(Indexer indexer) {
@@ -118,49 +156,23 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         return stringCellValue.contains(COURSER_HOLDER) || stringCellValue.contains(INCOME_YEAR_HOLDER);
     }
 
-    private boolean isNotFileEnd(int row) {
-        return row < 100 && isFalse(getString1CellValue(row).contains(FACULTY_DIRECTOR_HOLDER));
-    }
-
-    private Course extractCourse(Indexer indexer) {
-        Course course = new Course();
-        course.setLabel(getStringCellValue(indexer.getValue()));
-        course.setSemesters(extractSemesters(indexer));
-        StudentProfileValidationUtils.validateCourse(course);
-        return course;
-    }
-
-    private List<Semester> extractSemesters(Indexer indexer) {
-        indexer.next();
-        return Lists.newArrayList(extractSemester(indexer, LEFT_SEMESTER_COLL), extractSemester(indexer, RIGHT_SEMESTER_COLL))
+    private List<Discipline> extractSemesters(Indexer indexer, int course) {
+        return Lists.newArrayList(extractSemester(indexer, LEFT_SEMESTER_COLL, course, 1), extractSemester(indexer, RIGHT_SEMESTER_COLL, course, 2))
                 .stream()
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
-    private Optional<Semester> extractSemester(Indexer indexer, int col) {
+    private List<Discipline> extractSemester(Indexer indexer, int rightSemesterColl, int course, int semester) {
         Indexer internalSemesterIndex = Indexer.of(indexer.getValue());
-        String semesterLabel = getStringCellValue(internalSemesterIndex.getValue(), col);
-        if (StringUtils.isNotBlank(semesterLabel)) {
-            Semester semester = new Semester();
-            semester.setLabel(semesterLabel);
-            internalSemesterIndex.next();
-            internalSemesterIndex.next();
-            semester.setDisciplines(extractDisciplines(internalSemesterIndex, col));
-            semester.setTotal(getIntegerCellValue(internalSemesterIndex.getValue(), col + 2));
-            StudentProfileValidationUtils.validateSemester(semester);
-            return Optional.of(semester);
-        }
-        return Optional.empty();
-    }
-
-    private List<Discipline> extractDisciplines(Indexer internalSemesterIndex, int col) {
         final List<Discipline> disciplines = Lists.newArrayList();
-        while (isNotSemesterEnd(internalSemesterIndex.getValue(), col + 1)) {
-            if (isNotEmpty(getStringCellValue(internalSemesterIndex.getValue(), col + 1)))
-                disciplines.add(extractDiscipline(internalSemesterIndex.getValue(), col + 1));
-            internalSemesterIndex.next();
+        if (isNotEmpty(getStringCellValue(internalSemesterIndex.getValue() + 1, rightSemesterColl + 1))) {
+            while (isNotSemesterEnd(internalSemesterIndex.getValue(), rightSemesterColl + 1)) {
+                String disciplineLabel = getStringCellValue(internalSemesterIndex.getValue(), rightSemesterColl + 1);
+                if (isNotEmpty(disciplineLabel))
+                    disciplines.add(extractDiscipline(internalSemesterIndex.getValue(), rightSemesterColl + 1, disciplineLabel, course, semester));
+                internalSemesterIndex.next();
+            }
         }
         return disciplines;
     }
@@ -169,30 +181,21 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         return isFalse(getStringCellValue(row, col).contains(SEMESTER_END_HOLDER));
     }
 
-    private Discipline extractDiscipline(int row, int col) {
+    private boolean isNotSpecialityLabel(int row) {
+        String stringCellValue = getStringCellValue(row);
+        return isFalse(stringCellValue.contains(COURSER_DIRECTION_HOLDER)) && isFalse(stringCellValue.contains(SPECIALITY_HOLDER));
+    }
+
+    private Discipline extractDiscipline(int row, int col, String label, int course, int semester) {
         Discipline discipline = new Discipline();
         Indexer columnIndex = Indexer.of(col);
-        populateDisciplineLabelAndType(discipline, getStringCellValue(row, columnIndex.getValue()));
+        discipline.setLabel(label);
         discipline.setCredits(getIntegerCellValue(row, columnIndex.next()));
-        discipline.setControlForm(getStringCellValue(row, columnIndex.next()));
-        discipline.setMark(getDisciplineMark(row, columnIndex));
+        discipline.setControlForm(DisciplineFormControl.of(getStringCellValue(row, columnIndex.next()).trim()));
+        discipline.setCourse(course);
+        discipline.setSemester(semester);
         StudentProfileValidationUtils.validateDiscipline(discipline);
         return Optional.ofNullable(disciplineRepository.findOne(Example.of(discipline))).orElse(discipline);
-    }
-
-    private Integer getDisciplineMark(int row, Indexer columnIndex) {
-        final String stringCellValue = getStringCellValue(row, columnIndex.next());
-        return Optional.ofNullable(stringCellValue).filter(StringUtils::isNotBlank).map(value -> {
-            StudentProfileValidationUtils.validateDisciplineMark(value);
-            return Integer.valueOf(stringCellValue);
-        }).orElse(null);
-    }
-
-    private void populateDisciplineLabelAndType(Discipline discipline, String disciplineLabelOrType) {
-        DisciplineType disciplineType = DISCIPLINE_TYPES_MAP.getOrDefault(disciplineLabelOrType, DisciplineType.REGULAR);
-        if (disciplineType == DisciplineType.REGULAR)
-            discipline.setLabel(disciplineLabelOrType);
-        discipline.setType(disciplineType);
     }
 
     private byte[] extractProfileImage() {

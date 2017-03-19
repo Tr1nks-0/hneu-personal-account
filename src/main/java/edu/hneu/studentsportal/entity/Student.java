@@ -1,26 +1,9 @@
 package edu.hneu.studentsportal.entity;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @Builder
@@ -42,9 +25,31 @@ public class Student {
     private String surname;
     private String passportNumber;
 
-    private String faculty;
-    private String speciality;
-    private String educationProgram;
+    @NonNull
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "student2faculty",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "faculty_id")
+    )
+    private Faculty faculty;
+
+    @NonNull
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "student2speciality",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "speciality_id")
+    )
+    private Speciality speciality;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "student2education_program",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "education_program_id")
+    )
+    private EducationProgram educationProgram;
 
     private Integer incomeYear;
     private Integer rate;
@@ -65,10 +70,10 @@ public class Student {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "student2course",
+            name = "student2discipline",
             joinColumns = @JoinColumn(name = "student_email"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
+            inverseJoinColumns = @JoinColumn(name = "discipline_id")
     )
-    private List<Course> courses;
+    private List<Discipline> disciplines;
 
 }

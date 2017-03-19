@@ -1,19 +1,21 @@
 package edu.hneu.studentsportal.listener;
 
-import edu.hneu.studentsportal.entity.Group;
+import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
+import edu.hneu.studentsportal.service.StudentService;
+import edu.hneu.studentsportal.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.stereotype.Component;
 
-import edu.hneu.studentsportal.entity.User;
-import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.service.StudentService;
-import edu.hneu.studentsportal.service.UserService;
-
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 @Component
 public class InitializationAdminUserOnStartupListener implements ApplicationListener<ContextRefreshedEvent> {
@@ -29,19 +31,15 @@ public class InitializationAdminUserOnStartupListener implements ApplicationList
 
     @Resource
     private GroupRepository groupRepository;
+    @Resource
+    private DisciplineRepository disciplineRepository;
+    @Resource
+    private DataSource dataSource;
 
     @Override
     public void onApplicationEvent(final ContextRefreshedEvent contextRefreshedEvent) {
-        final User admin = new User();
-        admin.setId(ADMIN_USER_ID);
-        admin.setRole(UserRole.ADMIN);
-        userService.save(admin);
-        LOG.info("Default admin was created!");
-
-        groupRepository.save(new Group(21382, "8.04.51.16.04"));
-
-        // studentService.refreshMarks();
-        // LOG.info("All marks refreshed");
+        ClassPathResource initData = new ClassPathResource("scripts/init.sql");
+        DatabasePopulator databasePopulator = new ResourceDatabasePopulator(initData);
+        DatabasePopulatorUtils.execute(databasePopulator, dataSource);
     }
-
 }
