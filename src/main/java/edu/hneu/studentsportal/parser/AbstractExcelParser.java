@@ -12,9 +12,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import edu.hneu.studentsportal.parser.exception.ParseErrorCodes;
-import edu.hneu.studentsportal.parser.exception.ParseException;
-
 public abstract class AbstractExcelParser<E> {
 
     protected Sheet sheet;
@@ -26,7 +23,7 @@ public abstract class AbstractExcelParser<E> {
             sheet = workbook.getSheetAt(0);
             return extractModel();
         } catch (InvalidFormatException | IOException e) {
-            throw new ParseException(ParseErrorCodes.NOT_SUPPORTED_FORMAT);
+            throw new IllegalArgumentException("invalid.student.profile.file.format");
         }
     }
 
