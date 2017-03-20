@@ -108,30 +108,31 @@
                         <table class="table no-margin">
                             <c:set var="course" value="0"/>
                             <c:set var="semester" value="0"/>
-                            <c:forEach items="${student.disciplines}" var="discipline" varStatus="i">
-                                <c:if test="${discipline.course ne course}">
-                                    <c:set var="course" value="${discipline.course}"/>
+                            <c:forEach items="${student.disciplineMarks}" var="disciplineMarks" varStatus="i">
+                                <c:if test="${disciplineMarks.discipline.course ne course}">
+                                    <c:set var="course" value="${disciplineMarks.discipline.course}"/>
                                     <tr>
                                         <td colspan="5"><span class="label label-primary">Курс №${course}</span></td>
                                     </tr>
                                 </c:if>
-                                <c:if test="${discipline.semester ne semester}">
-                                    <c:set var="semester" value="${discipline.semester}"/>
+                                <c:if test="${disciplineMarks.discipline.semester ne semester}">
+                                    <c:set var="semester" value="${disciplineMarks.discipline.semester}"/>
                                     <tr>
                                         <td colspan="5"><span class="label label-default">СЕМЕСТР №${semester}</span></td>
                                     </tr>
                                 </c:if>
                                 <tr>
-                                    <td class="col-md-6"><form:input path="disciplines[${i.index}].label" cssClass="form-control"/></td>
-                                    <td class="col-md-1"><form:input path="disciplines[${i.index}].credits" cssClass="form-control" type="number"/></td>
-                                    <td class="col-md-2"><form:select path="disciplines[${i.index}].controlForm" items="${disciplineFormControls}" cssClass="form-control"/>
-                                    <td class="col-md-2"><form:select path="disciplines[${i.index}].type" items="${disciplineTypes}" cssClass="form-control"/>
-                                    <td class="col-md-1"><form:input path="disciplines[${i.index}].mark" cssClass="form-control" type="number"/></td>
-                                    <form:hidden path="disciplines[${i.index}].id"/>
-                                    <form:hidden path="disciplines[${i.index}].speciality"/>
-                                    <form:hidden path="disciplines[${i.index}].educationProgram"/>
-                                    <form:hidden path="disciplines[${i.index}].course"/>
-                                    <form:hidden path="disciplines[${i.index}].semester"/>
+                                    <td class="col-md-6"><form:input path="disciplineMarks[${i.index}].discipline.label" cssClass="form-control"/></td>
+                                    <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].discipline.credits" cssClass="form-control" type="number"/></td>
+                                    <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.controlForm" items="${disciplineFormControls}" cssClass="form-control"/>
+                                    <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.type" items="${disciplineTypes}" cssClass="form-control"/>
+                                    <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].mark" cssClass="form-control" type="number"/></td>
+                                    <form:hidden path="disciplineMarks[${i.index}].id"/>
+                                    <form:hidden path="disciplineMarks[${i.index}].discipline.id"/>
+                                    <form:hidden path="disciplineMarks[${i.index}].discipline.speciality"/>
+                                    <form:hidden path="disciplineMarks[${i.index}].discipline.educationProgram"/>
+                                    <form:hidden path="disciplineMarks[${i.index}].discipline.course"/>
+                                    <form:hidden path="disciplineMarks[${i.index}].discipline.semester"/>
                                 </tr>
                             </c:forEach>
                         </table>

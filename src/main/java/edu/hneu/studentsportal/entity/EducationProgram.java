@@ -1,9 +1,19 @@
 package edu.hneu.studentsportal.entity;
 
-import lombok.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @Entity
@@ -21,12 +31,7 @@ public class EducationProgram {
     private String name;
 
     @NonNull
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "education_program2faculty",
-            joinColumns = @JoinColumn(name = "education_program_id"),
-            inverseJoinColumns = @JoinColumn(name = "speciality_id")
-    )
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Speciality speciality;
 
 }

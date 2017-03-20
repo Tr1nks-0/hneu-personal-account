@@ -1,5 +1,23 @@
 package edu.hneu.studentsportal.service.impl;
 
+import static java.lang.String.format;
+import static java.util.Objects.nonNull;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.WebApplicationContext;
+
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.UserRole;
@@ -13,23 +31,6 @@ import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.TimeService;
 import edu.hneu.studentsportal.service.UserService;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.WebApplicationContext;
-
-import javax.annotation.Resource;
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-
-import static java.lang.String.format;
-import static java.util.Objects.nonNull;
 
 @Log4j
 @Service
@@ -256,11 +257,13 @@ public class DefaultStudentService implements StudentService {
             students.forEach(studentRepository::save);
         });*/
     }
+/*
 
     Function<List<Discipline>, Double> calculateAverageFunction = disciplines -> {
         double total = disciplines.stream().map(Discipline::getMark).mapToDouble(Double::valueOf).sum();
         return total / disciplines.size();
     };
+*/
 
 /*    Function<Student, List<Discipline>> extractDisciplinesFunction = student -> student.getCourses().stream().flatMap(c -> c.getSemesters().stream())
             .flatMap(s -> s.getDisciplines().stream()).filter(d -> NumberUtils.isNumber(d.getMark())).collect(Collectors.toList());*/

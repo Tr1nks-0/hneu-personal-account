@@ -150,7 +150,7 @@ class StudentProfileExcelParserUnitTest extends Specification {
             def profile = studentProfileExcelParser.parse(excelFile)
         then:
 
-            profile.disciplines.stream().filter{ discipline -> discipline.course == course && discipline.semester == semester}.count() == numberOfDisciplines
+            profile.disciplineMarks.stream().filter{ discipline -> discipline.course == course && discipline.semester == semester}.count() == numberOfDisciplines
         where:
             excelFileName            | course | semester | numberOfDisciplines
             MASTER_STUDENT_PROFILE   | 1      | 1        | 4

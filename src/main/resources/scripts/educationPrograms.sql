@@ -1,0 +1,1 @@
+INSERT INTO education_program(id, NAME, speciality_id) VALUES (0, 'ІНФОРМАЦІЙНІ СИСТЕМИ УПРАВЛІННЯ ТА ТЕХНОЛОГІЇ ОБРОБКИ ДАНИХ', 0);

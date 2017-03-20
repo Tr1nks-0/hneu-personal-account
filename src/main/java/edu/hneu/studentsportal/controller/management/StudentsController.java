@@ -1,21 +1,29 @@
 package edu.hneu.studentsportal.controller.management;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.service.StudentService;
 import lombok.SneakyThrows;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 
 @Controller
+@ControllerAdvice
 @RequestMapping("/management/students")
 public class StudentsController {
 
@@ -47,4 +55,8 @@ public class StudentsController {
         outputStream.close();
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public String databaseError() {
+        return "management/uploadUserProfilesFromExcel";
+    }
 }

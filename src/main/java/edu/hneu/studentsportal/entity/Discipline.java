@@ -1,12 +1,25 @@
 package edu.hneu.studentsportal.entity;
 
-import edu.hneu.studentsportal.enums.DisciplineFormControl;
-import edu.hneu.studentsportal.enums.DisciplineType;
-import lombok.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import edu.hneu.studentsportal.enums.DisciplineFormControl;
+import edu.hneu.studentsportal.enums.DisciplineType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Data
 @Builder
@@ -20,7 +33,6 @@ public class Discipline {
     @GeneratedValue
     private long id;
 
-    private Integer mark;
     private Integer credits;
 
     @NonNull
@@ -28,21 +40,11 @@ public class Discipline {
     @NonNull
     private int semester;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "discipline2education_program",
-            joinColumns = @JoinColumn(name = "discipline_id"),
-            inverseJoinColumns = @JoinColumn(name = "education_program_id")
-    )
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private EducationProgram educationProgram;
 
     @NonNull
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "discipline2speciality",
-            joinColumns = @JoinColumn(name = "discipline_id"),
-            inverseJoinColumns = @JoinColumn(name = "speciality_id")
-    )
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Speciality speciality;
 
     @NotNull

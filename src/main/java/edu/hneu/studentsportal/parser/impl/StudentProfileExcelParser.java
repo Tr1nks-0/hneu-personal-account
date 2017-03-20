@@ -19,6 +19,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import edu.hneu.studentsportal.entity.Discipline;
+import edu.hneu.studentsportal.entity.DisciplineMark;
 import edu.hneu.studentsportal.entity.EducationProgram;
 import edu.hneu.studentsportal.entity.Faculty;
 import edu.hneu.studentsportal.entity.Group;
@@ -77,7 +78,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         student.setSpeciality(extractSpeciality(indexer, student.getFaculty()));
         student.setEducationProgram(extractMasterEducationProgram(indexer));
         student.setStudentGroup(extractGroup(indexer));
-        student.setDisciplines(extractDisciplinesInternal(student.getSpeciality(), student.getEducationProgram(), indexer));
+        student.setDisciplineMarks(extractDisciplinesInternal(student.getSpeciality(), student.getEducationProgram(), indexer));
         student.setPhoto(extractProfileImage());
         return student;
     }
@@ -113,18 +114,19 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         return groupRepository.findByName(groupName).orElseThrow(() -> new IllegalArgumentException("invalid.student.profile.group"));
     }
 
-    private List<Discipline> extractDisciplinesInternal(Speciality speciality, EducationProgram educationProgram, Indexer indexer) {
-        List<Discipline> allDisciplines = Lists.newArrayList();
+    private List<DisciplineMark> extractDisciplinesInternal(Speciality speciality, EducationProgram educationProgram, Indexer indexer) {
+        List<DisciplineMark> allDisciplines = Lists.newArrayList();
         int course = 1;
         while (isNotFileEnd(indexer.next())) {
             if (isCourseLabel(indexer)) {
                 indexer.next();
                 indexer.next();
 
-                List<Discipline> disciplinesPerCourse = extractSemesters(indexer, course).stream()
+                List<DisciplineMark> disciplinesPerCourse = extractSemesters(indexer, course).stream()
                         .map(populateDisciplineSpeciality(speciality))
                         .map(populateDisciplineEducationProgram(educationProgram))
                         .map(findDisciplineByExample())
+                        .map(DisciplineMark::new)
                         .collect(Collectors.toList());
                 allDisciplines.addAll(disciplinesPerCourse);
                 course++;
