@@ -66,8 +66,7 @@
                                 <label for="faculty.name" class="control-label"><spring:message code="form.label.student.faculty"/></label>
                             </td>
                             <td class="col-md-5">
-                                <form:input path="faculty.name" cssClass="form-control"/>
-                                <form:hidden path="faculty.id"/>
+                                <form:select path="faculty" items="${faculties}" cssClass="form-control" itemLabel="name"/>
                             </td>
                             <td class="col-md-2">
                                  <label for="incomeYear" class="control-label"><spring:message code="form.label.student.incomeYear"/></label>
@@ -81,8 +80,7 @@
                                 <label for="speciality.name" class="control-label"><spring:message code="form.label.student.speciality"/></label>
                             </td>
                             <td class="col-md-5">
-                                <form:input path="speciality.name" cssClass="form-control"/>
-                                <form:hidden path="speciality.id"/>
+                                <form:select path="speciality" items="${specialities}" cssClass="form-control" itemLabel="name"/>
                             </td>
                             <td class="col-md-2">
                                  <label for="studentGroup.name" class="control-label"><spring:message code="form.label.student.studentGroup"/></label>
@@ -97,8 +95,7 @@
                                     <label for="educationProgram.name" class="control-label"><spring:message code="form.label.student.educationProgram"/></label>
                                 </td>
                                 <td class="col-md-5" colspan=3>
-                                    <form:input path="educationProgram.name" cssClass="form-control"/>
-                                    <form:hidden path="educationProgram.id"/>
+                                    <form:select path="educationProgram" items="${educationPrograms}" cssClass="form-control" itemLabel="name"/>
                                 </td>
                             </tr>
                         </c:if>
@@ -122,10 +119,10 @@
                                     </tr>
                                 </c:if>
                                 <tr>
-                                    <td class="col-md-6"><form:input path="disciplineMarks[${i.index}].discipline.label" cssClass="form-control"/></td>
-                                    <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].discipline.credits" cssClass="form-control" type="number"/></td>
-                                    <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.controlForm" items="${disciplineFormControls}" cssClass="form-control"/>
-                                    <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.type" items="${disciplineTypes}" cssClass="form-control"/>
+                                    <td class="col-md-6"><form:input path="disciplineMarks[${i.index}].discipline.label" cssClass="form-control" disabled="true"/></td>
+                                    <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].discipline.credits" cssClass="form-control" type="number" disabled="true"/></td>
+                                    <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.controlForm" items="${disciplineFormControls}" cssClass="form-control" disabled="true"/>
+                                    <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.type" items="${disciplineTypes}" cssClass="form-control" disabled="true"/>
                                     <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].mark" cssClass="form-control" type="number"/></td>
                                     <form:hidden path="disciplineMarks[${i.index}].id"/>
                                     <form:hidden path="disciplineMarks[${i.index}].discipline.id"/>

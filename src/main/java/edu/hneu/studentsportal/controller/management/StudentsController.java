@@ -19,6 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
+import edu.hneu.studentsportal.service.EducationProgramService;
+import edu.hneu.studentsportal.service.FacultyService;
+import edu.hneu.studentsportal.service.SpecialityService;
 import edu.hneu.studentsportal.service.StudentService;
 import lombok.SneakyThrows;
 
@@ -29,12 +32,21 @@ public class StudentsController {
 
     @Resource
     private StudentService studentService;
+    @Resource
+    private FacultyService facultyService;
+    @Resource
+    private SpecialityService specialityService;
+    @Resource
+    private EducationProgramService educationProgramService;
 
     @GetMapping("/{id}")
     public ModelAndView getStudent(@PathVariable long id, Model model) {
         Student student = studentService.getStudent(id);
         model.addAttribute("disciplineTypes", DisciplineType.values());
         model.addAttribute("disciplineFormControls", DisciplineFormControl.values());
+        model.addAttribute("faculties", facultyService.getAllFaculties());
+        model.addAttribute("specialities", specialityService.getSpecialitiesForFaculty(student.getFaculty()));
+        model.addAttribute("educationPrograms", educationProgramService.getEducationProgramsForSpeciality(student.getSpeciality()));
         return new ModelAndView("management/successfullyUploaded", "student", student);
     }
 
