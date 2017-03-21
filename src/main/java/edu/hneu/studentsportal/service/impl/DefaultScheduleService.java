@@ -1,17 +1,18 @@
 package edu.hneu.studentsportal.service.impl;
 
-import edu.hneu.studentsportal.entity.Group;
-import edu.hneu.studentsportal.repository.GroupRepository;
-import edu.hneu.studentsportal.service.ScheduleService;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import edu.hneu.studentsportal.repository.GroupRepository;
+import edu.hneu.studentsportal.service.ScheduleService;
 
 @Service
 public class DefaultScheduleService implements ScheduleService {
@@ -30,7 +31,7 @@ public class DefaultScheduleService implements ScheduleService {
     @Override
     public void downloadGroups() {
         LOG.info("Groups downloading started");
-        final List<String> facultyIds = getListOfIds(getStringResponse(FACULTIES_URL));
+        /*final List<String> facultyIds = getListOfIds(getStringResponse(FACULTIES_URL));
         for(final String facultyId : facultyIds) {
             final List<String> specialityIds =  getListOfIds(getStringResponse(String.format(SPECIALITIES_URL, facultyId)));
             for(final String specialityId : specialityIds) {
@@ -43,7 +44,7 @@ public class DefaultScheduleService implements ScheduleService {
                     }
                 }
             }
-        }
+        }*/
         LOG.info("Groups downloading finished");
     }
 

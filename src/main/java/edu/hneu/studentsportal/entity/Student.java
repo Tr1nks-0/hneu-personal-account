@@ -11,59 +11,70 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.ToString;
 
 @Data
-@Builder
 @Entity
 @Table(name = "student")
 @ToString(of = "email")
-@NoArgsConstructor
-@AllArgsConstructor
 public class Student {
 
     @Id
     @GeneratedValue
     private long id;
 
+    @NotNull
     @Column(unique = true)
     private String email;
 
+    @NotNull
     private String name;
+
+    @NotNull
     private String surname;
+
+    @NotNull
+    @Column(name = "passport_number")
     private String passportNumber;
 
-    @NonNull
+    @NotNull
+    @Column(name = "income_year")
+    private Integer incomeYear;
+
+    private Integer rate;
+    private Double average;
+
+    @Column(name = "modification_time")
+    private Long modificationTime;
+
+    @NotNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Faculty faculty;
 
-    @NonNull
+    @NotNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Speciality speciality;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "education_program_id")
     private EducationProgram educationProgram;
 
-    private Integer incomeYear;
-    private Integer rate;
-    private Double average;
-    private Long modificationTime;
-
     @Lob
+    @NotNull
     @Column(name = "photo", columnDefinition = "longblob")
     private byte[] photo;
 
+    @NotNull
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_group")
     private Group studentGroup;
 
     @ElementCollection
@@ -72,6 +83,7 @@ public class Student {
     private List<String> contactInfo;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "discipline_mark_id"))
     private List<DisciplineMark> disciplineMarks;
 
 }

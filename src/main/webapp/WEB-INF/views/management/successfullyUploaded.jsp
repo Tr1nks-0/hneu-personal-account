@@ -86,7 +86,7 @@
                                  <label for="studentGroup.name" class="control-label"><spring:message code="form.label.student.studentGroup"/></label>
                             </td>
                             <td class="col-md-3">
-                                <form:input path="studentGroup.name" cssClass="form-control"/>
+                                <form:select path="studentGroup" items="${groups}" cssClass="form-control" itemLabel="name"/>
                             </td>
                         </tr>
                         <c:if test="${not empty student.educationProgram}">

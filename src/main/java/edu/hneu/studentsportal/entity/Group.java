@@ -1,25 +1,33 @@
 package edu.hneu.studentsportal.entity;
 
-import lombok.*;
-import org.hibernate.validator.constraints.NotBlank;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "student_group")
-@NoArgsConstructor
-@AllArgsConstructor
-@RequiredArgsConstructor
 public class Group {
 
     @Id
     private long id;
 
-    @NonNull
-    @NotBlank
+    @NotNull
     private String name;
 
+    @NotNull
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Speciality speciality;
+
+    @NotNull
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "education_program_id")
+    private EducationProgram educationProgram;
 }

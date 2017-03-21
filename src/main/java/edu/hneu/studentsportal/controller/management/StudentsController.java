@@ -21,6 +21,7 @@ import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.service.EducationProgramService;
 import edu.hneu.studentsportal.service.FacultyService;
+import edu.hneu.studentsportal.service.GroupService;
 import edu.hneu.studentsportal.service.SpecialityService;
 import edu.hneu.studentsportal.service.StudentService;
 import lombok.SneakyThrows;
@@ -38,6 +39,8 @@ public class StudentsController {
     private SpecialityService specialityService;
     @Resource
     private EducationProgramService educationProgramService;
+    @Resource
+    private GroupService groupService;
 
     @GetMapping("/{id}")
     public ModelAndView getStudent(@PathVariable long id, Model model) {
@@ -47,6 +50,7 @@ public class StudentsController {
         model.addAttribute("faculties", facultyService.getAllFaculties());
         model.addAttribute("specialities", specialityService.getSpecialitiesForFaculty(student.getFaculty()));
         model.addAttribute("educationPrograms", educationProgramService.getEducationProgramsForSpeciality(student.getSpeciality()));
+        model.addAttribute("groups", groupService.getGroups(student.getSpeciality(), student.getEducationProgram()));
         return new ModelAndView("management/successfullyUploaded", "student", student);
     }
 

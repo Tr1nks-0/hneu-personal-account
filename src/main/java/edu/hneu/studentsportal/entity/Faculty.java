@@ -1,24 +1,21 @@
 package edu.hneu.studentsportal.entity;
 
-import lombok.*;
-import org.hibernate.validator.constraints.NotBlank;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "faculty")
-@NoArgsConstructor
-@RequiredArgsConstructor
 public class Faculty {
 
     @Id
     private long id;
 
-    @NonNull
-    @NotBlank
+    @NotNull
     private String name;
 
 }

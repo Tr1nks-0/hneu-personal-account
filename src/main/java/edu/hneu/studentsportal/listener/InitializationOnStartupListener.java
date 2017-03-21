@@ -40,14 +40,13 @@ public class InitializationOnStartupListener implements ApplicationListener<Cont
     @Override
     public void onApplicationEvent(final ContextRefreshedEvent contextRefreshedEvent) {
         ClassPathResource users = new ClassPathResource("scripts/users.sql");
-        ClassPathResource groups = new ClassPathResource("scripts/groups.sql");
         ClassPathResource faculties = new ClassPathResource("scripts/faculties.sql");
         ClassPathResource specialities = new ClassPathResource("scripts/specialities.sql");
         ClassPathResource educationPrograms = new ClassPathResource("scripts/educationPrograms.sql");
+        ClassPathResource groups = new ClassPathResource("scripts/groups.sql");
         ClassPathResource disciplines = new ClassPathResource("scripts/disciplines.sql");
 
-        DatabasePopulator databasePopulator = new ResourceDatabasePopulator(users, groups,
-                faculties, specialities, educationPrograms, disciplines);
+        DatabasePopulator databasePopulator = new ResourceDatabasePopulator(users, faculties, specialities, educationPrograms, groups, disciplines);
         DatabasePopulatorUtils.execute(databasePopulator, dataSource);
     }
 }

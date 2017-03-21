@@ -6,31 +6,22 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotBlank;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "speciality")
-@NoArgsConstructor
-@AllArgsConstructor
-@RequiredArgsConstructor
 public class Speciality {
 
     @Id
     private long id;
 
-    @NonNull
-    @NotBlank
+    @NotNull
     private String name;
 
-    @NonNull
+    @NotNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Faculty faculty;
 

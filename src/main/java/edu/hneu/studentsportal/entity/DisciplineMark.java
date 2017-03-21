@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class DisciplineMark {
     private long id;
 
     @NonNull
+    @NotNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Discipline discipline;
 
