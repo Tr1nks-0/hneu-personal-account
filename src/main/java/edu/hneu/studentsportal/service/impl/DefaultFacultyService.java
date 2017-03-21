@@ -1,14 +1,12 @@
 package edu.hneu.studentsportal.service.impl;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-
 import edu.hneu.studentsportal.entity.Faculty;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.service.FacultyService;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class DefaultFacultyService implements FacultyService {
@@ -19,5 +17,10 @@ public class DefaultFacultyService implements FacultyService {
     @Override
     public List<Faculty> getAllFaculties() {
         return facultyRepository.findAll();
+    }
+
+    @Override
+    public Faculty getFaculty(long id) {
+        return facultyRepository.findOne(id);
     }
 }

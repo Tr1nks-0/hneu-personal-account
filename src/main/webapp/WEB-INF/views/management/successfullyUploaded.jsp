@@ -63,10 +63,10 @@
                         </tr>
                         <tr>
                             <td class="col-md-2">
-                                <label for="faculty.name" class="control-label"><spring:message code="form.label.student.faculty"/></label>
+                                <label for="faculty" class="control-label"><spring:message code="form.label.student.faculty"/></label>
                             </td>
                             <td class="col-md-5">
-                                <form:select path="faculty" items="${faculties}" cssClass="form-control" itemLabel="name"/>
+                                <form:select path="faculty" items="${faculties}" cssClass="form-control" itemLabel="name" itemValue="id"/>
                             </td>
                             <td class="col-md-2">
                                  <label for="incomeYear" class="control-label"><spring:message code="form.label.student.incomeYear"/></label>
@@ -77,28 +77,29 @@
                         </tr>
                         <tr>
                             <td class="col-md-2">
-                                <label for="speciality.name" class="control-label"><spring:message code="form.label.student.speciality"/></label>
+                                <label for="speciality" class="control-label"><spring:message code="form.label.student.speciality"/></label>
                             </td>
                             <td class="col-md-5">
-                                <form:select path="speciality" items="${specialities}" cssClass="form-control" itemLabel="name"/>
+                                <form:select path="speciality" items="${specialities}" cssClass="form-control" itemLabel="name" itemValue="id"/>
                             </td>
                             <td class="col-md-2">
-                                 <label for="studentGroup.name" class="control-label"><spring:message code="form.label.student.studentGroup"/></label>
+                                 <label for="studentGroup" class="control-label"><spring:message code="form.label.student.studentGroup"/></label>
                             </td>
                             <td class="col-md-3">
-                                <form:select path="studentGroup" items="${groups}" cssClass="form-control" itemLabel="name"/>
+                                <form:select path="studentGroup" items="${groups}" cssClass="form-control" itemLabel="name" itemValue="id"/>
                             </td>
                         </tr>
-                        <c:if test="${not empty student.educationProgram}">
-                            <tr>
-                                <td class="col-md-2">
-                                    <label for="educationProgram.name" class="control-label"><spring:message code="form.label.student.educationProgram"/></label>
-                                </td>
-                                <td class="col-md-5" colspan=3>
-                                    <form:select path="educationProgram" items="${educationPrograms}" cssClass="form-control" itemLabel="name"/>
-                                </td>
-                            </tr>
-                        </c:if>
+                        <tr>
+                            <td class="col-md-2">
+                                <label for="educationProgram" class="control-label"><spring:message code="form.label.student.educationProgram"/></label>
+                            </td>
+                            <td class="col-md-5" colspan=3>
+                                <form:select path="educationProgram" cssClass="form-control">
+                                    <form:option value=""/>
+                                    <form:options items="${educationPrograms}" itemLabel="name" itemValue="id"/>
+                                </form:select>
+                            </td>
+                        </tr>
                     </table>
 
                     <div class="col-md-12">
