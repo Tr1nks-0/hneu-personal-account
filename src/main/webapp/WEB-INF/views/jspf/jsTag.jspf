@@ -13,32 +13,3 @@
 <script src="/resources/js/template/app.min.js"></script>
 <script src="/resources/js/template/demo.js"></script>
 <script src="/resources/js/custom/scripts.js"></script>
-
-<script>
-    $('#faculty').on('change', function () {
-        var facultyId = $("option:selected", this).val();
-        $.getJSON("/management/students/specialities",{id: facultyId}, function(j){
-            var options = '';
-            for (var i = 0; i < j.length; i++) {
-                options += '<option value="' + j[i].id + '">' + j[i].name + '</option>';
-            }
-            $("#speciality").html(options);
-        });
-    });
-
-    $('#speciality').on('change', function () {
-        var specialityId = $("option:selected", this).val();
-        window.location.href = window.location.href + '?speciality=' + specialityId;
-    });
-
-    $('#educationProgram').on('change', function () {
-        var educationProgram = $("option:selected", this).val();
-        window.location.href = window.location.href + '?education-program=' + educationProgram;
-    });
-
-    $('#group').on('change', function () {
-        var group = $("option:selected", this).val();
-        window.location.href = window.location.href + '?group=' + group;
-    });
-</script>
-

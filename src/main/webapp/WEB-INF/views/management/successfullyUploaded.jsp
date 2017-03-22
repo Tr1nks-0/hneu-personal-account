@@ -66,13 +66,13 @@
                                 <label for="faculty" class="control-label"><spring:message code="form.label.student.faculty"/></label>
                             </td>
                             <td class="col-md-5">
-                                <form:select path="faculty" items="${faculties}" cssClass="form-control" itemLabel="name" itemValue="id"/>
+                                <form:select path="faculty" items="${faculties}" cssClass="form-control" itemLabel="name" itemValue="id" disabled="true"/>
                             </td>
                             <td class="col-md-2">
                                  <label for="incomeYear" class="control-label"><spring:message code="form.label.student.incomeYear"/></label>
                             </td>
                             <td class="col-md-3">
-                                <form:input path="incomeYear" cssClass="form-control" type="number"/>
+                                <form:input path="incomeYear" cssClass="form-control" type="number" disabled="true"/>
                             </td>
                         </tr>
                         <tr>
@@ -80,13 +80,13 @@
                                 <label for="speciality" class="control-label"><spring:message code="form.label.student.speciality"/></label>
                             </td>
                             <td class="col-md-5">
-                                <form:select path="speciality" items="${specialities}" cssClass="form-control" itemLabel="name" itemValue="id"/>
+                                <form:select path="speciality" items="${specialities}" cssClass="form-control" itemLabel="name" itemValue="id" disabled="true"/>
                             </td>
                             <td class="col-md-2">
                                  <label for="studentGroup" class="control-label"><spring:message code="form.label.student.studentGroup"/></label>
                             </td>
                             <td class="col-md-3">
-                                <form:select path="studentGroup" items="${groups}" cssClass="form-control" itemLabel="name" itemValue="id"/>
+                                <form:select path="studentGroup" items="${groups}" cssClass="form-control" itemLabel="name" itemValue="id" disabled="true"/>
                             </td>
                         </tr>
                         <tr>
@@ -94,7 +94,7 @@
                                 <label for="educationProgram" class="control-label"><spring:message code="form.label.student.educationProgram"/></label>
                             </td>
                             <td class="col-md-5" colspan=3>
-                                <form:select path="educationProgram" cssClass="form-control">
+                                <form:select path="educationProgram" cssClass="form-control" disabled="true">
                                     <form:option value=""/>
                                     <form:options items="${educationPrograms}" itemLabel="name" itemValue="id"/>
                                 </form:select>
