@@ -8,6 +8,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 class StudentMarksExcelParserUnitTest extends Specification {
+
     static final String STUDENTS_MARKS = 'parser/8.04.51.16.04.xlsx'
 
     @Shared def groupMock = Mock(Group)
@@ -49,14 +50,22 @@ class StudentMarksExcelParserUnitTest extends Specification {
         ]
     }
 
-    def 'student from 1 '() {
+    def 'should have marks for all student from the group'() {
         given:
             def excelFile = loadResource STUDENTS_MARKS
         when:
-            def pointsWrapper = studentMarksExcelParser.parse(excelFile)
+            def marksPerStudent = studentMarksExcelParser.parse(excelFile)
         then:
-            !pointsWrapper.isEmpty()
+            marksPerStudent.size() == 15
+    }
 
+    def 'should have all disciplines from file'() {
+        given:
+           def excelFile = loadResource STUDENTS_MARKS
+        when:
+            def marksPerStudent = studentMarksExcelParser.parse(excelFile)
+        then:
+            marksPerStudent.values()[0].size() == 6
     }
 
     def loadResource = { resourceName ->
