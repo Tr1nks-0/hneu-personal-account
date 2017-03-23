@@ -34,7 +34,7 @@ public class Discipline {
     @NotNull
     private Integer semester;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "education_program_id")
     private EducationProgram educationProgram;
 

@@ -18,4 +18,7 @@ public interface DisciplineRepository extends JpaRepository<Discipline, Long> {
                                                                                                                  Speciality speciality, EducationProgram educationProgram,
                                                                                                                  Integer credits, DisciplineFormControl controlForm);
 
+    Optional<Discipline> findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(String label, Integer course, Integer semester,
+                                                                                         Speciality speciality, EducationProgram educationProgram);
+
 }

@@ -27,9 +27,14 @@ public class DisciplineMark {
 
     @NonNull
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Discipline discipline;
 
-    private Integer mark;
+    private Double mark;
+
+    public DisciplineMark(Discipline discipline, double mark) {
+        this.discipline = discipline;
+        this.mark = mark;
+    }
 
 }

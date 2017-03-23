@@ -22,7 +22,7 @@ public class EducationProgram {
     private String name;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Speciality speciality;
 
 }

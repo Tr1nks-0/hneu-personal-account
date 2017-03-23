@@ -1,7 +1,6 @@
 package edu.hneu.studentsportal.service.impl;
 
 import static java.lang.String.format;
-import static java.util.Objects.nonNull;
 
 import java.io.File;
 import java.util.HashMap;
@@ -22,8 +21,6 @@ import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.factory.ParserFactory;
-import edu.hneu.studentsportal.parser.impl.StudentMarksExcelParser;
-import edu.hneu.studentsportal.parser.pojo.PointsWrapper;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentDao;
 import edu.hneu.studentsportal.repository.StudentRepository;
@@ -113,16 +110,16 @@ public class DefaultStudentService implements StudentService {
     }
 
     public void updateStudentsScoresFromFile(final File file) {
-        final PointsWrapper studentsPointsWrapper = new StudentMarksExcelParser().parse(file);
+      /*  final PointsWrapper studentsPointsWrapper = new StudentMarksExcelParser().parse(file);
         for (final Map.Entry<String, Map<String, String>> studentScore : studentsPointsWrapper.getMap().entrySet()) {
             final Student studentProfile = getStudentProfile(studentScore);
             if (nonNull(studentProfile)) {
-                final String semesterId = studentsPointsWrapper.getSemester();
+                //final String semesterId = studentsPointsWrapper.getSemester();
                 //updateStudentProfileSemester(studentProfile, semesterId, studentScore.getValue());
                 save(studentProfile);
                 sendEmailAfterProfileUpdating(studentProfile);
             }
-        }
+        }*/
     }
 
     private Student getStudentProfile(final Map.Entry<String, Map<String, String>> studentScore) {
