@@ -1,18 +1,17 @@
 package edu.hneu.studentsportal.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import edu.hneu.studentsportal.entity.Group;
+import edu.hneu.studentsportal.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.hneu.studentsportal.entity.Group;
-import edu.hneu.studentsportal.entity.Student;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Optional<Student> findByEmail(String email);
 
-    List<Student> findByGroup(Group group);
+    List<Student> findByStudentGroup(Group studentGroup);
 }

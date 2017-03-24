@@ -131,15 +131,23 @@
                                     <form:hidden path="disciplineMarks[${i.index}].discipline.educationProgram"/>
                                     <form:hidden path="disciplineMarks[${i.index}].discipline.course"/>
                                     <form:hidden path="disciplineMarks[${i.index}].discipline.semester"/>
+                                    <form:hidden path="disciplineMarks[${i.index}].discipline.credits"/>
+                                    <form:hidden path="disciplineMarks[${i.index}].discipline.controlForm"/>
+                                    <form:hidden path="disciplineMarks[${i.index}].discipline.label"/>
+                                    <form:hidden path="disciplineMarks[${i.index}].discipline.type"/>
                                 </tr>
                             </c:forEach>
                         </table>
                     </div>
+                    <form:hidden path="incomeYear"/>
+                    <form:hidden path="faculty"/>
+                    <form:hidden path="speciality"/>
+                    <form:hidden path="educationProgram"/>
                     <form:hidden path="average"/>
                     <form:hidden path="rate"/>
                     <form:hidden path="photo"/>
                     <form:hidden path="email"/>
-                    <form:hidden path="studentGroup.id"/>
+                    <form:hidden path="studentGroup"/>
                 </div>
             </form:form>
         </div>

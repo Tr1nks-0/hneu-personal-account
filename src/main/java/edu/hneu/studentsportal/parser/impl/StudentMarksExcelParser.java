@@ -75,7 +75,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     }
 
     private List<Student> getStudents() {
-        return studentRepository.findByGroup(getGroup());
+        return studentRepository.findByStudentGroup(getGroup());
     }
 
     private Group getGroup() {
