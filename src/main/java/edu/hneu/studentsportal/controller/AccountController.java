@@ -154,9 +154,4 @@ public class AccountController {
         return "redirect:contactUs?success=true";
     }
 
-    @ModelAttribute(value = "groupId")
-    public String getGroupId(final HttpSession session) {
-        return (String) session.getAttribute("groupId");
-    }
-
 }

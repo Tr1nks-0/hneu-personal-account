@@ -21,13 +21,8 @@
 </head>
 <body class="hold-transition skin-blue sidebar-mini <c:if test="${'top.menu.schedule' eq title}">sidebar-collapse</c:if> ">
 
-    <c:set var="profileImage" value="/profile/"/>
-    <%--
-    <c:set var="profileImage" value="/profile/${profile.profileImage}"/>--%>
-    <%--<c:if test="${empty profile.profileImage}">
-        <c:set var="profileImage" value="/resources/img/student_photo_default.png"/>
-    </c:if>
---%>
+    <c:set var="profileImage" value="/students/${profile.id}/photo"/>
+
     <div class="wrapper">
         <header class="main-header">
             <a href="/account" class="logo">
@@ -50,7 +45,7 @@
                                 <li class="user-header">
                                     <img src="${profileImage}" class="img-circle profile-photo-large" alt="User Image">
                                     <p>
-                                        <c:out value="${profile.surname} ${profile.name}"/> - <c:out value="${profile.faculty}"/>
+                                        <c:out value="${profile.surname} ${profile.name}"/> </br>
                                         <small><c:out value="${profile.studentGroup.name}"/></small>
                                     </p>
                                 </li>
@@ -86,29 +81,20 @@
                     <li <c:if test="${'top.menu.home' eq title}">class="active"</c:if> >
                         <a href="/account">
                             <i class="fa fa-home "></i> <span><spring:message code="top.menu.home"/></span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li>
-                                <a href="/account">
-                                    <i class="fa fa-circle-o"></i> Особиста інформація
-                                </a>
-                            </li>
-                            <c:forEach items="${profile.courses}" varStatus="i" var="course">
-                                <li>
-                                    <a href="/account#${i.index + 1}course">
-                                        <i class="fa fa-circle-o"></i>
-                                        ${i.index + 1} <spring:message code="form.label.student.profile.course"/>
-                                    </a>
-                                </li>
-                            </c:forEach>
-                        </ul>
                     </li>
                     <li <c:if test="${'top.menu.schedule' eq title}">class="active"</c:if>>
                         <a href="/account/schedule">
                             <i class="fa fa-calendar"></i> <span><spring:message code="top.menu.schedule"/></span>
+                        </a>
+                    </li>
+                    <li>
+                        <form method="post" id="studentForm" name="studentForm" action="http://services.ksue.edu.ua:8081/student/report" target="marks-window">
+                            <input type="hidden" size="15" name="lastName" value="${profile.surname}">
+                            <input type="hidden" size="15" name="code" value="${profile.passportNumber}">
+                        </form>
+                        <a class="current-marks">
+                            <i class="fa fa-bar-chart"></i> <span><spring:message code="top.menu.journal"/></span>
                         </a>
                     </li>
                     <li <c:if test="${'top.menu.documents' eq title}">class="active"</c:if>>

@@ -1,16 +1,17 @@
 package edu.hneu.studentsportal.parser;
 
-import static java.util.Objects.nonNull;
-
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import static java.lang.String.format;
+import static java.util.Objects.nonNull;
 
 public abstract class AbstractExcelParser<E> {
 
@@ -19,11 +20,11 @@ public abstract class AbstractExcelParser<E> {
 
     public E parse(File file) {
         try {
-            workbook = WorkbookFactory.create(file);
+            workbook = new XSSFWorkbook(new FileInputStream(file));
             sheet = workbook.getSheetAt(0);
             return extractModel();
-        } catch (InvalidFormatException | IOException e) {
-            throw new IllegalArgumentException("invalid.student.profile.file.format");
+        } catch (IOException e) {
+            throw new IllegalArgumentException(format("File[%s] not found", file.toPath()));
         }
     }
 

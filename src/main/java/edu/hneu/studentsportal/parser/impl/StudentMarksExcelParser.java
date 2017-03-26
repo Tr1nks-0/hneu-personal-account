@@ -85,8 +85,9 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
 
     private List<Discipline> getDisciplines() {
         List<Discipline> disciplines = Lists.newArrayList();
-        for (int i = START_DISCIPLINES_COL; isEndOfDisciplines(i); i++)
+        for (int i = START_DISCIPLINES_COL; isEndOfDisciplines(i); i++) {
             disciplines.add(getDiscipline(getStringCellValue(START_DISCIPLINES_ROW, i)));
+        }
         return disciplines;
     }
 
@@ -123,7 +124,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
 
     private IntFunction<DisciplineMark> getDisciplineMark(int row, List<Discipline> disciplines) {
         return col -> {
-            double mark = Double.valueOf(getStringCellValue(row, col));
+            String mark = getStringCellValue(row, col);
             return new DisciplineMark(disciplines.get(col - START_DISCIPLINES_COL), mark);
         };
     }

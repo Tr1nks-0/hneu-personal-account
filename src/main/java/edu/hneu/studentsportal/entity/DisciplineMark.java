@@ -24,9 +24,9 @@ public class DisciplineMark {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Discipline discipline;
 
-    private Double mark;
+    private String mark;
 
-    public DisciplineMark(Discipline discipline, double mark) {
+    public DisciplineMark(Discipline discipline, String mark) {
         this.discipline = discipline;
         this.mark = mark;
     }

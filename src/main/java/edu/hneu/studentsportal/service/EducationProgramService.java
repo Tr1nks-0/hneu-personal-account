@@ -6,7 +6,7 @@ import edu.hneu.studentsportal.entity.Speciality;
 import java.util.List;
 
 public interface EducationProgramService {
+
     List<EducationProgram> getEducationProgramsForSpeciality(Speciality speciality);
 
-    EducationProgram getEducationProgram(long id);
 }

@@ -10,6 +10,10 @@ public enum DisciplineFormControl {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public static DisciplineFormControl of(String name) {
         for(DisciplineFormControl disciplineFormControl : values())
             if(disciplineFormControl.name.equalsIgnoreCase(name)) return disciplineFormControl;

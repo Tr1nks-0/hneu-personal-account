@@ -2,20 +2,16 @@ package edu.hneu.studentsportal.service.impl;
 
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.Student;
-import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.parser.factory.ParserFactory;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentDao;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.TimeService;
-import edu.hneu.studentsportal.service.UserService;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.Resource;
@@ -25,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.String.format;
-
 @Log4j
 @Service
 public class DefaultStudentService implements StudentService {
@@ -34,7 +28,6 @@ public class DefaultStudentService implements StudentService {
     private static final int PREFIX_LENGTH = 5;
     private static final double MIN_SIMILARITY_COEFFICIENT = 0.6;
     private static final Map<String, String> semesters = new HashMap<>();
-    private static final String GET_STUDENT_EMAIL_URL = "%s/EmailToOutController?name=%s&surname=%s&groupId=%s";
     private static final String SEND_PASSWORD_VM_TEMPLATE = "velocity/sendProfileWasCreated.vm";
     private static final String SEND_PROFILE_WAS_CHANGED_VM_TEMPLATE = "velocity/sendProfileWasChangedMessage.vm";
 
@@ -51,8 +44,6 @@ public class DefaultStudentService implements StudentService {
     @Autowired
     private StudentDao studentDao;
     @Autowired
-    private UserService userService;
-    @Autowired
     private WebApplicationContext context;
     @Autowired
     private GroupRepository groupRepository;
@@ -65,30 +56,12 @@ public class DefaultStudentService implements StudentService {
 
     @Value("${support.mail}")
     public String supportMail;
-    @Value("${emails.integration.service.url}")
-    public String emailsIntegrationServiceUrl;
 
-    @Resource
-    private ParserFactory parserFactory;
+
     @Resource
     private TimeService timeService;
 
-    @Override
-    public Student parseStudentProfile(File file) {
-        Student student = parserFactory.newStudentProfileExcelParser().parse(file);
-        student.setEmail(retrieveStudentEmailFromThirdPartyService(student.getName(), student.getSurname(), student.getStudentGroup().getName()));
-        userService.create(student.getEmail(), UserRole.STUDENT);
-        save(student);
-        log.info(format("New %s has been created.", student));
-        return student;
-    }
 
-    private String retrieveStudentEmailFromThirdPartyService(String name, String surname, String groupName) {
-        String formattedName = name.toLowerCase().split(" ")[0];
-        String formatterSurname = surname.toLowerCase().trim();
-        String url = format(GET_STUDENT_EMAIL_URL, emailsIntegrationServiceUrl, formattedName, formatterSurname, groupName);
-        return new RestTemplate().getForEntity(url, String.class).getBody().toLowerCase();
-    }
 
     @Override
     public void save(Student studentProfile) {
