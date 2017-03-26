@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import static edu.hneu.studentsportal.pojo.Schedule.ScheduleElements.ScheduleElement;
@@ -38,12 +39,16 @@ public class DefaultScheduleService implements ScheduleService {
     public Map<Integer, Map<Integer, ScheduleElement>> getPairs(Schedule schedule) {
         Map<Integer, Map<Integer, ScheduleElement>> pairs = Maps.newHashMap();
         IntStream.range(0, 7).forEach(i -> pairs.put(i, Maps.newHashMap()));
-        schedule.getScheduleElements().getScheduleElement().forEach(scheduleElement -> {
-            int pairNumber = Integer.valueOf(scheduleElement.getPair());
-            Map<Integer, ScheduleElement> days = pairs.get(pairNumber);
-            days.put(Integer.valueOf(scheduleElement.getDay()), scheduleElement);
-            pairs.put(pairNumber, days);
-        });
+        schedule.getScheduleElements().getScheduleElement().forEach(groupByDayAndPairNumber(pairs));
         return pairs;
+    }
+
+    private Consumer<ScheduleElement> groupByDayAndPairNumber(Map<Integer, Map<Integer, ScheduleElement>> pairs) {
+        return scheduleElement -> {
+            int pairNumber = Integer.valueOf(scheduleElement.getPair());
+            Map<Integer, ScheduleElement> pairsPerDays = pairs.get(pairNumber);
+            pairsPerDays.put(Integer.valueOf(scheduleElement.getDay()), scheduleElement);
+            pairs.put(pairNumber, pairsPerDays);
+        };
     }
 }
