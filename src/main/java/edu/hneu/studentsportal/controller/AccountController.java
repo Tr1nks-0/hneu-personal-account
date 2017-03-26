@@ -4,10 +4,7 @@ import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.entity.User;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.pojo.Schedule;
-import edu.hneu.studentsportal.service.CustomUserDetailsService;
-import edu.hneu.studentsportal.service.StudentService;
-import edu.hneu.studentsportal.service.TimeService;
-import edu.hneu.studentsportal.service.UserService;
+import edu.hneu.studentsportal.service.*;
 import edu.hneu.studentsportal.service.impl.DefaultEmailService;
 import edu.hneu.studentsportal.service.impl.GmailService;
 import org.apache.commons.lang.StringUtils;
@@ -19,13 +16,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,8 +35,6 @@ public class AccountController {
     @Resource
     private StudentService studentService;
     @Resource
-    private TimeService timeService;
-    @Resource
     private UserService userService;
     @Resource
     private CustomUserDetailsService userDetailsService;
@@ -53,8 +47,9 @@ public class AccountController {
     public String decanMail;
     @Value("${support.mail}")
     public String supportMail;
-    @Value("${schedule.url}")
-    public String scheduleUrl;
+
+    @Resource
+    private ScheduleService scheduleService;
 
     @RequestMapping
     public ModelAndView account(final HttpSession session, final Model model, final Principal principal) {
@@ -78,7 +73,7 @@ public class AccountController {
     }
 
     private int getCurrentCourse(final Student studentProfile) {
-        return timeService.getCurrentDate().getYear() - studentProfile.getIncomeYear() + 1;
+        return LocalDate.now().getYear() - studentProfile.getIncomeYear() + 1;
     }
 
     @ModelAttribute(value = "profile")
@@ -92,40 +87,16 @@ public class AccountController {
     }
 
     @RequestMapping("/schedule")
-    public String schedule(final Model model, @RequestParam(required = false) Integer week, final HttpSession session, final Principal principal) {
-        try {
-            if (isNull(week))
-                week = timeService.getCurrentEducationWeek();
-            final long groupId = getProfile(session, principal).getStudentGroup().getId();
-            final String url = String.format(scheduleUrl, groupId, week);
-
-            final Schedule schedule = new RestTemplate().getForObject(url, Schedule.class);
-
-            final Map<Integer, Map<Integer, Schedule.ScheduleElements.ScheduleElement>> pairs = extractPairs(schedule);
-            final List<Schedule.Week.Day> days = schedule.getWeek().getDay();
-
-            model.addAttribute("pairs", pairs);
-            model.addAttribute("days", days);
-            model.addAttribute("week", week);
-        } catch (final RuntimeException e) {
-            //
-        }
+    public String schedule(@ModelAttribute("profile") Student profile , @RequestParam(required = false) Long week, Model model) {
+        Schedule schedule = scheduleService.load(profile.getStudentGroup().getId(), week);
+        model.addAttribute("pairs", scheduleService.getPairs(schedule));
+        model.addAttribute("days", schedule.getWeek().getDay());
+        model.addAttribute("week", week);
         model.addAttribute("title", "top.menu.schedule");
         return "student/schedule";
     }
 
-    private Map<Integer, Map<Integer, Schedule.ScheduleElements.ScheduleElement>> extractPairs(final Schedule schedule) {
-        final Map<Integer, Map<Integer, Schedule.ScheduleElements.ScheduleElement>> pairs = new HashMap<>(7);
-        for (byte i = 0; i < 7; i++) {
-            pairs.put(Integer.valueOf(i), new HashMap(8));
-        }
-        for (final Schedule.ScheduleElements.ScheduleElement scheduleElement : schedule.getScheduleElements().getScheduleElement()) {
-            final Map<Integer, Schedule.ScheduleElements.ScheduleElement> days = pairs.get(Integer.valueOf(scheduleElement.getPair()));
-            days.put(Integer.valueOf(scheduleElement.getDay()), scheduleElement);
-            pairs.put(Integer.valueOf(scheduleElement.getPair()), days);
-        }
-        return pairs;
-    }
+
 
     @RequestMapping("/documents")
     public String documents(final Model model) {

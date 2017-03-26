@@ -9,4 +9,6 @@ public interface ImportService {
     Student importStudent(File file);
 
     Set<Student> importStudentMarks(File file);
+
+    void downloadGroups();
 }

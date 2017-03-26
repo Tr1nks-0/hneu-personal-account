@@ -6,7 +6,6 @@ import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentDao;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.StudentService;
-import edu.hneu.studentsportal.service.TimeService;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.Resource;
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Log4j
 @Service
@@ -58,14 +53,9 @@ public class DefaultStudentService implements StudentService {
     public String supportMail;
 
 
-    @Resource
-    private TimeService timeService;
-
-
-
     @Override
     public void save(Student studentProfile) {
-        studentProfile.setModificationTime(timeService.getCurrentTime());
+        studentProfile.setModificationTime(new Date().getTime());
         studentRepository.save(studentProfile);
     }
 

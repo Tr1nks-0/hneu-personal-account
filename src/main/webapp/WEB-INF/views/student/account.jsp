@@ -54,10 +54,10 @@
                     <div class="box box-info">
                         <div class="box-header with-border">
                             <div>
-                                <span class="label label-primary">Курс №${course}</span>
                                 <c:if test="${disciplineMark.discipline.course ne course}">
                                     <c:set var="course" value="${disciplineMark.discipline.course}"/>
                                 </c:if>
+                                <span class="label label-primary">Курс №${course}</span>
                                 <c:if test="${disciplineMark.discipline.semester ne semester}">
                                     <c:set var="semester" value="${disciplineMark.discipline.semester}"/>
                                     <span class="label label-default">СЕМЕСТР №${semester}</span>

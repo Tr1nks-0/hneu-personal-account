@@ -1,79 +1,49 @@
 package edu.hneu.studentsportal.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
+import com.google.api.client.util.Maps;
+import edu.hneu.studentsportal.pojo.Schedule;
+import edu.hneu.studentsportal.service.ScheduleService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import edu.hneu.studentsportal.repository.GroupRepository;
-import edu.hneu.studentsportal.service.ScheduleService;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.Map;
+import java.util.stream.IntStream;
+
+import static edu.hneu.studentsportal.pojo.Schedule.ScheduleElements.ScheduleElement;
+import static java.time.temporal.ChronoUnit.WEEKS;
+import static java.util.Objects.isNull;
 
 @Service
 public class DefaultScheduleService implements ScheduleService {
 
-    private static final Logger LOG = Logger.getLogger(DefaultScheduleService.class.getName());
 
-    private static final String ID_REGEX = "id=\".+\"";
-    private static final String NAME_REGEX = "<displayName>.+</displayName>";
-    private static final String FACULTIES_URL = "http://services.ksue.edu.ua:8081/schedule/xmlmetadata?q=faculties&auth=test";
-    private static final String SPECIALITIES_URL = "http://services.ksue.edu.ua:8081/schedule/xmlmetadata?q=specialities&facultyid=%s&auth=test";
-    private static final String GROUPS_URL = "http://services.ksue.edu.ua:8081/schedule/xmlmetadata?q=groups&facultyid=%s&specialityid=%s&course=%s&auth=test";
-
-    @Resource
-    private GroupRepository groupRepository;
+    @Value("${schedule.url}")
+    public String scheduleUrl;
 
     @Override
-    public void downloadGroups() {
-        LOG.info("Groups downloading started");
-        /*final List<String> facultyIds = getListOfIds(getStringResponse(FACULTIES_URL));
-        for(final String facultyId : facultyIds) {
-            final List<String> specialityIds =  getListOfIds(getStringResponse(String.format(SPECIALITIES_URL, facultyId)));
-            for(final String specialityId : specialityIds) {
-                for(int course = 1; course <= 6; course++) {
-                    final String response = getStringResponse(String.format(GROUPS_URL, facultyId, specialityId, course));
-                    final List<String> groupIds = getListOfIds(response);
-                    final List<String> groupName = getListOfNames(response);
-                    for (int i = 0; i < groupIds.size(); i++) {
-                        groupRepository.save(new Group(Integer.valueOf(groupIds.get(i)), groupName.get(i)));
-                    }
-                }
-            }
-        }*/
-        LOG.info("Groups downloading finished");
-    }
-
-    private String getStringResponse(final String url) {
-        final RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.getForObject(url, String.class);
-    }
-
-    private List<String> getListOfIds(final String stringToParse) {
-        final Matcher matcher = Pattern.compile(ID_REGEX).matcher(stringToParse);
-        final List<String> ids = new ArrayList<>();
-        while(matcher.find()) {
-            final String parsedId = matcher.group();
-            final String idValue = parsedId.substring(4, parsedId.length() - 1);
-            ids.add(idValue);
+    public Schedule load(long groupId, Long week) {
+        if(isNull(week)) {
+            LocalDate currentDate = LocalDate.now();
+            int educationYear = currentDate.getMonth().compareTo(Month.JANUARY) >= 0 ? currentDate.getYear() - 1 : currentDate.getYear();
+            week = WEEKS.between(LocalDate.of(educationYear, Month.SEPTEMBER, 1), LocalDate.now()) + 1;
         }
-        return ids;
+        String url = String.format(scheduleUrl, groupId, week);
+        return new RestTemplate().getForObject(url, Schedule.class);
     }
 
-    private List<String> getListOfNames(final String stringToParse) {
-        final Matcher matcher = Pattern.compile(NAME_REGEX).matcher(stringToParse);
-        final List<String> names = new ArrayList<>();
-        while(matcher.find()) {
-            final String parsedName = matcher.group();
-            final String nameValue = parsedName.substring(13, parsedName.length() - 14);
-            names.add(nameValue);
-        }
-        return names;
+    @Override
+    public Map<Integer, Map<Integer, ScheduleElement>> getPairs(Schedule schedule) {
+        Map<Integer, Map<Integer, ScheduleElement>> pairs = Maps.newHashMap();
+        IntStream.range(0, 7).forEach(i -> pairs.put(i, Maps.newHashMap()));
+        schedule.getScheduleElements().getScheduleElement().forEach(scheduleElement -> {
+            int pairNumber = Integer.valueOf(scheduleElement.getPair());
+            Map<Integer, ScheduleElement> days = pairs.get(pairNumber);
+            days.put(Integer.valueOf(scheduleElement.getDay()), scheduleElement);
+            pairs.put(pairNumber, days);
+        });
+        return pairs;
     }
-
-
 }

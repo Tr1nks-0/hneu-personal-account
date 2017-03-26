@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.ServletContext;
 import java.util.Comparator;
 import java.util.Optional;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -191,7 +190,7 @@ public class ManagementController {
 */
     @RequestMapping(value = "/downloadGroups")
     public String downloadGroups() {
-        Executors.newSingleThreadExecutor().execute( () -> scheduleService.downloadGroups());
+       // Executors.newSingleThreadExecutor().execute( () -> scheduleService.downloadGroups());
         return "redirect:scheduleSynchronizedSuccessfully";
     }
 
