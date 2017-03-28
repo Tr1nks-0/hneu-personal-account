@@ -7,6 +7,7 @@
         <h1>
             <spring:message code="form.label.management.add.profiles"/>
         </h1>
+
         <div class="content">
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -17,7 +18,7 @@
                     <c:if test="${not empty error}">
                         <div class="col-md-12">
                             <div class="alert alert-error alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
                                 <i class="icon fa fa-error"></i> ${error}
                             </div>
                         </div>

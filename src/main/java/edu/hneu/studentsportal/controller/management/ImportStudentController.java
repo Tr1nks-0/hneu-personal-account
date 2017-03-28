@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
@@ -47,10 +48,11 @@ public class ImportStudentController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public String importStudentException(RuntimeException e, RedirectAttributes redirectAttributes) {
+    public ModelAndView importStudentException(RuntimeException e, RedirectAttributes redirectAttributes) {
         log.warn(e.getMessage(), e);
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return "management/uploadUserProfilesFromExcel";
+        ModelAndView modelAndView = new ModelAndView("management/uploadUserProfilesFromExcel");
+        modelAndView.addObject("error", e.getMessage());
+        return modelAndView;
     }
 
 }

@@ -1,39 +1,27 @@
 package edu.hneu.studentsportal.parser.impl;
 
 
-import static org.apache.commons.lang.BooleanUtils.isFalse;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import edu.hneu.studentsportal.entity.*;
+import edu.hneu.studentsportal.enums.DisciplineFormControl;
+import edu.hneu.studentsportal.parser.AbstractExcelParser;
+import edu.hneu.studentsportal.parser.Indexer;
+import edu.hneu.studentsportal.repository.*;
+import lombok.extern.log4j.Log4j;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import javax.annotation.Resource;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.DisciplineMark;
-import edu.hneu.studentsportal.entity.EducationProgram;
-import edu.hneu.studentsportal.entity.Faculty;
-import edu.hneu.studentsportal.entity.Group;
-import edu.hneu.studentsportal.entity.Speciality;
-import edu.hneu.studentsportal.entity.Student;
-import edu.hneu.studentsportal.enums.DisciplineFormControl;
-import edu.hneu.studentsportal.parser.AbstractExcelParser;
-import edu.hneu.studentsportal.parser.Indexer;
-import edu.hneu.studentsportal.repository.DisciplineRepository;
-import edu.hneu.studentsportal.repository.EducationProgramRepository;
-import edu.hneu.studentsportal.repository.FacultyRepository;
-import edu.hneu.studentsportal.repository.GroupRepository;
-import edu.hneu.studentsportal.repository.SpecialityRepository;
-import lombok.extern.log4j.Log4j;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 @Log4j
 @Component
@@ -66,7 +54,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
     public Student extractModel() {
         Indexer indexer = Indexer.of(3);
         if (isFalse(getStringCellValue(indexer.getValue()).contains(VALID_HEADER_HOLDER)))
-            throw new IllegalArgumentException("invalid.student.profile.file");
+            throw new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.file", new Object[0], Locale.getDefault()));
         indexer.next();
         Student student = new Student();
         student.setSurname(getString2CellValue(indexer.next()));
@@ -85,7 +73,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     private Faculty extractFaculty(Indexer indexer) {
         String facultyName = getString2CellValue(indexer.next());
-        return facultyRepository.findByName(facultyName).orElseThrow(() -> new IllegalArgumentException("invalid.student.profile.faculty"));
+        return facultyRepository.findByName(facultyName).orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.faculty", new Object[0], Locale.getDefault())));
     }
 
     private List<String> extractContacts(Indexer indexer) {
@@ -97,21 +85,24 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     private Speciality extractSpeciality(Indexer indexer, Faculty faculty) {
         String specialityName = getString2CellValue(indexer.next());
-        return specialityRepository.findByNameAndFaculty(specialityName, faculty).orElseThrow(() -> new IllegalArgumentException("invalid.student.profile.speciality"));
+        return specialityRepository.findByNameAndFaculty(specialityName, faculty).orElseThrow(() -> new IllegalArgumentException(
+                messageSource.getMessage("invalid.student.profile.speciality", new Object[0], Locale.getDefault())));
     }
 
     private EducationProgram extractMasterEducationProgram(Indexer indexer) {
         boolean isMasterProgram = getStringCellValue(indexer.getValue() + 1).contains(MASTER_PROGRAM_HOLDER);
         if (isMasterProgram) {
             String educationProgramName = getString2CellValue(indexer.next());
-            return educationProgramRepository.findByName(educationProgramName).orElseThrow(() -> new IllegalArgumentException("invalid.student.profile.education.program"));
+            return educationProgramRepository.findByName(educationProgramName).orElseThrow(() -> new IllegalArgumentException(
+                    messageSource.getMessage("invalid.student.profile.education.program", new Object[0], Locale.getDefault())));
         }
         return null;
     }
 
     private Group extractGroup(Indexer indexer) {
         String groupName = getString2CellValue(indexer.next());
-        return groupRepository.findByName(groupName).orElseThrow(() -> new IllegalArgumentException("invalid.student.profile.group"));
+        return groupRepository.findByName(groupName).orElseThrow(() -> new IllegalArgumentException(
+                messageSource.getMessage("invalid.student.profile.group", new String[] {groupName}, Locale.getDefault())));
     }
 
     private List<DisciplineMark> extractDisciplinesInternal(Speciality speciality, EducationProgram educationProgram, Indexer indexer) {
@@ -153,7 +144,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         return discipline -> disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgramAndCreditsAndControlForm(
                 discipline.getLabel(), discipline.getCourse(), discipline.getSemester(),
                 discipline.getSpeciality(), discipline.getEducationProgram(),
-                discipline.getCredits(), discipline.getControlForm()).orElseThrow(() -> new IllegalArgumentException("invalid.student.profile.discipline"));
+                discipline.getCredits(), discipline.getControlForm()).orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.discipline", new Object[0], Locale.getDefault())));
     }
 
     private boolean isNotFileEnd(int row) {
@@ -209,7 +200,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
     private byte[] extractProfileImage() {
         List<? extends PictureData> allPictures = workbook.getAllPictures();
         if (allPictures.isEmpty())
-            throw new IllegalArgumentException("invalid.student.profile.photo");
+            throw new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.photo", new Object[0], Locale.getDefault()));
         return Iterables.getLast(allPictures).getData();
     }
 }
