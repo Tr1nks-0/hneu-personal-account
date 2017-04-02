@@ -1,6 +1,8 @@
 package edu.hneu.studentsportal.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,11 +19,13 @@ public class Group {
     private String name;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
     private Speciality speciality;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "education_program_id")
+    @Cascade(CascadeType.SAVE_UPDATE)
     private EducationProgram educationProgram;
 }

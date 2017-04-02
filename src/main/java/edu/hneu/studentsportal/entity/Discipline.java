@@ -3,6 +3,8 @@ package edu.hneu.studentsportal.entity;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,12 +27,14 @@ public class Discipline {
     @NotNull
     private Integer semester;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "education_program_id")
+    @Cascade(CascadeType.SAVE_UPDATE)
     private EducationProgram educationProgram;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
     private Speciality speciality;
 
     @NotNull

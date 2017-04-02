@@ -13,6 +13,16 @@
                     <spring:message code="form.label.management.add.totals.message"/>
                 </div>
                 <div class="box-body">
+
+                    <c:if test="${not empty error}">
+                        <div class="col-md-12">
+                            <div class="alert alert-error alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+                                <i class="icon fa fa-error"></i> ${error}
+                            </div>
+                        </div>
+                    </c:if>
+
                     <form method="post" action="/management/import/student-marks" enctype="multipart/form-data">
                         <div class="input-group">
                             <span class="input-group-btn">

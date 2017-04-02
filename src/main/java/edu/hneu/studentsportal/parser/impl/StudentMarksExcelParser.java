@@ -15,9 +15,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
@@ -55,8 +53,8 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
 
     @Override
     public Map<Student, List<DisciplineMark>> extractModel() {
-        if(isFalse(getStringCellValue(7,4).contains(DISCIPLINES_HEADER)))
-            throw new RuntimeException("");
+        if (isFalse(getStringCellValue(7, 4).contains(DISCIPLINES_HEADER)))
+            throw new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.marks.file", new Object[0], Locale.getDefault()));
 
         List<Student> students = getStudents();
         List<Discipline> disciplines = getDisciplines();
@@ -80,7 +78,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
 
     private Group getGroup() {
         final String groupName = getStringCellValue(GROUP_ID_ROW_INDEX, GROUP_NAME_CELL).toLowerCase().replace(GROUP_PREFIX, StringUtils.EMPTY).trim();
-        return groupRepository.findByName(groupName).orElseThrow(() -> new RuntimeException());
+        return groupRepository.findByName(groupName).orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.marks.group.not.found", new Object[]{groupName}, Locale.getDefault())));
     }
 
     private List<Discipline> getDisciplines() {
@@ -100,11 +98,12 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     }
 
     private Student getStudentByFullName(String fullName, List<Student> groupStudents) {
-        return groupStudents.stream()
-                .filter(s -> fullName.contains(s.getName()))
-                .filter(s -> fullName.contains(s.getSurname()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException());
+        Optional<Student> student = groupStudents.stream().filter(s -> fullName.contains(s.getName())).filter(s -> fullName.contains(s.getSurname())).findFirst();
+        if (student.isPresent()) {
+            return student.get();
+        } else {
+            throw new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.marks.student.not.found", new Object[]{fullName}, Locale.getDefault()));
+        }
     }
 
     private List<DisciplineMark> getDisciplineMarks(int row, List<Discipline> disciplines) {
@@ -119,7 +118,8 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     }
 
     private Discipline getDiscipline(String disciplineName) {
-        return disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(disciplineName, getCourse(), getSemester(), getGroup().getSpeciality(), getGroup().getEducationProgram()).orElseThrow(() -> new RuntimeException());
+        return disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(disciplineName, getCourse(), getSemester(), getGroup().getSpeciality(), getGroup().getEducationProgram())
+                .orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.marks.discipline.not.found", new Object[]{disciplineName}, Locale.getDefault())));
     }
 
     private IntFunction<DisciplineMark> getDisciplineMark(int row, List<Discipline> disciplines) {
@@ -133,7 +133,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
         return IntStream.range(0, MAX_NUMBER_OF_ITERATIONS)
                 .filter(i -> getStringCellValue(i).contains(NUMBER_MARKER))
                 .map(i -> i + 2)
-                .findFirst().orElseThrow(() -> new RuntimeException());
+                .findFirst().orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.marks.file", new Object[0], Locale.getDefault())));
     }
 
     private int getSemester() {

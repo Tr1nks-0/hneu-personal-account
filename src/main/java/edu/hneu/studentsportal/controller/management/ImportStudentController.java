@@ -48,7 +48,7 @@ public class ImportStudentController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ModelAndView importStudentException(RuntimeException e, RedirectAttributes redirectAttributes) {
+    public ModelAndView importStudentException(RuntimeException e) {
         log.warn(e.getMessage(), e);
         ModelAndView modelAndView = new ModelAndView("management/uploadUserProfilesFromExcel");
         modelAndView.addObject("error", e.getMessage());

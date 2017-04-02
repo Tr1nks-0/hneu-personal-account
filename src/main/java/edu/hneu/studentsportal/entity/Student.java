@@ -2,6 +2,8 @@ package edu.hneu.studentsportal.entity;
 
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -42,15 +44,18 @@ public class Student {
     private Long modificationTime;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
     private Faculty faculty;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
     private Speciality speciality;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "education_program_id")
+    @Cascade(CascadeType.SAVE_UPDATE)
     private EducationProgram educationProgram;
 
     @Lob
@@ -59,17 +64,20 @@ public class Student {
     private byte[] photo;
 
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "student_group")
+    @Cascade(CascadeType.SAVE_UPDATE)
     private Group studentGroup;
 
     @ElementCollection
-    @CollectionTable(name = "student2contact", joinColumns = @JoinColumn(name = "student_email"))
+    @CollectionTable(name = "student_contact", joinColumns = @JoinColumn(name = "student_email"))
     @Column(name = "contact")
+    @Cascade(CascadeType.ALL)
     private List<String> contactInfo;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "discipline_mark_id"))
+    @Cascade(CascadeType.ALL)
     private List<DisciplineMark> disciplineMarks;
 
 }

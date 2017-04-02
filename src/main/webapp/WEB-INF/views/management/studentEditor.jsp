@@ -11,7 +11,8 @@
                 <div class="box-header with-border">
                     <div class="pull-left"><h4>${student.email}</h4></div>
                     <div class="pull-right">
-                        <input type = "submit" value = "Submit" class="btn btn-success"/>
+                        <a class="btn btn-danger" href="/management/students/${student.id}/remove"><spring:message code="btn.remove"/></a>
+                        <input type = "submit" value = "<spring:message code="btn.save"/>" class="btn btn-success"/>
                     </div>
                 </div>
                 <div class="box-body">
@@ -34,7 +35,7 @@
                                 <form:input path="name" cssClass="form-control"/>
                             </td>
                             <td class="col-md-5 center" rowspan="4" colspan="2">
-                                <img src="/management/students/${student.id}/photo" class="img-thumbnail" style="width: 150px">
+                                <img src="/students/${student.id}/photo" class="img-thumbnail" style="width: 150px">
                             </td>
                         </tr>
                         <tr>

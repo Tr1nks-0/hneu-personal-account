@@ -46,4 +46,10 @@ public class EditStudentController {
         redirectAttributes.addFlashAttribute("success", "Success");
         return "redirect:/management/students/" + student.getId();
     }
+
+    @GetMapping("/{id}/remove")
+    public String removeStudent(@PathVariable long id) {
+        studentService.remove(id);
+        return "redirect:/management/import/student";
+    }
 }
