@@ -43,7 +43,7 @@
                             <tr>
                                 <td class="center">${faculty.id}</td>
                                 <td>${faculty.name}</td>
-                                <td><a href="/management/faculties/${faculty.id}/delete" class="btn btn-danger float-right">X</a></td>
+                                <td><button  faculty-id="${faculty.id}" class="remove-faculty btn btn-danger float-right">X</button></td>
                             </tr>
                         </c:forEach>
                     </table>
@@ -53,5 +53,16 @@
     </section>
 </div>
 
-
 <%@ include file="../jspf/management-footer.jspf" %>
+
+<script>
+
+$(".remove-faculty").click(function() {
+    var faculty = $(this).attr("faculty-id");
+    var container = $(this).closest("tr")
+    $.post( "/management/faculties/" + faculty + "/delete", function() {
+        container.fadeOut(300, function(){ $(this).remove();});
+    });
+});
+
+</script>
