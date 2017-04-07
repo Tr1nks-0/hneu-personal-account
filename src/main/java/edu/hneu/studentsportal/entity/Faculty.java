@@ -1,11 +1,12 @@
 package edu.hneu.studentsportal.entity;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import lombok.Data;
 
 @Data
 @Entity
@@ -13,7 +14,8 @@ import lombok.Data;
 public class Faculty {
 
     @Id
-    private long id;
+    @GeneratedValue
+    private Long id;
 
     @NotNull
     private String name;

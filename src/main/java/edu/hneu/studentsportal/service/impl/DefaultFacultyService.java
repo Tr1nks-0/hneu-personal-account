@@ -23,4 +23,14 @@ public class DefaultFacultyService implements FacultyService {
     public Faculty getFaculty(long id) {
         return facultyRepository.findOne(id);
     }
+
+    @Override
+    public void save(Faculty faculty) {
+        facultyRepository.save(faculty);
+    }
+
+    @Override
+    public void delete(long id) {
+        facultyRepository.delete(id);
+    }
 }
