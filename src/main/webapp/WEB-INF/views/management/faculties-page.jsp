@@ -37,11 +37,13 @@
                 <div class="box-header with-border">
                     <spring:message code="form.label.management.faculties"/>
                 </div>
-                <div class="box-body">
+                <div class="faculties-box box-body">
                     <table class="table table-hover no-margin">
+                        <tr>
+                            <th><spring:message code="form.label.name"/></th>
+                        </tr>
                         <c:forEach items="${faculties}" var="faculty">
                             <tr>
-                                <td class="center">${faculty.id}</td>
                                 <td>${faculty.name}</td>
                                 <td><button  faculty-id="${faculty.id}" class="remove-faculty btn btn-danger float-right">X</button></td>
                             </tr>
@@ -61,7 +63,12 @@ $(".remove-faculty").click(function() {
     var faculty = $(this).attr("faculty-id");
     var container = $(this).closest("tr")
     $.post( "/management/faculties/" + faculty + "/delete", function() {
-        container.fadeOut(300, function(){ $(this).remove();});
+        container.fadeOut(300, function(){
+            $(this).remove();
+            if(!$(".remove-faculty").length) {
+                $(".faculties-box").html("<spring:message code='items.not.found'/>");
+            }
+        });
     });
 });
 

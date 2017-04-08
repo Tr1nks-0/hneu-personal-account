@@ -1,8 +1,7 @@
 package edu.hneu.studentsportal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,17 +9,19 @@ import javax.validation.constraints.NotNull;
 @Data
 @Entity
 @Table(name = "speciality")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Speciality {
 
     @Id
+    @GeneratedValue
     private long id;
 
     @NotNull
+    @Column(unique = true)
     private String name;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.SAVE_UPDATE)
+    @ManyToOne
     private Faculty faculty;
 
 }

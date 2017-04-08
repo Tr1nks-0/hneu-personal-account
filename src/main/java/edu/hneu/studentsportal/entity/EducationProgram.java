@@ -1,8 +1,6 @@
 package edu.hneu.studentsportal.entity;
 
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,14 +11,14 @@ import javax.validation.constraints.NotNull;
 public class EducationProgram {
 
     @Id
+    @GeneratedValue
     private long id;
 
     @NotNull
     private String name;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.SAVE_UPDATE)
+    @ManyToOne
     private Speciality speciality;
 
 }
