@@ -75,39 +75,7 @@
 
     $("#faculty").change(function() {
         var faculty = $("#faculty option:selected").val();
-        $.getJSON( "/management/specialities/rest?facultyId=" + faculty, function(data) {
-            var $boxBody = $(".specialities-box");
-
-            $boxBody.hide();
-
-            if($.isEmptyObject(data)) {
-                $boxBody.html("<spring:message code='items.not.found'/>");
-            } else {
-                var $table = $("<table/>", {"class": "table table-hover no-margin"});
-
-                //add header
-                $table.append(
-                    $("<tr/>").append(
-                        $("<th>").text("<spring:message code='form.label.name'/>"),
-                        $("<th>").text("<spring:message code='form.label.student.faculty'/>"),
-                        $("<th>").text("")
-                    )
-                );
-
-                //add items
-                $.each( data, function(i) {
-                    $table.append(
-                        $("<tr/>").append(
-                            $("<td>").text(data[i].name),
-                            $("<td>").text(data[i].faculty.name),
-                            $("<td>").html("<button  speciality-id='" + data[i].id + "' class='remove-speciality btn btn-danger float-right'>X</button>")
-                        )
-                    );
-                });
-            }
-            $boxBody.html($table);
-            $boxBody.show(300);
-        });
+        window.location.href="/management/specialities?facultyId=" + faculty;
     });
 
     $(".remove-speciality").click(function() {
