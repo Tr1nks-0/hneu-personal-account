@@ -68,7 +68,7 @@ public class EducationProgramsController {
     @PostMapping("/create")
     public String createEducationProgram(@ModelAttribute @Valid EducationProgram educationProgram) {
         educationProgramRepository.save(educationProgram);
-        return "redirect:/management/education-programs?facultyId" + educationProgram.getSpeciality().getFaculty().getId()
+        return "redirect:/management/education-programs?facultyId=" + educationProgram.getSpeciality().getFaculty().getId()
                 + "&specialityId=" + educationProgram.getSpeciality().getId();
     }
 

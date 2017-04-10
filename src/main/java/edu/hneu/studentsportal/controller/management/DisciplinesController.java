@@ -1,12 +1,14 @@
 package edu.hneu.studentsportal.controller.management;
 
+import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.EducationProgram;
 import edu.hneu.studentsportal.entity.Faculty;
-import edu.hneu.studentsportal.entity.Group;
 import edu.hneu.studentsportal.entity.Speciality;
+import edu.hneu.studentsportal.enums.DisciplineFormControl;
+import edu.hneu.studentsportal.enums.DisciplineType;
+import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.EducationProgramRepository;
 import edu.hneu.studentsportal.repository.FacultyRepository;
-import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
@@ -26,8 +28,8 @@ import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Log4j
 @Controller
-@RequestMapping("/management/groups")
-public class GroupsController {
+@RequestMapping("/management/disciplines")
+public class DisciplinesController {
 
     @Resource
     private FacultyRepository facultyRepository;
@@ -36,13 +38,16 @@ public class GroupsController {
     @Resource
     private EducationProgramRepository educationProgramRepository;
     @Resource
-    private GroupRepository groupRepository;
+    private DisciplineRepository disciplineRepository;
 
     @GetMapping
-    public String getGroups(@RequestParam(required = false) Long facultyId,
-                            @RequestParam(required = false) Long specialityId,
-                            @RequestParam(required = false) Long educationProgramId,
-                            Model model) {
+    public String getDisciplines(@RequestParam(required = false) Long facultyId,
+                                 @RequestParam(required = false) Long specialityId,
+                                 @RequestParam(required = false) Long educationProgramId,
+                                 @RequestParam(required = false, defaultValue = "1") int course,
+                                 @RequestParam(required = false, defaultValue = "1") int semester,
+
+                                 Model model) {
         List<Faculty> faculties = facultyRepository.findAll();
         if (faculties.isEmpty())
             return "redirect:/management/faculties";
@@ -56,17 +61,21 @@ public class GroupsController {
 
         EducationProgram educationProgram = Optional.ofNullable(educationProgramId).map(educationProgramRepository::getOne).orElse(null);
 
-        Group group = new Group();
-        group.setSpeciality(speciality);
-        group.setEducationProgram(educationProgram);
+        Discipline discipline = new Discipline();
+        discipline.setEducationProgram(educationProgram);
+        discipline.setSpeciality(speciality);
+        discipline.setCourse(course);
+        discipline.setSemester(semester);
 
-        model.addAttribute("newGroup", group);
+        model.addAttribute("newDiscipline", discipline);
         model.addAttribute("faculties", faculties);
         model.addAttribute("selectedFaculty", faculty);
         model.addAttribute("specialities", specialities);
         model.addAttribute("educationPrograms", educationProgramRepository.findBySpeciality(speciality));
-        model.addAttribute("groups", groupRepository.findBySpecialityAndEducationProgram(speciality, educationProgram));
-        return "management/groups-page";
+        model.addAttribute("disciplines", disciplineRepository.findByCourseAndSemesterAndSpecialityAndEducationProgram(course, semester, speciality, educationProgram));
+        model.addAttribute("controlForms", DisciplineFormControl.values());
+        model.addAttribute("disciplineTypes", DisciplineType.values());
+        return "management/disciplines-page";
     }
 
     private Supplier<Faculty> getFirstFacultyWithSpecialities(List<Faculty> faculties) {
@@ -78,20 +87,24 @@ public class GroupsController {
     }
 
     @PostMapping("/create")
-    public String createGroup(@ModelAttribute @Valid Group group) {
-        groupRepository.save(group);
+    public String createDiscipline(@ModelAttribute @Valid Discipline discipline) {
+        disciplineRepository.save(discipline);
 
-        String educationProgramParameter = Optional.ofNullable(group.getEducationProgram()).map(EducationProgram::getId)
+        String educationProgramParameter = Optional.ofNullable(discipline.getEducationProgram()).map(EducationProgram::getId)
                 .map(id -> "&educationProgramId=" + id).orElse(StringUtils.EMPTY);
-        long facultyId = group.getSpeciality().getFaculty().getId();
-        long specialityId = group.getSpeciality().getId();
-        return "redirect:/management/groups?faculty-id=" + facultyId + "&speciality-id=" + specialityId + educationProgramParameter;
+        long facultyId = discipline.getSpeciality().getFaculty().getId();
+        long specialityId = discipline.getSpeciality().getId();
+        return "redirect:/management/disciplines?faculty-id=" + facultyId
+                + "&speciality-id=" + specialityId
+                + educationProgramParameter
+                + "&course=" + discipline.getCourse()
+                + "&semester=" + discipline.getSemester();
     }
 
     @PostMapping("/{id}/delete")
     @ResponseBody
     public void delete(@PathVariable long id) {
-        groupRepository.delete(id);
+        disciplineRepository.delete(id);
     }
 
 }

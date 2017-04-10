@@ -1,8 +1,6 @@
 package edu.hneu.studentsportal.entity;
 
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -26,11 +24,9 @@ public class Group {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @Cascade(CascadeType.SAVE_UPDATE)
     private Speciality speciality;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "education_program_id")
-    @Cascade(CascadeType.SAVE_UPDATE)
     private EducationProgram educationProgram;
 }
