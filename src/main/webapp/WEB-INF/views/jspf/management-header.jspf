@@ -48,29 +48,44 @@
 
             <ul class="sidebar-menu">
                 <li class="header">ГОЛОВНЕ МЕНЮ</li>
-                <li <c:if test="${'Розклад' eq title}">class="active"</c:if>>
-                    <a href="/management/uploadStudentProfilesFromExcel">
+                <li>
+                    <a href="/management/import/student">
                         <i class="fa fa-group"></i> <span><spring:message code="form.label.management.add.profiles"/></span>
                     </a>
                 </li>
-                <li <c:if test="${'Корисно' eq title}">class="active"</c:if>>
-                    <a href="/management/uploadTotalsFromExcel">
+                <li>
+                    <a href="/management/import/student-marks">
                         <i class="fa fa-line-chart"></i> <span><spring:message code="form.label.management.add.totals"/></span>
                     </a>
                 </li>
-                <li <c:if test="${'Контакти' eq title}">class="active"</c:if>>
+                <li>
                     <a href="/management/synchronizeSchedule">
                         <i class="fa fa-calendar"></i> <span><spring:message code="form.label.management.synchronize.schedule"/></span>
                     </a>
                 </li>
-                <li <c:if test="${'Студенти' eq title}">class="active"</c:if>>
+                <li>
                     <a href="/management/students">
                         <i class="fa fa-university"></i> <span>Студенти</span>
                     </a>
                 </li>
-                <li <c:if test="${'Вибіркові дисципліни' eq title}">class="active"</c:if>>
-                    <a href="/management/special-disciplines">
-                        <i class="fa fa-star"></i> <span>Вибіркові дисципліни</span>
+                <li>
+                    <a href="/management/faculties">
+                        <i class="fa fa-university"></i> <span><spring:message code="form.label.management.faculties" /></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/management/specialities">
+                        <i class="fa fa-university"></i> <span><spring:message code="form.label.management.specialities" /></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/management/education-programs">
+                        <i class="fa fa-university"></i> <span><spring:message code="form.label.management.education.programs" /></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/management/disciplines">
+                        <i class="fa fa-university"></i> <span><spring:message code="form.label.management.disciplines" /></span>
                     </a>
                 </li>
                 <li>
