@@ -37,15 +37,6 @@
 
     <aside class="main-sidebar">
         <section class="sidebar">
-            <div class="user-panel">
-                <div class="image">
-                    <img src="/resources/img/admin-photo.png" class="img-circle profile-photo-large" alt="User Image">
-                </div>
-                <div class="info">
-                    <p>Адміністратор</p>
-                </div>
-            </div>
-
             <ul class="sidebar-menu">
                 <li class="header">ГОЛОВНЕ МЕНЮ</li>
                 <li>
