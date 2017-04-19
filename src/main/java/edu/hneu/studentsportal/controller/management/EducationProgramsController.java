@@ -9,7 +9,9 @@ import edu.hneu.studentsportal.repository.SpecialityRepository;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -49,7 +51,7 @@ public class EducationProgramsController {
         EducationProgram educationProgram = new EducationProgram();
         educationProgram.setSpeciality(speciality);
 
-        model.addAttribute("newEducationProgram", educationProgram);
+        model.addAttribute("educationProgram", educationProgram);
         model.addAttribute("faculties", faculties);
         model.addAttribute("selectedFaculty", faculty);
         model.addAttribute("specialities", specialities);
@@ -65,11 +67,21 @@ public class EducationProgramsController {
         return faculty -> isFalse(specialityRepository.findByFaculty(faculty).isEmpty());
     }
 
-    @PostMapping("/create")
-    public String createEducationProgram(@ModelAttribute @Valid EducationProgram educationProgram) {
-        educationProgramRepository.save(educationProgram);
-        return "redirect:/management/education-programs?facultyId=" + educationProgram.getSpeciality().getFaculty().getId()
-                + "&specialityId=" + educationProgram.getSpeciality().getId();
+    @PostMapping
+    public String createEducationProgram(@ModelAttribute @Valid EducationProgram educationProgram, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        Faculty faculty = educationProgram.getSpeciality().getFaculty();
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("faculties", facultyRepository.findAll());
+            model.addAttribute("selectedFaculty", faculty);
+            model.addAttribute("specialities", specialityRepository.findByFaculty(faculty));
+            model.addAttribute("educationPrograms", educationProgramRepository.findBySpeciality(educationProgram.getSpeciality()));
+            return "management/education-programs-page";
+        } else {
+            educationProgramRepository.save(educationProgram);
+            redirectAttributes.addFlashAttribute("success", "success.add.education.program");
+            return "redirect:/management/education-programs?facultyId=" + faculty.getId()
+                    + "&specialityId=" + educationProgram.getSpeciality().getId();
+        }
     }
 
     @PostMapping("/{id}/delete")

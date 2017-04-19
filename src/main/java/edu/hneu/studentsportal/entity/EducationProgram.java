@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.entity;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ public class EducationProgram {
     private long id;
 
     @NotNull
+    @Length(min = 3)
     private String name;
 
     @NotNull
