@@ -7,6 +7,7 @@ import edu.hneu.studentsportal.repository.SpecialityRepository;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -27,27 +28,22 @@ public class SpecialitiesController {
 
     @GetMapping
     public String getSpecialities(@RequestParam(required = false) Long facultyId, Model model) {
-        List<Faculty> allFaculties = facultyRepository.findAll();
-        if(allFaculties.isEmpty())
+        List<Faculty> faculties = facultyRepository.findAll();
+        if(faculties.isEmpty())
             return "redirect:/management/faculties";
-
-        allFaculties.stream().findFirst().ifPresent(defaultFaculty -> {
-            Faculty faculty = Optional.ofNullable(facultyId).map(facultyRepository::getOne).orElse(defaultFaculty);
-
-            Speciality specialityExample = new Speciality();
-            specialityExample.setFaculty(faculty);
-
-            model.addAttribute("faculties", allFaculties);
-            model.addAttribute("newSpeciality", specialityExample);
-            model.addAttribute("specialities", specialityRepository.findByFaculty(faculty));
-        });
-        return "management/specialities-page";
+        Faculty faculty = Optional.ofNullable(facultyId).map(facultyRepository::getOne).orElse(faculties.get(0));
+        return prepareSpecialityPage(model, new Speciality(faculty));
     }
 
-    @PostMapping("/create")
-    public String createFaculty(@ModelAttribute @Valid Speciality speciality, RedirectAttributes redirectAttributes) {
-        specialityRepository.save(speciality);
-        return "redirect:/management/specialities?facultyId=" + speciality.getFaculty().getId();
+    @PostMapping
+    public String createSpeciality(@ModelAttribute @Valid Speciality speciality, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        if(bindingResult.hasErrors()) {
+            return prepareSpecialityPage(model, speciality);
+        } else {
+            specialityRepository.save(speciality);
+            redirectAttributes.addFlashAttribute("success", "success.add.speciality");
+            return "redirect:/management/specialities?facultyId=" + speciality.getFaculty().getId();
+        }
     }
 
     @PostMapping("/{id}/delete")
@@ -61,5 +57,12 @@ public class SpecialitiesController {
     public List<Speciality> getSpecialitiesForFaculty(@RequestParam long facultyId) {
         Faculty faculty = facultyRepository.getOne(facultyId);
         return specialityRepository.findByFaculty(faculty);
+    }
+
+    private String prepareSpecialityPage(Model model, Speciality speciality) {
+        model.addAttribute("faculties", facultyRepository.findAll());
+        model.addAttribute("speciality", speciality);
+        model.addAttribute("specialities", specialityRepository.findByFaculty(speciality.getFaculty()));
+        return "management/specialities-page";
     }
 }

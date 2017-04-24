@@ -3,7 +3,11 @@ package edu.hneu.studentsportal.controller.management;
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
-import edu.hneu.studentsportal.service.*;
+import edu.hneu.studentsportal.repository.FacultyRepository;
+import edu.hneu.studentsportal.service.EducationProgramService;
+import edu.hneu.studentsportal.service.GroupService;
+import edu.hneu.studentsportal.service.SpecialityService;
+import edu.hneu.studentsportal.service.StudentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +24,7 @@ public class EditStudentController {
     @Resource
     private StudentService studentService;
     @Resource
-    private FacultyService facultyService;
+    private FacultyRepository facultyRepository;
     @Resource
     private SpecialityService specialityService;
     @Resource
@@ -34,7 +38,7 @@ public class EditStudentController {
         model.addAttribute("specialities", specialityService.getSpecialitiesForFaculty(student.getFaculty()));
         model.addAttribute("educationPrograms", educationProgramService.getEducationProgramsForSpeciality(student.getSpeciality()));
         model.addAttribute("groups", groupService.getGroups(student.getSpeciality(), student.getEducationProgram()));
-        model.addAttribute("faculties", facultyService.getAllFaculties());
+        model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("disciplineTypes", DisciplineType.values());
         model.addAttribute("disciplineFormControls", DisciplineFormControl.values());
         return new ModelAndView("management/studentEditor", "student", student);

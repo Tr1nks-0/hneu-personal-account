@@ -1,9 +1,9 @@
 package edu.hneu.studentsportal.entity;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
@@ -14,7 +14,7 @@ public class Faculty {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Length(min = 3, max = 200)
     @Column(unique = true)
     private String name;
 

@@ -16,14 +16,18 @@
 
                     <c:if test="${not empty error}">
                         <div class="col-md-12">
-                            <div class="alert alert-error alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                                <i class="icon fa fa-error"></i> ${error}
-                            </div>
+                            <div class="alert alert-error alert-dismissible"><spring:message code="${error}"/></div>
                         </div>
                     </c:if>
 
-                    <form:form modelAttribute="newSpeciality" action="/management/specialities/create" method="post">
+                    <c:if test="${not empty success}">
+                        <div class="col-md-12">
+                            <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
+                        </div>
+                    </c:if>
+
+                    <form:form modelAttribute="speciality" action="/management/specialities" method="post">
+                        <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
                         <div class="form-group">
                             <label for="faculty" class="control-label"><spring:message code="form.label.student.faculty"/></label>
                             <form:select path="faculty" items="${faculties}" itemLabel="name" itemValue="id" cssClass="form-control"/>
