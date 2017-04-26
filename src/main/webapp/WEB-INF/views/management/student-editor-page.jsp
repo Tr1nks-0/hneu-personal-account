@@ -17,14 +17,19 @@
                 </div>
                 <div class="box-body">
 
-                    <c:if test="${not empty success}">
+                    <c:if test="${not empty error}">
                         <div class="col-md-12">
-                            <div class="alert alert-success alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                <i class="icon fa fa-check"></i> ${success}
-                            </div>
+                            <div class="alert alert-error alert-dismissible"><spring:message code="${error}"/></div>
                         </div>
                     </c:if>
+
+                    <c:if test="${not empty success}">
+                        <div class="col-md-12">
+                            <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
+                        </div>
+                    </c:if>
+
+                    <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
 
                     <table class="table table-responsive">
                         <tr>
@@ -84,10 +89,10 @@
                                 <form:select path="speciality" items="${specialities}" cssClass="form-control" itemLabel="name" itemValue="id" disabled="true"/>
                             </td>
                             <td class="col-md-2">
-                                <label for="studentGroup" class="control-label"><spring:message code="form.label.student.studentGroup"/></label>
+                                <label for="group" class="control-label"><spring:message code="form.label.student.group"/></label>
                             </td>
                             <td class="col-md-3">
-                                <form:select path="studentGroup" items="${groups}" cssClass="form-control" itemLabel="name" itemValue="id" disabled="true"/>
+                                <form:select path="group" items="${groups}" cssClass="form-control" itemLabel="name" itemValue="id" disabled="true"/>
                             </td>
                         </tr>
                         <tr>
@@ -125,8 +130,8 @@
                                         <tr>
                                             <td class="col-md-6"><form:input path="disciplineMarks[${i.index}].discipline.label" cssClass="form-control" disabled="true"/></td>
                                             <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].discipline.credits" cssClass="form-control" type="number" disabled="true"/></td>
-                                            <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.controlForm" items="${disciplineFormControls}" cssClass="form-control" disabled="true"/>
-                                            <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.type" items="${disciplineTypes}" cssClass="form-control" disabled="true"/>
+                                            <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.controlForm" items="${disciplineFormControls}" itemLabel="name" cssClass="form-control" disabled="true"/>
+                                            <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.type" items="${disciplineTypes}" itemLabel="name" cssClass="form-control" disabled="true"/>
                                             <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].mark" cssClass="form-control" type="number"/></td>
                                             <form:hidden path="disciplineMarks[${i.index}].id"/>
                                             <form:hidden path="disciplineMarks[${i.index}].discipline.id"/>
@@ -152,7 +157,7 @@
                     <form:hidden path="rate"/>
                     <form:hidden path="photo"/>
                     <form:hidden path="email"/>
-                    <form:hidden path="studentGroup"/>
+                    <form:hidden path="group"/>
                 </div>
             </form:form>
         </div>

@@ -12,17 +12,22 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SpecialityRepository extends JpaRepository<Speciality, Long> {
+public interface SpecialityRepository extends JpaRepository<Speciality, Long>, SpecialityRepositoryCustom {
+
+    Optional<Speciality> findById(Long id);
 
     Optional<Speciality> findByNameAndFaculty(String specialityName, Faculty faculty);
 
-    List<Speciality> findByFaculty(Faculty faculty);
+    List<Speciality> findAllByFaculty(Faculty faculty);
 
-    @Query(value = "SELECT 1 * s.faculty_id FROM speciality s JOIN faculty f ON s.faculty_id=f.id WHERE s.faculty_id=:facultyId", nativeQuery = true)
+    @Query(value = "SELECT 1 * s.faculty_id FROM speciality s JOIN faculty f ON s.faculty_id=f.id WHERE s.faculty_id=:facultyId LIMIT 1", nativeQuery = true)
     Optional<BigInteger> checkFacultyHasSpecialities(@Param("facultyId") Long facultyId);
 
-    @Query(value = "SELECT 1* s.faculty_id FROM speciality s JOIN faculty f ON s.faculty_id=f.id", nativeQuery = true)
-    Optional<BigInteger> findFirstFacultyWithSpecialities();
+    @Query(value = "SELECT 1 * s.faculty_id FROM speciality s JOIN faculty f ON s.faculty_id=f.id LIMIT 1", nativeQuery = true)
+    Optional<BigInteger> findFirstFacultyIdWithSpecialities();
+
+    @Query(value = "SELECT * FROM speciality WHERE faculty_id=:facultyId LIMIT 1", nativeQuery = true)
+    Speciality findFirstSpecialityForFaculty(@Param("facultyId") Long facultyId);
 
 }
 

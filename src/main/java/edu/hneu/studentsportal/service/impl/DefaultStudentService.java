@@ -149,8 +149,8 @@ public class DefaultStudentService implements StudentService {
 
     @Override
     public void setGroupId(final Student studentProfile) {
-        // final Group group = groupDao.findOne(studentProfile.getStudentGroup());
-        // studentProfile.setStudentGroupId(group.getId());
+        // final Group group = groupDao.findOne(studentProfile.getGroup());
+        // studentProfile.setgroupId(group.getId());
     }
 
     @Override

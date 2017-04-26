@@ -65,7 +65,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         student.setContactInfo(extractContacts(indexer));
         student.setSpeciality(extractSpeciality(indexer, student.getFaculty()));
         student.setEducationProgram(extractMasterEducationProgram(indexer));
-        student.setStudentGroup(extractGroup(indexer));
+        student.setGroup(extractGroup(indexer));
         student.setDisciplineMarks(extractDisciplinesInternal(student.getSpeciality(), student.getEducationProgram(), indexer));
         student.setPhoto(extractProfileImage());
         return student;
@@ -142,9 +142,10 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     private Function<Discipline, Discipline> findDisciplineByExample() {
         return discipline -> disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgramAndCreditsAndControlForm(
-                discipline.getLabel(), discipline.getCourse(), discipline.getSemester(),
-                discipline.getSpeciality(), discipline.getEducationProgram(),
-                discipline.getCredits(), discipline.getControlForm()).orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.discipline", new Object[0], Locale.getDefault())));
+                    discipline.getLabel(), discipline.getCourse(), discipline.getSemester(),
+                    discipline.getSpeciality(), discipline.getEducationProgram(),
+                    discipline.getCredits(), discipline.getControlForm()
+                ).orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.discipline", new Object[]{discipline.getLabel()}, Locale.getDefault())));
     }
 
     private boolean isNotFileEnd(int row) {

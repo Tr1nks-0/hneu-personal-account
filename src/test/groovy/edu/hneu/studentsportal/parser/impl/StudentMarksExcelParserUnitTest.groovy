@@ -31,7 +31,7 @@ class StudentMarksExcelParserUnitTest extends Specification {
         groupMock.getSpeciality() >> specialityMock
         groupMock.getEducationProgram() >> educationProgramMock
         disciplineRepositoryMock.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(*_) >> Optional.of(disciplineMock)
-        studentRepositoryMock.findByStudentGroup(groupMock) >> [
+        studentRepositoryMock.findByGroup(groupMock) >> [
             new Student(name: 'Олександр', surname: 'Аніщік'),
             new Student(name: 'Богдан', surname: 'Безчасний'),
             new Student(name: 'Іван', surname: 'Білодід'),

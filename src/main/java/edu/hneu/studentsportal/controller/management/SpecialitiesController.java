@@ -14,7 +14,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @Log4j
 @Controller
@@ -31,7 +30,7 @@ public class SpecialitiesController {
         List<Faculty> faculties = facultyRepository.findAll();
         if(faculties.isEmpty())
             return "redirect:/management/faculties";
-        Faculty faculty = Optional.ofNullable(facultyId).map(facultyRepository::getOne).orElse(faculties.get(0));
+        Faculty faculty = facultyRepository.findByIdOrDefault(facultyId);
         return prepareSpecialityPage(model, new Speciality(faculty));
     }
 
@@ -56,13 +55,20 @@ public class SpecialitiesController {
     @ResponseBody
     public List<Speciality> getSpecialitiesForFaculty(@RequestParam long facultyId) {
         Faculty faculty = facultyRepository.getOne(facultyId);
-        return specialityRepository.findByFaculty(faculty);
+        return specialityRepository.findAllByFaculty(faculty);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
+        log.warn(e.getMessage(), e);
+        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
+        return "redirect:/management/specialities";
     }
 
     private String prepareSpecialityPage(Model model, Speciality speciality) {
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("speciality", speciality);
-        model.addAttribute("specialities", specialityRepository.findByFaculty(speciality.getFaculty()));
+        model.addAttribute("specialities", specialityRepository.findAllByFaculty(speciality.getFaculty()));
         return "management/specialities-page";
     }
 }

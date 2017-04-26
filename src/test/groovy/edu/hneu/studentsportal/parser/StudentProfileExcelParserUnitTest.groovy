@@ -127,15 +127,15 @@ class StudentProfileExcelParserUnitTest extends Specification {
     }
 
     @Unroll
-    def 'student from #excelFileName should have group[#studentGroup]'() {
+    def 'student from #excelFileName should have group[#group]'() {
         given:
             def excelFile = loadResource excelFileName
         when:
             def profile = studentProfileExcelParser.parse(excelFile)
         then:
-            profile.studentGroup == studentGroup
+            profile.group == group
         where:
-            excelFileName            | studentGroup
+            excelFileName            | group
             MASTER_STUDENT_PROFILE   | masterGroupMock
             BACHELOR_STUDENT_PROFILE | bachelorGroupMock
     }

@@ -42,7 +42,7 @@
                     <spring:message code="form.label.management.faculties"/>
                 </div>
                 <div class="faculties-box box-body">
-                    <table class="table table-hover no-margin">
+                    <table class="table no-margin">
                         <tr>
                             <th><spring:message code="form.label.name"/></th>
                         </tr>

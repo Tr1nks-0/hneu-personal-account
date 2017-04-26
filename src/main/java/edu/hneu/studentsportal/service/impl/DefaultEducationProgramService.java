@@ -17,6 +17,6 @@ public class DefaultEducationProgramService implements EducationProgramService {
 
     @Override
     public List<EducationProgram> getEducationProgramsForSpeciality(Speciality speciality) {
-        return educationProgramRepository.findBySpeciality(speciality);
+        return educationProgramRepository.findAllBySpeciality(speciality);
     }
 }

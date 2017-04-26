@@ -3,6 +3,8 @@ package edu.hneu.studentsportal.entity;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -20,18 +22,18 @@ public class Discipline {
     private long id;
 
     @NotNull
-    @Min(value = 0, message = "invalid.discipline.credits")
-    @Max(value = Integer.MAX_VALUE, message = "invalid.discipline.credits")
+    @Min(value = 0)
+    @Max(value = 100)
     private Integer credits;
 
     @NotNull
-    @Min(value = 1, message = "invalid.discipline.course")
-    @Max(value = 6, message = "invalid.discipline.course")
+    @Min(value = 1)
+    @Max(value = 6)
     private Integer course;
 
     @NotNull
-    @Min(value = 1, message = "invalid.discipline.semester")
-    @Max(value = 2, message = "invalid.discipline.semester")
+    @Min(value = 1)
+    @Max(value = 2)
     private Integer semester;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,7 +49,7 @@ public class Discipline {
     private DisciplineFormControl controlForm;
 
     @NotNull
-    @Size(min = 3, max = 100, message = "invalid.discipline.name")
+    @Length(min = 3, max = 100)
     private String label;
 
     @NotNull

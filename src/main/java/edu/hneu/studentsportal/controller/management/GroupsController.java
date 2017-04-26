@@ -12,7 +12,9 @@ import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -43,55 +45,59 @@ public class GroupsController {
                             @RequestParam(required = false) Long specialityId,
                             @RequestParam(required = false) Long educationProgramId,
                             Model model) {
-        List<Faculty> faculties = facultyRepository.findAll();
-        if (faculties.isEmpty())
+        if (facultyRepository.findAll().isEmpty())
             return "redirect:/management/faculties";
-
-        Faculty faculty = Optional.ofNullable(facultyId).map(facultyRepository::getOne).filter(containsSpecialities()).orElseGet(getFirstFacultyWithSpecialities(faculties));
+        Faculty faculty = facultyRepository.findByIdWithSpecialitiesOrDefault(facultyId);
         if (isNull(faculty))
             return "redirect:/management/specialities";
-
-        List<Speciality> specialities = specialityRepository.findByFaculty(faculty);
-        Speciality speciality = Optional.ofNullable(specialityId).map(specialityRepository::getOne).orElse(specialities.get(0));
-
-        EducationProgram educationProgram = Optional.ofNullable(educationProgramId).map(educationProgramRepository::getOne).orElse(null);
-
+        Speciality speciality = specialityRepository.findByIdOrDefault(specialityId, faculty);
+        EducationProgram educationProgram = educationProgramRepository.findById(educationProgramId);
         Group group = new Group();
         group.setSpeciality(speciality);
         group.setEducationProgram(educationProgram);
-
-        model.addAttribute("newGroup", group);
-        model.addAttribute("faculties", faculties);
-        model.addAttribute("selectedFaculty", faculty);
-        model.addAttribute("specialities", specialities);
-        model.addAttribute("educationPrograms", educationProgramRepository.findBySpeciality(speciality));
-        model.addAttribute("groups", groupRepository.findBySpecialityAndEducationProgram(speciality, educationProgram));
-        return "management/groups-page";
+        return prepareGroupPage(model, group);
     }
 
-    private Supplier<Faculty> getFirstFacultyWithSpecialities(List<Faculty> faculties) {
-        return () -> faculties.stream().filter(containsSpecialities()).findFirst().orElse(null);
-    }
-
-    private Predicate<Faculty> containsSpecialities() {
-        return faculty -> isFalse(specialityRepository.findByFaculty(faculty).isEmpty());
-    }
-
-    @PostMapping("/create")
-    public String createGroup(@ModelAttribute @Valid Group group) {
-        groupRepository.save(group);
-
-        String educationProgramParameter = Optional.ofNullable(group.getEducationProgram()).map(EducationProgram::getId)
-                .map(id -> "&educationProgramId=" + id).orElse(StringUtils.EMPTY);
-        long facultyId = group.getSpeciality().getFaculty().getId();
-        long specialityId = group.getSpeciality().getId();
-        return "redirect:/management/groups?faculty-id=" + facultyId + "&speciality-id=" + specialityId + educationProgramParameter;
+    @PostMapping
+    public String createGroup(@ModelAttribute @Valid Group group, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+        if(bindingResult.hasErrors()) {
+            return prepareGroupPage(model, group);
+        } else {
+            groupRepository.save(group);
+            redirectAttributes.addFlashAttribute("success", "success.add.discipline");
+            redirectAttributes.addAttribute("facultyId", group.getSpeciality().getFaculty().getId());
+            redirectAttributes.addAttribute("specialityId", group.getSpeciality().getId());
+            Optional.ofNullable(group.getEducationProgram()).map(EducationProgram::getId).ifPresent(id ->
+                    redirectAttributes.addAttribute("educationProgramId", id)
+            );
+            return "redirect:/management/groups";
+        }
     }
 
     @PostMapping("/{id}/delete")
     @ResponseBody
     public void delete(@PathVariable long id) {
         groupRepository.delete(id);
+    }
+
+
+    @ExceptionHandler(RuntimeException.class)
+    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
+        log.warn(e.getMessage(), e);
+        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
+        return "redirect:/management/groups";
+    }
+
+    private String prepareGroupPage(Model model, Group group) {
+        Speciality speciality = group.getSpeciality();
+        Faculty faculty = speciality.getFaculty();
+        model.addAttribute("group", group);
+        model.addAttribute("faculties", facultyRepository.findAll());
+        model.addAttribute("selectedFaculty", faculty);
+        model.addAttribute("specialities", specialityRepository.findAllByFaculty(faculty));
+        model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
+        model.addAttribute("groups", groupRepository.findBySpecialityAndEducationProgram(speciality, group.getEducationProgram()));
+        return "management/groups-page";
     }
 
 }

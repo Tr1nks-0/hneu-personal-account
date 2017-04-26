@@ -1,8 +1,13 @@
 package edu.hneu.studentsportal.enums;
 
 public enum DisciplineFormControl {
-    REGULAR("Диф. залік"), EXAM("Екзамен"), REPORT("ЗВІТ"),
-    GRADUATE_PROJECT("Дипломний проект"), STATE_EXAM("Держ. Екзамен"), COURSE_PROJECT("Курсовий проект");
+    REGULAR("Диф. залік"),
+    EXAM("Екзамен"),
+    STATE_EXAM("Держ. Екзамен"),
+    REPORT("ЗВІТ"),
+    GRADUATE_TASK("Дипломна робота"),
+    GRADUATE_PROJECT("Дипломний проект"),
+    COURSE_PROJECT("Курсовий проект");
 
     private final String name;
 

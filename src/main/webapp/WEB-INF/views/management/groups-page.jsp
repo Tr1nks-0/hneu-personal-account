@@ -16,14 +16,18 @@
 
                     <c:if test="${not empty error}">
                         <div class="col-md-12">
-                            <div class="alert alert-error alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                                <i class="icon fa fa-error"></i> ${error}
-                            </div>
+                            <div class="alert alert-error alert-dismissible"><spring:message code="${error}"/></div>
                         </div>
                     </c:if>
 
-                    <form:form modelAttribute="newGroup" action="/management/groups/create" method="post">
+                    <c:if test="${not empty success}">
+                        <div class="col-md-12">
+                            <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
+                        </div>
+                    </c:if>
+
+                    <form:form modelAttribute="group" action="/management/groups" method="post">
+                        <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
                         <div class="col-md-6 form-group">
                             <label for="faculty" class="control-label"><spring:message code="form.label.student.faculty"/></label>
                             <select id="faculty"  name="faculty" class="form-control">
@@ -70,7 +74,7 @@
                                     <th></th>
                                 </tr>
                                 <c:forEach items="${groups}" var="group">
-                                    <tr>
+                                    <tr onclick="document.location = '/management/students?groupId=${group.id}';">
                                         <td>${group.id}</td>
                                         <td>${group.name}</td>
                                         <td><button  group-id="${group.id}" class="remove-groups btn btn-danger float-right">X</button></td>

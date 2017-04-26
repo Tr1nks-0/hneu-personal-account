@@ -51,7 +51,7 @@ public class DefaultImportService implements ImportService {
     @Override
     public Student importStudent(File file) {
         Student student = parserFactory.newStudentProfileExcelParser().parse(file);
-        //student.setEmail(retrieveStudentEmailFromThirdPartyService(student.getName(), student.getSurname(), student.getStudentGroup().getName()));
+        //student.setEmail(retrieveStudentEmailFromThirdPartyService(student));
         student.setEmail(student.getSurname() + "@hneu.net");
         userService.create(student.getEmail(), UserRole.STUDENT);
         studentService.save(student);
@@ -82,9 +82,10 @@ public class DefaultImportService implements ImportService {
                 .findFirst().orElse(importedMark);
     }
 
-    private String retrieveStudentEmailFromThirdPartyService(String name, String surname, String groupName) {
-        String formattedName = name.toLowerCase().split(" ")[0];
-        String formatterSurname = surname.toLowerCase().trim();
+    private String retrieveStudentEmailFromThirdPartyService(Student student) {
+        String formattedName = student.getName().toLowerCase().split(" ")[0];
+        String formatterSurname = student.getSurname().toLowerCase().trim();
+        String groupName = student.getGroup().getName();
         String url = format("%s/EmailToOutController?name=%s&surname=%s&groupId=%s", emailsIntegrationServiceUrl, formattedName, formatterSurname, groupName);
         return new RestTemplate().getForEntity(url, String.class).getBody().toLowerCase();
     }

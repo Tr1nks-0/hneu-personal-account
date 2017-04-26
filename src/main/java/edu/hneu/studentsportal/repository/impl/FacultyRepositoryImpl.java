@@ -8,6 +8,7 @@ import edu.hneu.studentsportal.repository.SpecialityRepository;
 import javax.annotation.Resource;
 import java.math.BigInteger;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class FacultyRepositoryImpl implements FacultyRepositoryCustom {
 
@@ -17,14 +18,18 @@ public class FacultyRepositoryImpl implements FacultyRepositoryCustom {
     private SpecialityRepository specialityRepository;
 
     @Override
-    public Optional<Faculty> findFacultyByIdOrDefault(Long facultyId) {
-        return Optional.ofNullable(facultyId)
-                .filter(id -> specialityRepository.checkFacultyHasSpecialities(id).isPresent())
-                .map(facultyRepository::findById)
-                .orElseGet(
-                        () -> specialityRepository.findFirstFacultyWithSpecialities()
-                                .map(BigInteger::longValue)
-                                .map(facultyRepository::findOne)
-                );
+    public Faculty findByIdWithSpecialitiesOrDefault(Long id) {
+        return facultyRepository.findById(id)
+                .filter(faculty -> specialityRepository.checkFacultyHasSpecialities(faculty.getId()).isPresent())
+                .orElseGet(getFirstFacultyWithSpecialities());
+    }
+
+    @Override
+    public Faculty findByIdOrDefault(Long id) {
+        return facultyRepository.findById(id).orElseGet(() -> facultyRepository.findFirst());
+    }
+
+    private Supplier<Faculty> getFirstFacultyWithSpecialities() {
+        return () -> specialityRepository.findFirstFacultyIdWithSpecialities().map(BigInteger::longValue).map(facultyRepository::findOne).orElse(null);
     }
 }

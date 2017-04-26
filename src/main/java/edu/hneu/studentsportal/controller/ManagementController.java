@@ -84,7 +84,7 @@ public class ManagementController {
         model.addAttribute("group", group);
         if(nonNull(group) && !group.isEmpty()) {
             model.addAttribute("groups", studentService.find().stream()
-                    .map(Student::getStudentGroup)
+                    .map(Student::getGroup)
                     .filter(userGroup -> userGroup.getName().contains(group))
                     .sorted()
                     .collect(Collectors.toSet()));
@@ -92,7 +92,7 @@ public class ManagementController {
         }else {
             model.addAttribute("groups",
                     studentService.find().stream()
-                            .map(Student::getStudentGroup)
+                            .map(Student::getGroup)
                             .sorted()
                             .collect(Collectors.toSet()));
         }
@@ -103,7 +103,7 @@ public class ManagementController {
     public String choseSemesterForSpecialDisciplines(@PathVariable final String group, final Model model) {
         model.addAttribute("group", group);
         final Optional<Student> studentProfile = studentService.find().stream()
-                .filter(student -> student.getStudentGroup().getName().contains(group)).findAny();
+                .filter(student -> student.getGroup().getName().contains(group)).findAny();
         //model.addAttribute("coursesCount", studentProfile.map(profile -> profile.getCourses().size()).orElse(0));
         return "management/semesterPerGroup";
     }
@@ -139,7 +139,7 @@ public class ManagementController {
 /*
     private List<StudentDiscipline> getSpecialDisciplines(final String group, final Integer course, final Integer semester, final DisciplineType type) {
         final List<StudentDiscipline> disciplines = studentService.find().stream()
-                .filter(student -> student.getStudentGroup().getName().contains(group))
+                .filter(student -> student.getGroup().getName().contains(group))
                 .map(student -> {
                     Course courseModel = student.getCourses().get(course);
                     Semester semesterModel = courseModel.getSemesters().get(semester);
@@ -175,7 +175,7 @@ public class ManagementController {
             studentProfile.setSurname(editedProfile.getSurname());
             studentProfile.setFaculty(editedProfile.getFaculty());
             studentProfile.setSpeciality(editedProfile.getSpeciality());
-            studentProfile.setStudentGroup(editedProfile.getStudentGroup());
+            studentProfile.setGroup(editedProfile.getGroup());
             studentProfile.setContactInfo(editedProfile.getContactInfo());
             studentService.save(studentProfile);
         }

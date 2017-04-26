@@ -63,7 +63,7 @@ public class AccountController {
                 final Student studentProfile = profile.get();
                 model.addAttribute("title", "top.menu.home");
                 model.addAttribute("currentCourse", getCurrentCourse(studentProfile));
-                session.setAttribute("groupId", studentProfile.getStudentGroup().getId());
+                session.setAttribute("groupId", studentProfile.getGroup().getId());
                 session.setAttribute("email", studentProfile.getEmail());
                 return new ModelAndView("student/account", "profile", studentProfile);
             }
@@ -88,7 +88,7 @@ public class AccountController {
 
     @RequestMapping("/schedule")
     public String schedule(@ModelAttribute("profile") Student profile , @RequestParam(required = false) Long week, Model model) {
-        Schedule schedule = scheduleService.load(profile.getStudentGroup().getId(), week);
+        Schedule schedule = scheduleService.load(profile.getGroup().getId(), week);
         model.addAttribute("pairs", scheduleService.getPairs(schedule));
         model.addAttribute("days", schedule.getWeek().getDay());
         model.addAttribute("week", week);

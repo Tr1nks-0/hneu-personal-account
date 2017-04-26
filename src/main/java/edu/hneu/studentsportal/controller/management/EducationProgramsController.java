@@ -16,9 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
-import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static java.util.Objects.isNull;
 
 @Log4j
 @Controller
@@ -37,11 +36,10 @@ public class EducationProgramsController {
         List<Faculty> faculties = facultyRepository.findAll();
         if (faculties.isEmpty())
             return "redirect:/management/faculties";
-        Optional<Faculty> faculty = facultyRepository.findFacultyByIdOrDefault(facultyId);
-        if (isFalse(faculty.isPresent()))
+        Faculty faculty = facultyRepository.findByIdWithSpecialitiesOrDefault(facultyId);
+        if (isNull(faculty))
             return "redirect:/management/specialities";
-        List<Speciality> specialities = specialityRepository.findByFaculty(faculty.get());
-        Speciality speciality = Optional.ofNullable(specialityId).map(specialityRepository::getOne).orElse(specialities.get(0));
+        Speciality speciality = specialityRepository.findByIdOrDefault(specialityId, faculty);
         return prepareEducationProgramPage(model, new EducationProgram(speciality));
     }
 
@@ -63,14 +61,21 @@ public class EducationProgramsController {
         educationProgramRepository.delete(id);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
+        log.warn(e.getMessage(), e);
+        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
+        return "redirect:/management/education-programs";
+    }
+
     private String prepareEducationProgramPage(Model model, EducationProgram educationProgram) {
         Speciality speciality = educationProgram.getSpeciality();
         Faculty faculty = speciality.getFaculty();
         model.addAttribute("educationProgram", educationProgram);
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("selectedFaculty", faculty);
-        model.addAttribute("specialities", specialityRepository.findByFaculty(faculty));
-        model.addAttribute("educationPrograms", educationProgramRepository.findBySpeciality(speciality));
+        model.addAttribute("specialities", specialityRepository.findAllByFaculty(faculty));
+        model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
         return "management/education-programs-page";
     }
 

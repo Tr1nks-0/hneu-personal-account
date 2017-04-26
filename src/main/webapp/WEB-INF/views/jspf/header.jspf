@@ -46,7 +46,7 @@
                                     <img src="${profileImage}" class="img-circle profile-photo-large" alt="User Image">
                                     <p>
                                         <c:out value="${profile.surname} ${profile.name}"/> </br>
-                                        <small><c:out value="${profile.studentGroup.name}"/></small>
+                                        <small><c:out value="${profile.group.name}"/></small>
                                     </p>
                                 </li>
                                 <li class="user-footer">
@@ -72,7 +72,7 @@
                     </div>
                     <div class="info">
                         <p><c:out value="${profile.surname} ${profile.name}"/></p>
-                        <c:out value="${profile.studentGroup.name}"/>
+                        <c:out value="${profile.group.name}"/>
                     </div>
                 </div>
 

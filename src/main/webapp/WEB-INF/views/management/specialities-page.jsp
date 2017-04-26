@@ -48,7 +48,7 @@
                 <div class="specialities-box box-body">
                     <c:choose>
                         <c:when test="${not empty specialities}">
-                            <table class="table table-hover no-margin">
+                            <table class="table no-margin">
                                 <tr>
                                     <th><spring:message code="form.label.name"/></th>
                                     <th><spring:message code="form.label.student.faculty"/></th>

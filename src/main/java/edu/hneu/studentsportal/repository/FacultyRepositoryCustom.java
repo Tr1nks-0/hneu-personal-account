@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public interface FacultyRepositoryCustom {
 
-    Optional<Faculty> findFacultyByIdOrDefault(Long id);
+    Faculty findByIdWithSpecialitiesOrDefault(Long id);
+
+    Faculty findByIdOrDefault(Long id);
 
 }

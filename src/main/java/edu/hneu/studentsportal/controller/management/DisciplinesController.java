@@ -11,20 +11,18 @@ import edu.hneu.studentsportal.repository.EducationProgramRepository;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import static java.util.Objects.isNull;
-import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Log4j
 @Controller
@@ -45,66 +43,67 @@ public class DisciplinesController {
                                  @RequestParam(required = false) Long specialityId,
                                  @RequestParam(required = false) Long educationProgramId,
                                  @RequestParam(required = false, defaultValue = "1") int course,
-                                 @RequestParam(required = false, defaultValue = "1") int semester,
-
-                                 Model model) {
-        List<Faculty> faculties = facultyRepository.findAll();
-        if (faculties.isEmpty())
+                                 @RequestParam(required = false, defaultValue = "1") int semester, Model model) {
+        if (facultyRepository.findAll().isEmpty())
             return "redirect:/management/faculties";
-
-        Faculty faculty = Optional.ofNullable(facultyId).map(facultyRepository::getOne).filter(containsSpecialities()).orElseGet(getFirstFacultyWithSpecialities(faculties));
+        Faculty faculty = facultyRepository.findByIdWithSpecialitiesOrDefault(facultyId);
         if (isNull(faculty))
             return "redirect:/management/specialities";
-
-        List<Speciality> specialities = specialityRepository.findByFaculty(faculty);
-        Speciality speciality = Optional.ofNullable(specialityId).map(specialityRepository::getOne).orElse(specialities.get(0));
-
-        EducationProgram educationProgram = Optional.ofNullable(educationProgramId).map(educationProgramRepository::getOne).orElse(null);
-
+        Speciality speciality = specialityRepository.findByIdOrDefault(specialityId, faculty);
+        EducationProgram educationProgram = educationProgramRepository.findById(educationProgramId);
         Discipline discipline = new Discipline();
         discipline.setEducationProgram(educationProgram);
         discipline.setSpeciality(speciality);
         discipline.setCourse(course);
         discipline.setSemester(semester);
-
-        model.addAttribute("newDiscipline", discipline);
-        model.addAttribute("faculties", faculties);
-        model.addAttribute("selectedFaculty", faculty);
-        model.addAttribute("specialities", specialities);
-        model.addAttribute("educationPrograms", educationProgramRepository.findBySpeciality(speciality));
-        model.addAttribute("disciplines", disciplineRepository.findByCourseAndSemesterAndSpecialityAndEducationProgram(course, semester, speciality, educationProgram));
-        model.addAttribute("controlForms", DisciplineFormControl.values());
-        model.addAttribute("disciplineTypes", DisciplineType.values());
-        return "management/disciplines-page";
+        return prepareDisciplinesPage(model, discipline);
     }
 
-    private Supplier<Faculty> getFirstFacultyWithSpecialities(List<Faculty> faculties) {
-        return () -> faculties.stream().filter(containsSpecialities()).findFirst().orElse(null);
-    }
-
-    private Predicate<Faculty> containsSpecialities() {
-        return faculty -> isFalse(specialityRepository.findByFaculty(faculty).isEmpty());
-    }
-
-    @PostMapping("/create")
-    public String createDiscipline(@ModelAttribute @Valid Discipline discipline) {
-        disciplineRepository.save(discipline);
-
-        String educationProgramParameter = Optional.ofNullable(discipline.getEducationProgram()).map(EducationProgram::getId)
-                .map(id -> "&educationProgramId=" + id).orElse(StringUtils.EMPTY);
-        long facultyId = discipline.getSpeciality().getFaculty().getId();
-        long specialityId = discipline.getSpeciality().getId();
-        return "redirect:/management/disciplines?faculty-id=" + facultyId
-                + "&speciality-id=" + specialityId
-                + educationProgramParameter
-                + "&course=" + discipline.getCourse()
-                + "&semester=" + discipline.getSemester();
+    @PostMapping
+    public String createDiscipline(@ModelAttribute @Valid Discipline discipline, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+        if(bindingResult.hasErrors()) {
+            return prepareDisciplinesPage(model, discipline);
+        } else {
+            disciplineRepository.save(discipline);
+            redirectAttributes.addFlashAttribute("success", "success.add.discipline");
+            redirectAttributes.addAttribute("facultyId", discipline.getSpeciality().getFaculty().getId());
+            redirectAttributes.addAttribute("specialityId", discipline.getSpeciality().getId());
+            redirectAttributes.addAttribute("course", discipline.getCourse());
+            redirectAttributes.addAttribute("semester", discipline.getSemester());
+            Optional.ofNullable(discipline.getEducationProgram()).map(EducationProgram::getId).ifPresent(id ->
+                    redirectAttributes.addAttribute("educationProgramId", id)
+            );
+            return "redirect:/management/disciplines";
+        }
     }
 
     @PostMapping("/{id}/delete")
     @ResponseBody
     public void delete(@PathVariable long id) {
         disciplineRepository.delete(id);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
+        log.warn(e.getMessage(), e);
+        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
+        return "redirect:/management/disciplines";
+    }
+
+    private String prepareDisciplinesPage(Model model, Discipline discipline) {
+        EducationProgram educationProgram = discipline.getEducationProgram();
+        Speciality speciality = discipline.getSpeciality();
+        Faculty faculty = speciality.getFaculty();
+        model.addAttribute("discipline", discipline);
+        model.addAttribute("faculties", facultyRepository.findAll());
+        model.addAttribute("selectedFaculty", faculty);
+        model.addAttribute("specialities", specialityRepository.findAllByFaculty(faculty));
+        model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
+        model.addAttribute("controlForms", DisciplineFormControl.values());
+        model.addAttribute("disciplineTypes", DisciplineType.values());
+        model.addAttribute("disciplines", disciplineRepository.findByCourseAndSemesterAndSpecialityAndEducationProgram(
+                discipline.getCourse(), discipline.getSemester(), speciality, educationProgram));
+        return "management/disciplines-page";
     }
 
 }

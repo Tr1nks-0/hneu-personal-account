@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.entity;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -14,12 +15,12 @@ import javax.validation.constraints.Size;
 public class Group {
 
     @Id
-    @Min(value = 0, message = "invalid.group.code")
-    @Max(value = Integer.MAX_VALUE, message = "invalid.group.code")
+    @Min(value = 0)
+    @Max(value = Integer.MAX_VALUE)
     private long id;
 
     @NotNull
-    @Size(min = 2, max = 100, message = "invalid.group.name")
+    @Length(min = 2, max = 100)
     private String name;
 
     @NotNull
@@ -29,4 +30,5 @@ public class Group {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "education_program_id")
     private EducationProgram educationProgram;
+
 }

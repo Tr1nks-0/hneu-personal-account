@@ -16,14 +16,18 @@
 
                     <c:if test="${not empty error}">
                         <div class="col-md-12">
-                            <div class="alert alert-error alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                                <i class="icon fa fa-error"></i> ${error}
-                            </div>
+                            <div class="alert alert-error alert-dismissible"><spring:message code="${error}"/></div>
                         </div>
                     </c:if>
 
-                    <form:form modelAttribute="newDiscipline" action="/management/disciplines/create" method="post">
+                    <c:if test="${not empty success}">
+                        <div class="col-md-12">
+                            <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
+                        </div>
+                    </c:if>
+
+                    <form:form modelAttribute="discipline" action="/management/disciplines" method="post">
+                        <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
                         <div class="col-md-6 form-group">
                             <label for="faculty" class="control-label"><spring:message code="form.label.student.faculty"/></label>
                             <select id="faculty"  name="faculty" class="form-control">
@@ -49,11 +53,18 @@
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="course" class="control-label"><spring:message code="form.label.student.profile.course"/></label>
-                            <form:input path="course" cssClass="form-control" required="required" type="number"/>
+                            <form:select path="course" cssClass="form-control" type="number">
+                                <c:forEach begin="1" end="6" varStatus="course">
+                                    <form:option value="${course.index}">${course.index}</form:option>
+                                </c:forEach>
+                            </form:select>
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="semester" class="control-label"><spring:message code="form.label.student.profile.semester"/></label>
-                            <form:input path="semester" cssClass="form-control" required="required" type="number"/>
+                            <form:select path="semester" cssClass="form-control" type="number">
+                                <form:option value="1">1</form:option>
+                                <form:option value="2">2</form:option>
+                            </form:select>
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="credits" class="control-label"><spring:message code="form.label.discipline.credits"/></label>
@@ -61,11 +72,11 @@
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="type" class="control-label"><spring:message code="form.label.discipline.type"/></label>
-                            <form:select path="type" items="${disciplineTypes}" cssClass="form-control"/>
+                            <form:select path="type" items="${disciplineTypes}" itemLabel="name" cssClass="form-control"/>
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="controlForm" class="control-label"><spring:message code="form.label.discipline.control.form"/></label>
-                            <form:select path="controlForm" items="${controlForms}" cssClass="form-control"/>
+                            <form:select path="controlForm" items="${controlForms}" itemLabel="name" cssClass="form-control"/>
                         </div>
                         <input type = "submit" value = "<spring:message code="btn.save"/>" class="btn btn-success float-right"/>
                     </form:form>
@@ -79,20 +90,20 @@
                 <div class="disciplines-box box-body">
                     <c:choose>
                         <c:when test="${not empty disciplines}">
-                            <table class="table table-hover no-margin">
+                            <table class="table no-margin">
                                 <tr>
                                     <th><spring:message code="form.label.name"/></th>
                                     <th><spring:message code="form.label.discipline.credits"/></th>
                                     <th><spring:message code="form.label.discipline.control.form"/></th>
-                                    <th><spring:message code="form.label.name"/></th>
+                                    <th><spring:message code="form.label.discipline.type"/></th>
                                     <th></th>
                                 </tr>
                                 <c:forEach items="${disciplines}" var="discipline">
                                     <tr>
                                         <td>${discipline.label}</td>
                                         <td>${discipline.credits}</td>
-                                        <td>${discipline.controlForm}</td>
-                                        <td>${discipline.type}</td>
+                                        <td>${discipline.controlForm.name}</td>
+                                        <td>${discipline.type.name}</td>
                                         <td><button  discipline-id="${discipline.id}" class="remove-discipline btn btn-danger float-right">X</button></td>
                                     </tr>
                                 </c:forEach>
@@ -129,6 +140,31 @@
         var educationProgram = $("#educationProgram option:selected").val();
         window.location.href="/management/disciplines?facultyId=" + faculty + "&specialityId=" + speciality
             + "&educationProgramId=" +educationProgram;
+    });
+
+
+    $("#course").change(function() {
+        var faculty = $("#faculty option:selected").val();
+        var speciality = $("#speciality option:selected").val();
+        var educationProgram = $("#educationProgram option:selected").val();
+        var course = $("#course option:selected").val();
+        var semester = $("#semester option:selected").val();
+        window.location.href="/management/disciplines?facultyId=" + faculty + "&specialityId=" + speciality
+            + "&educationProgramId=" +educationProgram
+            + "&course=" + course
+            + "&semester=" + semester;
+    });
+
+    $("#semester").change(function() {
+        var faculty = $("#faculty option:selected").val();
+        var speciality = $("#speciality option:selected").val();
+        var educationProgram = $("#educationProgram option:selected").val();
+        var course = $("#course option:selected").val();
+        var semester = $("#semester option:selected").val();
+        window.location.href="/management/disciplines?facultyId=" + faculty + "&specialityId=" + speciality
+            + "&educationProgramId=" +educationProgram
+            + "&course=" + course
+            + "&semester=" + semester;
     });
 
     $(".remove-discipline").click(function() {

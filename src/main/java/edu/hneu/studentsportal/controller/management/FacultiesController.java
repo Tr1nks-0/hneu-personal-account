@@ -42,6 +42,13 @@ public class FacultiesController {
         facultyRepository.delete(id);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
+        log.warn(e.getMessage(), e);
+        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
+        return "redirect:/management/faculties";
+    }
+
     private String prepareFacultyPage(Model model, Faculty faculty) {
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("faculty", faculty);

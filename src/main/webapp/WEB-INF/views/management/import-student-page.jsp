@@ -17,10 +17,7 @@
 
                     <c:if test="${not empty error}">
                         <div class="col-md-12">
-                            <div class="alert alert-error alert-dismissible">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-                                <i class="icon fa fa-error"></i> ${error}
-                            </div>
+                            <div class="alert alert-error alert-dismissible"><spring:message code="${error}"/></div>
                         </div>
                     </c:if>
 

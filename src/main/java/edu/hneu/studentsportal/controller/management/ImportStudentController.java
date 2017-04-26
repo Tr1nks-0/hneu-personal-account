@@ -30,7 +30,7 @@ public class ImportStudentController {
 
     @GetMapping
     public String importStudent() {
-        return "management/uploadUserProfilesFromExcel";
+        return "management/import-student-page";
     }
 
     @PostMapping
@@ -48,11 +48,11 @@ public class ImportStudentController {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ModelAndView importStudentException(RuntimeException e) {
+    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
         log.warn(e.getMessage(), e);
-        ModelAndView modelAndView = new ModelAndView("management/uploadUserProfilesFromExcel");
-        modelAndView.addObject("error", e.getMessage());
-        return modelAndView;
+        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
+        return "redirect:/management/import/student";
     }
+
 
 }

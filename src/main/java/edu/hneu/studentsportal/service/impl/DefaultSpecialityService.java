@@ -17,7 +17,7 @@ public class DefaultSpecialityService implements SpecialityService {
 
     @Override
     public List<Speciality> getSpecialitiesForFaculty(Faculty faculty) {
-        return specialityRepository.findByFaculty(faculty);
+        return specialityRepository.findAllByFaculty(faculty);
     }
 
     @Override

@@ -11,7 +11,11 @@ import edu.hneu.studentsportal.entity.Speciality;
 
 @Repository
 public interface EducationProgramRepository extends JpaRepository<EducationProgram, Long> {
+
     Optional<EducationProgram> findByName(String name);
 
-    List<EducationProgram> findBySpeciality(Speciality speciality);
+    List<EducationProgram> findAllBySpeciality(Speciality speciality);
+
+    EducationProgram findById(Long id);
+
 }

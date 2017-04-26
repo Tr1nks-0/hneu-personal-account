@@ -25,7 +25,7 @@
                             <spring:message code="form.label.student.incomeYear"/> <c:out value="${profile.incomeYear}"/>
                         </span>
                             <span class="info-box-text">
-                            <spring:message code="form.label.student.studentGroup"/> <c:out value="${profile.studentGroup.name}"/>
+                            <spring:message code="form.label.student.group"/> <c:out value="${profile.group.name}"/>
                         </span>
                         </div>
                     </div>

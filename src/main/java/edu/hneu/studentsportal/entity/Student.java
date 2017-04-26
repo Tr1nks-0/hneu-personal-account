@@ -4,8 +4,13 @@ import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.ManyToAny;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -21,16 +26,22 @@ public class Student {
 
     @NotNull
     @Column(unique = true)
+    @Length(min = 3, max = 50)
+    @Email
     private String email;
 
     @NotNull
+    @Length(min = 3, max = 40)
     private String name;
 
     @NotNull
+    @Length(min = 3, max = 40)
     private String surname;
 
     @NotNull
     @Column(name = "passport_number")
+    @Min(0)
+    @Max(Integer.MAX_VALUE)
     private String passportNumber;
 
     @NotNull
@@ -67,7 +78,7 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "student_group")
     @Cascade(CascadeType.SAVE_UPDATE)
-    private Group studentGroup;
+    private Group group;
 
     @ElementCollection
     @CollectionTable(name = "student_contact", joinColumns = @JoinColumn(name = "student_email"))
