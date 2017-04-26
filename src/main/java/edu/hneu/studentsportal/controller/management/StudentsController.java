@@ -1,18 +1,10 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.DisciplineMark;
 import edu.hneu.studentsportal.entity.Group;
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
-import edu.hneu.studentsportal.repository.FacultyRepository;
-import edu.hneu.studentsportal.repository.GroupRepository;
-import edu.hneu.studentsportal.repository.StudentRepository;
-import edu.hneu.studentsportal.service.EducationProgramService;
-import edu.hneu.studentsportal.service.GroupService;
-import edu.hneu.studentsportal.service.SpecialityService;
-import edu.hneu.studentsportal.service.StudentService;
+import edu.hneu.studentsportal.repository.*;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Log4j
 @Controller
@@ -31,23 +22,19 @@ import java.util.stream.Collectors;
 public class StudentsController {
 
     @Resource
-    private StudentService studentService;
-    @Resource
     private StudentRepository studentRepository;
     @Resource
     private FacultyRepository facultyRepository;
     @Resource
-    private SpecialityService specialityService;
+    private SpecialityRepository specialityRepository;
     @Resource
-    private EducationProgramService educationProgramService;
-    @Resource
-    private GroupService groupService;
+    private EducationProgramRepository educationProgramRepository;
     @Resource
     private GroupRepository groupRepository;
 
     @GetMapping("/{id}")
     public String getStudent(@PathVariable long id, Model model) {
-        Student student = studentService.getStudent(id);
+        Student student = studentRepository.findOne(id);
         return prepareStudentEditorPage(model, student);
     }
 
@@ -65,7 +52,7 @@ public class StudentsController {
         if(bindingResult.hasErrors()) {
             return prepareStudentEditorPage(model, student);
         } else {
-            studentService.save(student);
+            studentRepository.save(student);
             redirectAttributes.addFlashAttribute("success", "success.save.student");
             return "redirect:/management/students/" + student.getId();
         }
@@ -73,7 +60,7 @@ public class StudentsController {
 
     @GetMapping("/{id}/remove")
     public String removeStudent(@PathVariable long id) {
-        studentService.remove(id);
+        studentRepository.delete(id);
         return "redirect:/management/import/student";
     }
 
@@ -85,9 +72,9 @@ public class StudentsController {
     }
 
     private String prepareStudentEditorPage(Model model, Student student) {
-        model.addAttribute("specialities", specialityService.getSpecialitiesForFaculty(student.getFaculty()));
-        model.addAttribute("educationPrograms", educationProgramService.getEducationProgramsForSpeciality(student.getSpeciality()));
-        model.addAttribute("groups", groupService.getGroups(student.getSpeciality(), student.getEducationProgram()));
+        model.addAttribute("specialities", specialityRepository.findAllByFaculty(student.getFaculty()));
+        model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(student.getSpeciality()));
+        model.addAttribute("groups", groupRepository.findBySpecialityAndEducationProgram(student.getSpeciality(), student.getEducationProgram()));
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("disciplineTypes", DisciplineType.values());
         model.addAttribute("disciplineFormControls", DisciplineFormControl.values());

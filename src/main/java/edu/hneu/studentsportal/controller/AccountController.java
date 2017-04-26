@@ -4,6 +4,7 @@ import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.entity.User;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.pojo.Schedule;
+import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.*;
 import edu.hneu.studentsportal.service.impl.DefaultEmailService;
 import edu.hneu.studentsportal.service.impl.GmailService;
@@ -33,7 +34,7 @@ import static java.util.Objects.isNull;
 public class AccountController {
 
     @Resource
-    private StudentService studentService;
+    private StudentRepository studentRepository;
     @Resource
     private UserService userService;
     @Resource
@@ -58,7 +59,7 @@ public class AccountController {
             final Optional<User> currentUser = Optional.ofNullable(userService.getUserForId(email.get()));
             if (currentUser.isPresent() && currentUser.get().getRole() == UserRole.ADMIN)
                 return new ModelAndView("redirect:management/import/student");
-            final Optional<Student> profile = studentService.findStudentProfileByEmail(email.get());
+            final Optional<Student> profile = studentRepository.findByEmail(email.get());
             if (profile.isPresent()) {
                 final Student studentProfile = profile.get();
                 model.addAttribute("title", "top.menu.home");
@@ -83,7 +84,7 @@ public class AccountController {
             final Map<String, List<Object>> details = (Map<String, List<Object>>) ((OAuth2Authentication) principal).getUserAuthentication().getDetails();
             email = userDetailsService.extractUserEmail(details).orElse(StringUtils.EMPTY);
         }
-        return studentService.findStudentProfileByEmail(email).orElse(null);
+        return studentRepository.findByEmail(email).orElse(null);
     }
 
     @RequestMapping("/schedule")
@@ -95,8 +96,6 @@ public class AccountController {
         model.addAttribute("title", "top.menu.schedule");
         return "student/schedule";
     }
-
-
 
     @RequestMapping("/documents")
     public String documents(final Model model) {

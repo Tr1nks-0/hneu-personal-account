@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.controller;
 
 import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.*;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Controller;
@@ -19,12 +20,12 @@ import javax.servlet.http.HttpServletResponse;
 public class StudentController {
 
     @Resource
-    private StudentService studentService;
+    private StudentRepository studentRepository;
 
     @GetMapping("/{id}/photo")
     @SneakyThrows
     public void getPhoto(@PathVariable long id, HttpServletResponse response) {
-        Student student = studentService.getStudent(id);
+        Student student = studentRepository.findOne(id);
         response.setContentType("image/jpeg, image/jpg, image/png, image/gif");
         ServletOutputStream outputStream = response.getOutputStream();
         outputStream.write(student.getPhoto());
