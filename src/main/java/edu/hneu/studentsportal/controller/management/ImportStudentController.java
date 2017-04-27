@@ -6,6 +6,7 @@ import edu.hneu.studentsportal.service.ImportService;
 import edu.hneu.studentsportal.service.StudentService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.Locale;
+import java.util.Optional;
 
 @Log4j
 @Controller
@@ -27,6 +30,8 @@ public class ImportStudentController {
     private StudentService studentService;
     @Resource
     private FileService fileService;
+    @Resource
+    private MessageSource messageSource;
 
     @GetMapping
     public String importStudent() {
@@ -50,7 +55,8 @@ public class ImportStudentController {
     @ExceptionHandler(RuntimeException.class)
     public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
         log.warn(e.getMessage(), e);
-        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
+        String error = Optional.ofNullable(e.getMessage()).orElse(messageSource.getMessage("error.something.went.wrong", new Object[0], Locale.getDefault()));
+        redirectAttributes.addFlashAttribute("error", error);
         return "redirect:/management/import/student";
     }
 
