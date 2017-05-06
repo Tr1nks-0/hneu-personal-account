@@ -1,18 +1,39 @@
 package edu.hneu.studentsportal.service.impl;
 
-import org.springframework.stereotype.Service;
-
+import com.google.common.collect.ImmutableMap;
+import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.service.EmailService;
+import edu.hneu.studentsportal.service.MessageService;
+import edu.hneu.studentsportal.service.impl.util.MimeMessageBuilder;
+import freemarker.template.Configuration;
+import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
+import javax.annotation.Resource;
+import javax.mail.internet.MimeMessage;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.function.Supplier;
+
+@Log4j
 @Service
 public class DefaultEmailService implements EmailService {
 
-  /*  private static final String UTF_8 = "UTF-8";
-
-    @Autowired
+    @Resource
     private JavaMailSender mailSender;
-    @Autowired
-    private VelocityEngine velocityEngine;
+    @Resource
+    private DefaultEmailService emailService;
+    @Resource
+    private Configuration freeMarkerConfiguration;
+    @Resource
+    private MessageService messageService;
+
+    @Value("${support.mail}")
+    public String supportMail;
 
     @Override
     public void send(final MimeMessage message) {
@@ -20,48 +41,42 @@ public class DefaultEmailService implements EmailService {
     }
 
     @Override
-    public String createHtmlFromVelocityTemplate(final String velocityTemplate, final Map model) {
-        return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, velocityTemplate, UTF_8, model);
+    public void sendProfileWasCreatedEmail(Student studentProfile) {
+        sendEmail(() -> {
+            Map<String, Object> modelForTemplate = ImmutableMap.of("name", studentProfile.getName());
+            String emailBody = emailService.buildHtmlForTemplate("profileWasCreatedEmailTemplate.ftl", modelForTemplate);
+            return new MimeMessageBuilder(supportMail, studentProfile.getEmail())
+                    .subject(messageService.getUserWasCreatedEmailSubject())
+                    .text(emailBody, true)
+                    .build(mailSender.createMimeMessage());
+        });
     }
 
-    public class MimeMessageBuilder {
+    @Override
+    public void sendProfileWasChangedEmail(Student studentProfile) {
+        sendEmail(() -> {
+            Map<String, Object> modelForTemplate = ImmutableMap.of("message", messageService.getUserWasChangedEmailBody());
+            String emailBody = emailService.buildHtmlForTemplate("profileWasChangedEmailTemplate.ftl", modelForTemplate);
+            return new MimeMessageBuilder(supportMail, studentProfile.getEmail())
+                    .subject(messageService.getUserWasChangedEmailSubject())
+                    .text(emailBody, true)
+                    .build(mailSender.createMimeMessage());
+        });
+    }
 
-        private final String from;
-        private final String to;
-        private String subject;
-        private String text;
-        private boolean isHtml;
-
-        public MimeMessageBuilder(final String from, final String to) {
-            this.from = from;
-            this.to = to;
-        }
-
-        public MimeMessageBuilder setSubject(final String subject) {
-            this.subject = subject;
-            return this;
-        }
-
-        public MimeMessageBuilder setText(final String text, final boolean isHtml) {
-            this.text = text;
-            this.isHtml = isHtml;
-            return this;
-        }
-
-        public MimeMessage build() {
+    private void sendEmail(Supplier<MimeMessage> mimeMessageSupplier) {
+        Executors.newCachedThreadPool().execute(() -> {
             try {
-                final MimeMessage mimeMessage = mailSender.createMimeMessage();
-                final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, UTF_8);
-                message.setFrom(new InternetAddress(from));
-                message.setTo(new InternetAddress(to));
-                message.setSubject(subject);
-                message.setText(text, isHtml);
-                message.setSentDate(new Date());
-                return mimeMessage;
-            } catch (final MessagingException e) {
-                throw new RuntimeException("Cannot create mime-message: ", e);
+                mailSender.send(mimeMessageSupplier.get());
+            } catch (Exception e) {
+                log.warn(e.getMessage(), e);
             }
-        }
-    }*/
+        });
+    }
+
+    @SneakyThrows
+    private String buildHtmlForTemplate(String template, Map model) {
+        return FreeMarkerTemplateUtils.processTemplateIntoString(freeMarkerConfiguration.getTemplate(template), model);
+    }
 
 }

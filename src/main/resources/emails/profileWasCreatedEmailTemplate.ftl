@@ -216,10 +216,10 @@
                                                                     <tr>
                                                                         <td valign="top" class="textContent">
                                                                             <h3 mc:edit="header" style="color:white;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:20px;font-weight:normal;margin-top:0;margin-bottom:3px;text-align:left;">
-                                                                                Увага
+                                                                                С повагою,
                                                                             </h3>
                                                                             <div mc:edit="body" style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:whitesmoke;line-height:135%;">
-                                                                                Не передавайте пароль нікому для уникнення конфліктних ситуацій.
+                                                                                Адміністрація сайту
                                                                             </div>
                                                                         </td>
                                                                     </tr>

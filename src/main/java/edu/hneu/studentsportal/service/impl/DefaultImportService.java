@@ -8,7 +8,6 @@ import edu.hneu.studentsportal.parser.factory.ParserFactory;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.ImportService;
-import edu.hneu.studentsportal.service.StudentService;
 import edu.hneu.studentsportal.service.UserService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,13 +16,10 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static java.lang.String.format;
 
@@ -31,28 +27,20 @@ import static java.lang.String.format;
 @Service
 public class DefaultImportService implements ImportService {
 
-    private static final String ID_REGEX = "id=\".+\"";
-    private static final String NAME_REGEX = "<displayName>.+</displayName>";
-    private static final String FACULTIES_URL = "http://services.ksue.edu.ua:8081/schedule/xmlmetadata?q=faculties&auth=test";
-    private static final String SPECIALITIES_URL = "http://services.ksue.edu.ua:8081/schedule/xmlmetadata?q=specialities&facultyid=%s&auth=test";
-    private static final String GROUPS_URL = "http://services.ksue.edu.ua:8081/schedule/xmlmetadata?q=groups&facultyid=%s&specialityid=%s&course=%s&auth=test";
-
     @Resource
     private ParserFactory parserFactory;
     @Resource
     private UserService userService;
     @Resource
     private StudentRepository studentRepository;
-    @Resource
-    private GroupRepository groupRepository;
+
     @Value("${emails.integration.service.url}")
     public String emailsIntegrationServiceUrl;
 
     @Override
     public Student importStudent(File file) {
         Student student = parserFactory.newStudentProfileExcelParser().parse(file);
-        //student.setEmail(retrieveStudentEmailFromThirdPartyService(student));
-        student.setEmail(student.getSurname() + "@hneu.net");
+        student.setEmail(retrieveStudentEmailFromThirdPartyService(student));
         userService.create(student.getEmail(), UserRole.STUDENT);
         studentRepository.save(student);
         log.info(format("New %s has been created.", student));

@@ -1,9 +1,9 @@
 package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ImportService;
-import edu.hneu.studentsportal.service.StudentService;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Controller;
@@ -25,9 +25,9 @@ public class ImportStudentMarksController {
     @Resource
     private ImportService importService;
     @Resource
-    private StudentService studentService;
-    @Resource
     private FileService fileService;
+    @Resource
+    private EmailService emailService;
 
     @GetMapping
     public String importStudent() {
@@ -40,7 +40,7 @@ public class ImportStudentMarksController {
         File file = fileService.getFile(multipartFile);
         try {
             Set<Student> students = importService.importStudentMarks(file);
-            students.forEach(studentService::sendEmailAfterProfileCreation);
+            students.forEach(emailService::sendProfileWasChangedEmail);
             redirectAttributes.addFlashAttribute("success", students);
         } finally {
             Files.deleteIfExists(file.toPath());
