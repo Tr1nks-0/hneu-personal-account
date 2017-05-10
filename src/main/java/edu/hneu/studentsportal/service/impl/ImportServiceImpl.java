@@ -5,7 +5,6 @@ import edu.hneu.studentsportal.entity.DisciplineMark;
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.factory.ParserFactory;
-import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.ImportService;
 import edu.hneu.studentsportal.service.UserService;
@@ -25,7 +24,7 @@ import static java.lang.String.format;
 
 @Log4j
 @Service
-public class DefaultImportService implements ImportService {
+public class ImportServiceImpl implements ImportService {
 
     @Resource
     private ParserFactory parserFactory;
@@ -40,7 +39,8 @@ public class DefaultImportService implements ImportService {
     @Override
     public Student importStudent(File file) {
         Student student = parserFactory.newStudentProfileExcelParser().parse(file);
-        student.setEmail(retrieveStudentEmailFromThirdPartyService(student));
+        //student.setEmail(retrieveStudentEmailFromThirdPartyService(student));
+        student.setEmail("oleksandr.rozdolskyi@hneu.net");
         userService.create(student.getEmail(), UserRole.STUDENT);
         studentRepository.save(student);
         log.info(format("New %s has been created.", student));

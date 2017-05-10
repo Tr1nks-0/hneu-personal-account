@@ -8,6 +8,9 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Scope
+import org.springframework.context.annotation.ScopedProxyMode
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.oauth2.client.OAuth2ClientContext
 import org.springframework.security.oauth2.client.OAuth2RestTemplate
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter
@@ -23,6 +26,7 @@ import javax.servlet.Filter
 @Configuration
 @EnableOAuth2Client
 @EnableAuthorizationServer
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true, proxyTargetClass = true)
 class SocialConfig {
 
     @Resource
@@ -53,7 +57,7 @@ class SocialConfig {
 
     private Filter oAuth2ClientAuthenticationProcessingFilter() {
         def clientAuthenticationProcessingFilter = new OAuth2ClientAuthenticationProcessingFilter('/connect/google')
-        clientAuthenticationProcessingFilter.setRestTemplate(oAuth2RestTemplate())
+        clientAuthenticationProcessingFilter.setRestTemplate(new OAuth2RestTemplate(google().client, oauth2ClientContext))
         clientAuthenticationProcessingFilter.setTokenServices(userInfoTokenServices())
         clientAuthenticationProcessingFilter
     }
@@ -62,11 +66,12 @@ class SocialConfig {
     UserInfoTokenServices userInfoTokenServices() {
         def tokenServices = new UserInfoTokenServices(google().resource.userInfoUri, google().client.clientId);
         tokenServices.setAuthoritiesExtractor(authoritiesExtractor)
-        tokenServices.setRestTemplate(oAuth2RestTemplate())
+        tokenServices.setRestTemplate(new OAuth2RestTemplate(google().client, oauth2ClientContext))
         tokenServices
     }
 
     @Bean
+    @Scope(value="session", proxyMode=ScopedProxyMode.INTERFACES)
     OAuth2RestTemplate oAuth2RestTemplate() {
         new OAuth2RestTemplate(google().client, oauth2ClientContext)
     }

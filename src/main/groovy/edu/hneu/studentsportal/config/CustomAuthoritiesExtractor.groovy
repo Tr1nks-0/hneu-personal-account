@@ -20,7 +20,7 @@ class CustomAuthoritiesExtractor implements AuthoritiesExtractor {
 
     @Override
     List<GrantedAuthority> extractAuthorities(Map<String, Object> userDetails) {
-        userDetailsService.extractUserEmail(userDetails)
+        Optional.ofNullable(userDetailsService.extractUserEmail(userDetails))
                 .map { email -> userService.getUserForId(email) }
                 .map { user -> userDetailsService.getGrantedAuthorities(user)}
                 .orElse(Lists.newArrayList(new SimpleGrantedAuthority("ROLE_STUDENT")))

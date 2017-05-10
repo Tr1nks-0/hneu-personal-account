@@ -1,5 +1,6 @@
 package edu.hneu.studentsportal.service.impl;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
@@ -21,7 +23,7 @@ import edu.hneu.studentsportal.repository.UserRepository;
 import edu.hneu.studentsportal.service.CustomUserDetailsService;
 
 @Service
-public class DefaultUserDetailsService implements CustomUserDetailsService {
+public class UserDetailsServiceImpl implements CustomUserDetailsService {
 
     @Resource
     private UserRepository userRepository;
@@ -53,12 +55,18 @@ public class DefaultUserDetailsService implements CustomUserDetailsService {
     }
 
     @Override
-    public Optional<String> extractUserEmail(Map<String, List<Object>> userDetails) {
+    public String extractUserEmail(Map<String, List<Object>> userDetails) {
         return Optional.ofNullable(userDetails.get("emails"))
                 .map(List::stream)
                 .flatMap(Stream::findFirst)
                 .filter(Map.class::isInstance).map(Map.class::cast)
                 .map(email -> email.get("value"))
-                .filter(String.class::isInstance).map(String.class::cast);
+                .filter(String.class::isInstance).map(String.class::cast)
+                .orElse(null);
+    }
+
+    @Override
+    public String extractUserEmail(Principal principal) {
+        return extractUserEmail((Map<String, List<Object>>) ((OAuth2Authentication) principal).getUserAuthentication().getDetails());
     }
 }

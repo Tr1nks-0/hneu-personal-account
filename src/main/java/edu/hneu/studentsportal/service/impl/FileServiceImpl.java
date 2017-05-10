@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
-public class DefaultFileService implements FileService {
+public class FileServiceImpl implements FileService {
 
     @Override
     @SneakyThrows

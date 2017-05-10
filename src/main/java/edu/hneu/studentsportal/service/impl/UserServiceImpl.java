@@ -10,7 +10,7 @@ import edu.hneu.studentsportal.repository.UserRepository;
 import edu.hneu.studentsportal.service.UserService;
 
 @Service
-public class DefaultUserService implements UserService {
+public class UserServiceImpl implements UserService {
 
     @Resource
     private UserRepository userRepository;

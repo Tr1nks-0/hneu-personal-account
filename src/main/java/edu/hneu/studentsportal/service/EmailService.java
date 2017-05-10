@@ -12,5 +12,7 @@ public interface EmailService {
     void sendProfileWasCreatedEmail(Student studentProfile);
 
     void sendProfileWasChangedEmail(Student studentProfile);
+
+    void sendContactUsEmail(Student student, String message);
 }
 

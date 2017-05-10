@@ -1,5 +1,6 @@
 package edu.hneu.studentsportal.config
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -28,14 +29,14 @@ class WebConfig extends WebMvcConfigurerAdapter {
         new DispatcherServlet()
     }
 
-    @Override
-    void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable()
-    }
-
     @Bean
     RequestContextListener requestContextListener() {
         new RequestContextListener()
+    }
+
+    @Override
+    void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable()
     }
 
 }

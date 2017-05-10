@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.service.impl;
 
 import com.google.api.client.util.Maps;
+import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.pojo.Schedule;
 import edu.hneu.studentsportal.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,7 @@ import static java.time.temporal.ChronoUnit.WEEKS;
 import static java.util.Objects.isNull;
 
 @Service
-public class DefaultScheduleService implements ScheduleService {
+public class ScheduleServiceImpl implements ScheduleService {
 
 
     @Value("${schedule.url}")
@@ -41,6 +42,11 @@ public class DefaultScheduleService implements ScheduleService {
         IntStream.range(0, 7).forEach(i -> pairs.put(i, Maps.newHashMap()));
         schedule.getScheduleElements().getScheduleElement().forEach(groupByDayAndPairNumber(pairs));
         return pairs;
+    }
+
+    @Override
+    public int getCurrentCourse(Student studentProfile) {
+        return LocalDate.now().getYear() - studentProfile.getIncomeYear() + 1;
     }
 
     private Consumer<ScheduleElement> groupByDayAndPairNumber(Map<Integer, Map<Integer, ScheduleElement>> pairs) {
