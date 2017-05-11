@@ -16,5 +16,4 @@ public interface CustomUserDetailsService extends UserDetailsService {
     String extractUserEmail(Map<String, List<Object>> userDetails);
 
     String extractUserEmail(Principal principal);
-
 }

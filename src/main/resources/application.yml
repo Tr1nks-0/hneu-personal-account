@@ -4,7 +4,7 @@ db:
   driver: com.mysql.jdbc.Driver
   username: root
   password: root
-  url: jdbc:mysql://localhost:3306/stud_portal?useUnicode=yes&characterEncoding=UTF-8
+  url: jdbc:mysql://localhost:3306/stud_portal?useUnicode=yes&characterEncoding=UTF-8&useSSL=false
 hibernate:
   dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   show_sql: false
@@ -21,7 +21,8 @@ uploaded:
 support:
   mail: lkhneu@hneu.net
 decan:
-  mail: dekanstei@gmail.com
+ # mail: dekanstei@gmail.com
+  mail: oleksandr.rozdolskyi2012@gmail.com
 schedule:
   url: http://services.ksue.edu.ua:8081/schedule/xml?auth=com.alcsan.atimetable_19092013_552ca3ffa5&group=%s&week=%s
 emails:

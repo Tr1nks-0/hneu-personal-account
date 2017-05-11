@@ -2,7 +2,9 @@ package edu.hneu.studentsportal.service.impl;
 
 import com.google.common.collect.ImmutableMap;
 import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.service.CustomUserDetailsService;
 import edu.hneu.studentsportal.service.EmailService;
+import edu.hneu.studentsportal.service.GmailService;
 import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.service.impl.util.MimeMessageBuilder;
 import freemarker.template.Configuration;
@@ -33,17 +35,13 @@ public class EmailServiceImpl implements EmailService {
     private MessageService messageService;
     @Resource
     private GmailService gmailService;
+    @Resource
+    private CustomUserDetailsService userDetailsService;
 
     @Value("${decan.mail}")
     public String decanMail;
     @Value("${support.mail}")
     public String supportMail;
-
-
-    @Override
-    public void send(final MimeMessage message) {
-        mailSender.send(message);
-    }
 
     @Override
     public void sendProfileWasCreatedEmail(Student student) {
@@ -68,12 +66,12 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendContactUsEmail(Student student, String text) {
-        MimeMessage message = new MimeMessageBuilder(student.getEmail(), decanMail)
+    public void sendContactUsEmail(String from, String token, String text) {
+        MimeMessage message = new MimeMessageBuilder(from, decanMail)
                 .subject(messageService.getContactUsEmailSubject())
                 .text(text, false)
                 .build(mailSender.createMimeMessage());
-        scheduleEmailSendingTask(message, m -> gmailService.sendEmail(student.getEmail(), gmailService.convertToGmailMessage(m)));
+        scheduleEmailSendingTask(message, m -> gmailService.sendEmail(from, token, gmailService.convertToGmailMessage(m)));
     }
 
     @SneakyThrows
@@ -86,7 +84,7 @@ public class EmailServiceImpl implements EmailService {
             try {
                 emailSender.accept(message);
             } catch (Exception e) {
-                log.warn(e.getMessage(), e);
+                log.warn("Failed during sending email: " + e.getMessage(), e);
             }
         });
     }

@@ -10,7 +10,12 @@ import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.UserService;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2RestOperations;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
@@ -39,6 +46,8 @@ public class AccountController {
     private ScheduleService scheduleService;
     @Resource
     private EmailService emailService;
+    @Autowired
+    private OAuth2RestOperations oAuth2RestTemplate;
 
     @RequestMapping
     public ModelAndView account(HttpSession session, Model model, Principal principal) {
@@ -91,9 +100,10 @@ public class AccountController {
     }
 
     @RequestMapping("/sendEmail")
-    public String contactUs(@RequestParam String message, HttpSession session, Principal principal) {
-        String userEmail = getProfile(session, principal).getEmail();
-        emailService.sendContactUsEmail(studentRepository.findByEmail(userEmail), message);
+    public String contactUs(@RequestParam String message, Principal principal) {
+        String email = userDetailsService.extractUserEmail(principal);
+        String accessToken = oAuth2RestTemplate.getAccessToken().getValue();
+        emailService.sendContactUsEmail(email, accessToken, message);
         return "redirect:contactUs?success=true";
     }
 

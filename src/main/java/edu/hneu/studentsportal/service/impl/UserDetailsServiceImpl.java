@@ -1,28 +1,26 @@
 package edu.hneu.studentsportal.service.impl;
 
+import com.google.common.collect.Lists;
+import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.enums.UserRole;
+import edu.hneu.studentsportal.repository.UserRepository;
+import edu.hneu.studentsportal.service.CustomUserDetailsService;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import javax.annotation.Resource;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.stereotype.Service;
-
-import com.google.common.collect.Lists;
-
-import edu.hneu.studentsportal.entity.User;
-import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.repository.UserRepository;
-import edu.hneu.studentsportal.service.CustomUserDetailsService;
-
-@Service
+@Service("userDetailsService ")
 public class UserDetailsServiceImpl implements CustomUserDetailsService {
 
     @Resource
@@ -67,6 +65,9 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
 
     @Override
     public String extractUserEmail(Principal principal) {
-        return extractUserEmail((Map<String, List<Object>>) ((OAuth2Authentication) principal).getUserAuthentication().getDetails());
+        OAuth2Authentication authentication = (OAuth2Authentication) principal;
+        Map<String, List<Object>> userAuthenticationDetails = (Map<String, List<Object>>) authentication.getUserAuthentication().getDetails();
+        return extractUserEmail(userAuthenticationDetails);
     }
+
 }
