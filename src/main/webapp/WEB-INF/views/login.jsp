@@ -22,16 +22,17 @@
         </div>
         <div class="container">
             <div class="row">
-                <div class="hidden-xs col-sm-8 col-sm-offset-2 text text-center">
+                <div class="col-md-12 text text-center">
                     <h1>
                         <strong><spring:message code="form.label.hneu"/></strong>
-                        <span class="hidden-sm hidden-xs">|</span>
+                        <span class="hidden-xs hidden-sm hidden-md">|</span>
+                        <br class="hidden-lg">
                         <spring:message code="form.label.student.profile"/>
                     </h1>
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-10 col-xs-offset-1 col-sm-4 col-sm-offset-4 form-box">
+                <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 form-box">
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title"><spring:message code="form.login.label.login"/></h3><br>
