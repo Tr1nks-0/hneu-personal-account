@@ -7,10 +7,6 @@ import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.Message;
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.oauth2.client.OAuth2RestOperations;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
