@@ -9,13 +9,9 @@ import edu.hneu.studentsportal.service.CustomUserDetailsService;
 import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.UserService;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,11 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Controller
 @RequestMapping("/account")
@@ -52,22 +47,19 @@ public class AccountController {
     @RequestMapping
     public ModelAndView account(HttpSession session, Model model, Principal principal) {
         String email = userDetailsService.extractUserEmail(principal);
-        if (email != null) {
-            Optional<User> currentUser = Optional.ofNullable(userService.getUserForId(email));
-            if (currentUser.isPresent() && currentUser.get().getRole() == UserRole.ADMIN)
-                return new ModelAndView("redirect:management/import/student");
-            Student profile = studentRepository.findByEmail(email);
-            if (profile != null) {
-                Student studentProfile = profile;
-                model.addAttribute("title", "top.menu.home");
-                model.addAttribute("currentCourse", scheduleService.getCurrentCourse(studentProfile));
-                session.setAttribute("groupId", studentProfile.getGroup().getId());
-                session.setAttribute("email", studentProfile.getEmail());
-                return new ModelAndView("student/account", "profile", studentProfile);
-            }
+        if (isNull(email)) {
+            SecurityContextHolder.clearContext();
+            return new ModelAndView("redirect:login?error");
         }
-        SecurityContextHolder.clearContext();
-        return new ModelAndView("redirect:login?error");
+        User currentUser = userService.getUserForId(email);
+        if (nonNull(currentUser) && currentUser.getRole() == UserRole.ADMIN)
+            return new ModelAndView("redirect:management/import/student");
+        Student studentProfile = studentRepository.findByEmail(email);
+        model.addAttribute("title", "top.menu.home");
+        model.addAttribute("currentCourse", scheduleService.getCurrentCourse(studentProfile));
+        session.setAttribute("groupId", studentProfile.getGroup().getId());
+        session.setAttribute("email", studentProfile.getEmail());
+        return new ModelAndView("student/account", "profile", studentProfile);
     }
 
     @ModelAttribute(value = "profile")
