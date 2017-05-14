@@ -58,7 +58,7 @@
                                     <tr>
                                         <td>${speciality.name}</td>
                                         <td>${speciality.faculty.name}</td>
-                                        <td><button  speciality-id="${speciality.id}" class="remove-speciality btn btn-danger float-right">X</button></td>
+                                        <td><button speciality-id="${speciality.id}" class="remove-speciality btn btn-danger float-right">X</button></td>
                                     </tr>
                                 </c:forEach>
                             </table>

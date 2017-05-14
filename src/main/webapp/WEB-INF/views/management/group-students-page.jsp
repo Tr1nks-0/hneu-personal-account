@@ -22,18 +22,6 @@
                     <c:choose>
                         <c:when test="${not empty students}">
                             <table class="table table-hover no-margin">
-                                <c:if test="${not empty group.educationProgram}">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th class="text-center">Магалего #1</th>
-                                            <th class="text-center">Магалего #2</th>
-                                            <th class="text-center">Магалего #3</th>
-                                            <th class="text-center">Магалего #4</th>
-                                        </tr>
-                                    </thead>
-                                </c:if>
                                 <c:forEach items="${students}" var="student">
                                     <tr onclick="document.location = '/management/students/${student.id}';">
                                         <td>
@@ -42,66 +30,6 @@
                                             </div>
                                         </td>
                                         <td class="text-center">${student.name} ${student.surname}</td>
-
-                                        <c:set var="isSemesterMagMaynersEmpty" value="${true}"/>
-                                        <c:set var="magMaynor1" value=""/>
-                                        <c:set var="magMaynor2" value=""/>
-                                        <c:set var="magMaynor3" value=""/>
-                                        <c:set var="magMaynor4" value=""/>
-
-                                        <c:forEach items="${student.disciplineMarks}" var="mark">
-                                            <c:set var="discipline" value="${mark.discipline}"/>
-                                            <c:if test="${discipline.type eq 'MAGMAYNOR' and discipline.course eq 1}">
-                                                <c:if test="${discipline.semester eq 1}">
-                                                    <c:choose>
-                                                        <c:when test="${isSemesterMagMaynersEmpty}">
-                                                            <c:set var="magMaynor1" value="${discipline.label}"/>
-                                                            <c:set var="isSemesterMagMaynersEmpty" value="${false}"/>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <c:set var="magMaynor2" value="${discipline.label}"/>
-                                                            <c:set var="isSemesterMagMaynersEmpty" value="${true}"/>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:if>
-                                                <c:if test="${discipline.semester eq 2}">
-                                                    <c:choose>
-                                                        <c:when test="${isSemesterMagMaynersEmpty}">
-                                                            <c:set var="magMaynor3" value="${discipline.label}"/>
-                                                            <c:set var="isSemesterMagMaynersEmpty" value="${false}"/>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <c:set var="magMaynor4" value="${discipline.label}"/>
-                                                            <c:set var="isSemesterMagMaynersEmpty" value="${true}"/>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:if>
-                                            </c:if>
-                                        </c:forEach>
-                                        <td class="text-center">
-                                            <c:choose>
-                                                <c:when test="${not empty magMaynor1}">${magMaynor1}</c:when>
-                                                <c:otherwise><i class="fa fa-remove text-red"></i></c:otherwise>
-                                            </c:choose>
-                                        </td>
-                                        <td class="text-center">
-                                            <c:choose>
-                                                <c:when test="${not empty magMaynor2}">${magMaynor2}</c:when>
-                                                <c:otherwise><i class="fa fa-remove text-red"></i></c:otherwise>
-                                            </c:choose>
-                                        </td>
-                                        <td class="text-center">
-                                            <c:choose>
-                                                <c:when test="${not empty magMaynor3}">${magMaynor3}</c:when>
-                                                <c:otherwise><i class="fa fa-remove text-red"></i></c:otherwise>
-                                            </c:choose>
-                                        </td>
-                                        <td class="text-center">
-                                            <c:choose>
-                                                <c:when test="${not empty magMaynor4}">${magMaynor4}</c:when>
-                                                <c:otherwise><i class="fa fa-remove text-red"></i></c:otherwise>
-                                            </c:choose>
-                                        </td>
                                     </tr>
                                 </c:forEach>
                             </table>

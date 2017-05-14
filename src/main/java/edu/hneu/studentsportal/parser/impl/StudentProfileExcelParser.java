@@ -3,20 +3,20 @@ package edu.hneu.studentsportal.parser.impl;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import edu.hneu.studentsportal.entity.*;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.parser.AbstractExcelParser;
 import edu.hneu.studentsportal.parser.Indexer;
 import edu.hneu.studentsportal.repository.*;
+import edu.hneu.studentsportal.utils.DisciplineMarkComparator;
 import lombok.extern.log4j.Log4j;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -105,8 +105,8 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
                 messageSource.getMessage("invalid.student.profile.group", new String[] {groupName}, Locale.getDefault())));
     }
 
-    private List<DisciplineMark> extractDisciplinesInternal(Speciality speciality, EducationProgram educationProgram, Indexer indexer) {
-        List<DisciplineMark> allDisciplines = Lists.newArrayList();
+    private Set<DisciplineMark> extractDisciplinesInternal(Speciality speciality, EducationProgram educationProgram, Indexer indexer) {
+        Set<DisciplineMark> allDisciplines = new TreeSet<>(new DisciplineMarkComparator());
         int course = 1;
         while (isNotFileEnd(indexer.next())) {
             if (isCourseLabel(indexer)) {

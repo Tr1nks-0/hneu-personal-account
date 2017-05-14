@@ -55,4 +55,9 @@ public class Discipline {
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     private DisciplineType type;
+
+    @Override
+    public String toString() {
+        return type.getName() + " - " + label;
+    }
 }

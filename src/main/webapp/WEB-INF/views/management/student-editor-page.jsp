@@ -4,6 +4,15 @@
 
 <%@ include file="../jspf/management-header.jspf" %>
 
+<style>
+    .form-control-button {
+        text-align: center;
+        font-size: 20px;
+        height: 31px;
+        margin-top: 6px;
+    }
+</style>
+
 <div class="content-wrapper">
     <div class="content">
         <div class="box box-primary">
@@ -145,6 +154,7 @@
                                             <form:hidden path="disciplineMarks[${i.index}].discipline.type"/>
                                         </tr>
                                     </c:forEach>
+
                                 </table>
                             </div>
                         </div>

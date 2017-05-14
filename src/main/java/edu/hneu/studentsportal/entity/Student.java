@@ -1,10 +1,11 @@
 package edu.hneu.studentsportal.entity;
 
+import edu.hneu.studentsportal.utils.DisciplineMarkComparator;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.ManyToAny;
+import org.hibernate.annotations.SortComparator;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
@@ -13,6 +14,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @Data
 @Entity
@@ -87,8 +91,9 @@ public class Student {
     private List<String> contactInfo;
 
     @OneToMany(fetch = FetchType.LAZY)
+    @SortComparator(DisciplineMarkComparator.class)
     @JoinTable(joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "discipline_mark_id"))
     @Cascade(CascadeType.ALL)
-    private List<DisciplineMark> disciplineMarks;
+    private Set<DisciplineMark> disciplineMarks = new TreeSet<>();
 
 }
