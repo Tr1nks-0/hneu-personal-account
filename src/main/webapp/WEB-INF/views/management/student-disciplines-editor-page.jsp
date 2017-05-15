@@ -2,14 +2,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file="../jspf/management-header.jspf" %>
 
-<style>
-    .selectpicker-left-from-control {
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-        -webkit-appearance: none;
-    }
-</style>
-
 <div class="content-wrapper">
     <div class="content">
         <form:form modelAttribute="disciplineMark" action="/management/students/${student.id}/disciplines" method="post" data-student="${student.id}">
@@ -125,30 +117,3 @@
 
 <%@ include file="../jspf/management-footer.jspf" %>
 
-<script>
-
-    $("#disciplineMark #course").change(redirectWithPickedCourseAndSemester);
-
-    $("#disciplineMark #semester").change(redirectWithPickedCourseAndSemester);
-
-    $(".delete-student-discipline").click(function() {
-        var student = getStudentId();
-        var disciplineMark = $(this).data("discipline");
-        var container = $(this).closest("tr")
-        $.post( "/management/students/" + student + "/disciplines/" + disciplineMark + "/delete", function() {
-            redirectWithPickedCourseAndSemester()
-        });
-    });
-
-    function redirectWithPickedCourseAndSemester() {
-        var student = getStudentId();
-        var course = $("#disciplineMark #course option:selected").val();
-        var semester = $("#disciplineMark #semester option:selected").val();
-        window.location.href="/management/students/" + student + "/disciplines?course=" + course + "&semester=" + semester;
-    }
-
-    function getStudentId() {
-        return $("#disciplineMark").data("student");
-    }
-
-</script>

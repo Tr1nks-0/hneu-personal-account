@@ -12,4 +12,4 @@
 <script src="/resources/js/jquery/jquery.slimscroll.min.js"></script>
 <script src="/resources/js/template/app.min.js"></script>
 <script src="/resources/js/template/demo.js"></script>
-<script src="/resources/js/custom/scripts.js"></script>
+<script src="/resources/js/custom.min.js"></script>
