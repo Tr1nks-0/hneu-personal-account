@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Log4j
@@ -48,18 +49,31 @@ public class StudentDisciplinesController {
             Student student = studentRepository.findOne(studentId);
             return prepareStudentEditorPage(model, student, disciplineMark, discipline.getCourse(), discipline.getSemester());
         } else {
+            if (isNull(disciplineMark.getId()))
+                redirectAttributes.addFlashAttribute("success", "success.add.discipline");
+            else
+                redirectAttributes.addFlashAttribute("success", "success.update.discipline");
             disciplineMarkRepository.save(disciplineMark);
-            redirectAttributes.addFlashAttribute("success", "success.add.discipline");
             redirectAttributes.addAttribute("course", discipline.getCourse());
             redirectAttributes.addAttribute("semester", discipline.getSemester());
             return "redirect:/management/students/" + studentId + "/disciplines";
         }
     }
 
-    @PostMapping("/{id}/delete")
+    @PostMapping("/{discipline-id}/delete")
     @ResponseBody
-    public void delete(@PathVariable long id) {
-        disciplineMarkRepository.delete(id);
+    public void delete(@PathVariable("discipline-id") long disciplineId) {
+        disciplineMarkRepository.delete(disciplineId);
+    }
+
+    @GetMapping("/{discipline-id}")
+    public String getStudentDiscipline(@PathVariable("id") long studentId, @PathVariable("discipline-id") long disciplineId, Model model) {
+        Student student = studentRepository.findOne(studentId);
+        DisciplineMark disciplineMark = disciplineMarkRepository.findOne(disciplineId);
+        if(isNull(disciplineMark))
+            return "redirect:/management/students/" + studentId + "/disciplines";
+        Discipline discipline = disciplineMark.getDiscipline();
+        return prepareStudentEditorPage(model, student, disciplineMark, discipline.getCourse(), discipline.getSemester());
     }
 
     private String prepareStudentEditorPage(Model model, Student student, DisciplineMark mark, int defaultCourse, int defaultSemester) {

@@ -64,10 +64,15 @@
                             </c:forEach>
                         </form:select>
                         <div class="input-group-btn">
-                            <input type = "submit" value = "<spring:message code="btn.save"/>"
-                                   <c:if test="${empty disciplines}">disabled="true"</c:if> class="btn btn-success float-right"/>
+                            <input type = "submit" class="btn btn-success float-right"
+                                   <c:if test="${empty disciplineMark.discipline}">value="<spring:message code="btn.add"/>"</c:if>
+                                   <c:if test="${not empty disciplineMark.discipline}">value="<spring:message code="btn.save"/>"</c:if>
+                                   <c:if test="${empty disciplines}">disabled="true"</c:if>/>
                         </div>
                     </div>
+                    <form:hidden path="id"/>
+                    <form:hidden path="discipline"/>
+                    <form:hidden path="mark"/>
                     <form:hidden path="student"/>
                 </div>
             </div>
@@ -92,7 +97,7 @@
                             </thead>
                             <tbody>
                                 <c:forEach items="${marks}" var="mark">
-                                    <tr>
+                                    <tr <c:if test="${mark.discipline.type ne 'REGULAR'}">onclick="document.location = '/management/students/${student.id}/disciplines/${mark.id}';"</c:if>>
                                         <td>${mark.discipline.label}</td>
                                         <td class="center hidden-xs">${mark.discipline.credits}</td>
                                         <td class="center hidden-xs">${mark.discipline.controlForm.name}</td>
@@ -131,12 +136,7 @@
         var disciplineMark = $(this).data("discipline");
         var container = $(this).closest("tr")
         $.post( "/management/students/" + student + "/disciplines/" + disciplineMark + "/delete", function() {
-            container.fadeOut(300, function(){
-                $(this).remove();
-                if(!$(".delete-student-discipline").length) {
-                    $("#student-disciplines").html("<spring:message code='items.not.found'/>");
-                }
-            });
+            redirectWithPickedCourseAndSemester()
         });
     });
 
