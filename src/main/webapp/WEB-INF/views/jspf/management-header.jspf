@@ -25,7 +25,7 @@
     <header class="main-header">
         <a href="/account" class="logo">
             <span class="logo-mini"><small><img src="/resources/img/logo-sm.svg"/></small></span>
-            <span class="logo-lg"><img src="/resources/img/logo-line.svg"/></span>
+            <span class="logo-lg"><b>Кабінет</b>Студента</span>
         </a>
 
         <nav class="navbar navbar-static-top">

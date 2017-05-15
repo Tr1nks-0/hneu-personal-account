@@ -7,7 +7,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <%@ include file="jspf/cssTag.jspf" %>
-    <link rel="stylesheet" href="/resources/css/custom/login.css">
+    <link rel="stylesheet" href="/resources/css/custom/custom.min.css">
 </head>
 <body>
 <div class="top-content mask">

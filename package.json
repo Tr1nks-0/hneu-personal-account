@@ -1,0 +1,25 @@
+{
+  "name": "hneu-students",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orozdolskyi/hneu-personal-account.git"
+  },
+  "homepage": "https://github.com/orozdolskyi/hneu-personal-account#readme",
+  "scripts": {
+    "build": "gulp build"
+  },
+  "dependencies": {
+    "gulp": "*",
+    "gulp-less": "*",
+    "gulp-minify-css": "*"
+  },
+  "private": true,
+  "devDependencies": {
+    "gulp": "*",
+    "gulp-concat": "*",
+    "gulp-less": "*",
+    "gulp-minify-css": "*"
+  }
+}
