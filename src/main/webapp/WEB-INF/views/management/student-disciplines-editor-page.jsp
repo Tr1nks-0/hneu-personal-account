@@ -7,6 +7,7 @@
         <form:form modelAttribute="disciplineMark" action="/management/students/${student.id}/disciplines" method="post" data-student="${student.id}">
 
             <ol class="breadcrumb panel panel-default">
+                <li><i class="fa fa-home"></i></li>
                 <li><a href="/management/students?groupId=${student.group.id}">${student.group.name}</a></li>
                 <li><a href="/management/students/${student.id}">${student.name} ${student.surname}</a></li>
                 <li class="active"><spring:message code="form.label.management.disciplines"/></li>
