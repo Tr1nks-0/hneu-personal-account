@@ -1,16 +1,16 @@
-$("#disciplineMark #course").change(redirectWithPickedCourseAndSemester);
+$("#disciplineMark #course").change(redirectToStudentDisciplines);
 
-$("#disciplineMark #semester").change(redirectWithPickedCourseAndSemester);
+$("#disciplineMark #semester").change(redirectToStudentDisciplines);
 
 $(".delete-student-discipline").click(function() {
     var student = getStudentId();
     var disciplineMark = $(this).data("discipline");
     $.post( "/management/students/" + student + "/disciplines/" + disciplineMark + "/delete", function() {
-        redirectWithPickedCourseAndSemester()
+        redirectToStudentDisciplines()
     });
 });
 
-function redirectWithPickedCourseAndSemester() {
+function redirectToStudentDisciplines() {
     var student = getStudentId();
     var course = $("#disciplineMark #course option:selected").val();
     var semester = $("#disciplineMark #semester option:selected").val();

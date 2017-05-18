@@ -35,16 +35,13 @@
                 </div>
 
                 <div class="panel-body">
+
                     <c:if test="${not empty error}">
-                        <div class="col-md-12">
-                            <div class="alert alert-error alert-dismissible"><spring:message code="${error}"/></div>
-                        </div>
+                        <div class="alert alert-error alert-dismissible">${error}</div>
                     </c:if>
 
                     <c:if test="${not empty success}">
-                        <div class="col-md-12">
-                            <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
-                        </div>
+                        <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
                     </c:if>
 
                     <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
@@ -90,8 +87,13 @@
                             </thead>
                             <tbody>
                                 <c:forEach items="${marks}" var="mark">
-                                    <tr <c:if test="${mark.discipline.type ne 'REGULAR'}">onclick="document.location = '/management/students/${student.id}/disciplines/${mark.id}';"</c:if>>
-                                        <td>${mark.discipline.label}</td>
+                                    <tr>
+                                        <td>
+                                            <c:if test="${mark.discipline.type ne 'REGULAR'}">
+                                                <a href="/management/students/${student.id}/disciplines/${mark.id}">${mark.discipline.label}</a>
+                                            </c:if>
+                                            ${mark.discipline.label}
+                                        </td>
                                         <td class="center hidden-xs">${mark.discipline.credits}</td>
                                         <td class="center hidden-xs">${mark.discipline.controlForm.name}</td>
                                         <td class="center hidden-xs">${mark.discipline.type.name}</td>

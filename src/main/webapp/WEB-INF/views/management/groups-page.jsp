@@ -3,31 +3,22 @@
 <%@ include file="../jspf/management-header.jspf" %>
 
 <div class="content-wrapper">
-    <section class="content-header">
-        <h1>
-            <spring:message code="form.label.management.groups"/>
-        </h1>
-        <div class="content">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <spring:message code="form.label.management.groups.add"/>
-                </div>
-                <div class="box-body">
+    <div class="content">
 
-                    <c:if test="${not empty error}">
-                        <div class="col-md-12">
-                            <div class="alert alert-error alert-dismissible"><spring:message code="${error}"/></div>
+        <ol class="breadcrumb panel panel-default">
+            <li><i class="fa fa-home"></i></li>
+            <li class="active"><spring:message code="form.label.management.groups"/></li>
+        </ol>
+
+        <form:form modelAttribute="group" action="/management/groups" method="post">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 panel-title">
+                            <spring:message code="form.label.management.groups.add"/>
                         </div>
-                    </c:if>
-
-                    <c:if test="${not empty success}">
-                        <div class="col-md-12">
-                            <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
-                        </div>
-                    </c:if>
-
-                    <form:form modelAttribute="group" action="/management/groups" method="post">
-                        <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
+                    </div>
+                    <div class="row">
                         <div class="col-md-6 form-group">
                             <label for="faculty" class="control-label"><spring:message code="form.label.student.faculty"/></label>
                             <select id="faculty"  name="faculty" class="form-control">
@@ -47,85 +38,77 @@
                                 <form:options items="${educationPrograms}" itemLabel="name" itemValue="id"/>
                             </form:select>
                         </div>
-                        <div class="col-md-6 form-group">
-                            <label for="name" class="control-label"><spring:message code="form.label.name"/></label>
-                            <form:input path="name" cssClass="form-control" required="required"/>
-                        </div>
-                        <div class="col-md-6 form-group">
-                            <label for="id" class="control-label"><spring:message code="form.label.code"/></label>
-                            <form:input path="id" cssClass="form-control" type="number" required="required"/>
-                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+
+                    <c:if test="${not empty error}">
+                        <div class="alert alert-error alert-dismissible">${error}</div>
+                    </c:if>
+
+                    <c:if test="${not empty success}">
+                        <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
+                    </c:if>
+
+                    <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
+
+                    <div class="col-md-6 form-group">
+                        <label for="name" class="control-label"><spring:message code="form.label.name"/></label>
+                        <form:input path="name" cssClass="form-control" required="required"/>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label for="id" class="control-label"><spring:message code="form.label.code"/></label>
+                        <form:input path="id" cssClass="form-control" type="number" required="required"/>
+                    </div>
+                    <div class="col-md-12">
                         <input type = "submit" value = "<spring:message code="btn.save"/>" class="btn btn-success float-right"/>
-                    </form:form>
+                    </div>
                 </div>
             </div>
+        </form:form>
 
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <spring:message code="form.label.management.groups"/>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-12">
+                        <spring:message code="form.label.management.groups"/>
+                    </div>
                 </div>
-                <div class="groups-box box-body">
-                    <c:choose>
-                        <c:when test="${not empty groups}">
-                            <table class="table table-hover no-margin">
+            </div>
+            <div class="panel-body disciplines-management-panel">
+                <c:choose>
+                    <c:when test="${not empty groups}">
+                        <table class="table no-margin">
+                            <thead>
                                 <tr>
                                     <th><spring:message code="form.label.code"/></th>
                                     <th><spring:message code="form.label.name"/></th>
                                     <th></th>
                                 </tr>
+                            </thead>
+                            <tbody>
                                 <c:forEach items="${groups}" var="group">
-                                    <tr onclick="document.location = '/management/students?groupId=${group.id}';">
-                                        <td>${group.id}</td>
+                                    <tr>
+                                        <td><a href="/management/students?groupId=${group.id}">${group.id}</a></td>
                                         <td>${group.name}</td>
-                                        <td><button  group-id="${group.id}" class="remove-groups btn btn-danger float-right">X</button></td>
+                                        <td>
+                                            <button  group-id="${group.id}" class="delete-groups btn btn-danger btn-xs pull-right">
+                                                <i class="fa fa-remove"></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                 </c:forEach>
-                            </table>
-                        </c:when>
-                        <c:otherwise>
-                            <spring:message code="items.not.found"/>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+                            </tbody>
+                        </table>
+                    </c:when>
+                    <c:otherwise>
+                        <spring:message code="items.not.found"/>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
-    </section>
+    </div>
 </div>
 
 <%@ include file="../jspf/management-footer.jspf" %>
-
-<script>
-
-    $("#faculty").change(function() {
-        var faculty = $("#faculty option:selected").val();
-        window.location.href="/management/groups?facultyId=" + faculty;
-    });
-
-    $("#speciality").change(function() {
-        var faculty = $("#faculty option:selected").val();
-        var speciality = $("#speciality option:selected").val();
-        window.location.href="/management/groups?facultyId=" + faculty + "&specialityId=" + speciality;
-    });
-
-    $("#educationProgram").change(function() {
-        var faculty = $("#faculty option:selected").val();
-        var speciality = $("#speciality option:selected").val();
-        var educationProgram = $("#educationProgram option:selected").val();
-        window.location.href="/management/groups?facultyId=" + faculty + "&specialityId=" + speciality
-            + "&educationProgramId=" +educationProgram;
-    });
-
-    $(".remove-groups").click(function() {
-        var group = $(this).attr("group-id");
-        var container = $(this).closest("tr")
-        $.post( "/management/groups/" + group + "/delete", function() {
-            container.fadeOut(300, function(){
-                $(this).remove();
-                if(!$(".remove-groups").length) {
-                    $(".groups-box").html("<spring:message code='items.not.found'/>");
-                }
-            });
-        });
-    });
-
-</script>

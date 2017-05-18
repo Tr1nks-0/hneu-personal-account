@@ -20,9 +20,11 @@
             </div>
             <div class="panel-body">
                 <c:if test="${not empty error}">
-                    <div class="col-md-12">
-                        <div class="alert alert-error alert-dismissible">${error}</div>
-                    </div>
+                    <div class="alert alert-error alert-dismissible">${error}</div>
+                </c:if>
+
+                <c:if test="${not empty success}">
+                    <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
                 </c:if>
 
                 <form method="post" action="/management/import/student-marks" enctype="multipart/form-data">
