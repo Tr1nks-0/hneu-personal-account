@@ -3,46 +3,46 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ include file="../jspf/management-header.jspf" %>
 
-
 <div class="content-wrapper">
-    <section class="content-header">
-        <h1>
-            Студенти
-        </h1>
-        <div class="content">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <form method="get" action="/management/students">
-                        <div class="input-group">
-                           ${group.name}
-                        </div>
-                    </form>
-                </div>
-                <div class="box-body table-responsive">
-                    <c:choose>
-                        <c:when test="${not empty students}">
-                            <table class="table table-hover no-margin">
-                                <c:forEach items="${students}" var="student">
-                                    <tr onclick="document.location = '/management/students/${student.id}';">
-                                        <td>
-                                            <div class="image">
-                                                <img src="/students/${student.id}/photo" class="img-thumbnail student-photo" alt="User Image">
-                                            </div>
-                                        </td>
-                                        <td class="text-center">${student.name} ${student.surname}</td>
-                                    </tr>
-                                </c:forEach>
-                            </table>
-                        </c:when>
-                        <c:otherwise>
-                            <spring:message code="items.not.found"/>
-                        </c:otherwise>
-                    </c:choose>
+    <div class="content">
+
+        <ol class="breadcrumb panel panel-default">
+            <li><i class="fa fa-home"></i></li>
+            <li><a href="/management/groups/${group.id}">${group.name}</a></li>
+            <li class="active"><spring:message code="form.label.management.students"/></li>
+        </ol>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-12 panel-title">
+                        <spring:message code="form.label.management.students"/> ${group.name}
                     </div>
                 </div>
             </div>
+            <c:choose>
+                <c:when test="${not empty students}">
+                    <ul class="list-group">
+                        <c:forEach items="${students}" var="student">
+                            <li class="list-group-item" onclick="document.location = '/management/students/${student.id}';">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <img src="/students/${student.id}/photo" class="img-thumbnail student-photo">
+                                        ${student.surname} ${student.name}
+                                    </div>
+                                </div>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </c:when>
+                <c:otherwise>
+                    <div class="panel-body">
+                        <spring:message code="items.not.found"/>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
-    </section>
+    </div>
 </div>
 
 <%@ include file="../jspf/management-footer.jspf" %>
