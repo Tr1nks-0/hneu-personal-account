@@ -20,15 +20,15 @@
                     </div>
                 </div>
             </div>
+
             <c:choose>
                 <c:when test="${not empty students}">
                     <ul class="list-group">
                         <c:forEach items="${students}" var="student">
-                            <li class="list-group-item" onclick="document.location = '/management/students/${student.id}';">
+                            <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <img src="/students/${student.id}/photo" class="img-thumbnail student-photo">
-                                        ${student.surname} ${student.name}
+                                        <a href="/management/students/${student.id}">${student.surname} ${student.name}</a>
                                     </div>
                                 </div>
                             </li>

@@ -13,18 +13,35 @@
     }
 </style>
 
+
 <div class="content-wrapper">
     <div class="content">
-        <div class="box box-primary">
-            <form:form modelAttribute="student" action="/management/students/${student.id}" method="post">
-                <div class="box-header with-border">
-                    <div class="pull-left"><h4>${student.email}</h4></div>
-                    <div class="pull-right">
-                        <a class="btn btn-danger" href="/management/students/${student.id}/remove"><spring:message code="btn.remove"/></a>
-                        <input type = "submit" value = "<spring:message code="btn.save"/>" class="btn btn-success"/>
+
+        <ol class="breadcrumb panel panel-default">
+            <li><i class="fa fa-home"></i></li>
+            <li><a href="/management/students?groupId=${student.group.id}">${student.group.name}</a></li>
+            <li class="active">${student.surname} ${student.name}</li>
+        </ol>
+
+        <form:form modelAttribute="student" action="/management/students/${student.id}" method="post">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 panel-title">
+                                ${student.surname} ${student.name}
+                            <div class="pull-right">
+                                <button class="btn btn-xs btn-danger" href="/management/students/${student.id}/delete">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                                <button class="btn btn-xs btn-success" href="/management/students/${student.id}/delete">
+                                    <i class="fa fa-save"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="box-body">
+                <div class="panel-body">
 
                     <c:if test="${not empty error}">
                         <div class="col-md-12">
@@ -40,85 +57,63 @@
 
                     <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
 
-                    <table class="table table-responsive">
-                        <tr>
-                            <td class="col-md-2">
-                                <label for="name" class="control-label"><spring:message code="form.label.student.name"/></label>
-                            </td>
-                            <td class="col-md-5">
-                                <form:input path="name" cssClass="form-control"/>
-                            </td>
-                            <td class="col-md-5 center" rowspan="4" colspan="2">
-                                <img src="/students/${student.id}/photo" class="img-thumbnail" style="width: 150px">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-2">
-                                <label for="surname" class="control-label"><spring:message code="form.label.student.surname"/></label>
-                            </td>
-                            <td class="col-md-5">
-                                <form:input path="surname" cssClass="form-control"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-2">
-                                <label for="passportNumber" class="control-label"><spring:message code="form.label.student.passportNumber"/></label>
-                            </td>
-                            <td class="col-md-5">
-                                <form:input path="passportNumber" cssClass="form-control" type="number"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-2">
-                                <label for="contactInfo" class="control-label"><spring:message code="form.label.student.contacts"/></label>
-                            </td>
-                            <td class="col-md-5">
-                                <form:input path="contactInfo" cssClass="form-control"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-2">
-                                <label for="faculty" class="control-label"><spring:message code="form.label.student.faculty"/></label>
-                            </td>
-                            <td class="col-md-5">
-                                <form:select path="faculty" items="${faculties}" cssClass="form-control" itemLabel="name" itemValue="id" disabled="true"/>
-                            </td>
-                            <td class="col-md-2">
-                                <label for="incomeYear" class="control-label"><spring:message code="form.label.student.incomeYear"/></label>
-                            </td>
-                            <td class="col-md-3">
-                                <form:input path="incomeYear" cssClass="form-control" type="number" disabled="true"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-2">
-                                <label for="speciality" class="control-label"><spring:message code="form.label.student.speciality"/></label>
-                            </td>
-                            <td class="col-md-5">
-                                <form:select path="speciality" items="${specialities}" cssClass="form-control" itemLabel="name" itemValue="id" disabled="true"/>
-                            </td>
-                            <td class="col-md-2">
-                                <label for="group" class="control-label"><spring:message code="form.label.student.group"/></label>
-                            </td>
-                            <td class="col-md-3">
-                                <form:select path="group" items="${groups}" cssClass="form-control" itemLabel="name" itemValue="id" disabled="true"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="col-md-2">
-                                <label for="educationProgram" class="control-label"><spring:message code="form.label.student.educationProgram"/></label>
-                            </td>
-                            <td class="col-md-5" colspan=3>
-                                <form:select path="educationProgram" cssClass="form-control" disabled="true">
-                                    <form:option value=""/>
-                                    <form:options items="${educationPrograms}" itemLabel="name" itemValue="id"/>
-                                </form:select>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="row">
+                        <div class="col-md-2 col-sm-3 col-xs-12 text-center">
+                            <img src="/students/${student.id}/photo" class="img-thumbnail" style="max-height: 126px">
+                        </div>
+                        <div class="col-md-10 col-sm-9 col-xs-12">
+                            <table class="table no-margin">
+                                <tr>
+                                    <td><label class="control-label"><spring:message code="form.label.student.email"/></label></td>
+                                    <td>${student.email}</td>
+                                </tr>
+                                <tr>
+                                    <td><label class="control-label"><spring:message code="form.label.student.name"/></label></td>
+                                    <td>${student.name}</td>
+                                </tr>
+                                <tr>
+                                    <td><label class="control-label"><spring:message code="form.label.student.surname"/></label></td>
+                                    <td>${student.surname}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
 
-                    <div class="col-md-12">
-                        <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-no-margin">
+                                <tr>
+                                    <td class="col-md-3"><label class="control-label"><spring:message code="form.label.student.passportNumber"/></label></td>
+                                    <td>${student.passportNumber}</td>
+                                </tr>
+                                <tr>
+                                    <td><label class="control-label"><spring:message code="form.label.student.faculty"/></label></td>
+                                    <td>${student.faculty.name}</td>
+                                </tr>
+                                <tr>
+                                    <td><label class="control-label"><spring:message code="form.label.student.speciality"/></label></td>
+                                    <td>${student.speciality.name}</td>
+                                </tr>
+                                <tr>
+                                    <td><label class="control-label"><spring:message code="form.label.student.group"/></label></td>
+                                    <td>${student.group.name}</td>
+                                </tr>
+                                <c:if test="${not empty student.educationProgram}">
+                                    <tr>
+                                        <td><label class="control-label"><spring:message code="form.label.student.educationProgram"/></label></td>
+                                        <td>${student.educationProgram.name}</td>
+                                    </tr>
+                                </c:if>
+                                <tr>
+                                    <td><label for="contactInfo" class="control-label"><spring:message code="form.label.student.contacts"/></label></td>
+                                    <td><form:input path="contactInfo" cssClass="form-control"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
                             <div class="table-responsive">
                                 <table class="table no-margin">
                                     <c:set var="course" value="0"/>
@@ -154,24 +149,25 @@
                                             <form:hidden path="disciplineMarks[${i.index}].discipline.type"/>
                                         </tr>
                                     </c:forEach>
-
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <form:hidden path="incomeYear"/>
-                    <form:hidden path="faculty"/>
-                    <form:hidden path="speciality"/>
-                    <form:hidden path="educationProgram"/>
-                    <form:hidden path="average"/>
-                    <form:hidden path="rate"/>
-                    <form:hidden path="photo"/>
-                    <form:hidden path="email"/>
-                    <form:hidden path="group"/>
                 </div>
-            </form:form>
-        </div>
+            </div>
+
+            <form:hidden path="id"/>
+            <form:hidden path="email"/>
+            <form:hidden path="name"/>
+            <form:hidden path="surname"/>
+            <form:hidden path="passportNumber"/>
+            <form:hidden path="incomeYear"/>
+            <form:hidden path="faculty"/>
+            <form:hidden path="speciality"/>
+            <form:hidden path="educationProgram"/>
+            <form:hidden path="photo"/>
+            <form:hidden path="group"/>
+        </form:form>
     </div>
 </div>
-
 <%@ include file="../jspf/management-footer.jspf" %>

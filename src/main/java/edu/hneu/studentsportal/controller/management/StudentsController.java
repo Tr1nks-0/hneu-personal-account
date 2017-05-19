@@ -58,8 +58,8 @@ public class StudentsController {
         }
     }
 
-    @GetMapping("/{id}/remove")
-    public String removeStudent(@PathVariable long id) {
+    @GetMapping("/{id}/delete")
+    public String deleteStudent(@PathVariable long id) {
         studentRepository.delete(id);
         return "redirect:/management/import/student";
     }

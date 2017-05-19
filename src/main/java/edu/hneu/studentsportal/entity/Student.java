@@ -52,12 +52,6 @@ public class Student {
     @Column(name = "income_year")
     private Integer incomeYear;
 
-    private Integer rate;
-    private Double average;
-
-    @Column(name = "modification_time")
-    private Long modificationTime;
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @Cascade(CascadeType.SAVE_UPDATE)

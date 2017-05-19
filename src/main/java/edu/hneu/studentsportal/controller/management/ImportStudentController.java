@@ -44,7 +44,7 @@ public class ImportStudentController {
         File file = fileService.getFile(multipartFile);
         try {
             Student student = importService.importStudent(file);
-            emailService.sendProfileWasCreatedEmail(student);
+            //emailService.sendProfileWasCreatedEmail(student);
             redirectAttributes.addFlashAttribute("student", student);
             return "redirect:/management/students/" + student.getId();
         } finally {
