@@ -15,5 +15,7 @@ public interface StudentDisciplineMarksService {
 
     List<Discipline> getPossibleNewDisciplinesForStudent(Student student, int course, int semester);
 
+    List<Integer> getStudentCourses(Student student);
+
     <E> List<E> extract(Collection<DisciplineMark> marks, Function<DisciplineMark, E> converter);
 }

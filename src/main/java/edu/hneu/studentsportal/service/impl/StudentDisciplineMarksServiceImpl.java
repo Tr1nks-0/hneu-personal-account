@@ -45,6 +45,11 @@ public class StudentDisciplineMarksServiceImpl implements StudentDisciplineMarks
     }
 
     @Override
+    public List<Integer> getStudentCourses(Student student) {
+        return extract(student.getDisciplineMarks(), m -> m.getDiscipline().getCourse()).stream().distinct().collect(toList());
+    }
+
+    @Override
     public <E> List<E> extract(Collection<DisciplineMark> marks, Function<DisciplineMark, E> extractor) {
         return marks.stream().map(extractor).collect(toList());
     }

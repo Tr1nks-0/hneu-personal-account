@@ -95,12 +95,8 @@ public class StudentDisciplinesController {
         model.addAttribute("student", student);
         model.addAttribute("selectedCourse", course);
         model.addAttribute("selectedSemester", semester);
-        model.addAttribute("courses", getStudentCourses(student));
+        model.addAttribute("courses", studentDisciplineMarksService.getStudentCourses(student));
         return "management/student-disciplines-editor-page";
-    }
-
-    private List<Integer> getStudentCourses(Student student) {
-        return studentDisciplineMarksService.extract(student.getDisciplineMarks(), m -> m.getDiscipline().getCourse()).stream().distinct().collect(toList());
     }
 
 }

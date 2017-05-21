@@ -5,6 +5,7 @@ import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.repository.*;
+import edu.hneu.studentsportal.service.StudentDisciplineMarksService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +32,8 @@ public class StudentsController {
     private EducationProgramRepository educationProgramRepository;
     @Resource
     private GroupRepository groupRepository;
+    @Resource
+    private StudentDisciplineMarksService studentDisciplineMarksService;
 
     @GetMapping("/{id}")
     public String getStudent(@PathVariable long id, Model model) {
@@ -79,6 +82,7 @@ public class StudentsController {
         model.addAttribute("disciplineTypes", DisciplineType.values());
         model.addAttribute("disciplineFormControls", DisciplineFormControl.values());
         model.addAttribute("student", student);
+        model.addAttribute("courses", studentDisciplineMarksService.getStudentCourses(student));
         return "management/student-editor-page";
     }
 }

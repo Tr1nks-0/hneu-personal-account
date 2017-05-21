@@ -105,8 +105,8 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
                 messageSource.getMessage("invalid.student.profile.group", new String[] {groupName}, Locale.getDefault())));
     }
 
-    private Set<DisciplineMark> extractDisciplinesInternal(Speciality speciality, EducationProgram educationProgram, Indexer indexer) {
-        Set<DisciplineMark> allDisciplines = new TreeSet<>(new DisciplineMarkComparator());
+    private List<DisciplineMark> extractDisciplinesInternal(Speciality speciality, EducationProgram educationProgram, Indexer indexer) {
+        List<DisciplineMark> allDisciplines = Lists.newArrayList();
         int course = 1;
         while (isNotFileEnd(indexer.next())) {
             if (isCourseLabel(indexer)) {

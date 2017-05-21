@@ -116,38 +116,43 @@
                         <div class="col-md-12">
                             <div class="table-responsive">
                                 <table class="table no-margin">
-                                    <c:set var="course" value="0"/>
-                                    <c:set var="semester" value="0"/>
-                                    <c:forEach items="${student.disciplineMarks}" var="disciplineMarks" varStatus="i">
-                                        <c:if test="${disciplineMarks.discipline.course ne course}">
-                                            <c:set var="course" value="${disciplineMarks.discipline.course}"/>
-                                            <tr>
-                                                <td colspan="5"><span class="label label-primary">Курс №${course}</span></td>
-                                            </tr>
-                                        </c:if>
-                                        <c:if test="${disciplineMarks.discipline.semester ne semester}">
-                                            <c:set var="semester" value="${disciplineMarks.discipline.semester}"/>
-                                            <tr>
-                                                <td colspan="5"><span class="label label-default">СЕМЕСТР №${semester}</span></td>
-                                            </tr>
-                                        </c:if>
+
+                                    <c:forEach items="${courses}" var="course">
                                         <tr>
-                                            <td class="col-md-6"><form:input path="disciplineMarks[${i.index}].discipline.label" cssClass="form-control" disabled="true"/></td>
-                                            <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].discipline.credits" cssClass="form-control" type="number" disabled="true"/></td>
-                                            <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.controlForm" items="${disciplineFormControls}" itemLabel="name" cssClass="form-control" disabled="true"/>
-                                            <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.type" items="${disciplineTypes}" itemLabel="name" cssClass="form-control" disabled="true"/>
-                                            <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].mark" cssClass="form-control" type="number"/></td>
-                                            <form:hidden path="disciplineMarks[${i.index}].id"/>
-                                            <form:hidden path="disciplineMarks[${i.index}].discipline.id"/>
-                                            <form:hidden path="disciplineMarks[${i.index}].discipline.speciality"/>
-                                            <form:hidden path="disciplineMarks[${i.index}].discipline.educationProgram"/>
-                                            <form:hidden path="disciplineMarks[${i.index}].discipline.course"/>
-                                            <form:hidden path="disciplineMarks[${i.index}].discipline.semester"/>
-                                            <form:hidden path="disciplineMarks[${i.index}].discipline.credits"/>
-                                            <form:hidden path="disciplineMarks[${i.index}].discipline.controlForm"/>
-                                            <form:hidden path="disciplineMarks[${i.index}].discipline.label"/>
-                                            <form:hidden path="disciplineMarks[${i.index}].discipline.type"/>
+                                            <td colspan="5"><span class="label label-primary">Курс №${course}</span></td>
                                         </tr>
+
+                                        <c:forEach begin="1" end="2" var="semester">
+                                            <c:set var="showSemesterLabel" value="true"/>
+                                            <c:forEach items="${student.disciplineMarks}" var="disciplineMarks" varStatus="i">
+                                                <c:if test="${disciplineMarks.discipline.course == course and disciplineMarks.discipline.semester == semester}">
+                                                    <c:if test="${showSemesterLabel}">
+                                                        <tr>
+                                                            <td colspan="5"><span class="label label-default">СЕМЕСТР №${semester}</span></td>
+                                                        </tr>
+                                                        <c:set var="showSemesterLabel" value="false"/>
+                                                    </c:if>
+                                                    <tr>
+                                                        <td class="col-md-6"><form:input path="disciplineMarks[${i.index}].discipline.label" cssClass="form-control" disabled="true"/></td>
+                                                        <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].discipline.credits" cssClass="form-control" type="number" disabled="true"/></td>
+                                                        <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.controlForm" items="${disciplineFormControls}" itemLabel="name" cssClass="form-control" disabled="true"/>
+                                                        <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.type" items="${disciplineTypes}" itemLabel="name" cssClass="form-control" disabled="true"/>
+                                                        <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].mark" cssClass="form-control" type="number"/></td>
+                                                        <form:hidden path="disciplineMarks[${i.index}].id"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].student"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.id"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.speciality"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.educationProgram"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.course"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.semester"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.credits"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.controlForm"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.label"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.type"/>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:forEach>
                                     </c:forEach>
                                 </table>
                             </div>

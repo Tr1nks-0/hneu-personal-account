@@ -85,9 +85,8 @@ public class Student {
     private List<String> contactInfo;
 
     @OneToMany(fetch = FetchType.LAZY)
-    @SortComparator(DisciplineMarkComparator.class)
     @JoinTable(joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "discipline_mark_id"))
     @Cascade(CascadeType.ALL)
-    private Set<DisciplineMark> disciplineMarks = new TreeSet<>();
+    private List<DisciplineMark> disciplineMarks;
 
 }

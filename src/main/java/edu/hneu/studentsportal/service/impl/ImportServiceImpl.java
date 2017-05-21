@@ -57,14 +57,14 @@ public class ImportServiceImpl implements ImportService {
         return importedStudentsMarks.keySet();
     }
 
-    private Consumer<DisciplineMark> merge(Set<DisciplineMark> existingMarks) {
+    private Consumer<DisciplineMark> merge(List<DisciplineMark> existingMarks) {
         return importedMark -> {
             DisciplineMark studentDiscipline = alignWithExisting(importedMark, existingMarks);
             studentDiscipline.setMark(importedMark.getMark());
         };
     }
 
-    private DisciplineMark alignWithExisting(DisciplineMark importedMark, Set<DisciplineMark> existingMarks) {
+    private DisciplineMark alignWithExisting(DisciplineMark importedMark, List<DisciplineMark> existingMarks) {
         return existingMarks.stream()
                 .filter(sm -> sm.getDiscipline().equals(importedMark.getDiscipline()))
                 .findFirst().orElse(importedMark);
