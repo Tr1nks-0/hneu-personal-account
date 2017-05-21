@@ -3,20 +3,20 @@ package edu.hneu.studentsportal.parser.impl;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import edu.hneu.studentsportal.entity.*;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.parser.AbstractExcelParser;
 import edu.hneu.studentsportal.parser.Indexer;
 import edu.hneu.studentsportal.repository.*;
-import edu.hneu.studentsportal.utils.DisciplineMarkComparator;
 import lombok.extern.log4j.Log4j;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -102,7 +102,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
     private Group extractGroup(Indexer indexer) {
         String groupName = getString2CellValue(indexer.next());
         return groupRepository.findByName(groupName).orElseThrow(() -> new IllegalArgumentException(
-                messageSource.getMessage("invalid.student.profile.group", new String[] {groupName}, Locale.getDefault())));
+                messageSource.getMessage("invalid.student.profile.group", new String[]{groupName}, Locale.getDefault())));
     }
 
     private List<DisciplineMark> extractDisciplinesInternal(Speciality speciality, EducationProgram educationProgram, Indexer indexer) {
@@ -142,10 +142,10 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     private Function<Discipline, Discipline> findDisciplineByExample() {
         return discipline -> disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgramAndCreditsAndControlForm(
-                    discipline.getLabel(), discipline.getCourse(), discipline.getSemester(),
-                    discipline.getSpeciality(), discipline.getEducationProgram(),
-                    discipline.getCredits(), discipline.getControlForm()
-                ).orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.discipline", new Object[]{discipline.getLabel()}, Locale.getDefault())));
+                discipline.getLabel(), discipline.getCourse(), discipline.getSemester(),
+                discipline.getSpeciality(), discipline.getEducationProgram(),
+                discipline.getCredits(), discipline.getControlForm()
+        ).orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.discipline", new Object[]{discipline.getLabel()}, Locale.getDefault())));
     }
 
     private boolean isNotFileEnd(int row) {

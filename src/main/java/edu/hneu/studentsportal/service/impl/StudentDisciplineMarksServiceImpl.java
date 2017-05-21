@@ -16,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 
@@ -29,7 +30,9 @@ public class StudentDisciplineMarksServiceImpl implements StudentDisciplineMarks
     public List<DisciplineMark> getStudentMarks(Student student, int course, int semester) {
         Predicate<DisciplineMark> hasGivenCourse = m -> m.getDiscipline().getCourse() == course;
         Predicate<DisciplineMark> hasGivenSemester = m -> m.getDiscipline().getSemester() == semester;
-        return student.getDisciplineMarks().stream().filter(hasGivenCourse.and(hasGivenSemester)).collect(toList());
+        return student.getDisciplineMarks().stream()
+                .filter(m -> nonNull(m.getDiscipline()))
+                .filter(hasGivenCourse.and(hasGivenSemester)).collect(toList());
     }
 
     @Override
@@ -51,6 +54,6 @@ public class StudentDisciplineMarksServiceImpl implements StudentDisciplineMarks
 
     @Override
     public <E> List<E> extract(Collection<DisciplineMark> marks, Function<DisciplineMark, E> extractor) {
-        return marks.stream().map(extractor).collect(toList());
+        return marks.stream().filter(m -> nonNull(m.getDiscipline())).map(extractor).collect(toList());
     }
 }

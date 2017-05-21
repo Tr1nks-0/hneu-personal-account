@@ -9,7 +9,7 @@
             <ol class="breadcrumb panel panel-default">
                 <li><i class="fa fa-home"></i></li>
                 <li><a href="/management/students?groupId=${student.group.id}">${student.group.name}</a></li>
-                <li><a href="/management/students/${student.id}">${student.name} ${student.surname}</a></li>
+                <li><a href="/management/students/${student.id}">${student.surname} ${student.name}</a></li>
                 <li class="active"><spring:message code="form.label.management.disciplines"/></li>
             </ol>
 
@@ -63,7 +63,6 @@
                     <form:hidden path="id"/>
                     <form:hidden path="discipline"/>
                     <form:hidden path="mark"/>
-                    <form:hidden path="student"/>
                 </div>
             </div>
         </form:form>
@@ -92,7 +91,9 @@
                                             <c:if test="${mark.discipline.type ne 'REGULAR'}">
                                                 <a href="/management/students/${student.id}/disciplines/${mark.id}">${mark.discipline.label}</a>
                                             </c:if>
-                                            ${mark.discipline.label}
+                                            <c:if test="${mark.discipline.type eq 'REGULAR'}">
+                                                ${mark.discipline.label}
+                                            </c:if>
                                         </td>
                                         <td class="center hidden-xs">${mark.discipline.credits}</td>
                                         <td class="center hidden-xs">${mark.discipline.controlForm.name}</td>

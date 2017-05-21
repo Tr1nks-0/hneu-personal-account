@@ -4,16 +4,6 @@
 
 <%@ include file="../jspf/management-header.jspf" %>
 
-<style>
-    .form-control-button {
-        text-align: center;
-        font-size: 20px;
-        height: 31px;
-        margin-top: 6px;
-    }
-</style>
-
-
 <div class="content-wrapper">
     <div class="content">
 
@@ -31,10 +21,10 @@
                         <div class="col-md-12 panel-title">
                                 ${student.surname} ${student.name}
                             <div class="pull-right">
-                                <button class="btn btn-xs btn-danger" href="/management/students/${student.id}/delete">
+                                <button id="delete-student" class="btn btn-xs btn-danger" data-student="${student.id}" data-group="${student.group.id}">
                                     <i class="fa fa-remove"></i>
                                 </button>
-                                <button class="btn btn-xs btn-success" href="/management/students/${student.id}/delete">
+                                <button id="save-student" class="btn btn-xs btn-success">
                                     <i class="fa fa-save"></i>
                                 </button>
                             </div>
@@ -44,15 +34,11 @@
                 <div class="panel-body">
 
                     <c:if test="${not empty error}">
-                        <div class="col-md-12">
-                            <div class="alert alert-error alert-dismissible"><spring:message code="${error}"/></div>
-                        </div>
+                        <div class="alert alert-error alert-dismissible"><spring:message code="${error}"/></div>
                     </c:if>
 
                     <c:if test="${not empty success}">
-                        <div class="col-md-12">
-                            <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
-                        </div>
+                        <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
                     </c:if>
 
                     <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
@@ -128,7 +114,10 @@
                                                 <c:if test="${disciplineMarks.discipline.course == course and disciplineMarks.discipline.semester == semester}">
                                                     <c:if test="${showSemesterLabel}">
                                                         <tr>
-                                                            <td colspan="5"><span class="label label-default">СЕМЕСТР №${semester}</span></td>
+                                                            <td colspan="5">
+                                                                <span class="label label-default">СЕМЕСТР №${semester}</span>
+                                                                <a href="/management/students/${student.id}/disciplines?course=${course}&semester=${semester}" class="float-right"><i class="fa fa-edit"></i></a>
+                                                            </td>
                                                         </tr>
                                                         <c:set var="showSemesterLabel" value="false"/>
                                                     </c:if>
@@ -139,7 +128,6 @@
                                                         <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.type" items="${disciplineTypes}" itemLabel="name" cssClass="form-control" disabled="true"/>
                                                         <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].mark" cssClass="form-control" type="number"/></td>
                                                         <form:hidden path="disciplineMarks[${i.index}].id"/>
-                                                        <form:hidden path="disciplineMarks[${i.index}].student"/>
                                                         <form:hidden path="disciplineMarks[${i.index}].discipline.id"/>
                                                         <form:hidden path="disciplineMarks[${i.index}].discipline.speciality"/>
                                                         <form:hidden path="disciplineMarks[${i.index}].discipline.educationProgram"/>

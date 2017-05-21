@@ -8,7 +8,7 @@
 
         <ol class="breadcrumb panel panel-default">
             <li><i class="fa fa-home"></i></li>
-            <li><a href="/management/groups/${group.id}">${group.name}</a></li>
+            <li><a href="/management/students?groupId=${group.id}">${group.name}</a></li>
             <li class="active"><spring:message code="form.label.management.students"/></li>
         </ol>
 

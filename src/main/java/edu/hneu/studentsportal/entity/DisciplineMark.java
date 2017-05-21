@@ -27,12 +27,6 @@ public class DisciplineMark {
 
     private String mark;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "student_discipline_mark",
-            joinColumns = @JoinColumn(name = "discipline_mark_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
-    private Student student;
-
     public DisciplineMark(Discipline discipline, String mark) {
         this.discipline = discipline;
         this.mark = mark;

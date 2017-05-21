@@ -10,23 +10,17 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static java.util.stream.Collectors.toList;
+import static org.apache.commons.collections4.ListUtils.union;
 
 @Log4j
 @Controller
@@ -45,7 +39,6 @@ public class StudentDisciplinesController {
                                   @RequestParam(defaultValue = "1") int course, @RequestParam(defaultValue = "1") int semester) {
         Student student = studentRepository.findOne(studentId);
         DisciplineMark newMark = new DisciplineMark();
-        newMark.setStudent(student);
         return prepareStudentEditorPage(model, student, newMark, course, semester);
     }
 
@@ -54,17 +47,20 @@ public class StudentDisciplinesController {
                                        @PathVariable("id") long studentId,
                                        BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
         Discipline discipline = disciplineMark.getDiscipline();
+        Student student = studentRepository.findOne(studentId);
         if (bindingResult.hasErrors()) {
-            Student student = studentRepository.findOne(studentId);
             return prepareStudentEditorPage(model, student, disciplineMark, discipline.getCourse(), discipline.getSemester());
+        } else if (isNull(disciplineMark.getId())) {
+            student.setDisciplineMarks(union(student.getDisciplineMarks(), asList(disciplineMark)));
+            studentRepository.save(student);
+            redirectAttributes.addFlashAttribute("success", "success.add.discipline");
         } else {
-            String successMessage = isNull(disciplineMark.getId()) ? "success.add.discipline" : "success.update.discipline";
-            redirectAttributes.addFlashAttribute("success", successMessage);
             disciplineMarkRepository.save(disciplineMark);
-            redirectAttributes.addAttribute("course", discipline.getCourse());
-            redirectAttributes.addAttribute("semester", discipline.getSemester());
-            return "redirect:/management/students/" + studentId + "/disciplines";
+            redirectAttributes.addFlashAttribute("success", "success.update.discipline");
         }
+        redirectAttributes.addAttribute("course", discipline.getCourse());
+        redirectAttributes.addAttribute("semester", discipline.getSemester());
+        return "redirect:/management/students/" + studentId + "/disciplines";
     }
 
     @PostMapping("/{discipline-id}/delete")

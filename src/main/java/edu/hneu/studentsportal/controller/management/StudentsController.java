@@ -61,10 +61,10 @@ public class StudentsController {
         }
     }
 
-    @GetMapping("/{id}/delete")
-    public String deleteStudent(@PathVariable long id) {
+    @PostMapping("/{id}/delete")
+    @ResponseBody
+    public void deleteStudent(@PathVariable long id) {
         studentRepository.delete(id);
-        return "redirect:/management/import/student";
     }
 
     @ExceptionHandler(RuntimeException.class)
