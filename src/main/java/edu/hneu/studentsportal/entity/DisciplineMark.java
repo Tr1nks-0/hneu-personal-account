@@ -8,8 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Data
-@EqualsAndHashCode(exclude = "student")
 @Entity
+@EqualsAndHashCode
 @Table(name = "discipline_mark")
 @NoArgsConstructor
 @RequiredArgsConstructor

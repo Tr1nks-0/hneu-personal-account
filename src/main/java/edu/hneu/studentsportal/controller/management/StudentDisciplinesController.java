@@ -7,6 +7,8 @@ import edu.hneu.studentsportal.repository.DisciplineMarkRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.impl.StudentDisciplineMarksServiceImpl;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
@@ -24,7 +27,7 @@ import static org.apache.commons.collections4.ListUtils.union;
 
 @Log4j
 @Controller
-@RequestMapping("/management/students/{id}/disciplines")
+@RequestMapping("/management/students/{studentId}/disciplines")
 public class StudentDisciplinesController {
 
     @Resource
@@ -35,7 +38,7 @@ public class StudentDisciplinesController {
     private StudentDisciplineMarksServiceImpl studentDisciplineMarksService;
 
     @GetMapping
-    public String getStudentMarks(@PathVariable("id") long studentId, Model model,
+    public String getStudentMarks(@PathVariable long studentId, Model model,
                                   @RequestParam(defaultValue = "1") int course, @RequestParam(defaultValue = "1") int semester) {
         Student student = studentRepository.findOne(studentId);
         DisciplineMark newMark = new DisciplineMark();
@@ -44,7 +47,7 @@ public class StudentDisciplinesController {
 
     @PostMapping
     public String createDisciplineMark(@ModelAttribute @Valid DisciplineMark disciplineMark,
-                                       @PathVariable("id") long studentId,
+                                       @PathVariable long studentId,
                                        BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
         Discipline discipline = disciplineMark.getDiscipline();
         Student student = studentRepository.findOne(studentId);
@@ -63,10 +66,14 @@ public class StudentDisciplinesController {
         return "redirect:/management/students/" + studentId + "/disciplines";
     }
 
-    @PostMapping("/{discipline-id}/delete")
+    @PostMapping("/{disciplineId}/delete")
     @ResponseBody
-    public void delete(@PathVariable("discipline-id") long disciplineId) {
-        disciplineMarkRepository.delete(disciplineId);
+    public void delete(@PathVariable long studentId, @PathVariable long disciplineId) {
+        Student student = studentRepository.findOne(studentId);
+        List<DisciplineMark> disciplineMarks = student.getDisciplineMarks();
+        disciplineMarks.remove(disciplineMarkRepository.findOne(disciplineId));
+        student.setDisciplineMarks(disciplineMarks);
+        studentRepository.save(student);
     }
 
     @GetMapping("/{discipline-id}")
