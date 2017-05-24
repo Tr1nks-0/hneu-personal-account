@@ -3,6 +3,8 @@ package edu.hneu.studentsportal.controller.management;
 import edu.hneu.studentsportal.entity.Faculty;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import lombok.extern.log4j.Log4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +29,7 @@ public class FacultiesController {
 
     @PostMapping
     public String createFaculty(@Valid @ModelAttribute Faculty faculty, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return prepareFacultyPage(model, faculty);
         } else {
             facultyRepository.save(faculty);
@@ -37,9 +39,13 @@ public class FacultiesController {
     }
 
     @PostMapping("/{id}/delete")
-    @ResponseBody
-    public void delete(@PathVariable long id) {
-        facultyRepository.delete(id);
+    public ResponseEntity<String> delete(@PathVariable long id) {
+        try {
+            facultyRepository.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     @ExceptionHandler(RuntimeException.class)
