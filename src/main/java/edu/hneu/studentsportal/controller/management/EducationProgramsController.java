@@ -7,6 +7,8 @@ import edu.hneu.studentsportal.repository.EducationProgramRepository;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
 import lombok.extern.log4j.Log4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -56,9 +58,14 @@ public class EducationProgramsController {
     }
 
     @PostMapping("/{id}/delete")
-    @ResponseBody
-    public void delete(@PathVariable long id) {
-        educationProgramRepository.delete(id);
+    public ResponseEntity delete(@PathVariable long id) {
+        try {
+            educationProgramRepository.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Cannot delete education program due to: " + e.getMessage(), e);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     @ExceptionHandler(RuntimeException.class)
