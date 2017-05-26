@@ -44,6 +44,7 @@ public class FacultiesController {
             facultyRepository.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
+            log.error("Cannot delete faculty due to: " + e.getMessage(), e);
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }

@@ -10,36 +10,35 @@
             <li class="active"><spring:message code="form.label.management.faculties"/></li>
         </ol>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-md-12 panel-title">
-                        <spring:message code="form.label.management.faculties.add"/>
+        <form:form modelAttribute="faculty" action="/management/faculties" method="post">
+
+            <c:if test="${not empty error}">
+                <div class="alert alert-error alert-dismissible">${error}</div>
+            </c:if>
+
+            <c:if test="${not empty success}">
+                <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
+            </c:if>
+
+            <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 panel-title">
+                            <spring:message code="form.label.management.faculties.add"/>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="panel-body">
-                <form:form modelAttribute="faculty" action="/management/faculties" method="post">
-
-                    <c:if test="${not empty error}">
-                        <div class="alert alert-error alert-dismissible">${error}</div>
-                    </c:if>
-
-                    <c:if test="${not empty success}">
-                        <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
-                    </c:if>
-
-                    <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
-
+                <div class="panel-body">
                     <div class="form-group">
                         <label for="name" class="control-label"><spring:message code="form.label.student.faculty"/></label>
                         <form:input path="name" cssClass="form-control" required="required"/>
                     </div>
                     <input type = "submit" value = "<spring:message code="btn.save"/>" class="btn btn-success float-right"/>
-                </form:form>
+                </div>
             </div>
-        </div>
-
+        </form:form>
 
         <div class="panel panel-default">
             <div class="panel-heading">
