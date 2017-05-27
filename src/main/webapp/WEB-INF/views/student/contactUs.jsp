@@ -5,47 +5,57 @@
 <%@ include file="../jspf/header.jspf" %>
 
 <div class="content-wrapper">
-    <section class="content-header">
-        <h1>
-            Зворотній зв'язок
-            <small>Написати листа декану</small>
-        </h1>
-        <div class="content">
-            <c:if test="${success}">
-                <div class="alert alert-success">
-                    Повідомлення успішно відправлено!
-                </div>
-            </c:if>
+    <div class="content">
 
-            <div class="box box-info direct-chat">
-                <div class="row chat-header">
-                    <div class="col-md-3 col-sm-12 col-xs-12">
-                        <img class="img-responsive decan-photo direct-chat-img" src="/resources/img/foto_koc.jpg" alt="message user image">
-                    </div>
-                    <div class="chat-text col-md-8 col-sm-12 col-xs-12">
-                        <span>Доцент кафедри інформаційних систем, кандидат економічних наук.</span><br>
-                        <span><b>Коц Григорій Павлович</b></span><hr>
-                        <span>61166, Україна, м.Харків, пр-т Науки 9а, ХНЕУ, Головний корпус, ауд. 420.</span><br>
-                        <span><b>Тел.</b> +38 (057) 702-18-31</span><br>
-                        <span><b>Факс:</b> +38 (057) 702-07-17</span><br>
-                        <span><b>Сайт:</b> http://www.ei.hneu.edu.ua/</span><br>
-                        <span><b>E-mail:</b> dekanstei@gmail.com</span>
-                    </div>
-                </div>
+        <ol class="breadcrumb panel panel-default">
+            <li><a href="/account"><i class="fa fa-home"></i></a></li>
+            <li class="active">Написати листа декану</li>
+        </ol>
 
-                <div class="box-footer">
-                    <form class="form-horizontal" role="form" method="post" action="/account/sendEmail">
-                        <div class="input-group">
-                            <textarea class="form-control" rows="1" name="message" id="message" required="required" maxlength="250"></textarea>
-                            <span class="input-group-btn">
-                                <input id="submit" name="submit" type="submit" value="Відправити" class="btn btn-info btn-flat">
-                            </span>
-                        </div>
-                    </form>
+        <c:if test="${success}">
+            <div class="alert alert-success">
+                Повідомлення успішно відправлено!
+            </div>
+        </c:if>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <ul class="chat">
+                            <li class="left clearfix">
+                                <div class="hidden-sm  hidden-xs chat-img pull-left">
+                                    <img class="img-circle img-contact" src="/resources/img/foto_koc.jpg" alt="message user image">
+                                </div>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font"><b>Коц Григорій Павлович</b></strong>
+                                    </div>
+                                    <p>Доцент кафедри інформаційних систем, кандидат економічних наук.</p>
+                                    <br>
+                                    <p>61166, Україна, м.Харків, пр-т Науки 9а, ХНЕУ, Головний корпус, ауд. 420.</p>
+                                    <p><b>Тел.</b> +38 (057) 702-18-31</p>
+                                    <p><b>Факс:</b> +38 (057) 702-07-17</p>
+                                    <p><b>Сайт:</b> <a href="http://www.ei.hneu.edu.ua/">http://www.ei.hneu.edu.ua</a></p>
+                                    <p><b>E-mail:</b> dekanstei@gmail.com</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="panel-footer">
+                        <form class="form-horizontal" role="form" method="post" action="/account/sendEmail">
+                            <div class="input-group">
+                                <textarea class="form-control" rows="1" name="message" id="message" required="required" maxlength="250"></textarea>
+                                <span class="input-group-btn">
+                                    <input id="submit" name="submit" type="submit" value="Відправити" class="btn btn-info btn-flat">
+                                </span>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 </div>
 
 <%@ include file="../jspf/footer.jspf" %>

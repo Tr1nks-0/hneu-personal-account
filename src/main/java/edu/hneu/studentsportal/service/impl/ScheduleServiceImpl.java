@@ -26,14 +26,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     public String scheduleUrl;
 
     @Override
-    public Schedule load(long groupId, Long week) {
+    public Schedule load(long groupId, long week) {
+        String url = String.format(scheduleUrl, groupId, week);
+        return new RestTemplate().getForObject(url, Schedule.class);
+    }
+
+    @Override
+    public long getWeekOrDefault(Long week) {
         if(isNull(week)) {
             LocalDate currentDate = LocalDate.now();
             int educationYear = currentDate.getMonth().compareTo(Month.JANUARY) >= 0 ? currentDate.getYear() - 1 : currentDate.getYear();
             week = WEEKS.between(LocalDate.of(educationYear, Month.SEPTEMBER, 1), LocalDate.now()) + 1;
         }
-        String url = String.format(scheduleUrl, groupId, week);
-        return new RestTemplate().getForObject(url, Schedule.class);
+        return week;
     }
 
     @Override
