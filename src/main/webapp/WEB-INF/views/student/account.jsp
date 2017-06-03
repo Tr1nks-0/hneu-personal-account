@@ -64,13 +64,13 @@
                                     <c:set var="semester" value="${disciplineMark.discipline.semester}"/>
                                     <span class="label label-default">СЕМЕСТР №${semester}</span>
                                 </c:if>
-                                <a class="pull-right">
+                                <a class="pull-right" data-toggle="collapse" href="#disciplines${i.index}">
                                     <i class="fa fa-minus"></i>
                                 </a>
                             </div>
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class="panel-body collapse in" id="disciplines${i.index}">
                         <table class="table no-margin">
                             <thead>
                                 <tr>

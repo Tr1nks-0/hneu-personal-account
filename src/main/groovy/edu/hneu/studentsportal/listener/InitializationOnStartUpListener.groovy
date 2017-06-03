@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.listener
 
 import org.springframework.context.ApplicationListener
+import org.springframework.context.annotation.Profile
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.core.io.ClassPathResource
 import org.springframework.jdbc.datasource.init.DatabasePopulator
@@ -12,7 +13,7 @@ import javax.annotation.Resource
 import javax.sql.DataSource
 
 @Component
-//@Profile("init")
+@Profile("init")
 class InitializationOnStartUpListener implements ApplicationListener<ContextRefreshedEvent> {
 
     @Resource

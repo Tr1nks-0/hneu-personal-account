@@ -1,17 +1,24 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="info" tagdir="/WEB-INF/tags" %>
+
 <%@ include file="../jspf/management-header.jspf" %>
 
 <div class="content-wrapper">
     <div class="content">
+
+        <ol class="breadcrumb panel panel-default">
+            <li><i class="fa fa-home"></i></li>
+            <li><a href="/management/students?groupId=${student.group.id}">${student.group.name}</a></li>
+            <li><a href="/management/students/${student.id}">${student.surname} ${student.name}</a></li>
+            <li class="active"><spring:message code="form.label.management.disciplines"/></li>
+        </ol>
+
         <form:form modelAttribute="disciplineMark" action="/management/students/${student.id}/disciplines" method="post" data-student="${student.id}">
 
-            <ol class="breadcrumb panel panel-default">
-                <li><i class="fa fa-home"></i></li>
-                <li><a href="/management/students?groupId=${student.group.id}">${student.group.name}</a></li>
-                <li><a href="/management/students/${student.id}">${student.surname} ${student.name}</a></li>
-                <li class="active"><spring:message code="form.label.management.disciplines"/></li>
-            </ol>
+            <info:error error="${error}"/>
+            <info:success success="${success}"/>
+            <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
 
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -35,17 +42,6 @@
                 </div>
 
                 <div class="panel-body">
-
-                    <c:if test="${not empty error}">
-                        <div class="alert alert-error alert-dismissible">${error}</div>
-                    </c:if>
-
-                    <c:if test="${not empty success}">
-                        <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
-                    </c:if>
-
-                    <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
-
                     <label for="discipline" class="control-label"><spring:message code="form.label.management.disciplines"/></label>
                     <div class="input-group">
                         <form:select path="discipline" cssClass="selectpicker selectpicker-left-from-control form-control">

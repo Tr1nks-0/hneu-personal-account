@@ -39,8 +39,8 @@ public class ImportServiceImpl implements ImportService {
     @Override
     public Student importStudent(File file) {
         Student student = parserFactory.newStudentProfileExcelParser().parse(file);
-        //student.setEmail(retrieveStudentEmailFromThirdPartyService(student));
-        student.setEmail("oleksandr.rozdolskyi@hneu.net");
+        student.setEmail(retrieveStudentEmailFromThirdPartyService(student));
+        //student.setEmail("oleksandr.rozdolskyi@hneu.net");
         userService.create(student.getEmail(), UserRole.STUDENT);
         studentRepository.save(student);
         log.info(format("New %s has been created.", student));

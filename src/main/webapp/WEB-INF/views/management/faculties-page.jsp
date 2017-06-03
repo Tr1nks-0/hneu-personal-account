@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="info" tagdir="/WEB-INF/tags" %>
+
 <%@ include file="../jspf/management-header.jspf" %>
 
 <div class="content-wrapper">
@@ -12,14 +14,8 @@
 
         <form:form modelAttribute="faculty" action="/management/faculties" method="post">
 
-            <c:if test="${not empty error}">
-                <div class="alert alert-error alert-dismissible">${error}</div>
-            </c:if>
-
-            <c:if test="${not empty success}">
-                <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
-            </c:if>
-
+            <info:error error="${error}"/>
+            <info:success success="${success}"/>
             <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
 
             <div class="panel panel-default">

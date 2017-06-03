@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="info" tagdir="/WEB-INF/tags" %>
 
 <%@ include file="../jspf/management-header.jspf" %>
 
@@ -14,6 +15,10 @@
         </ol>
 
         <form:form modelAttribute="student" action="/management/students/${student.id}" method="post">
+
+            <info:error error="${error}"/>
+            <info:success success="${success}"/>
+            <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
 
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -32,17 +37,6 @@
                     </div>
                 </div>
                 <div class="panel-body">
-
-                    <c:if test="${not empty error}">
-                        <div class="alert alert-error alert-dismissible"><spring:message code="${error}"/></div>
-                    </c:if>
-
-                    <c:if test="${not empty success}">
-                        <div class="alert alert-success alert-dismissible"><spring:message code="${success}"/></div>
-                    </c:if>
-
-                    <form:errors path="*" cssClass="alert alert-danger alert-dismissible" element="div" />
-
                     <div class="row">
                         <div class="col-md-2 col-sm-3 col-xs-12 text-center">
                             <img src="/students/${student.id}/photo" class="img-thumbnail" style="max-height: 126px">

@@ -22,10 +22,10 @@
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <ul class="chat">
-                            <li class="left clearfix">
+                        <div class="chat">
+                            <div class="left clearfix">
                                 <div class="hidden-sm  hidden-xs chat-img pull-left">
-                                    <img class="img-circle img-contact" src="/resources/img/foto_koc.jpg" alt="message user image">
+                                    <img class="img-circle img-contact direct-chat-img" src="/resources/img/foto_koc.jpg" alt="message user image">
                                 </div>
                                 <div class="chat-body clearfix">
                                     <div class="header">
@@ -33,14 +33,16 @@
                                     </div>
                                     <p>Доцент кафедри інформаційних систем, кандидат економічних наук.</p>
                                     <br>
-                                    <p>61166, Україна, м.Харків, пр-т Науки 9а, ХНЕУ, Головний корпус, ауд. 420.</p>
-                                    <p><b>Тел.</b> +38 (057) 702-18-31</p>
-                                    <p><b>Факс:</b> +38 (057) 702-07-17</p>
-                                    <p><b>Сайт:</b> <a href="http://www.ei.hneu.edu.ua/">http://www.ei.hneu.edu.ua</a></p>
-                                    <p><b>E-mail:</b> dekanstei@gmail.com</p>
+                                    <p>
+                                        61166, Україна, м.Харків, пр-т Науки 9а, ХНЕУ, Головний корпус, ауд. 420.<br>
+                                        <b>Тел.</b> +38 (057) 702-18-31<br>
+                                        <b>Факс:</b> +38 (057) 702-07-17<br>
+                                        <b>Сайт:</b> <a href="http://www.ei.hneu.edu.ua/">http://www.ei.hneu.edu.ua</a><br>
+                                        <b>E-mail:</b> dekanstei@gmail.com
+                                    </p>
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </div>
                     <div class="panel-footer">
                         <form class="form-horizontal" role="form" method="post" action="/account/sendEmail">
