@@ -14,7 +14,11 @@ import javax.validation.constraints.Size;
 
 @Data
 @Entity
-@Table(name = "discipline")
+@Table(name = "discipline", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "label", "course", "semester", "education_program_id", "speciality_id"
+        })
+})
 public class Discipline {
 
     @Id
@@ -45,6 +49,7 @@ public class Discipline {
     private Speciality speciality;
 
     @NotNull
+    @Column(name="control_form")
     @Enumerated(EnumType.ORDINAL)
     private DisciplineFormControl controlForm;
 

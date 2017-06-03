@@ -1,10 +1,16 @@
 package edu.hneu.studentsportal.controller.management;
 
+import edu.hneu.studentsportal.controller.ExceptionHandlingController;
 import edu.hneu.studentsportal.entity.Faculty;
 import edu.hneu.studentsportal.entity.Speciality;
+import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
+import edu.hneu.studentsportal.service.MessageService;
+import javaslang.control.Try;
 import lombok.extern.log4j.Log4j;
+import org.apache.log4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,15 +23,19 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
+import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_SPECIALITIES_URL;
+
 @Log4j
 @Controller
-@RequestMapping("/management/specialities")
-public class SpecialitiesController {
+@RequestMapping(MANAGE_SPECIALITIES_URL)
+public class SpecialitiesController implements ExceptionHandlingController{
 
     @Resource
     private FacultyRepository facultyRepository;
     @Resource
     private SpecialityRepository specialityRepository;
+    @Resource
+    private MessageService messageService;
 
     @GetMapping
     public String getSpecialities(@RequestParam(required = false) Long facultyId, Model model) {
@@ -48,14 +58,11 @@ public class SpecialitiesController {
     }
 
     @PostMapping("/{id}/delete")
-    public ResponseEntity delete(@PathVariable long id) {
-        try {
-            specialityRepository.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("Cannot delete speciality due to: " + e.getMessage(), e);
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+    @ResponseBody
+    public void delete(@PathVariable long id) {
+        Try.run(() -> specialityRepository.delete(id)).onFailure(e -> {
+            throw new CannotDeleteResourceException(e);
+        });
     }
 
     @GetMapping(path = "/rest", params = "facultyId")
@@ -65,11 +72,25 @@ public class SpecialitiesController {
         return specialityRepository.findAllByFaculty(faculty);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
-        log.warn(e.getMessage(), e);
-        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
-        return "redirect:/management/specialities";
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
+        return handleErrorInternal(e, messageService.specialityExistsError(), redirectAttributes);
+    }
+
+    @ExceptionHandler(CannotDeleteResourceException.class)
+    public ResponseEntity<String> handleError(CannotDeleteResourceException e) {
+        log.warn("Cannot delete speciality due to: " + e.getMessage(), e);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
+    @Override
+    public String baseUrl() {
+        return MANAGE_SPECIALITIES_URL;
+    }
+
+    @Override
+    public Logger logger() {
+        return log;
     }
 
     private String prepareSpecialityPage(Model model, Speciality speciality) {

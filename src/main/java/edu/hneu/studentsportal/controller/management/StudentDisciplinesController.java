@@ -1,5 +1,6 @@
 package edu.hneu.studentsportal.controller.management;
 
+import edu.hneu.studentsportal.controller.ExceptionHandlingController;
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.DisciplineMark;
 import edu.hneu.studentsportal.entity.Student;
@@ -9,6 +10,7 @@ import edu.hneu.studentsportal.service.impl.StudentDisciplineMarksServiceImpl;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,6 +22,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_STUDENT_DISCIPLINES_URL;
 import static java.util.Arrays.asList;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -27,8 +30,8 @@ import static org.apache.commons.collections4.ListUtils.union;
 
 @Log4j
 @Controller
-@RequestMapping("/management/students/{studentId}/disciplines")
-public class StudentDisciplinesController {
+@RequestMapping(MANAGE_STUDENT_DISCIPLINES_URL)
+public class StudentDisciplinesController implements ExceptionHandlingController {
 
     @Resource
     private StudentRepository studentRepository;
@@ -88,6 +91,16 @@ public class StudentDisciplinesController {
         }
     }
 
+    @Override
+    public String baseUrl() {
+        return MANAGE_STUDENT_DISCIPLINES_URL;
+    }
+
+    @Override
+    public Logger logger() {
+        return log;
+    }
+
     private String prepareStudentEditorPage(Model model, Student student, DisciplineMark mark, int defaultCourse, int defaultSemester) {
         Optional<Discipline> discipline = Optional.ofNullable(mark.getDiscipline());
         int course = discipline.map(Discipline::getCourse).orElse(defaultCourse);
@@ -101,5 +114,4 @@ public class StudentDisciplinesController {
         model.addAttribute("courses", studentDisciplineMarksService.getStudentCourses(student));
         return "management/student-disciplines-editor-page";
     }
-
 }

@@ -12,9 +12,9 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
-@Table(name = "speciality")
+@Table(name = "speciality", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "faculty_id"})})
 @NoArgsConstructor
-@RequiredArgsConstructor
+@RequiredArgsConstructor()
 public class Speciality {
 
     @Id
@@ -22,7 +22,6 @@ public class Speciality {
     private long id;
 
     @Length(min = 3, max = 200)
-    @Column(unique = true)
     private String name;
 
     @NonNull

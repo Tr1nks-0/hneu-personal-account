@@ -13,7 +13,7 @@ import javax.annotation.Resource
 import javax.sql.DataSource
 
 @Component
-@Profile("init")
+//@Profile("init")
 class InitializationOnStartUpListener implements ApplicationListener<ContextRefreshedEvent> {
 
     @Resource

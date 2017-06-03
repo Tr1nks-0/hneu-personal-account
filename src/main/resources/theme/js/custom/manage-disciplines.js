@@ -43,10 +43,10 @@ $("#discipline #semester").change(function() {
 });
 
 $(".delete-discipline").click(function() {
-    var group = $(this).data("discipline");
+    var discipline = $(this).data("discipline");
     var container = $(this).closest("tr");
 
-    $.post("/management/disciplines/" + group + "/delete")
+    $.post("/management/disciplines/" + discipline + "/delete")
         .done(function(){
             container.fadeOut(300, function(){
                 $(this).remove();

@@ -1,12 +1,18 @@
 package edu.hneu.studentsportal.controller.management;
 
+import edu.hneu.studentsportal.controller.ExceptionHandlingController;
 import edu.hneu.studentsportal.entity.EducationProgram;
 import edu.hneu.studentsportal.entity.Faculty;
 import edu.hneu.studentsportal.entity.Speciality;
+import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.repository.EducationProgramRepository;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
+import edu.hneu.studentsportal.service.MessageService;
+import javaslang.control.Try;
 import lombok.extern.log4j.Log4j;
+import org.apache.log4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,12 +25,13 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
+import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_EDUCATION_PROGRAMS_URL;
 import static java.util.Objects.isNull;
 
 @Log4j
 @Controller
-@RequestMapping("/management/education-programs")
-public class EducationProgramsController {
+@RequestMapping(MANAGE_EDUCATION_PROGRAMS_URL)
+public class EducationProgramsController implements ExceptionHandlingController {
 
     @Resource
     private FacultyRepository facultyRepository;
@@ -32,6 +39,8 @@ public class EducationProgramsController {
     private SpecialityRepository specialityRepository;
     @Resource
     private EducationProgramRepository educationProgramRepository;
+    @Resource
+    private MessageService messageService;
 
     @GetMapping
     public String getEducationPrograms(@RequestParam(required = false) Long facultyId, @RequestParam(required = false) Long specialityId, Model model) {
@@ -58,21 +67,32 @@ public class EducationProgramsController {
     }
 
     @PostMapping("/{id}/delete")
-    public ResponseEntity delete(@PathVariable long id) {
-        try {
-            educationProgramRepository.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("Cannot delete education program due to: " + e.getMessage(), e);
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+    @ResponseBody
+    public void delete(@PathVariable long id) {
+        Try.run(() -> educationProgramRepository.delete(id)).onFailure(e -> {
+            throw new CannotDeleteResourceException(e);
+        });
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
-        log.warn(e.getMessage(), e);
-        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
-        return "redirect:/management/education-programs";
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
+        return handleErrorInternal(e, messageService.educationProgramExistsError(), redirectAttributes);
+    }
+
+    @ExceptionHandler(CannotDeleteResourceException.class)
+    public ResponseEntity<String> handleError(CannotDeleteResourceException e) {
+        log.warn("Cannot delete education program due to: " + e.getMessage(), e);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
+    @Override
+    public String baseUrl() {
+        return MANAGE_EDUCATION_PROGRAMS_URL;
+    }
+
+    @Override
+    public Logger logger() {
+        return log;
     }
 
     private String prepareEducationProgramPage(Model model, EducationProgram educationProgram) {
@@ -85,5 +105,4 @@ public class EducationProgramsController {
         model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
         return "management/education-programs-page";
     }
-
 }

@@ -10,8 +10,8 @@ hibernate:
   show_sql: false
   format_sql: true
   hbm2ddl:
-    auto: update
-    #auto: create
+    #auto: update
+    auto: create
 
 profile:
   photo:

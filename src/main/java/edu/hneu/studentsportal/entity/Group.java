@@ -21,6 +21,7 @@ public class Group {
 
     @NotNull
     @Length(min = 2, max = 100)
+    @Column(unique = true)
     private String name;
 
     @NotNull

@@ -1,16 +1,24 @@
 package edu.hneu.studentsportal.controller.management;
 
+import edu.hneu.studentsportal.controller.ExceptionHandlingController;
 import edu.hneu.studentsportal.entity.Discipline;
 import edu.hneu.studentsportal.entity.EducationProgram;
 import edu.hneu.studentsportal.entity.Faculty;
 import edu.hneu.studentsportal.entity.Speciality;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
+import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.EducationProgramRepository;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
+import edu.hneu.studentsportal.service.MessageService;
+import javaslang.control.Try;
 import lombok.extern.log4j.Log4j;
+import org.apache.log4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,12 +30,13 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.Optional;
 
+import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_DISCIPLINES_URL;
 import static java.util.Objects.isNull;
 
 @Log4j
 @Controller
-@RequestMapping("/management/disciplines")
-public class DisciplinesController {
+@RequestMapping(MANAGE_DISCIPLINES_URL)
+public class DisciplinesController implements ExceptionHandlingController {
 
     @Resource
     private FacultyRepository facultyRepository;
@@ -37,6 +46,8 @@ public class DisciplinesController {
     private EducationProgramRepository educationProgramRepository;
     @Resource
     private DisciplineRepository disciplineRepository;
+    @Resource
+    private MessageService messageService;
 
     @GetMapping
     public String getDisciplines(@RequestParam(required = false) Long facultyId,
@@ -80,14 +91,30 @@ public class DisciplinesController {
     @PostMapping("/{id}/delete")
     @ResponseBody
     public void delete(@PathVariable long id) {
-        disciplineRepository.delete(id);
+        Try.run(() -> disciplineRepository.delete(id)).onFailure(e -> {
+            throw new CannotDeleteResourceException(e);
+        });
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
-        log.warn(e.getMessage(), e);
-        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
-        return "redirect:/management/disciplines";
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
+        return handleErrorInternal(e, messageService.disciplineExistsError(), redirectAttributes);
+    }
+
+    @ExceptionHandler(CannotDeleteResourceException.class)
+    public ResponseEntity<String> handleError(CannotDeleteResourceException e) {
+        log.warn("Cannot delete discipline program due to: " + e.getMessage(), e);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
+    @Override
+    public String baseUrl() {
+        return MANAGE_DISCIPLINES_URL;
+    }
+
+    @Override
+    public Logger logger() {
+        return log;
     }
 
     private String prepareDisciplinesPage(Model model, Discipline discipline) {

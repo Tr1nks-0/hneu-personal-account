@@ -48,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
         Map<String, Object> modelForTemplate = ImmutableMap.of("name", student.getName());
         String emailBody = emailService.buildHtmlForTemplate("profileWasCreatedEmailTemplate.ftl", modelForTemplate);
         MimeMessage message = new MimeMessageBuilder(supportMail, student.getEmail())
-                .subject(messageService.getUserWasCreatedEmailSubject())
+                .subject(messageService.userWasCreatedEmailSubject())
                 .text(emailBody, true)
                 .build(mailSender.createMimeMessage());
         scheduleEmailSendingTask(message, mailSender::send);
@@ -56,10 +56,10 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendProfileWasChangedEmail(Student student) {
-        Map<String, Object> modelForTemplate = ImmutableMap.of("message", messageService.getUserWasChangedEmailBody());
+        Map<String, Object> modelForTemplate = ImmutableMap.of("message", messageService.userWasChangedEmailBody());
         String emailBody = emailService.buildHtmlForTemplate("profileWasChangedEmailTemplate.ftl", modelForTemplate);
         MimeMessage message = new MimeMessageBuilder(supportMail, student.getEmail())
-                .subject(messageService.getUserWasChangedEmailSubject())
+                .subject(messageService.userWasChangedEmailSubject())
                 .text(emailBody, true)
                 .build(mailSender.createMimeMessage());
         scheduleEmailSendingTask(message, mailSender::send);
@@ -68,7 +68,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendContactUsEmail(String from, String token, String text) {
         MimeMessage message = new MimeMessageBuilder(from, decanMail)
-                .subject(messageService.getContactUsEmailSubject())
+                .subject(messageService.contactUsEmailSubject())
                 .text(text, false)
                 .build(mailSender.createMimeMessage());
         scheduleEmailSendingTask(message, m -> gmailService.sendEmail(from, token, gmailService.convertToGmailMessage(m)));

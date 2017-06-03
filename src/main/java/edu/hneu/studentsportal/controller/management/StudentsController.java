@@ -1,5 +1,6 @@
 package edu.hneu.studentsportal.controller.management;
 
+import edu.hneu.studentsportal.controller.ExceptionHandlingController;
 import edu.hneu.studentsportal.entity.Group;
 import edu.hneu.studentsportal.entity.Student;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
@@ -7,6 +8,7 @@ import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.repository.*;
 import edu.hneu.studentsportal.service.StudentDisciplineMarksService;
 import lombok.extern.log4j.Log4j;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,12 +17,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.List;
+
+import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_STUDENTS_URL;
 
 @Log4j
 @Controller
-@RequestMapping("/management/students")
-public class StudentsController {
+@RequestMapping(MANAGE_STUDENTS_URL)
+public class StudentsController implements ExceptionHandlingController {
 
     @Resource
     private StudentRepository studentRepository;
@@ -35,12 +39,6 @@ public class StudentsController {
     @Resource
     private StudentDisciplineMarksService studentDisciplineMarksService;
 
-    @GetMapping("/{id}")
-    public String getStudent(@PathVariable long id, Model model) {
-        Student student = studentRepository.findOne(id);
-        return prepareStudentEditorPage(model, student);
-    }
-
     @GetMapping
     public String getStudents(@RequestParam Long groupId, Model model) {
         Group group = groupRepository.findById(groupId).orElseThrow(IllegalArgumentException::new);
@@ -50,9 +48,15 @@ public class StudentsController {
         return "management/group-students-page";
     }
 
+    @GetMapping("/{id}")
+    public String getStudent(@PathVariable long id, Model model) {
+        Student student = studentRepository.findOne(id);
+        return prepareStudentEditorPage(model, student);
+    }
+
     @PostMapping("/{id}")
-    public String saveStudent(@Valid @ModelAttribute Student student, BindingResult bindingResult ,RedirectAttributes redirectAttributes, Model model) {
-        if(bindingResult.hasErrors()) {
+    public String saveStudent(@Valid @ModelAttribute Student student, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+        if (bindingResult.hasErrors()) {
             return prepareStudentEditorPage(model, student);
         } else {
             studentRepository.save(student);
@@ -67,11 +71,15 @@ public class StudentsController {
         studentRepository.delete(id);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
-        log.warn(e.getMessage(), e);
-        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
-        return "redirect:/management/import/student";
+
+    @Override
+    public String baseUrl() {
+        return MANAGE_STUDENTS_URL;
+    }
+
+    @Override
+    public Logger logger() {
+        return log;
     }
 
     private String prepareStudentEditorPage(Model model, Student student) {

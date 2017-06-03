@@ -17,15 +17,26 @@ $("#group #educationProgram").change(function() {
         + "&educationProgramId=" +educationProgram;
 });
 
-$(".delete-groups").click(function() {
+$(".delete-groups ").click(function() {
     var group = $(this).attr("group-id");
-    var container = $(this).closest("tr")
-    $.post( "/management/groups/" + group + "/delete", function() {
-        container.fadeOut(300, function(){
-            $(this).remove();
-            if(!$(".delete-groups").length) {
-                $(".disciplines-management-panel").html("<spring:message code='items.not.found'/>");
-            }
+    var container = $(this).closest("tr");
+
+    $.post("/management/groups/" + group + "/delete")
+        .done(function(){
+            container.fadeOut(300, function(){
+                $(this).remove();
+                if(!$(".delete-groups").length) {
+                    $(".disciplines-management-panel").html('Нічого не знайдено');
+                }
+            })
+        })
+        .fail(function() {
+            $("<div />", {
+                "class": "alert alert-error alert-dismissible",
+                text: 'Групу не можна видалити так, як вона використовується'
+            }).hide().fadeIn(300).insertAfter( ".breadcrumb" );
+            $(".alert-error").delay(2000).fadeOut(300, function() {
+                $(this).remove()
+            });
         });
-    });
 });

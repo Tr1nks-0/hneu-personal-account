@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
-@Table(name = "education_program")
+@Table(name = "education_program", uniqueConstraints = {@UniqueConstraint(columnNames = {"name", "speciality_id"})})
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class EducationProgram {

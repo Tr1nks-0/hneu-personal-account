@@ -1,15 +1,22 @@
 package edu.hneu.studentsportal.controller.management;
 
+import edu.hneu.studentsportal.controller.ExceptionHandlingController;
 import edu.hneu.studentsportal.entity.EducationProgram;
 import edu.hneu.studentsportal.entity.Faculty;
 import edu.hneu.studentsportal.entity.Group;
 import edu.hneu.studentsportal.entity.Speciality;
+import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.repository.EducationProgramRepository;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
+import edu.hneu.studentsportal.service.MessageService;
+import javaslang.control.Try;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,18 +25,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
+import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_GROUPS_URL;
 import static java.util.Objects.isNull;
-import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Log4j
 @Controller
-@RequestMapping("/management/groups")
-public class GroupsController {
+@RequestMapping(MANAGE_GROUPS_URL)
+public class GroupsController implements ExceptionHandlingController{
 
     @Resource
     private FacultyRepository facultyRepository;
@@ -39,6 +43,8 @@ public class GroupsController {
     private EducationProgramRepository educationProgramRepository;
     @Resource
     private GroupRepository groupRepository;
+    @Resource
+    private MessageService messageService;
 
     @GetMapping
     public String getGroups(@RequestParam(required = false) Long facultyId,
@@ -77,15 +83,30 @@ public class GroupsController {
     @PostMapping("/{id}/delete")
     @ResponseBody
     public void delete(@PathVariable long id) {
-        groupRepository.delete(id);
+        Try.run(() -> groupRepository.delete(id)).onFailure(e -> {
+            throw new CannotDeleteResourceException(e);
+        });
     }
 
+    @Override
+    public String baseUrl() {
+        return MANAGE_GROUPS_URL;
+    }
 
-    @ExceptionHandler(RuntimeException.class)
-    public String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
-        log.warn(e.getMessage(), e);
-        redirectAttributes.addFlashAttribute("error", "error.something.went.wrong");
-        return "redirect:/management/groups";
+    @Override
+    public Logger logger() {
+        return log;
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
+        return handleErrorInternal(e, messageService.groupExistsError(), redirectAttributes);
+    }
+
+    @ExceptionHandler(CannotDeleteResourceException.class)
+    public ResponseEntity<String> handleError(CannotDeleteResourceException e) {
+        log.warn("Cannot delete group due to: " + e.getMessage(), e);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     private String prepareGroupPage(Model model, Group group) {
