@@ -34,7 +34,7 @@ class StorageConfig {
     @Bean
     LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         new LocalContainerEntityManagerFactoryBean(
-                packagesToScan: ['edu.hneu.studentsportal.entity'],
+                packagesToScan: ['edu.hneu.studentsportal.domain'],
                 dataSource: dataSource(),
                 jpaVendorAdapter: new HibernateJpaVendorAdapter(),
                 jpaProperties: [
