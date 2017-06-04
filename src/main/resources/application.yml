@@ -51,6 +51,9 @@ communication:
   mail:
     support: oleksandr.rozdolskyi2012@gmail.com
     decan: oleksandr.rozdolskyi2012@gmail.com
+  server:
+    username: 'oleksandr.rozdolskyi2012@gmail.com'
+    password: 'Rozdolski1994'
 
 ---
 
@@ -66,6 +69,9 @@ communication:
   mail:
     support: lkhneu@hneu.net
     decan: dekanstei@gmail.com
+  server: #TODO: request credentials
+      username: 'oleksandr.rozdolskyi2012@gmail.com'
+      password: 'Rozdolski1994'
 
 ---
 

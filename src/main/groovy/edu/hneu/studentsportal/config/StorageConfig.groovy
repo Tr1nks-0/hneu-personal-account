@@ -19,15 +19,15 @@ import javax.sql.DataSource
 class StorageConfig {
 
     @Resource
-    Environment env
+    Environment environment
 
     @Bean
     DataSource dataSource() {
         new DriverManagerDataSource(
-                driverClassName: env.getRequiredProperty('db.driver'),
-                url: env.getRequiredProperty('db.url'),
-                username: env.getRequiredProperty('db.username'),
-                password: env.getRequiredProperty('db.password')
+                driverClassName: environment.getRequiredProperty('db.driver'),
+                url: environment.getRequiredProperty('db.url'),
+                username: environment.getRequiredProperty('db.username'),
+                password: environment.getRequiredProperty('db.password')
         )
     }
 
@@ -38,10 +38,10 @@ class StorageConfig {
                 dataSource: dataSource(),
                 jpaVendorAdapter: new HibernateJpaVendorAdapter(),
                 jpaProperties: [
-                        'hibernate.dialect'     : env.getRequiredProperty('hibernate.dialect'),
-                        'hibernate.hbm2ddl.auto': env.getRequiredProperty('hibernate.hbm2ddl.auto'),
-                        'hibernate.show_sql'    : env.getRequiredProperty('hibernate.show_sql'),
-                        'hibernate.format_sql'  : env.getRequiredProperty('hibernate.format_sql')
+                        'hibernate.dialect'     : environment.getRequiredProperty('hibernate.dialect'),
+                        'hibernate.hbm2ddl.auto': environment.getRequiredProperty('hibernate.hbm2ddl.auto'),
+                        'hibernate.show_sql'    : environment.getRequiredProperty('hibernate.show_sql'),
+                        'hibernate.format_sql'  : environment.getRequiredProperty('hibernate.format_sql')
                 ]
         )
     }

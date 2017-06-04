@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.env.Environment
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean
@@ -14,12 +15,12 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver
 class MailConfig {
 
     @Bean
-    JavaMailSender getMailSender() {
+    JavaMailSender getMailSender(Environment environment) {
         new JavaMailSenderImpl(
                 host: 'smtp.gmail.com',
                 port: 587,
-                username: 'oleksandr.rozdolskyi2012@gmail.com',
-                password: 'Rozdolski1994',
+                username: environment.getRequiredProperty('communication.server.username'),
+                password: environment.getRequiredProperty('communication.server.password'),
                 javaMailProperties: [
                         'mail.smtp.starttls.enable': 'true',
                         'mail.smtp.auth'           : 'true',
