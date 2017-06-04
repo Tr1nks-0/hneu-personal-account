@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.config
+package edu.hneu.studentsportal.utils
 
 import com.google.common.collect.Lists
 import edu.hneu.studentsportal.service.CustomUserDetailsService

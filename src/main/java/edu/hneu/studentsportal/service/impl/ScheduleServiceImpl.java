@@ -22,12 +22,12 @@ import static java.util.Objects.isNull;
 public class ScheduleServiceImpl implements ScheduleService {
 
 
-    @Value("${schedule.url}")
-    public String scheduleUrl;
+    @Value("${integration.service.schedule.url}")
+    public String scheduleProviderServiceUrl;
 
     @Override
     public Schedule load(long groupId, long week) {
-        String url = String.format(scheduleUrl, groupId, week);
+        String url = String.format(scheduleProviderServiceUrl, groupId, week);
         return new RestTemplate().getForObject(url, Schedule.class);
     }
 

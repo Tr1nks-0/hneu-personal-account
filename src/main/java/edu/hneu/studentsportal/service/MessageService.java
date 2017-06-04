@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.service;
 
-import edu.hneu.studentsportal.utils.annotation.Message;
+import edu.hneu.studentsportal.annotation.Message;
 
 public interface MessageService {
 

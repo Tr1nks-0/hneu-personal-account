@@ -1,5 +1,8 @@
-server:
-  port: 8080
+spring:
+  profiles:
+    active: develop
+  freemarker:
+      template-loader-path: classpath:/emails/
 db:
   driver: com.mysql.jdbc.Driver
   username: root
@@ -10,28 +13,11 @@ hibernate:
   show_sql: false
   format_sql: true
   hbm2ddl:
-    #auto: update
-    auto: create
-
-profile:
-  photo:
-    location: /img/
-uploaded:
-  files:
-    location: /excel/
-support:
-  mail: lkhneu@hneu.net
-decan:
- # mail: dekanstei@gmail.com
-  mail: oleksandr.rozdolskyi2012@gmail.com
-schedule:
-  url: http://services.ksue.edu.ua:8081/schedule/xml?auth=com.alcsan.atimetable_19092013_552ca3ffa5&group=%s&week=%s
-emails:
-  integration:
-    service:
-      url: http://212.111.199.46:65008
-      #url: http://172.16.0.208:8080
-
+    auto: update
+integration:
+  service:
+    schedule:
+      url: http://services.ksue.edu.ua:8081/schedule/xml?auth=com.alcsan.atimetable_19092013_552ca3ffa5&group=%s&week=%s
 security:
   oauth2:
     client:
@@ -50,6 +36,41 @@ google:
     clientAuthenticationScheme: form
   resource:
     userInfoUri: https://www.googleapis.com/plus/v1/people/me
+
+---
+
 spring:
-  freemarker:
-    template-loader-path: classpath:/emails/
+  profiles: develop
+server:
+  port: 8080
+integration:
+  service:
+    emails:
+      url: http://212.111.199.46:65008
+communication:
+  mail:
+    support: oleksandr.rozdolskyi2012@gmail.com
+    decan: oleksandr.rozdolskyi2012@gmail.com
+
+---
+
+spring:
+  profiles: production
+server:
+  port: 80
+integration:
+  service:
+    emails:
+      url: http://172.16.0.208:8080
+communication:
+  mail:
+    support: lkhneu@hneu.net
+    decan: dekanstei@gmail.com
+
+---
+
+spring:
+  profiles: init
+hibernate:
+  hbm2ddl:
+    auto: create

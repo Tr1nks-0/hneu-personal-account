@@ -33,7 +33,7 @@ public class ImportServiceImpl implements ImportService {
     @Resource
     private StudentRepository studentRepository;
 
-    @Value("${emails.integration.service.url}")
+    @Value("${integration.service.emails.url}")
     public String emailsIntegrationServiceUrl;
 
     @Override

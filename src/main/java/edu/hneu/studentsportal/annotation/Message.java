@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.utils.annotation;
+package edu.hneu.studentsportal.annotation;
 
 
 import java.lang.annotation.*;

@@ -1,18 +1,21 @@
 package edu.hneu.studentsportal.config
 
 import edu.hneu.studentsportal.service.MessageService
-import edu.hneu.studentsportal.utils.annotation.Message
+import edu.hneu.studentsportal.annotation.Message
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.util.ClassUtils
 import org.springframework.web.context.request.RequestContextListener
 import org.springframework.web.filter.RequestContextFilter
+import org.springframework.web.multipart.commons.CommonsMultipartResolver
 import org.springframework.web.servlet.DispatcherServlet
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver
 
@@ -50,9 +53,17 @@ class WebConfig extends WebMvcConfigurerAdapter {
         new RequestContextFilter()
     }
 
-    @Override
-    void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable()
+    @Bean
+    CommonsMultipartResolver multipartResolver() {
+        new CommonsMultipartResolver()
+    }
+
+    @Bean
+    ReloadableResourceBundleMessageSource messageSource() {
+        def messageSource = new ReloadableResourceBundleMessageSource()
+        messageSource.basename = 'classpath:messages'
+        messageSource.defaultEncoding = 'UTF-8'
+        messageSource
     }
 
     @Bean
@@ -70,4 +81,15 @@ class WebConfig extends WebMvcConfigurerAdapter {
             }
         }) as MessageService
     }
+
+    @Override
+    void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable()
+    }
+
+    @Override
+    void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler('/resources/**').addResourceLocations('classpath:/theme/')
+    }
+
 }

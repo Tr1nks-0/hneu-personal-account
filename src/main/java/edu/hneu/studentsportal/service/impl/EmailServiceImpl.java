@@ -8,6 +8,7 @@ import edu.hneu.studentsportal.service.GmailService;
 import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.service.impl.util.MimeMessageBuilder;
 import freemarker.template.Configuration;
+import javaslang.control.Try;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,12 +36,10 @@ public class EmailServiceImpl implements EmailService {
     private MessageService messageService;
     @Resource
     private GmailService gmailService;
-    @Resource
-    private CustomUserDetailsService userDetailsService;
 
-    @Value("${decan.mail}")
+    @Value("${communication.mail.decan}")
     public String decanMail;
-    @Value("${support.mail}")
+    @Value("${communication.mail.support}")
     public String supportMail;
 
     @Override
@@ -80,13 +79,8 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private void scheduleEmailSendingTask(MimeMessage message, Consumer<MimeMessage> emailSender) {
-        Executors.newCachedThreadPool().execute(() -> {
-            try {
-                emailSender.accept(message);
-            } catch (Exception e) {
-                log.warn("Failed during sending email: " + e.getMessage(), e);
-            }
-        });
+        Executors.newCachedThreadPool().execute(() -> Try.run(() ->
+                emailSender.accept(message)).onFailure(e -> log.warn("Failed during sending email: " + e.getMessage(), e)));
     }
 
 }
