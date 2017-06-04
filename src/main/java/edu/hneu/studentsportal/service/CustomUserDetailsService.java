@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.domain.User;
 
 public interface CustomUserDetailsService extends UserDetailsService {
 

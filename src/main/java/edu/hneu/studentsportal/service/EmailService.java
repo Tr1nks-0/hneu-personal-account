@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.service;
 
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.Student;
 
 public interface EmailService {
 

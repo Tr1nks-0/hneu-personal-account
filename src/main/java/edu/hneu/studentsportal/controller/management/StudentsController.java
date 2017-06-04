@@ -1,8 +1,8 @@
 package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.controller.ExceptionHandlingController;
-import edu.hneu.studentsportal.entity.Group;
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.Group;
+import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.repository.*;

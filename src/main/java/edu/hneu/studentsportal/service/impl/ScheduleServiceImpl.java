@@ -1,7 +1,7 @@
 package edu.hneu.studentsportal.service.impl;
 
 import com.google.api.client.util.Maps;
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.pojo.Schedule;
 import edu.hneu.studentsportal.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Value;

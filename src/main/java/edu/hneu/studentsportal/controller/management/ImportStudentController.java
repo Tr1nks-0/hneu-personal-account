@@ -1,7 +1,7 @@
 package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.controller.ExceptionHandlingController;
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ImportService;

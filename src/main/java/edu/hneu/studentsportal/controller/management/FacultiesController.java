@@ -1,7 +1,7 @@
 package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.controller.ExceptionHandlingController;
-import edu.hneu.studentsportal.entity.Faculty;
+import edu.hneu.studentsportal.domain.Faculty;
 import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.service.MessageService;
@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import javax.xml.ws.Response;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_FACULTIES_URL;
 

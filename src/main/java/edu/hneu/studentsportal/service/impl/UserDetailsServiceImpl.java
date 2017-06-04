@@ -1,7 +1,7 @@
 package edu.hneu.studentsportal.service.impl;
 
 import com.google.common.collect.Lists;
-import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.repository.UserRepository;
 import edu.hneu.studentsportal.service.CustomUserDetailsService;
@@ -10,7 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

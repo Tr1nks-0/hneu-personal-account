@@ -1,7 +1,7 @@
 package edu.hneu.studentsportal.service.impl;
 
 import com.google.common.collect.ImmutableMap;
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.service.CustomUserDetailsService;
 import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.GmailService;

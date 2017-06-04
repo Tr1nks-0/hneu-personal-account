@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.entity;
+package edu.hneu.studentsportal.domain;
 
 import edu.hneu.studentsportal.enums.UserRole;
 import lombok.Data;

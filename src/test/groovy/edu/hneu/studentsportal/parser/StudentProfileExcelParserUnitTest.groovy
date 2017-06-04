@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.parser
 
-import edu.hneu.studentsportal.entity.*
+import edu.hneu.studentsportal.domain.*
 import edu.hneu.studentsportal.parser.impl.StudentProfileExcelParser
 import edu.hneu.studentsportal.repository.*
 import spock.lang.Shared

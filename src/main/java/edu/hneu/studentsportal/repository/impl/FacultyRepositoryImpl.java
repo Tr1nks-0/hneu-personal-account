@@ -1,13 +1,12 @@
 package edu.hneu.studentsportal.repository.impl;
 
-import edu.hneu.studentsportal.entity.Faculty;
+import edu.hneu.studentsportal.domain.Faculty;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.repository.FacultyRepositoryCustom;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
 
 import javax.annotation.Resource;
 import java.math.BigInteger;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public class FacultyRepositoryImpl implements FacultyRepositoryCustom {

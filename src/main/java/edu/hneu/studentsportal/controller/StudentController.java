@@ -1,8 +1,7 @@
 package edu.hneu.studentsportal.controller;
 
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.repository.StudentRepository;
-import edu.hneu.studentsportal.service.*;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;

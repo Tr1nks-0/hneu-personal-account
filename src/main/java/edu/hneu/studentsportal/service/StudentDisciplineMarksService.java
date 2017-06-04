@@ -1,12 +1,11 @@
 package edu.hneu.studentsportal.service;
 
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.DisciplineMark;
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.Discipline;
+import edu.hneu.studentsportal.domain.DisciplineMark;
+import edu.hneu.studentsportal.domain.Student;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
 public interface StudentDisciplineMarksService {

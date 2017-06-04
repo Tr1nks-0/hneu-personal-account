@@ -1,7 +1,7 @@
 package edu.hneu.studentsportal.controller;
 
-import edu.hneu.studentsportal.entity.Student;
-import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.domain.Student;
+import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.pojo.Schedule;
 import edu.hneu.studentsportal.repository.StudentRepository;

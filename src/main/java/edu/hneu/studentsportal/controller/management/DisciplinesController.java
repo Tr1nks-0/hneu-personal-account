@@ -1,10 +1,10 @@
 package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.controller.ExceptionHandlingController;
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.EducationProgram;
-import edu.hneu.studentsportal.entity.Faculty;
-import edu.hneu.studentsportal.entity.Speciality;
+import edu.hneu.studentsportal.domain.Discipline;
+import edu.hneu.studentsportal.domain.EducationProgram;
+import edu.hneu.studentsportal.domain.Faculty;
+import edu.hneu.studentsportal.domain.Speciality;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
@@ -24,7 +24,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;

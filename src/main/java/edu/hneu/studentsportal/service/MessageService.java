@@ -1,62 +1,76 @@
 package edu.hneu.studentsportal.service;
 
-import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Service;
+import edu.hneu.studentsportal.utils.annotation.Message;
 
-import javax.annotation.Resource;
-import java.util.Locale;
-
-@Service
-public class MessageService {
-
-    @Resource
-    private MessageSource messageSource;
+public interface MessageService {
 
     //emails
 
-    public String userWasCreatedEmailSubject() {
-        return getMessage("mails.subject.new.user");
-    }
+    @Message("mails.subject.new.user")
+    String userWasCreatedEmailSubject();
 
-    public String userWasChangedEmailSubject() {
-        return getMessage("mails.subject.changed.user");
-    }
+    @Message("mails.subject.changed.user")
+    String userWasChangedEmailSubject();
 
-    public String userWasChangedEmailBody() {
-        return getMessage("mails.body.changed.user");
-    }
+    @Message("mails.body.changed.user")
+    String userWasChangedEmailBody();
 
-    public String contactUsEmailSubject() {
-        return getMessage("mails.subject.contact.us.email");
-    }
+    @Message("mails.subject.contact.us.email")
+    String contactUsEmailSubject();
 
     //errors
 
-    public String studentExistsError() {
-        return getMessage("error.student.profile.exists");
-    }
+    @Message("invalid.student.profile.file.not.found")
+    String fileNotFoundError(String path);
 
-    public String groupExistsError() {
-        return getMessage("error.group.exists");
-    }
+    @Message("error.student.profile.exists")
+    String studentExistsError();
 
-    public String facultyExistsError() {
-        return getMessage("error.faculty.exists");
-    }
+    @Message("error.group.exists")
+    String groupExistsError();
 
-    public String specialityExistsError() {
-        return getMessage("error.speciality.exists");
-    }
+    @Message("error.faculty.exists")
+    String facultyExistsError();
 
-    private String getMessage(String code) {
-        return messageSource.getMessage(code, new Object[0], Locale.getDefault());
-    }
+    @Message("error.speciality.exists")
+    String specialityExistsError();
 
-    public String educationProgramExistsError() {
-        return getMessage("error.education.program.exists");
-    }
+    @Message("error.education.program.exists")
+    String educationProgramExistsError();
 
-    public String disciplineExistsError() {
-        return getMessage("error.discipline.exists");
-    }
+    @Message("error.discipline.exists")
+    String disciplineExistsError();
+
+    @Message("invalid.student.profile.file")
+    String invalidStudentError();
+
+    @Message("invalid.student.profile.faculty")
+    String invalidStudentFacultyError();
+
+    @Message("invalid.student.profile.speciality")
+    String invalidStudentSpecialityError();
+
+    @Message("invalid.student.profile.education.program")
+    String invalidStudentEducationProgramError();
+
+    @Message("invalid.student.profile.group")
+    String invalidStudentGroupError(String group);
+
+    @Message("invalid.student.profile.discipline")
+    String invalidStudentDisciplineError(String discipline);
+
+    @Message("invalid.student.profile.photo")
+    String invalidStudentPhotoError();
+
+    @Message("invalid.student.profile.marks.file")
+    String invalidStudentMarksError();
+
+    @Message("error.student.profile.not.found")
+    String studentNotFoundError(String name);
+
+    @Message("error.discipline.not.found")
+    String disciplineNotFoundError(String name);
+
+    @Message("invalid.student.profile.marks.file")
+    String invalidStudentMarksFile();
 }

@@ -1,7 +1,7 @@
 package edu.hneu.studentsportal.repository;
 
-import edu.hneu.studentsportal.entity.Faculty;
-import edu.hneu.studentsportal.entity.Speciality;
+import edu.hneu.studentsportal.domain.Faculty;
+import edu.hneu.studentsportal.domain.Speciality;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

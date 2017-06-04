@@ -1,10 +1,10 @@
 package edu.hneu.studentsportal.service.impl;
 
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.DisciplineMark;
-import edu.hneu.studentsportal.entity.EducationProgram;
-import edu.hneu.studentsportal.entity.Speciality;
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.Discipline;
+import edu.hneu.studentsportal.domain.DisciplineMark;
+import edu.hneu.studentsportal.domain.EducationProgram;
+import edu.hneu.studentsportal.domain.Speciality;
+import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.service.StudentDisciplineMarksService;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;

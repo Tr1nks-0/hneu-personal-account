@@ -1,8 +1,6 @@
 package edu.hneu.studentsportal.repository;
 
-import edu.hneu.studentsportal.entity.Faculty;
-
-import java.util.Optional;
+import edu.hneu.studentsportal.domain.Faculty;
 
 public interface FacultyRepositoryCustom {
 

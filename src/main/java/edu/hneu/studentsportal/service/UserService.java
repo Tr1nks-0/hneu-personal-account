@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.service;
 
-import edu.hneu.studentsportal.entity.User;
+import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
 
 public interface UserService {

@@ -1,17 +1,16 @@
 package edu.hneu.studentsportal.parser;
 
+import edu.hneu.studentsportal.service.MessageService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.context.MessageSource;
 
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Locale;
 
 import static java.util.Objects.nonNull;
 
@@ -21,7 +20,7 @@ public abstract class AbstractExcelParser<E> {
     protected Workbook workbook;
 
     @Resource
-    protected MessageSource messageSource;
+    protected MessageService messageService;
 
     public E parse(File file) {
         try {
@@ -29,7 +28,7 @@ public abstract class AbstractExcelParser<E> {
             sheet = workbook.getSheetAt(0);
             return extractModel();
         } catch (IOException e) {
-            throw new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.file.not.found", new Object[] {file.toPath()}, Locale.getDefault()));
+            throw new IllegalArgumentException(messageService.fileNotFoundError(file.getPath()));
         }
     }
 

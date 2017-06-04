@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.entity;
+package edu.hneu.studentsportal.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

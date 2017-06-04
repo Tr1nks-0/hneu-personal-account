@@ -1,10 +1,10 @@
 package edu.hneu.studentsportal.parser.impl;
 
 import com.google.api.client.util.Lists;
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.DisciplineMark;
-import edu.hneu.studentsportal.entity.Group;
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.Discipline;
+import edu.hneu.studentsportal.domain.DisciplineMark;
+import edu.hneu.studentsportal.domain.Group;
+import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.parser.AbstractExcelParser;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
@@ -54,7 +54,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     @Override
     public Map<Student, List<DisciplineMark>> extractModel() {
         if (isFalse(getStringCellValue(7, 4).contains(DISCIPLINES_HEADER)))
-            throw new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.marks.file", new Object[0], Locale.getDefault()));
+            throw new IllegalArgumentException(messageService.invalidStudentMarksError());
 
         List<Student> students = getStudents();
         List<Discipline> disciplines = getDisciplines();
@@ -78,7 +78,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
 
     private Group getGroup() {
         final String groupName = getStringCellValue(GROUP_ID_ROW_INDEX, GROUP_NAME_CELL).toLowerCase().replace(GROUP_PREFIX, StringUtils.EMPTY).trim();
-        return groupRepository.findByName(groupName).orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.marks.group.not.found", new Object[]{groupName}, Locale.getDefault())));
+        return groupRepository.findByName(groupName).orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentGroupError(groupName)));
     }
 
     private List<Discipline> getDisciplines() {
@@ -99,11 +99,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
 
     private Student getStudentByFullName(String fullName, List<Student> groupStudents) {
         Optional<Student> student = groupStudents.stream().filter(s -> fullName.contains(s.getName())).filter(s -> fullName.contains(s.getSurname())).findFirst();
-        if (student.isPresent()) {
-            return student.get();
-        } else {
-            throw new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.marks.student.not.found", new Object[]{fullName}, Locale.getDefault()));
-        }
+        return student.orElseThrow(() -> new IllegalArgumentException(messageService.studentNotFoundError(fullName)));
     }
 
     private List<DisciplineMark> getDisciplineMarks(int row, List<Discipline> disciplines) {
@@ -119,7 +115,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
 
     private Discipline getDiscipline(String disciplineName) {
         return disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(disciplineName, getCourse(), getSemester(), getGroup().getSpeciality(), getGroup().getEducationProgram())
-                .orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.marks.discipline.not.found", new Object[]{disciplineName}, Locale.getDefault())));
+                .orElseThrow(() -> new IllegalArgumentException(messageService.disciplineNotFoundError(disciplineName)));
     }
 
     private IntFunction<DisciplineMark> getDisciplineMark(int row, List<Discipline> disciplines) {
@@ -133,7 +129,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
         return IntStream.range(0, MAX_NUMBER_OF_ITERATIONS)
                 .filter(i -> getStringCellValue(i).contains(NUMBER_MARKER))
                 .map(i -> i + 2)
-                .findFirst().orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.marks.file", new Object[0], Locale.getDefault())));
+                .findFirst().orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentMarksFile()));
     }
 
     private int getSemester() {

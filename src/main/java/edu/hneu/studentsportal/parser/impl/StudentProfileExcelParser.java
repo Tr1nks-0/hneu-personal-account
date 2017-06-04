@@ -3,11 +3,12 @@ package edu.hneu.studentsportal.parser.impl;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import edu.hneu.studentsportal.entity.*;
+import edu.hneu.studentsportal.domain.*;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.parser.AbstractExcelParser;
 import edu.hneu.studentsportal.parser.Indexer;
 import edu.hneu.studentsportal.repository.*;
+import edu.hneu.studentsportal.service.MessageService;
 import lombok.extern.log4j.Log4j;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.springframework.context.annotation.Scope;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,12 +49,14 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
     private SpecialityRepository specialityRepository;
     @Resource
     private EducationProgramRepository educationProgramRepository;
+    @Resource
+    private MessageService messageService;
 
     @Override
     public Student extractModel() {
         Indexer indexer = Indexer.of(3);
         if (isFalse(getStringCellValue(indexer.getValue()).contains(VALID_HEADER_HOLDER)))
-            throw new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.file", new Object[0], Locale.getDefault()));
+            throw new IllegalArgumentException(messageService.invalidStudentError());
         indexer.next();
         Student student = new Student();
         student.setSurname(getString2CellValue(indexer.next()));
@@ -73,7 +75,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     private Faculty extractFaculty(Indexer indexer) {
         String facultyName = getString2CellValue(indexer.next());
-        return facultyRepository.findByName(facultyName).orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.faculty", new Object[0], Locale.getDefault())));
+        return facultyRepository.findByName(facultyName).orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentFacultyError()));
     }
 
     private List<String> extractContacts(Indexer indexer) {
@@ -85,24 +87,24 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
 
     private Speciality extractSpeciality(Indexer indexer, Faculty faculty) {
         String specialityName = getString2CellValue(indexer.next());
-        return specialityRepository.findByNameAndFaculty(specialityName, faculty).orElseThrow(() -> new IllegalArgumentException(
-                messageSource.getMessage("invalid.student.profile.speciality", new Object[0], Locale.getDefault())));
+        return specialityRepository.findByNameAndFaculty(specialityName, faculty)
+                .orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentSpecialityError()));
     }
 
     private EducationProgram extractMasterEducationProgram(Indexer indexer) {
         boolean isMasterProgram = getStringCellValue(indexer.getValue() + 1).contains(MASTER_PROGRAM_HOLDER);
         if (isMasterProgram) {
             String educationProgramName = getString2CellValue(indexer.next());
-            return educationProgramRepository.findByName(educationProgramName).orElseThrow(() -> new IllegalArgumentException(
-                    messageSource.getMessage("invalid.student.profile.education.program", new Object[0], Locale.getDefault())));
+            return educationProgramRepository.findByName(educationProgramName)
+                    .orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentEducationProgramError()));
         }
         return null;
     }
 
     private Group extractGroup(Indexer indexer) {
         String groupName = getString2CellValue(indexer.next());
-        return groupRepository.findByName(groupName).orElseThrow(() -> new IllegalArgumentException(
-                messageSource.getMessage("invalid.student.profile.group", new String[]{groupName}, Locale.getDefault())));
+        return groupRepository.findByName(groupName)
+                .orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentGroupError(groupName)));
     }
 
     private List<DisciplineMark> extractDisciplinesInternal(Speciality speciality, EducationProgram educationProgram, Indexer indexer) {
@@ -144,8 +146,8 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         return discipline -> disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgramAndCreditsAndControlForm(
                 discipline.getLabel(), discipline.getCourse(), discipline.getSemester(),
                 discipline.getSpeciality(), discipline.getEducationProgram(),
-                discipline.getCredits(), discipline.getControlForm()
-        ).orElseThrow(() -> new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.discipline", new Object[]{discipline.getLabel()}, Locale.getDefault())));
+                discipline.getCredits(), discipline.getControlForm())
+                    .orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentDisciplineError(discipline.getLabel())));
     }
 
     private boolean isNotFileEnd(int row) {
@@ -201,7 +203,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
     private byte[] extractProfileImage() {
         List<? extends PictureData> allPictures = workbook.getAllPictures();
         if (allPictures.isEmpty())
-            throw new IllegalArgumentException(messageSource.getMessage("invalid.student.profile.photo", new Object[0], Locale.getDefault()));
+            throw new IllegalArgumentException(messageService.invalidStudentPhotoError());
         return Iterables.getLast(allPictures).getData();
     }
 }

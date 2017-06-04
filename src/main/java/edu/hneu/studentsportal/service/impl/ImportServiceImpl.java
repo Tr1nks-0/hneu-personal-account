@@ -1,8 +1,8 @@
 package edu.hneu.studentsportal.service.impl;
 
 
-import edu.hneu.studentsportal.entity.DisciplineMark;
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.DisciplineMark;
+import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.factory.ParserFactory;
 import edu.hneu.studentsportal.repository.StudentRepository;

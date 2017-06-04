@@ -1,7 +1,7 @@
 package edu.hneu.studentsportal.repository.impl;
 
-import edu.hneu.studentsportal.entity.Faculty;
-import edu.hneu.studentsportal.entity.Speciality;
+import edu.hneu.studentsportal.domain.Faculty;
+import edu.hneu.studentsportal.domain.Speciality;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepositoryCustom;
 

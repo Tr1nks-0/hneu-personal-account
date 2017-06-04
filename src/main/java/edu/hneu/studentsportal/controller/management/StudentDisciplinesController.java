@@ -1,15 +1,13 @@
 package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.controller.ExceptionHandlingController;
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.DisciplineMark;
-import edu.hneu.studentsportal.entity.Student;
+import edu.hneu.studentsportal.domain.Discipline;
+import edu.hneu.studentsportal.domain.DisciplineMark;
+import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.repository.DisciplineMarkRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.impl.StudentDisciplineMarksServiceImpl;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

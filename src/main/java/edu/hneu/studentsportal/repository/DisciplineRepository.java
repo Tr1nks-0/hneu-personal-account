@@ -1,8 +1,8 @@
 package edu.hneu.studentsportal.repository;
 
-import edu.hneu.studentsportal.entity.Discipline;
-import edu.hneu.studentsportal.entity.EducationProgram;
-import edu.hneu.studentsportal.entity.Speciality;
+import edu.hneu.studentsportal.domain.Discipline;
+import edu.hneu.studentsportal.domain.EducationProgram;
+import edu.hneu.studentsportal.domain.Speciality;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

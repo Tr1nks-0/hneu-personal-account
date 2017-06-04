@@ -1,8 +1,8 @@
 package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.controller.ExceptionHandlingController;
-import edu.hneu.studentsportal.entity.Faculty;
-import edu.hneu.studentsportal.entity.Speciality;
+import edu.hneu.studentsportal.domain.Faculty;
+import edu.hneu.studentsportal.domain.Speciality;
 import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;

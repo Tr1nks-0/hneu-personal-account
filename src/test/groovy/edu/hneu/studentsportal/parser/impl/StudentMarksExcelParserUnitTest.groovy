@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.parser.impl
 
-import edu.hneu.studentsportal.entity.*
+import edu.hneu.studentsportal.domain.*
 import edu.hneu.studentsportal.repository.DisciplineRepository
 import edu.hneu.studentsportal.repository.GroupRepository
 import edu.hneu.studentsportal.repository.StudentRepository
