@@ -24,7 +24,6 @@
                 </div>
             </div>
             <div class="panel-body">
-
                 <form method="post" action="/management/import/student-marks" enctype="multipart/form-data">
                     <div class="input-group">
                         <span class="input-group-btn">
@@ -39,7 +38,6 @@
                         </span>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>

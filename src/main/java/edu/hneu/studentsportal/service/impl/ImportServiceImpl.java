@@ -17,7 +17,6 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import static java.lang.String.format;
@@ -48,13 +47,13 @@ public class ImportServiceImpl implements ImportService {
     }
 
     @Override
-    public Set<Student> importStudentMarks(File file) {
+    public Map<Student, List<DisciplineMark>> importStudentMarks(File file) {
         Map<Student, List<DisciplineMark>> importedStudentsMarks = parserFactory.newStudentMarksExcelParser().parse(file);
         importedStudentsMarks.forEach((student, importedMarks) -> {
             importedMarks.forEach(merge(student.getDisciplineMarks()));
             studentRepository.save(student);
         });
-        return importedStudentsMarks.keySet();
+        return importedStudentsMarks;
     }
 
     private Consumer<DisciplineMark> merge(List<DisciplineMark> existingMarks) {

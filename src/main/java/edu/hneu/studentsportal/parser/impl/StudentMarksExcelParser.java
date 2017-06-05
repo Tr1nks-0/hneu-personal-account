@@ -63,10 +63,9 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
         Map<Student, List<DisciplineMark>> studentsDisciplineMarks = new HashMap<>();
         while (isNotEndFile(row)) {
             String fullName = getString1CellValue(row);
-            if (isNotBlank(fullName)) {
-                Student student = getStudentByFullName(fullName, students);
-                studentsDisciplineMarks.put(student, getDisciplineMarks(row, disciplines));
-            }
+            Optional<Student> student = getStudentByFullName(fullName, students);
+            if(student.isPresent())
+                studentsDisciplineMarks.put(student.get(), getDisciplineMarks(row, disciplines));
             row++;
         }
         return studentsDisciplineMarks;
@@ -84,7 +83,9 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     private List<Discipline> getDisciplines() {
         List<Discipline> disciplines = Lists.newArrayList();
         for (int i = START_DISCIPLINES_COL; isEndOfDisciplines(i); i++) {
-            disciplines.add(getDiscipline(getStringCellValue(START_DISCIPLINES_ROW, i)));
+            String disciplineName = getStringCellValue(START_DISCIPLINES_ROW, i);
+            if(isFalse(disciplineName.startsWith("Маголего")))
+                disciplines.add(getDiscipline(disciplineName));
         }
         return disciplines;
     }
@@ -97,9 +98,10 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
         return row < MAX_NUMBER_OF_ITERATIONS && isFalse(getString1CellValue(row).contains(FILE_END_PREFIX));
     }
 
-    private Student getStudentByFullName(String fullName, List<Student> groupStudents) {
-        Optional<Student> student = groupStudents.stream().filter(s -> fullName.contains(s.getName())).filter(s -> fullName.contains(s.getSurname())).findFirst();
-        return student.orElseThrow(() -> new IllegalArgumentException(messageService.studentNotFoundError(fullName)));
+    private Optional<Student> getStudentByFullName(String fullName, List<Student> groupStudents) {
+        if(isNotBlank(fullName))
+            return groupStudents.stream().filter(s -> fullName.contains(s.getName())).filter(s -> fullName.contains(s.getSurname())).findFirst();
+        return Optional.empty();
     }
 
     private List<DisciplineMark> getDisciplineMarks(int row, List<Discipline> disciplines) {
@@ -114,7 +116,12 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     }
 
     private Discipline getDiscipline(String disciplineName) {
-        return disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(disciplineName, getCourse(), getSemester(), getGroup().getSpeciality(), getGroup().getEducationProgram())
+        return disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(
+                disciplineName,
+                getCourse(),
+                getSemester(),
+                getGroup().getSpeciality(),
+                getGroup().getEducationProgram())
                 .orElseThrow(() -> new IllegalArgumentException(messageService.disciplineNotFoundError(disciplineName)));
     }
 

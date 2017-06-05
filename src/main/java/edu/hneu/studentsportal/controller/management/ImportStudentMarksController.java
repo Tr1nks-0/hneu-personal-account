@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.controller.ExceptionHandlingController;
+import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.FileService;
@@ -9,6 +10,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_STUDENTS_MARKS_URL;
@@ -42,16 +46,16 @@ public class ImportStudentMarksController implements ExceptionHandlingController
 
     @PostMapping
     @SneakyThrows
-    public String importStudent(@RequestParam("file") MultipartFile multipartFile, RedirectAttributes redirectAttributes) {
+    public String importStudent(@RequestParam("file") MultipartFile multipartFile, Model model) {
         File file = fileService.getFile(multipartFile);
         try {
-            final Set<Student> students = importService.importStudentMarks(file);
-            students.forEach(emailService::sendProfileWasChangedEmail);
-            redirectAttributes.addFlashAttribute("success", students);
+            Map<Student, List<DisciplineMark>> studentsMarks = importService.importStudentMarks(file);
+            //students.forEach(emailService::sendProfileWasChangedEmail);
+            model.addAttribute("studentsMarks", studentsMarks);
         } finally {
             Files.deleteIfExists(file.toPath());
         }
-        return "redirect:" + IMPORT_STUDENTS_MARKS_URL;
+        return "management/imported-students-marks";
     }
 
     @Override
