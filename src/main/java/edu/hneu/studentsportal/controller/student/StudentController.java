@@ -14,7 +14,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@ControllerAdvice
 @RequestMapping("/students")
 public class StudentController {
 
