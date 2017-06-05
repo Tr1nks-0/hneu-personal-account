@@ -35,6 +35,9 @@
                             <li class="list-group-item">
                                 <div>
                                     <a data-toggle="collapse" data-parent="#accordion" href="#collapse${i.index}">${student.surname} ${student.name}</a>
+                                    <a href="/management/students/${student.id}" class="float-right">
+                                        <i class="fa fa-edit"></i>
+                                    </a>
                                 </div>
                                 <div id="collapse${i.index}" class="panel-collapse collapse">
                                     <table class="table no-margin">
@@ -44,7 +47,7 @@
                                                     ${mark.discipline.label}
                                                     <tags:disciplineType type="${mark.discipline.type}"/>
                                                 </td>
-                                                <td>${mark.mark}</td>
+                                                <td><tags:mark mark="${mark.mark}"/></td>
                                             </tr>
                                         </c:forEach>
                                     </table>

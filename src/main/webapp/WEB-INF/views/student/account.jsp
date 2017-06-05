@@ -1,6 +1,7 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
 <%@ include file="../jspf/header.jspf" %>
 
@@ -87,28 +88,7 @@
                                     <td class="center hidden-xs"><c:out value="${disciplineMark.discipline.credits}"/></td>
                                     <td class="center hidden-xs"><c:out value="${disciplineMark.discipline.controlForm.name}"/></td>
                                     <td class="center">
-                                        <c:choose>
-                                            <c:when test="${disciplineMark.mark ge '90' or disciplineMark.mark eq 'з' }">
-                                                <button class="btn btn-success disabled">
-                                                    <c:out value="${disciplineMark.mark}"/>
-                                                </button>
-                                            </c:when>
-                                            <c:when test="${disciplineMark.mark ge '74' and disciplineMark.mark lt '90' }">
-                                                <button class="btn btn-default disabled">
-                                                    <c:out value="${disciplineMark.mark}"/>
-                                                </button>
-                                            </c:when>
-                                            <c:when test="${disciplineMark.mark ge '60' and disciplineMark.mark lt '74' }">
-                                                <button class="btn btn-warning disabled">
-                                                    <c:out value="${disciplineMark.mark}"/>
-                                                </button>
-                                            </c:when>
-                                            <c:when test="${(disciplineMark.mark ge '0' and disciplineMark.mark lt '60') or disciplineMark.mark eq 'н'}">
-                                                <button class="btn btn-danger disabled">
-                                                    <c:out value="${disciplineMark.mark}"/>
-                                                </button>
-                                            </c:when>
-                                        </c:choose>
+                                        <tags:mark mark="${disciplineMark.mark}"/>
                                     </td>
                                 </tr>
             <c:if test="${profile.disciplineMarks.size() > i.index

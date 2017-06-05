@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.controller;
+package edu.hneu.studentsportal.controller.student;
 
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.domain.User;
