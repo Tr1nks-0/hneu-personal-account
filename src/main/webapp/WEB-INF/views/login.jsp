@@ -3,11 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 <html lang="ua">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <%@ include file="jspf/cssTag.jspf" %>
-    <link rel="stylesheet" href="/resources/css/custom/custom.min.css">
+    <tags:css/>
 </head>
 <body>
 <div class="top-content mask">
@@ -57,7 +57,7 @@
         </div>
     </div>
 </div>
-<%@ include file="jspf/jsTag.jspf" %>
+<tags:js/>
 <script type="text/javascript" src="/resources/js/jquery/jquery.backstretch.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {

@@ -13,7 +13,7 @@ import javax.annotation.Resource
 import javax.sql.DataSource
 
 @Component
-@Profile("init")
+@Profile('init')
 class InitializationOnStartUpListener implements ApplicationListener<ContextRefreshedEvent> {
 
     @Resource
@@ -22,19 +22,19 @@ class InitializationOnStartUpListener implements ApplicationListener<ContextRefr
     @Override
     void onApplicationEvent(ContextRefreshedEvent event) {
         def logger = Logger.getLogger(InitializationOnStartUpListener.class)
-        logger.info("=========== INITIALIZATION STARTED ===========")
+        logger.info('=========== INITIALIZATION STARTED ===========')
 
-        def users = new ClassPathResource("scripts/users.sql")
-        def faculties = new ClassPathResource("scripts/faculties.sql")
-        def specialities = new ClassPathResource("scripts/specialities.sql")
-        def educationPrograms = new ClassPathResource("scripts/educationPrograms.sql")
-        def groups = new ClassPathResource("scripts/groups.sql")
-        def disciplines = new ClassPathResource("scripts/disciplines.sql")
+        def users = new ClassPathResource('scripts/users.sql')
+        def faculties = new ClassPathResource('scripts/faculties.sql')
+        def specialities = new ClassPathResource('scripts/specialities.sql')
+        def educationPrograms = new ClassPathResource('scripts/educationPrograms.sql')
+        def groups = new ClassPathResource('scripts/groups.sql')
+        def disciplines = new ClassPathResource('scripts/disciplines.sql')
 
         def databasePopulator = new ResourceDatabasePopulator(users, faculties, specialities, educationPrograms, groups, disciplines)
         DatabasePopulatorUtils.execute(databasePopulator, dataSource)
 
-        logger.info("=========== INITIALIZATION FINISHED ===========")
+        logger.info('=========== INITIALIZATION FINISHED ===========')
     }
 
 }

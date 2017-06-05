@@ -60,7 +60,7 @@ communication:
 spring:
   profiles: production
 server:
-  port: 80
+  port: 8080
 integration:
   service:
     emails:

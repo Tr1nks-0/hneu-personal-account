@@ -49,7 +49,7 @@
                             <div class="input-group">
                                 <textarea class="form-control" rows="1" name="message" id="message" required="required" maxlength="250"></textarea>
                                 <span class="input-group-btn">
-                                    <input id="submit" name="submit" type="submit" value="Відправити" class="btn btn-info btn-flat">
+                                    <input id="submit" name="submit" type="submit" value="Відправити" class="btn btn-default">
                                 </span>
                             </div>
                         </form>

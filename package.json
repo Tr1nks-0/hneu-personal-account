@@ -21,6 +21,7 @@
     "gulp-concat": "*",
     "gulp-less": "*",
     "gulp-uglify": "*",
-    "gulp-minify-css": "*"
+    "gulp-minify-css": "*",
+    "merge-stream": "*"
   }
 }
