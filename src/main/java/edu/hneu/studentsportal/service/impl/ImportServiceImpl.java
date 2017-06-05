@@ -7,9 +7,12 @@ import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.factory.ParserFactory;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.ImportService;
+import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.service.UserService;
+import javaslang.control.Try;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -31,6 +34,8 @@ public class ImportServiceImpl implements ImportService {
     private UserService userService;
     @Resource
     private StudentRepository studentRepository;
+    @Resource
+    private MessageService messageService;
 
     @Value("${integration.service.emails.url}")
     public String emailsIntegrationServiceUrl;
@@ -39,7 +44,6 @@ public class ImportServiceImpl implements ImportService {
     public Student importStudent(File file) {
         Student student = parserFactory.newStudentProfileExcelParser().parse(file);
         student.setEmail(retrieveStudentEmailFromThirdPartyService(student));
-        //student.setEmail("oleksandr.rozdolskyi@hneu.net");
         userService.create(student.getEmail(), UserRole.STUDENT);
         studentRepository.save(student);
         log.info(format("New %s has been created.", student));
@@ -74,7 +78,10 @@ public class ImportServiceImpl implements ImportService {
         String formatterSurname = student.getSurname().toLowerCase().trim();
         String groupName = student.getGroup().getName();
         String url = format("%s/EmailToOutController?name=%s&surname=%s&groupId=%s", emailsIntegrationServiceUrl, formattedName, formatterSurname, groupName);
-        return new RestTemplate().getForEntity(url, String.class).getBody().toLowerCase();
+        return Try.of(() -> new RestTemplate().getForEntity(url, String.class))
+                .map(ResponseEntity::getBody)
+                .map(String::toLowerCase)
+                .getOrElseThrow(() -> new IllegalArgumentException(messageService.emailNotFoundForStudent(formattedName + " " + formatterSurname)));
     }
 
 }
