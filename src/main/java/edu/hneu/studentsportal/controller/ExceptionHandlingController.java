@@ -16,8 +16,8 @@ public interface ExceptionHandlingController {
         return handleErrorInternal(e, e.getMessage(), redirectAttributes);
     }
 
-    default String handleErrorInternal(Exception e, String errorMessage, RedirectAttributes redirectAttributes) {
-        logger().warn(e.getMessage(), e);
+    default String handleErrorInternal(Throwable cause, String errorMessage, RedirectAttributes redirectAttributes) {
+        logger().warn(cause.getMessage(), cause);
         redirectAttributes.addFlashAttribute("error", errorMessage);
         return "redirect:" + baseUrl();
     }

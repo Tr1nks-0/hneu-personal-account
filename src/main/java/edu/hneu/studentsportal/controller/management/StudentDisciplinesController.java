@@ -6,10 +6,12 @@ import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.repository.DisciplineMarkRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
+import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.service.impl.StudentDisciplineMarksServiceImpl;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +39,9 @@ public class StudentDisciplinesController implements ExceptionHandlingController
     private DisciplineMarkRepository disciplineMarkRepository;
     @Resource
     private StudentDisciplineMarksServiceImpl studentDisciplineMarksService;
-
+    @Resource
+    private MessageService messageService;
+    
     @GetMapping
     public String getStudentMarks(@PathVariable long studentId, Model model,
                                   @RequestParam(defaultValue = "1") int course, @RequestParam(defaultValue = "1") int semester) {
@@ -87,6 +91,11 @@ public class StudentDisciplinesController implements ExceptionHandlingController
         } else {
             return "redirect:/management/students/" + studentId + "/disciplines";
         }
+    }
+
+    @ExceptionHandler(TransactionSystemException.class)
+    public String handleError(TransactionSystemException e, RedirectAttributes redirectAttributes) {
+        return handleErrorInternal(e.getCause(), messageService.semesterDisciplinesLimitExceededError(), redirectAttributes);
     }
 
     @Override

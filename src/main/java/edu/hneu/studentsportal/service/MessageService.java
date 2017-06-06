@@ -73,4 +73,8 @@ public interface MessageService {
 
     @Message("error.student.email.not.found")
     String emailNotFoundForStudent(String studentName);
+
+    @Message("limit.semester.disciplines.message")
+    String semesterDisciplinesLimitExceededError();
+
 }

@@ -1,5 +1,7 @@
 package edu.hneu.studentsportal.domain;
 
+import edu.hneu.studentsportal.annotation.LimitSemesterDisciplines;
+import edu.hneu.studentsportal.enums.DisciplineType;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.Cascade;
@@ -82,6 +84,7 @@ public class Student {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinTable(joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "discipline_mark_id"))
     @Cascade(CascadeType.ALL)
+    @LimitSemesterDisciplines(count = 2, type = DisciplineType.MAGMAYNOR)
     private List<DisciplineMark> disciplineMarks;
 
 }
