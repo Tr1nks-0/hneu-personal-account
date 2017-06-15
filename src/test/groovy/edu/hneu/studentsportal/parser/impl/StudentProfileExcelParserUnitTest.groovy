@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.parser
+package edu.hneu.studentsportal.parser.impl
 
 import edu.hneu.studentsportal.domain.*
 import edu.hneu.studentsportal.parser.impl.StudentProfileExcelParser

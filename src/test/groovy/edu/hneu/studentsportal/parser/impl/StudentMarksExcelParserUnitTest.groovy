@@ -4,6 +4,7 @@ import edu.hneu.studentsportal.domain.*
 import edu.hneu.studentsportal.repository.DisciplineRepository
 import edu.hneu.studentsportal.repository.GroupRepository
 import edu.hneu.studentsportal.repository.StudentRepository
+import edu.hneu.studentsportal.service.DisciplineMarkService
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -19,11 +20,13 @@ class StudentMarksExcelParserUnitTest extends Specification {
     def groupRepositoryMock = Mock(GroupRepository)
     def disciplineRepositoryMock = Mock(DisciplineRepository)
     def studentRepositoryMock = Mock(StudentRepository)
+    def disciplineMarkServiceMock = Mock(DisciplineMarkService)
 
     def studentMarksExcelParser = new StudentMarksExcelParser(
             groupRepository: groupRepositoryMock,
             disciplineRepository: disciplineRepositoryMock,
-            studentRepository: studentRepositoryMock
+            studentRepository: studentRepositoryMock,
+            disciplineMarkService: disciplineMarkServiceMock
     )
 
     def setup() {
@@ -47,6 +50,10 @@ class StudentMarksExcelParserUnitTest extends Specification {
             new Student(name: 'Олександр', surname: 'Роздольський'),
             new Student(name: 'Максим', surname: 'Сизранцев'),
             new Student(name: 'Валентин', surname: 'Чугреєв'),
+        ]
+        disciplineMarkServiceMock.alignStudentDisciplinesMark(*_) >> [
+                disciplineMock, disciplineMock, disciplineMock,
+                disciplineMock, disciplineMock, disciplineMock,
         ]
     }
 
