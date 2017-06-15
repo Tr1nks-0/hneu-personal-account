@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.pojo;
 
 import edu.hneu.studentsportal.domain.Discipline;
+import edu.hneu.studentsportal.enums.DisciplineType;
 
 public class StudentDiscipline extends Discipline {
 

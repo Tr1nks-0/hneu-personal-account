@@ -6,7 +6,7 @@ import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.repository.*;
-import edu.hneu.studentsportal.service.StudentDisciplineMarksService;
+import edu.hneu.studentsportal.service.DisciplineMarkService;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -37,7 +37,7 @@ public class StudentsController implements ExceptionHandlingController {
     @Resource
     private GroupRepository groupRepository;
     @Resource
-    private StudentDisciplineMarksService studentDisciplineMarksService;
+    private DisciplineMarkService disciplineMarkService;
 
     @GetMapping
     public String getStudents(@RequestParam Long groupId, Model model) {
@@ -90,7 +90,7 @@ public class StudentsController implements ExceptionHandlingController {
         model.addAttribute("disciplineTypes", DisciplineType.values());
         model.addAttribute("disciplineFormControls", DisciplineFormControl.values());
         model.addAttribute("student", student);
-        model.addAttribute("courses", studentDisciplineMarksService.getStudentCourses(student));
+        model.addAttribute("courses", disciplineMarkService.getStudentCourses(student));
         return "management/student-editor-page";
     }
 }

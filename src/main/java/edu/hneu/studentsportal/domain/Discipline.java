@@ -59,6 +59,16 @@ public class Discipline {
     @Enumerated(EnumType.ORDINAL)
     private DisciplineType type;
 
+    public Discipline(String label, DisciplineType type, int course, int semester) {
+        this.label = label;
+        this.type = type;
+        this.course = course;
+        this.semester = semester;
+    }
+
+    public Discipline() {
+    }
+
     @Override
     public String toString() {
         return type.getName() + " - " + label;

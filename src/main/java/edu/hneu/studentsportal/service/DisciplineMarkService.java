@@ -8,13 +8,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-public interface StudentDisciplineMarksService {
+public interface DisciplineMarkService {
 
     List<DisciplineMark> getStudentMarks(Student student, int course, int semester);
 
     List<Discipline> getPossibleNewDisciplinesForStudent(Student student, int course, int semester);
 
     List<Integer> getStudentCourses(Student student);
+
+    List<DisciplineMark> alignStudentDisciplinesMark(Student student, List<DisciplineMark> disciplineMarks);
 
     <E> List<E> extract(Collection<DisciplineMark> marks, Function<DisciplineMark, E> converter);
 }

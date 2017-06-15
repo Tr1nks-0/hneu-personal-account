@@ -5,22 +5,27 @@ import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Group;
 import edu.hneu.studentsportal.domain.Student;
+import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.parser.AbstractExcelParser;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
+import edu.hneu.studentsportal.service.DisciplineMarkService;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.math.NumberUtils.isNumber;
@@ -50,6 +55,8 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     private DisciplineRepository disciplineRepository;
     @Resource
     private StudentRepository studentRepository;
+    @Resource
+    private DisciplineMarkService disciplineMarkService;
 
     @Override
     public Map<Student, List<DisciplineMark>> extractModel() {
@@ -63,9 +70,12 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
         Map<Student, List<DisciplineMark>> studentsDisciplineMarks = new HashMap<>();
         while (isNotEndFile(row)) {
             String fullName = getString1CellValue(row);
-            Optional<Student> student = getStudentByFullName(fullName, students);
-            if(student.isPresent())
-                studentsDisciplineMarks.put(student.get(), getDisciplineMarks(row, disciplines));
+            Optional<Student> studentOptional = getStudentByFullName(fullName, students);
+            if (studentOptional.isPresent()) {
+                Student student = studentOptional.get();
+                List<DisciplineMark> disciplineMarks = disciplineMarkService.alignStudentDisciplinesMark(student, getDisciplineMarks(row, disciplines));
+                studentsDisciplineMarks.put(student, disciplineMarks);
+            }
             row++;
         }
         return studentsDisciplineMarks;
@@ -84,8 +94,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
         List<Discipline> disciplines = Lists.newArrayList();
         for (int i = START_DISCIPLINES_COL; isEndOfDisciplines(i); i++) {
             String disciplineName = getStringCellValue(START_DISCIPLINES_ROW, i);
-            if(isFalse(disciplineName.startsWith("Маголего")))
-                disciplines.add(getDiscipline(disciplineName));
+            disciplines.add(getDiscipline(disciplineName));
         }
         return disciplines;
     }
@@ -99,8 +108,11 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     }
 
     private Optional<Student> getStudentByFullName(String fullName, List<Student> groupStudents) {
-        if(isNotBlank(fullName))
-            return groupStudents.stream().filter(s -> fullName.contains(s.getName())).filter(s -> fullName.contains(s.getSurname())).findFirst();
+        if (isNotBlank(fullName))
+            return groupStudents.stream()
+                    .filter(s -> fullName.contains(s.getName()))
+                    .filter(s -> fullName.contains(s.getSurname()))
+                    .findFirst();
         return Optional.empty();
     }
 
@@ -108,7 +120,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
         return IntStream.range(START_DISCIPLINES_COL, disciplines.size() + START_DISCIPLINES_COL)
                 .filter(isDisciplineMark(row))
                 .mapToObj(getDisciplineMark(row, disciplines))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     private IntPredicate isDisciplineMark(int row) {
@@ -116,13 +128,17 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     }
 
     private Discipline getDiscipline(String disciplineName) {
-        return disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(
-                disciplineName,
-                getCourse(),
-                getSemester(),
-                getGroup().getSpeciality(),
-                getGroup().getEducationProgram())
-                .orElseThrow(() -> new IllegalArgumentException(messageService.disciplineNotFoundError(disciplineName)));
+        if (disciplineName.toLowerCase().contains("маголего")) {
+            return new Discipline(disciplineName, DisciplineType.MAGMAYNOR, getCourse(), getSemester());
+        } else {
+            return disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(
+                    disciplineName,
+                    getCourse(),
+                    getSemester(),
+                    getGroup().getSpeciality(),
+                    getGroup().getEducationProgram())
+                    .orElseThrow(() -> new IllegalArgumentException(messageService.disciplineNotFoundError(disciplineName)));
+        }
     }
 
     private IntFunction<DisciplineMark> getDisciplineMark(int row, List<Discipline> disciplines) {

@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import edu.hneu.studentsportal.domain.*;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
+import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.parser.AbstractExcelParser;
 import edu.hneu.studentsportal.parser.Indexer;
 import edu.hneu.studentsportal.repository.*;
