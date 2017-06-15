@@ -11,6 +11,7 @@ import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.DisciplineMarkService;
+import edu.hneu.studentsportal.service.DisciplineService;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Scope;
@@ -57,6 +58,8 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     private StudentRepository studentRepository;
     @Resource
     private DisciplineMarkService disciplineMarkService;
+    @Resource
+    private DisciplineService disciplineService;
 
     @Override
     public Map<Student, List<DisciplineMark>> extractModel() {
@@ -100,7 +103,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     }
 
     private Discipline getDiscipline(String disciplineName) {
-        if (disciplineName.toLowerCase().contains("маголего"))
+        if (disciplineService.isMagmaynorLabel(disciplineName))
             return new Discipline(disciplineName, DisciplineType.MAGMAYNOR, getCourse(), getSemester());
         else
             return findDiscipline(disciplineName).orElseThrow(() -> new IllegalArgumentException(messageService.disciplineNotFoundError(disciplineName)));

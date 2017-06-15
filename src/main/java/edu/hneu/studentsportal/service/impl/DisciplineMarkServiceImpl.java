@@ -57,11 +57,12 @@ public class DisciplineMarkServiceImpl implements DisciplineMarkService {
         List<Discipline> allStudentMagmaynors = extractMagmaynors(student.getDisciplineMarks());
         IntStream.range(0, disciplineMarks.size()).forEach(i -> {
             DisciplineMark disciplineMark = disciplineMarks.get(i);
-            if (disciplineMark.getDiscipline().getLabel().toLowerCase().contains("маголего")) {
-                Integer number = Integer.valueOf(disciplineMark.getDiscipline().getLabel().split(" ")[1]);
+            Discipline discipline = disciplineMark.getDiscipline();
+            if (disciplineService.isMagmaynorLabel(discipline.getLabel())) {
+                Integer number = Integer.valueOf(discipline.getLabel().split(" ")[1]);
                 List<Discipline> magmaynersPerSemester = allStudentMagmaynors.stream()
-                        .filter(d -> d.getSemester() == disciplineMark.getDiscipline().getSemester())
-                        .filter(d -> d.getCourse() == disciplineMark.getDiscipline().getCourse())
+                        .filter(d -> d.getSemester().equals(discipline.getSemester()))
+                        .filter(d -> d.getCourse().equals(discipline.getCourse()))
                         .collect(toList());
                 if(number <= magmaynersPerSemester.size())
                     disciplineMark.setDiscipline(magmaynersPerSemester.get(number - 1));

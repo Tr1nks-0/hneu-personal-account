@@ -18,4 +18,9 @@ public class DisciplineServiceImpl implements DisciplineService {
     public boolean isMagmaynor(Discipline discipline) {
         return DisciplineType.MAGMAYNOR.equals(discipline.getType());
     }
+
+    @Override
+    public boolean isMagmaynorLabel(String label) {
+        return label.toLowerCase().contains("маголего");
+    }
 }

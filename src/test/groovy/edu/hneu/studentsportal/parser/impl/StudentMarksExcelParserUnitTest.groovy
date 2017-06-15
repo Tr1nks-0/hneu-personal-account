@@ -5,6 +5,7 @@ import edu.hneu.studentsportal.repository.DisciplineRepository
 import edu.hneu.studentsportal.repository.GroupRepository
 import edu.hneu.studentsportal.repository.StudentRepository
 import edu.hneu.studentsportal.service.DisciplineMarkService
+import edu.hneu.studentsportal.service.DisciplineService
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -21,12 +22,14 @@ class StudentMarksExcelParserUnitTest extends Specification {
     def disciplineRepositoryMock = Mock(DisciplineRepository)
     def studentRepositoryMock = Mock(StudentRepository)
     def disciplineMarkServiceMock = Mock(DisciplineMarkService)
+    def disciplineServiceMock = Mock(DisciplineService)
 
     def studentMarksExcelParser = new StudentMarksExcelParser(
             groupRepository: groupRepositoryMock,
             disciplineRepository: disciplineRepositoryMock,
             studentRepository: studentRepositoryMock,
-            disciplineMarkService: disciplineMarkServiceMock
+            disciplineMarkService: disciplineMarkServiceMock,
+            disciplineService: disciplineServiceMock
     )
 
     def setup() {
@@ -68,7 +71,7 @@ class StudentMarksExcelParserUnitTest extends Specification {
 
     def 'should have all disciplines from file'() {
         given:
-           def excelFile = loadResource STUDENTS_MARKS
+            def excelFile = loadResource STUDENTS_MARKS
         when:
             def marksPerStudent = studentMarksExcelParser.parse(excelFile)
         then:
