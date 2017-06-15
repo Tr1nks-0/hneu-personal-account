@@ -63,7 +63,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
         if (isFalse(getStringCellValue(7, 4).contains(DISCIPLINES_HEADER)))
             throw new IllegalArgumentException(messageService.invalidStudentMarksError());
 
-        List<Student> students = getStudents();
+        List<Student> students = studentRepository.findByGroup(getGroup());
         List<Discipline> disciplines = getDisciplines();
 
         int row = getStartRow();
@@ -79,10 +79,6 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
             row++;
         }
         return studentsDisciplineMarks;
-    }
-
-    private List<Student> getStudents() {
-        return studentRepository.findByGroup(getGroup());
     }
 
     private Group getGroup() {
@@ -101,6 +97,34 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
 
     private boolean isEndOfDisciplines(int i) {
         return i < MAX_NUMBER_OF_ITERATIONS && isFalse(getStringCellValue(START_DISCIPLINES_ROW - 1, i).contains(AVERAGE_SCORE_MARKER));
+    }
+
+    private Discipline getDiscipline(String disciplineName) {
+        if (disciplineName.toLowerCase().contains("маголего"))
+            return new Discipline(disciplineName, DisciplineType.MAGMAYNOR, getCourse(), getSemester());
+        else
+            return findDiscipline(disciplineName).orElseThrow(() -> new IllegalArgumentException(messageService.disciplineNotFoundError(disciplineName)));
+    }
+
+    private Optional<Discipline> findDiscipline(String disciplineName) {
+        return disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(disciplineName, getCourse(), getSemester(),
+                getGroup().getSpeciality(), getGroup().getEducationProgram());
+    }
+
+    private int getCourse() {
+        return Integer.parseInt(getStringCellValue(6).split(" ")[1]);
+    }
+
+    private int getSemester() {
+        return Integer.parseInt(getString2CellValue(SEMESTER_NUMBER_ROW_INDEX).replace(SEMESTER_NUMBER_PREFIX, StringUtils.EMPTY).trim());
+    }
+
+    private int getStartRow() {
+        return IntStream.range(0, MAX_NUMBER_OF_ITERATIONS)
+                .filter(i -> getStringCellValue(i).contains(NUMBER_MARKER))
+                .map(i -> i + 2)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentMarksFile()));
     }
 
     private boolean isNotEndFile(int row) {
@@ -127,40 +151,11 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
         return i -> isNumber(getStringCellValue(row, i));
     }
 
-    private Discipline getDiscipline(String disciplineName) {
-        if (disciplineName.toLowerCase().contains("маголего")) {
-            return new Discipline(disciplineName, DisciplineType.MAGMAYNOR, getCourse(), getSemester());
-        } else {
-            return disciplineRepository.findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(
-                    disciplineName,
-                    getCourse(),
-                    getSemester(),
-                    getGroup().getSpeciality(),
-                    getGroup().getEducationProgram())
-                    .orElseThrow(() -> new IllegalArgumentException(messageService.disciplineNotFoundError(disciplineName)));
-        }
-    }
-
     private IntFunction<DisciplineMark> getDisciplineMark(int row, List<Discipline> disciplines) {
         return col -> {
             String mark = getStringCellValue(row, col);
             return new DisciplineMark(disciplines.get(col - START_DISCIPLINES_COL), mark);
         };
-    }
-
-    private int getStartRow() {
-        return IntStream.range(0, MAX_NUMBER_OF_ITERATIONS)
-                .filter(i -> getStringCellValue(i).contains(NUMBER_MARKER))
-                .map(i -> i + 2)
-                .findFirst().orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentMarksFile()));
-    }
-
-    private int getSemester() {
-        return Integer.parseInt(getString2CellValue(SEMESTER_NUMBER_ROW_INDEX).replace(SEMESTER_NUMBER_PREFIX, StringUtils.EMPTY).trim());
-    }
-
-    private int getCourse() {
-        return Integer.parseInt(getStringCellValue(6).split(" ")[1]);
     }
 
 }
