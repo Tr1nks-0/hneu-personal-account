@@ -14,10 +14,10 @@ class StudentProfileExcelParserUnitTest extends Specification {
 
     @Shared def bachelorGroupMock = Mock(Group)
     @Shared def masterGroupMock = Mock(Group)
-    @Shared def facultyMock = Mock(Faculty)
-    @Shared def specialityMock = Mock(Speciality)
-    @Shared def educationProgramMock = Mock(EducationProgram)
-    @Shared def disciplineMock = Mock(Discipline)
+    def facultyMock = Mock(Faculty)
+    def specialityMock = Mock(Speciality)
+    def educationProgramMock = Mock(EducationProgram)
+    def disciplineMock = Mock(Discipline)
 
     def groupRepositoryMock = Mock(GroupRepository)
     def disciplineRepositoryMock = Mock(DisciplineRepository)

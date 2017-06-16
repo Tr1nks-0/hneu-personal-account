@@ -6,17 +6,16 @@ import edu.hneu.studentsportal.repository.GroupRepository
 import edu.hneu.studentsportal.repository.StudentRepository
 import edu.hneu.studentsportal.service.DisciplineMarkService
 import edu.hneu.studentsportal.service.DisciplineService
-import spock.lang.Shared
 import spock.lang.Specification
 
 class StudentMarksExcelParserUnitTest extends Specification {
 
     static final String STUDENTS_MARKS = 'parser/8.04.51.16.04.xlsx'
 
-    @Shared def groupMock = Mock(Group)
-    @Shared def specialityMock = Mock(Speciality)
-    @Shared def educationProgramMock = Mock(EducationProgram)
-    @Shared def disciplineMock = Mock(Discipline)
+    def groupMock = Mock(Group)
+    def specialityMock = Mock(Speciality)
+    def educationProgramMock = Mock(EducationProgram)
+    def disciplineMock = Mock(Discipline)
 
     def groupRepositoryMock = Mock(GroupRepository)
     def disciplineRepositoryMock = Mock(DisciplineRepository)
