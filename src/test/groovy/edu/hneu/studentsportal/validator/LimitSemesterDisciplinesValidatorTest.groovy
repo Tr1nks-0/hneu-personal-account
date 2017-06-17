@@ -10,8 +10,8 @@ import javax.validation.ConstraintValidatorContext
 
 class LimitSemesterDisciplinesValidatorTest extends Specification {
 
-    def context = Mock(ConstraintValidatorContext)
-    def annotation = Mock(LimitSemesterDisciplines)
+    def contextMock = Mock(ConstraintValidatorContext)
+    def annotationMock = Mock(LimitSemesterDisciplines)
 
     LimitSemesterDisciplinesValidator validator = new LimitSemesterDisciplinesValidator(
             permittedCount: 2,
@@ -20,25 +20,25 @@ class LimitSemesterDisciplinesValidatorTest extends Specification {
 
     def 'should initialize validator permitted count'() {
         given:
-            annotation.count() >> 2
+            annotationMock.count() >> 2
         when:
-            validator.initialize(annotation)
+            validator.initialize(annotationMock)
         then:
-            1 * annotation.count()
+            1 * annotationMock.count()
     }
 
     def 'should initialize validator type'() {
         given:
-            annotation.type() >> DisciplineType.MAGMAYNOR
+            annotationMock.type() >> DisciplineType.MAGMAYNOR
         when:
-            validator.initialize(annotation)
+            validator.initialize(annotationMock)
         then:
-            1 * annotation.type()
+            1 * annotationMock.type()
     }
 
     def 'should validate when disciplines marks list is empty'() {
         when:
-            def isValid = validator.isValid([], context)
+            def isValid = validator.isValid([], contextMock)
         then:
             isValid
     }
@@ -51,7 +51,7 @@ class LimitSemesterDisciplinesValidatorTest extends Specification {
                     new DisciplineMark(discipline: new Discipline('Mag-Maynor 3', DisciplineType.MAGMAYNOR, 1, 1)),
             ]
         when:
-            def isValid = validator.isValid(disciplines, context)
+            def isValid = validator.isValid(disciplines, contextMock)
         then:
             !isValid
     }
@@ -65,7 +65,7 @@ class LimitSemesterDisciplinesValidatorTest extends Specification {
                     new DisciplineMark(discipline: new Discipline('Regular 2', DisciplineType.REGULAR, 1, 1))
             ]
         when:
-            def isValid = validator.isValid(disciplines, context)
+            def isValid = validator.isValid(disciplines, contextMock)
         then:
             isValid
     }

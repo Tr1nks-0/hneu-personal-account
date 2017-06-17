@@ -18,12 +18,12 @@ class StudentProfileExcelParserUnitTest extends Specification {
     def specialityMock = Mock(Speciality)
     def educationProgramMock = Mock(EducationProgram)
     def disciplineMock = Mock(Discipline)
-
     def groupRepositoryMock = Mock(GroupRepository)
     def disciplineRepositoryMock = Mock(DisciplineRepository)
     def facultyRepositoryMock = Mock(FacultyRepository)
     def specialityRepositoryMock = Mock(SpecialityRepository)
     def educationProgramRepositoryMock = Mock(EducationProgramRepository)
+
     def studentProfileExcelParser = new StudentProfileExcelParser(
             groupRepository: groupRepositoryMock,
             disciplineRepository: disciplineRepositoryMock,

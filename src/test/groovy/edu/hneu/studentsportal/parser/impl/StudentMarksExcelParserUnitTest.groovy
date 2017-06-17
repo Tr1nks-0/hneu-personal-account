@@ -16,7 +16,6 @@ class StudentMarksExcelParserUnitTest extends Specification {
     def specialityMock = Mock(Speciality)
     def educationProgramMock = Mock(EducationProgram)
     def disciplineMock = Mock(Discipline)
-
     def groupRepositoryMock = Mock(GroupRepository)
     def disciplineRepositoryMock = Mock(DisciplineRepository)
     def studentRepositoryMock = Mock(StudentRepository)

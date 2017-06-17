@@ -8,7 +8,7 @@ import spock.lang.Specification
 class SpecialityRepositoryImplTest extends Specification {
 
     static final int SPECIALITY_ID = 1
-    public static final int FACULTY_ID = 1
+    static final int FACULTY_ID = 1
 
     def specialityRepositoryMock = Mock(SpecialityRepository)
     def facultyMock = Mock(Faculty)
