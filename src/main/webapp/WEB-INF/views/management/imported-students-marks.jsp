@@ -42,13 +42,19 @@
                                 <div id="collapse${i.index}" class="panel-collapse collapse">
                                     <table class="table no-margin">
                                         <c:forEach items="${studentMarks.value}" var="mark">
-                                            <tr>
-                                                <td>
-                                                    ${mark.discipline.label}
-                                                    <tags:disciplineType type="${mark.discipline.type}"/>
-                                                </td>
-                                                <td><tags:mark mark="${mark.mark}"/></td>
-                                            </tr>
+                                            <c:if test="${mark.previousMark ne mark.mark}">
+                                                <tr>
+                                                    <td>
+                                                        ${mark.discipline.label}
+                                                        <tags:disciplineType type="${mark.discipline.type}"/>
+                                                    </td>
+                                                    <td>
+                                                        <tags:mark mark="${mark.previousMark}"/>
+                                                        <span><i class="fa fa-arrow-right"></i></span>
+                                                        <tags:mark mark="${mark.mark}"/>
+                                                    </td>
+                                                </tr>
+                                            </c:if>
                                         </c:forEach>
                                     </table>
                                 </div>

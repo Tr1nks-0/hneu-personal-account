@@ -18,5 +18,8 @@ public interface DisciplineMarkService {
 
     List<DisciplineMark> alignStudentDisciplinesMark(Student student, List<DisciplineMark> disciplineMarks);
 
+    List<DisciplineMark> updateStudentMarks(Student student, List<DisciplineMark> importedMarks);
+
     <E> List<E> extract(Collection<DisciplineMark> marks, Function<DisciplineMark, E> converter);
+
 }

@@ -11,9 +11,6 @@ import javax.annotation.Resource;
 @Service
 public class DisciplineServiceImpl implements DisciplineService {
 
-    @Resource
-    private DisciplineRepository disciplineRepository;
-
     @Override
     public boolean isMagmaynor(Discipline discipline) {
         return DisciplineType.MAGMAYNOR.equals(discipline.getType());

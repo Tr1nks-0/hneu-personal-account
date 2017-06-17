@@ -6,21 +6,19 @@ import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.factory.ParserFactory;
 import edu.hneu.studentsportal.repository.StudentRepository;
+import edu.hneu.studentsportal.service.DisciplineMarkService;
 import edu.hneu.studentsportal.service.ImportService;
-import edu.hneu.studentsportal.service.MessageService;
+import edu.hneu.studentsportal.service.StudentEmailReceivingService;
 import edu.hneu.studentsportal.service.UserService;
-import javaslang.control.Try;
 import lombok.extern.log4j.Log4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static java.lang.String.format;
 
@@ -35,15 +33,14 @@ public class ImportServiceImpl implements ImportService {
     @Resource
     private StudentRepository studentRepository;
     @Resource
-    private MessageService messageService;
-
-    @Value("${integration.service.emails.url}")
-    public String emailsIntegrationServiceUrl;
+    private DisciplineMarkService disciplineMarkService;
+    @Resource
+    private StudentEmailReceivingService studentEmailReceivingService;
 
     @Override
     public Student importStudent(File file) {
         Student student = parserFactory.newStudentProfileExcelParser().parse(file);
-        student.setEmail(retrieveStudentEmailFromThirdPartyService(student));
+        student.setEmail(studentEmailReceivingService.receiveStudentEmail(student));
         userService.create(student.getEmail(), UserRole.STUDENT);
         studentRepository.save(student);
         log.info(format("New %s has been created.", student));
@@ -53,35 +50,16 @@ public class ImportServiceImpl implements ImportService {
     @Override
     public Map<Student, List<DisciplineMark>> importStudentMarks(File file) {
         Map<Student, List<DisciplineMark>> importedStudentsMarks = parserFactory.newStudentMarksExcelParser().parse(file);
+        Map<Student, List<DisciplineMark>> updatedStudentsMarks = new HashMap<>();
         importedStudentsMarks.forEach((student, importedMarks) -> {
-            importedMarks.forEach(merge(student.getDisciplineMarks()));
-            studentRepository.save(student);
+            List<DisciplineMark> updatedMarks = disciplineMarkService.updateStudentMarks(student, importedMarks);
+            if (CollectionUtils.isNotEmpty(updatedMarks)) {
+                studentRepository.save(student);
+                updatedStudentsMarks.put(student, updatedMarks);
+            }
         });
-        return importedStudentsMarks;
+        return updatedStudentsMarks;
     }
 
-    private Consumer<DisciplineMark> merge(List<DisciplineMark> existingMarks) {
-        return importedMark -> {
-            DisciplineMark studentDiscipline = alignWithExisting(importedMark, existingMarks);
-            studentDiscipline.setMark(importedMark.getMark());
-        };
-    }
-
-    private DisciplineMark alignWithExisting(DisciplineMark importedMark, List<DisciplineMark> existingMarks) {
-        return existingMarks.stream()
-                .filter(sm -> sm.getDiscipline().equals(importedMark.getDiscipline()))
-                .findFirst().orElse(importedMark);
-    }
-
-    private String retrieveStudentEmailFromThirdPartyService(Student student) {
-        String formattedName = student.getName().toLowerCase().split(" ")[0];
-        String formatterSurname = student.getSurname().toLowerCase().trim();
-        String groupName = student.getGroup().getName();
-        String url = format("%s/EmailToOutController?name=%s&surname=%s&groupId=%s", emailsIntegrationServiceUrl, formattedName, formatterSurname, groupName);
-        return Try.of(() -> new RestTemplate().getForEntity(url, String.class))
-                .map(ResponseEntity::getBody)
-                .map(String::toLowerCase)
-                .getOrElseThrow(() -> new IllegalArgumentException(messageService.emailNotFoundForStudent(formattedName + " " + formatterSurname)));
-    }
 
 }

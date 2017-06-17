@@ -2,6 +2,11 @@
 <%@ attribute name="mark" required="true" type="java.lang.String" %>
 
 <c:choose>
+    <c:when test="${empty mark}">
+        <label class="label label-default">
+            N/A
+        </label>
+    </c:when>
     <c:when test="${mark ge '90' or mark eq 'з' }">
         <label class="label label-success">
             <c:out value="${mark}"/>

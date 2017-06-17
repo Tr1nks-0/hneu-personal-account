@@ -4,11 +4,13 @@ import edu.hneu.studentsportal.domain.*;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.service.DisciplineMarkService;
 import edu.hneu.studentsportal.service.DisciplineService;
+import org.apache.commons.lang.ObjectUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -64,11 +66,34 @@ public class DisciplineMarkServiceImpl implements DisciplineMarkService {
                         .filter(d -> d.getSemester().equals(discipline.getSemester()))
                         .filter(d -> d.getCourse().equals(discipline.getCourse()))
                         .collect(toList());
-                if(number <= magmaynersPerSemester.size())
+                if (number <= magmaynersPerSemester.size())
                     disciplineMark.setDiscipline(magmaynersPerSemester.get(number - 1));
             }
         });
         return disciplineMarks.stream().filter(m -> nonNull(m.getDiscipline().getSemester())).collect(toList());
+    }
+
+    @Override
+    public List<DisciplineMark> updateStudentMarks(Student student, List<DisciplineMark> importedMarks) {
+        return importedMarks.stream()
+                .map(importedMark -> merge(importedMark, student.getDisciplineMarks()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(mark -> ObjectUtils.notEqual(mark.getMark(), mark.getPreviousMark()))
+                .collect(toList());
+    }
+
+    private Optional<DisciplineMark> merge(DisciplineMark importedMark, List<DisciplineMark> existingMarks) {
+        Function<DisciplineMark, DisciplineMark> mergeExistedAndUpdatedMarks = mark -> {
+            mark.setPreviousMark(mark.getMark());
+            mark.setMark(importedMark.getMark());
+            return mark;
+        };
+        return getPreviousDisciplineMark(importedMark, existingMarks).map(mergeExistedAndUpdatedMarks);
+    }
+
+    private Optional<DisciplineMark> getPreviousDisciplineMark(DisciplineMark importedMark, List<DisciplineMark> existingMarks) {
+        return existingMarks.stream().filter(sm -> sm.getDiscipline().getId().equals(importedMark.getDiscipline().getId())).findFirst();
     }
 
     @Override

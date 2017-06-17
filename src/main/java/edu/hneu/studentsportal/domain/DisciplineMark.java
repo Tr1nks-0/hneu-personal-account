@@ -26,6 +26,7 @@ public class DisciplineMark {
     private Discipline discipline;
 
     private String mark;
+    private String previousMark;
 
     public DisciplineMark(Discipline discipline, String mark) {
         this.discipline = discipline;
