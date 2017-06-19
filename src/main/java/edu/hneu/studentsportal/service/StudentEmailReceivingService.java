@@ -9,7 +9,7 @@ import org.springframework.web.client.RestOperations;
 
 import javax.annotation.Resource;
 
-import static com.sun.tools.javac.util.Log.format;
+import static java.lang.String.format;
 
 @Service
 public class StudentEmailReceivingService {
