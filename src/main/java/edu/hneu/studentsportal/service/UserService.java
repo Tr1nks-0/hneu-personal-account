@@ -9,5 +9,5 @@ public interface UserService {
 
     User getUserForId(String id);
 
-    void create(String id, UserRole role);
+    User create(String id, UserRole role);
 }

@@ -1,13 +1,12 @@
 package edu.hneu.studentsportal.service.impl;
 
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-
 import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.repository.UserRepository;
 import edu.hneu.studentsportal.service.UserService;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -16,21 +15,22 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public void save(final User user) {
+    public void save(User user) {
         userRepository.save(user);
     }
 
     @Override
-    public User getUserForId(final String id){
+    public User getUserForId(String id) {
         return userRepository.findOne(id);
     }
 
     @Override
-    public void create(String id, UserRole role) {
+    public User create(String id, UserRole role) {
         User user = new User();
         user.setId(id);
         user.setRole(role);
         save(user);
+        return user;
     }
 
 }
