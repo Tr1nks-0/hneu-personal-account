@@ -50,7 +50,7 @@ public class ImportStudentMarksController implements ExceptionHandlingController
         File file = fileService.getFile(multipartFile);
         try {
             Map<Student, List<DisciplineMark>> studentsMarks = importService.importStudentMarks(file);
-            //students.forEach(emailService::sendProfileWasChangedEmail);
+            studentsMarks.keySet().forEach(emailService::sendProfileWasChangedEmail);
             model.addAttribute("studentsMarks", studentsMarks);
         } finally {
             Files.deleteIfExists(file.toPath());

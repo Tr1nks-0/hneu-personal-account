@@ -77,4 +77,6 @@ public interface MessageService {
     @Message("limit.semester.disciplines.message")
     String semesterDisciplinesLimitExceededError();
 
+    @Message("error.admin.exists")
+    String adminExistsError();
 }

@@ -3,7 +3,7 @@ package edu.hneu.studentsportal.service
 import edu.hneu.studentsportal.domain.Group
 import edu.hneu.studentsportal.domain.Student
 import org.springframework.http.ResponseEntity
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.RestOperations
 import spock.lang.Specification
 
 class StudentEmailReceivingServiceTest extends Specification {
@@ -11,12 +11,12 @@ class StudentEmailReceivingServiceTest extends Specification {
     static final String EMAIL_INTEGRATION_SERVICE_URL = 'test.email.service'
     static final String STUDENT_EMAIL = 'student@email'
     static final String REQUEST_EMAIL_URL = 'test.email.service/EmailToOutController?name=олександр&surname=роздольський&groupId=8.04.51.16.01'
-    public static final String ERROR_MESSAGE = 'error message'
+    static final String ERROR_MESSAGE = 'error message'
 
     def messageServiceMock = Mock(MessageService)
     def studentMock = Mock(Student)
     def groupMock = Mock(Group)
-    def restTemplateMock = Mock(RestTemplate)
+    def restTemplateMock = Mock(RestOperations)
     def restEntityMock = Mock(ResponseEntity)
 
     def studentEmailReceivingService = new StudentEmailReceivingService(

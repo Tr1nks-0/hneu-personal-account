@@ -37,7 +37,7 @@ class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     void configure(HttpSecurity http) {
         http.authorizeRequests()
-                .antMatchers('/management/**')
+                .antMatchers('/management/**', '/togglz')
                     .access("hasRole('ROLE_ADMIN')")
                 .antMatchers('/account/**')
                     .access("hasAnyRole('ROLE_STUDENT', 'ROLE_ADMIN')")

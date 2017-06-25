@@ -19,8 +19,8 @@ class MailConfig {
         new JavaMailSenderImpl(
                 host: 'smtp.gmail.com',
                 port: 587,
-                username: environment.getRequiredProperty('communication.server.username'),
-                password: environment.getRequiredProperty('communication.server.password'),
+                username: environment.getRequiredProperty('communication.mail.support.username'),
+                password: environment.getRequiredProperty('communication.mail.support.password'),
                 javaMailProperties: [
                         'mail.smtp.starttls.enable': 'true',
                         'mail.smtp.auth'           : 'true',

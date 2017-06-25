@@ -49,11 +49,10 @@ integration:
       url: http://212.111.199.46:65008
 communication:
   mail:
-    support: oleksandr.rozdolskyi2012@gmail.com
     decan: oleksandr.rozdolskyi2012@gmail.com
-  server:
-    username: 'oleksandr.rozdolskyi2012@gmail.com'
-    password: 'Rozdolski1994'
+    support:
+      username: 'oleksandr.rozdolskyi2012@gmail.com'
+      password: 'Rozdolski1994'
 
 ---
 
@@ -67,9 +66,8 @@ integration:
       url: http://172.16.0.208:8080
 communication:
   mail:
-    support: lkhneu@hneu.net
     decan: dekanstei@gmail.com
-  server: #TODO: request credentials
+    support: #TODO: request credentials
       username: 'oleksandr.rozdolskyi2012@gmail.com'
       password: 'Rozdolski1994'
 

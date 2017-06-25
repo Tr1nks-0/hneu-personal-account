@@ -1,7 +1,8 @@
 package edu.hneu.studentsportal.config
 
-import edu.hneu.studentsportal.service.MessageService
 import edu.hneu.studentsportal.annotation.Message
+import edu.hneu.studentsportal.feature.SiteFeature
+import edu.hneu.studentsportal.service.MessageService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.MessageSource
 import org.springframework.context.annotation.Bean
@@ -11,7 +12,6 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.util.ClassUtils
 import org.springframework.web.context.request.RequestContextListener
-import org.springframework.web.filter.RequestContextFilter
 import org.springframework.web.multipart.commons.CommonsMultipartResolver
 import org.springframework.web.servlet.DispatcherServlet
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer
@@ -19,6 +19,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver
+import org.togglz.core.manager.EnumBasedFeatureProvider
+import org.togglz.core.spi.FeatureProvider
 
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
@@ -46,12 +48,6 @@ class WebConfig extends WebMvcConfigurerAdapter {
     @ConditionalOnMissingBean(RequestContextListener.class)
     RequestContextListener requestContextListener() {
         new RequestContextListener()
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(RequestContextFilter.class)
-    RequestContextFilter requestContextFilter() {
-        new RequestContextFilter()
     }
 
     @Bean
@@ -86,6 +82,11 @@ class WebConfig extends WebMvcConfigurerAdapter {
                 }
             }
         }) as MessageService
+    }
+
+    @Bean
+    FeatureProvider featureProvider() {
+        new EnumBasedFeatureProvider(SiteFeature.class)
     }
 
     @Override

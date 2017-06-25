@@ -76,6 +76,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/management/configs">
+                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.configurations" /></span>
+                    </a>
+                </li>
+                <li>
                     <a href="/logout">
                         <i class="fa fa-share"></i> <span><spring:message code="top.menu.exit"/></span>
                     </a>

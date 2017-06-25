@@ -2,7 +2,7 @@ package edu.hneu.studentsportal.service.impl;
 
 import com.google.common.collect.ImmutableMap;
 import edu.hneu.studentsportal.domain.Student;
-import edu.hneu.studentsportal.service.CustomUserDetailsService;
+import edu.hneu.studentsportal.feature.SiteFeature;
 import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.GmailService;
 import edu.hneu.studentsportal.service.MessageService;
@@ -39,29 +39,33 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${communication.mail.decan}")
     public String decanMail;
-    @Value("${communication.mail.support}")
+    @Value("${communication.mail.support.username}")
     public String supportMail;
 
     @Override
     public void sendProfileWasCreatedEmail(Student student) {
-        Map<String, Object> modelForTemplate = ImmutableMap.of("name", student.getName());
-        String emailBody = emailService.buildHtmlForTemplate("profileWasCreatedEmailTemplate.ftl", modelForTemplate);
-        MimeMessage message = new MimeMessageBuilder(supportMail, student.getEmail())
-                .subject(messageService.userWasCreatedEmailSubject())
-                .text(emailBody, true)
-                .build(mailSender.createMimeMessage());
-        scheduleEmailSendingTask(message, mailSender::send);
+        if (SiteFeature.SEND_EMAIL_AFTER_PROFILE_CREATION.isActive()) {
+            Map<String, Object> modelForTemplate = ImmutableMap.of("name", student.getName());
+            String emailBody = emailService.buildHtmlForTemplate("profileWasCreatedEmailTemplate.ftl", modelForTemplate);
+            MimeMessage message = new MimeMessageBuilder(supportMail, student.getEmail())
+                    .subject(messageService.userWasCreatedEmailSubject())
+                    .text(emailBody, true)
+                    .build(mailSender.createMimeMessage());
+            scheduleEmailSendingTask(message, mailSender::send);
+        }
     }
 
     @Override
     public void sendProfileWasChangedEmail(Student student) {
-        Map<String, Object> modelForTemplate = ImmutableMap.of("message", messageService.userWasChangedEmailBody());
-        String emailBody = emailService.buildHtmlForTemplate("profileWasChangedEmailTemplate.ftl", modelForTemplate);
-        MimeMessage message = new MimeMessageBuilder(supportMail, student.getEmail())
-                .subject(messageService.userWasChangedEmailSubject())
-                .text(emailBody, true)
-                .build(mailSender.createMimeMessage());
-        scheduleEmailSendingTask(message, mailSender::send);
+        if (SiteFeature.SEND_EMAIL_AFTER_PROFILE_MODIFICATION.isActive()) {
+            Map<String, Object> modelForTemplate = ImmutableMap.of("message", messageService.userWasChangedEmailBody());
+            String emailBody = emailService.buildHtmlForTemplate("profileWasChangedEmailTemplate.ftl", modelForTemplate);
+            MimeMessage message = new MimeMessageBuilder(supportMail, student.getEmail())
+                    .subject(messageService.userWasChangedEmailSubject())
+                    .text(emailBody, true)
+                    .build(mailSender.createMimeMessage());
+            scheduleEmailSendingTask(message, mailSender::send);
+        }
     }
 
     @Override
@@ -79,8 +83,9 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private void scheduleEmailSendingTask(MimeMessage message, Consumer<MimeMessage> emailSender) {
-        Executors.newCachedThreadPool().execute(() -> Try.run(() ->
-                emailSender.accept(message)).onFailure(e -> log.warn("Failed during sending email: " + e.getMessage(), e)));
+        Executors.newCachedThreadPool().execute(() ->
+                Try.run(() -> emailSender.accept(message))
+                        .onFailure(e -> log.warn("Failed during sending email: " + e.getMessage(), e)));
     }
 
 }
