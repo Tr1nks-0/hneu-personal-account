@@ -1,6 +1,7 @@
 package edu.hneu.studentsportal.service.impl;
 
 
+import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.enums.UserRole;
@@ -19,8 +20,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Log4j
 @Service
@@ -59,6 +63,24 @@ public class ImportServiceImpl implements ImportService {
             }
         });
         return updatedStudentsMarks;
+    }
+
+    @Override
+    public Map<Student, List<Discipline>> importStudentsChoice(File file) {
+        Map<Student, List<Discipline>> studentsChoice = parserFactory.newStudentsChoiceParser().parse(file);
+        studentsChoice.forEach((student, disciplines) -> {
+            List<DisciplineMark> newMarks = createNewMarksFromStudentChoice(student, disciplines);
+            student.getDisciplineMarks().addAll(newMarks);
+        });
+        studentRepository.save(studentsChoice.keySet());
+        return studentsChoice;
+    }
+
+    private List<DisciplineMark> createNewMarksFromStudentChoice(Student student, List<Discipline> disciplines) {
+        List<Discipline> studentMarks = disciplineMarkService.extract(student.getDisciplineMarks(), DisciplineMark::getDiscipline);
+        Predicate<DisciplineMark> doesStudentHaveMark = mark -> isFalse(studentMarks.contains(mark));
+        List<DisciplineMark> newMarks = disciplines.stream().map(DisciplineMark::new).collect(toList());
+        return newMarks.stream().filter(doesStudentHaveMark).collect(toList());
     }
 
 

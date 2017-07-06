@@ -51,6 +51,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="/management/import/students-choice">
+                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.import.student.choice"/></span>
+                    </a>
+                </li>
+                <li>
                     <a href="/management/groups">
                         <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.groups"/></span>
                     </a>

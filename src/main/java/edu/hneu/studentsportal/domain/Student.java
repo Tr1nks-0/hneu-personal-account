@@ -3,6 +3,7 @@ package edu.hneu.studentsportal.domain;
 import edu.hneu.studentsportal.annotation.LimitSemesterDisciplines;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -19,6 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "student")
 @ToString(of = "email")
+@EqualsAndHashCode(of = "id")
 public class Student {
 
     @Id

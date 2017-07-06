@@ -7,7 +7,7 @@ log4j:
     layout:
       ConversionPattern: %d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
     file: org.apache.log4j.RollingFileAppender
-      File: C:/deploy/log4j-application.log
+      File: logs/log4j-application.log
       MaxFileSize: 5MB
       MaxBackupIndex: 10
       layout: org.apache.log4j.PatternLayout

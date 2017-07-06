@@ -55,7 +55,11 @@
                        <label for="label" class="control-label"><spring:message code="form.label.name"/></label>
                        <form:input path="label" cssClass="form-control" required="required"/>
                     </div>
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-3 form-group">
+                        <label for="code" class="control-label"><spring:message code="form.label.code"/></label>
+                        <form:input path="code" cssClass="form-control" required="required"/>
+                    </div>
+                    <div class="col-md-3 form-group">
                        <label for="course" class="control-label"><spring:message code="form.label.student.profile.course"/></label>
                        <form:select path="course" cssClass="form-control" type="number">
                            <c:forEach begin="1" end="6" varStatus="course">
@@ -63,14 +67,14 @@
                            </c:forEach>
                        </form:select>
                     </div>
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-3 form-group">
                        <label for="semester" class="control-label"><spring:message code="form.label.student.profile.semester"/></label>
                        <form:select path="semester" cssClass="form-control" type="number">
                            <form:option value="1">1</form:option>
                            <form:option value="2">2</form:option>
                        </form:select>
                     </div>
-                    <div class="col-md-4 form-group">
+                    <div class="col-md-3 form-group">
                        <label for="credits" class="control-label"><spring:message code="form.label.discipline.credits"/></label>
                        <form:input path="credits" cssClass="form-control" required="required" type="number"/>
                     </div>
@@ -104,6 +108,7 @@
                             <thead>
                                 <tr>
                                     <th><spring:message code="form.label.name"/></th>
+                                    <th><spring:message code="form.label.code"/></th>
                                     <th><spring:message code="form.label.discipline.credits"/></th>
                                     <th><spring:message code="form.label.discipline.control.form"/></th>
                                     <th><spring:message code="form.label.discipline.type"/></th>
@@ -114,6 +119,7 @@
                                 <c:forEach items="${disciplines}" var="discipline">
                                     <tr>
                                         <td>${discipline.label}</td>
+                                        <td>${discipline.code}</td>
                                         <td>${discipline.credits}</td>
                                         <td>${discipline.controlForm.name}</td>
                                         <td>${discipline.type.name}</td>
