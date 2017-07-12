@@ -60,12 +60,14 @@ public class DisciplinesExcelParser extends AbstractExcelParser<List<Discipline>
 
     private Speciality parseSpeciality(Indexer indexer) {
         String code = parseCode(getString1CellValue(indexer));
-        return specialityRepository.findByCode(String.valueOf(code)).orElseThrow(() -> new RuntimeException());
+        return specialityRepository.findByCode(String.valueOf(code))
+                .orElseThrow(() -> new IllegalStateException("Cannot find speciality for code: " + code));
     }
 
     private EducationProgram parseEducationProgram(Indexer indexer) {
         String code = parseCode(getString2CellValue(indexer));
-        return educationProgramRepository.findByCode(code).orElseThrow(() -> new RuntimeException());
+        return educationProgramRepository.findByCode(code)
+                .orElseThrow(() -> new IllegalStateException("Cannot find education program for code: " + code));
     }
 
     private String parseCode(String line) {

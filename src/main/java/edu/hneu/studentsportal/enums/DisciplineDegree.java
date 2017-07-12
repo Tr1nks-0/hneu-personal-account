@@ -21,6 +21,6 @@ public enum DisciplineDegree {
         return Arrays.stream(values())
                 .filter(degree -> StringUtils.equals(degree.getName(), name))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Discipline degree[%s] is not supported.", name)));
     }
 }

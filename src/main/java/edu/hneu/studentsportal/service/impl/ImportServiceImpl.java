@@ -83,7 +83,7 @@ public class ImportServiceImpl implements ImportService {
     public List<Discipline> importDisciplines(File file) {
         List<Discipline> disciplines = parserFactory.newDisciplinesParser().parse(file);
         disciplineRepository.save(disciplines);
-        disciplines.forEach(discipline -> log.info(format("New discipline[%s] imported", discipline)));
+        disciplines.forEach(discipline -> log.info(format("New discipline[%s] was imported", discipline)));
         return disciplines;
     }
 
