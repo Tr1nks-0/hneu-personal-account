@@ -1,1 +1,1 @@
-INSERT INTO education_program(id, NAME, speciality_id) VALUES (1, 'ІНФОРМАЦІЙНІ СИСТЕМИ УПРАВЛІННЯ ТА ТЕХНОЛОГІЇ ОБРОБКИ ДАНИХ', 1);
+INSERT INTO education_program(id, code, name, speciality_id) VALUES (1, '51-ІСУТОД', 'ІНФОРМАЦІЙНІ СИСТЕМИ УПРАВЛІННЯ ТА ТЕХНОЛОГІЇ ОБРОБКИ ДАНИХ', 1);

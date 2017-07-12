@@ -22,6 +22,11 @@ public class EducationProgram {
     private long id;
 
     @NotNull
+    @Length(max = 20)
+    @Column(unique = true)
+    private String code;
+
+    @NotNull
     @Length(min = 3, max = 200)
     private String name;
 

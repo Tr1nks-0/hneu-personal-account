@@ -47,9 +47,19 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div class="form-group">
-                        <label for="name" class="control-label"><spring:message code="form.label.student.educationProgram"/></label>
-                        <form:input path="name" cssClass="form-control" required="required"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="code" class="control-label"><spring:message code="form.label.code"/></label>
+                                <form:input path="code" cssClass="form-control" required="required"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="name" class="control-label"><spring:message code="form.label.student.educationProgram"/></label>
+                                <form:input path="name" cssClass="form-control" required="required"/>
+                            </div>
+                        </div>
                     </div>
                     <input type = "submit" value = "<spring:message code="btn.save"/>" class="btn btn-success float-right"/>
                 </div>
@@ -70,6 +80,7 @@
                         <table class="table no-margin">
                             <thead>
                                 <tr>
+                                    <th><spring:message code="form.label.code"/></th>
                                     <th><spring:message code="form.label.name"/></th>
                                     <th><spring:message code="form.label.student.speciality"/></th>
                                     <th></th>
@@ -78,6 +89,7 @@
                             <tbody>
                                 <c:forEach items="${educationPrograms}" var="educationProgram">
                                     <tr>
+                                        <td>${educationProgram.code}</td>
                                         <td>${educationProgram.name}</td>
                                         <td>${educationProgram.speciality.name}</td>
                                         <td>

@@ -28,6 +28,10 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
+                        <label for="code" class="control-label"><spring:message code="form.label.code"/></label>
+                        <form:input path="code" cssClass="form-control" required="required"/>
+                    </div>
+                    <div class="form-group">
                         <label for="name" class="control-label"><spring:message code="form.label.student.faculty"/></label>
                         <form:input path="name" cssClass="form-control" required="required"/>
                     </div>
@@ -48,12 +52,14 @@
                 <table class="table no-margin">
                     <thead>
                         <tr>
+                            <th><spring:message code="form.label.code"/></th>
                             <th><spring:message code="form.label.name"/></th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach items="${faculties}" var="faculty">
                             <tr>
+                                <td>${faculty.code}</td>
                                 <td>${faculty.name}</td>
                                 <td>
                                     <button  data-faculty="${faculty.id}" class="delete-faculty btn btn-danger btn-xs pull-right">

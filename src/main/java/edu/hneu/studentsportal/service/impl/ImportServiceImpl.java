@@ -6,6 +6,7 @@ import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.factory.ParserFactory;
+import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.DisciplineMarkService;
 import edu.hneu.studentsportal.service.ImportService;
@@ -39,6 +40,8 @@ public class ImportServiceImpl implements ImportService {
     @Resource
     private DisciplineMarkService disciplineMarkService;
     @Resource
+    private DisciplineRepository disciplineRepository;
+    @Resource
     private StudentEmailReceivingService studentEmailReceivingService;
 
     @Override
@@ -47,7 +50,7 @@ public class ImportServiceImpl implements ImportService {
         student.setEmail(studentEmailReceivingService.receiveStudentEmail(student));
         userService.create(student.getEmail(), UserRole.STUDENT);
         studentRepository.save(student);
-        log.info(format("New %s has been created.", student));
+        log.info(format("New student[%s] has been created.", student));
         return student;
     }
 
@@ -76,9 +79,17 @@ public class ImportServiceImpl implements ImportService {
         return studentsChoice;
     }
 
+    @Override
+    public List<Discipline> importDisciplines(File file) {
+        List<Discipline> disciplines = parserFactory.newDisciplinesParser().parse(file);
+        disciplineRepository.save(disciplines);
+        disciplines.forEach(discipline -> log.info(format("New discipline[%s] imported", discipline)));
+        return disciplines;
+    }
+
     private List<DisciplineMark> createNewMarksFromStudentChoice(Student student, List<Discipline> disciplines) {
         List<Discipline> studentMarks = disciplineMarkService.extract(student.getDisciplineMarks(), DisciplineMark::getDiscipline);
-        Predicate<DisciplineMark> doesStudentHaveMark = mark -> isFalse(studentMarks.contains(mark));
+        Predicate<DisciplineMark> doesStudentHaveMark = mark -> isFalse(studentMarks.contains(mark.getDiscipline()));
         List<DisciplineMark> newMarks = disciplines.stream().map(DisciplineMark::new).collect(toList());
         return newMarks.stream().filter(doesStudentHaveMark).collect(toList());
     }

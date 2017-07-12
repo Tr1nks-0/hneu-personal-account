@@ -14,6 +14,8 @@ public interface EducationProgramRepository extends JpaRepository<EducationProgr
 
     Optional<EducationProgram> findByName(String name);
 
+    Optional<EducationProgram> findByCode(String code);
+
     List<EducationProgram> findAllBySpeciality(Speciality speciality);
 
     EducationProgram findById(Long id);

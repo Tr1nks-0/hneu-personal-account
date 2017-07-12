@@ -16,4 +16,5 @@ public interface ImportService {
 
     Map<Student, List<Discipline>> importStudentsChoice(File file);
 
+    List<Discipline> importDisciplines(File file);
 }

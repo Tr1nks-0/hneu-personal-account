@@ -1,8 +1,9 @@
 package edu.hneu.studentsportal.domain;
 
+import edu.hneu.studentsportal.enums.DisciplineDegree;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -12,11 +13,15 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
+@Builder
 @Table(name = "discipline", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
                 "label", "course", "semester", "education_program_id", "speciality_id"
         })
 })
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(of = {"label"})
 public class Discipline {
 
     @Id
@@ -47,6 +52,11 @@ public class Discipline {
     private Speciality speciality;
 
     @NotNull
+    @Column(name="degree")
+    @Enumerated(EnumType.ORDINAL)
+    private DisciplineDegree degree;
+
+//    @NotNull
     @Column(name="control_form")
     @Enumerated(EnumType.ORDINAL)
     private DisciplineFormControl controlForm;
@@ -55,11 +65,11 @@ public class Discipline {
     @Length(min = 3, max = 100)
     private String label;
 
-    @NotNull
-    @Length(min = 1, max = 100)
+//    @NotNull
+//    @Length(min = 1, max = 100)
     private String code;
 
-    @NotNull
+//    @NotNull
     @Enumerated(EnumType.ORDINAL)
     private DisciplineType type;
 
@@ -68,13 +78,5 @@ public class Discipline {
         this.type = type;
         this.course = course;
         this.semester = semester;
-    }
-
-    public Discipline() {
-    }
-
-    @Override
-    public String toString() {
-        return type.getName() + " - " + label;
     }
 }

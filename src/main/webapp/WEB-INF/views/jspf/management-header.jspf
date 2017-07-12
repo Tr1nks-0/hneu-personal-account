@@ -41,6 +41,11 @@
             <ul class="sidebar-menu">
                 <li class="header">ГОЛОВНЕ МЕНЮ</li>
                 <li>
+                    <a href="/management/import/disciplines">
+                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.import.disciplines"/></span>
+                    </a>
+                </li>
+                <li>
                     <a href="/management/import/student">
                         <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.add.profiles"/></span>
                     </a>

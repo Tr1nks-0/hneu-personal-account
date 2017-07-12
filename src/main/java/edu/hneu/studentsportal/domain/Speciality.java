@@ -24,6 +24,11 @@ public class Speciality {
     @Length(min = 3, max = 200)
     private String name;
 
+    @NotNull
+    @Length(max = 20)
+    @Column(unique = true)
+    private String code;
+
     @NonNull
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

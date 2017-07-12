@@ -1,5 +1,6 @@
 package edu.hneu.studentsportal.parser.factory;
 
+import edu.hneu.studentsportal.parser.impl.DisciplinesExcelParser;
 import edu.hneu.studentsportal.parser.impl.StudentMarksExcelParser;
 import edu.hneu.studentsportal.parser.impl.StudentsChoiceExcelParser;
 import org.springframework.beans.factory.annotation.Lookup;
@@ -18,4 +19,8 @@ public abstract class ParserFactory {
 
     @Lookup
     public abstract StudentsChoiceExcelParser newStudentsChoiceParser();
+
+    @Lookup
+    public abstract DisciplinesExcelParser newDisciplinesParser();
+
 }

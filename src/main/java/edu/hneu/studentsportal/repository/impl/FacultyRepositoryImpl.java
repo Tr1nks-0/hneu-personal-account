@@ -29,6 +29,8 @@ public class FacultyRepositoryImpl implements FacultyRepositoryCustom {
     }
 
     private Supplier<Faculty> getFirstFacultyWithSpecialities() {
-        return () -> specialityRepository.findFirstFacultyIdWithSpecialities().map(BigInteger::longValue).map(facultyRepository::findOne).orElse(null);
+        return () -> specialityRepository.findFirstFacultyIdWithSpecialities()
+                .map(BigInteger::longValue)
+                .map(facultyRepository::findOne).orElse(null);
     }
 }

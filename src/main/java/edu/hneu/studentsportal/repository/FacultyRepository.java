@@ -14,6 +14,8 @@ public interface FacultyRepository extends JpaRepository<Faculty, Long>, Faculty
 
     Optional<Faculty> findById(Long id);
 
+    Optional<Faculty> findByCode(String code);
+
     @Query(value = "SELECT * FROM Faculty LIMIT 1", nativeQuery = true)
     Faculty findFirst();
 

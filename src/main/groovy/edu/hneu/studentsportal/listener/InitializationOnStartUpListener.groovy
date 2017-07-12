@@ -29,9 +29,9 @@ class InitializationOnStartUpListener implements ApplicationListener<ContextRefr
         def specialities = new ClassPathResource('scripts/specialities.sql')
         def educationPrograms = new ClassPathResource('scripts/educationPrograms.sql')
         def groups = new ClassPathResource('scripts/groups.sql')
-        def disciplines = new ClassPathResource('scripts/disciplines.sql')
+        //def disciplines = new ClassPathResource('scripts/disciplines.sql')
 
-        def databasePopulator = new ResourceDatabasePopulator(users, faculties, specialities, educationPrograms, groups, disciplines)
+        def databasePopulator = new ResourceDatabasePopulator(users, faculties, specialities, educationPrograms, groups)
         DatabasePopulatorUtils.execute(databasePopulator, dataSource)
 
         logger.info('=========== INITIALIZATION FINISHED ===========')
