@@ -7,7 +7,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class StudentProfileExcelParserUnitTest extends Specification {
+class StudentProfileExcelParserSpockTest extends Specification {
 
     static final String MASTER_STUDENT_PROFILE = 'parser/master.xlsx'
     static final String BACHELOR_STUDENT_PROFILE = 'parser/bachelor.xlsx'

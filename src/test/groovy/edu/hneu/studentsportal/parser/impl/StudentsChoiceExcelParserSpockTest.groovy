@@ -9,7 +9,7 @@ import edu.hneu.studentsportal.repository.StudentRepository
 import spock.lang.Shared
 import spock.lang.Specification
 
-class StudentsChoiceExcelParserUnitTest extends Specification {
+class StudentsChoiceExcelParserSpockTest extends Specification {
 
     static final String STUDENTS_CHOICE_FILE = 'parser/students_choice.xlsx'
     static final String GROUP1 = '8.02.22.16.04'

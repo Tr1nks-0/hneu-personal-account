@@ -2,6 +2,7 @@ package edu.hneu.studentsportal.parser;
 
 import edu.hneu.studentsportal.service.MessageService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -11,8 +12,11 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.IntStream;
 
 import static java.util.Objects.nonNull;
+import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 public abstract class AbstractExcelParser<E> {
 
@@ -23,6 +27,8 @@ public abstract class AbstractExcelParser<E> {
     protected MessageService messageService;
 
     public E parse(File file) {
+        Validate.notNull(file);
+
         try {
             workbook = new XSSFWorkbook(new FileInputStream(file));
             sheet = workbook.getSheetAt(0);
@@ -42,6 +48,7 @@ public abstract class AbstractExcelParser<E> {
     }
 
     protected String getStringCellValue(Indexer indexer, int col) {
+        Validate.notNull(indexer);
         return getStringCellValue(indexer.getValue(), col);
     }
 
@@ -79,6 +86,19 @@ public abstract class AbstractExcelParser<E> {
 
     protected Integer getIntegerCellValue(Indexer indexer, int col) {
         return getIntegerCellValue(indexer.getValue(), col);
+    }
+
+
+    protected void validateHeaders(int row, List<String> headers) {
+        Validate.notEmpty(headers);
+        IntStream.of(0, headers.size() - 1).forEach(i -> validateHeaderColumn(row, i, headers.get(i)));
+    }
+
+    protected void validateHeaderColumn(int row, int col, String expectedLabel) {
+        Validate.notEmpty(expectedLabel);
+        if (isFalse(StringUtils.equals(expectedLabel.trim(), getStringCellValue(row, col).trim()))) {
+            throw new IllegalArgumentException(messageService.invalidFile());
+        }
     }
 
 }

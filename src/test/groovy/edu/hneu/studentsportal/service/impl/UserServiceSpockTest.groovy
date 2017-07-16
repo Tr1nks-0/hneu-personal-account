@@ -3,9 +3,10 @@ package edu.hneu.studentsportal.service.impl
 import edu.hneu.studentsportal.domain.User
 import edu.hneu.studentsportal.enums.UserRole
 import edu.hneu.studentsportal.repository.UserRepository
+import edu.hneu.studentsportal.service.UserService
 import spock.lang.Specification
 
-class UserServiceImplTest extends Specification {
+class UserServiceSpockTest extends Specification {
 
     static final String USER_ID = 'id'
     static final UserRole USER_ROLE = UserRole.ADMIN
@@ -13,7 +14,7 @@ class UserServiceImplTest extends Specification {
     def userRepositoryMock = Mock(UserRepository)
     def userMock = Mock(User)
 
-    def userService = new UserServiceImpl(
+    def userService = new UserService(
             userRepository: userRepositoryMock
     )
 

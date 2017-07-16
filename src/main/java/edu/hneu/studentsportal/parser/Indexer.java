@@ -12,10 +12,4 @@ public class Indexer {
     public int next() {
         return ++value;
     }
-
-    public int skip2() {
-        next();
-        next();
-        return value;
-    }
 }

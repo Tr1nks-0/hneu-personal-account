@@ -38,24 +38,28 @@ public class DisciplinesExcelParser extends AbstractExcelParser<List<Discipline>
         Indexer indexer = Indexer.of(0);
 
         while (isNotFileEnd(indexer.next())) {
-            Try.run(() -> {
-                Discipline discipline = Discipline.builder()
-                        .speciality(parseSpeciality(indexer))
-                        .educationProgram(parseEducationProgram(indexer))
-                        .course(getIntegerCellValue(indexer, 3))
-                        .degree(parseDegree(indexer))
-                        .label(getStringCellValue(indexer, 6))
-                        .credits(getIntegerCellValue(indexer, 7))
-                        .semester(parseSemester(indexer))
-                        .build();
-                disciplines.add(discipline);
-            }).onFailure(e -> log.warn(e.getMessage(), e));
+            Try.of(() -> parseDiscipline(indexer))
+                    .andThen(disciplines::add)
+                    .onFailure(e -> log.warn(e.getMessage(), e));
         }
         return disciplines;
     }
 
+
     private boolean isNotFileEnd(int row) {
         return isFalse(isEmpty(getString1CellValue(row)));
+    }
+
+    private Discipline parseDiscipline(Indexer indexer) {
+        return Discipline.builder()
+                .speciality(parseSpeciality(indexer))
+                .educationProgram(parseEducationProgram(indexer))
+                .course(getIntegerCellValue(indexer, 3))
+                .degree(parseDegree(indexer))
+                .label(getStringCellValue(indexer, 6))
+                .credits(getIntegerCellValue(indexer, 7))
+                .semester(parseSemester(indexer))
+                .build();
     }
 
     private Speciality parseSpeciality(Indexer indexer) {

@@ -5,7 +5,8 @@ import org.apache.commons.lang.StringUtils;
 import java.util.Arrays;
 
 public enum DisciplineDegree {
-    MASTER("маг");
+
+    BACHELOR("бак"), MASTER("маг"), SPECIALIST("спец");
 
     private final String name;
 

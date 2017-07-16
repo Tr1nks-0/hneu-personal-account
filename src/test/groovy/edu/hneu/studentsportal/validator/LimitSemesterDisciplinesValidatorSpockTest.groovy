@@ -8,7 +8,7 @@ import spock.lang.Specification
 
 import javax.validation.ConstraintValidatorContext
 
-class LimitSemesterDisciplinesValidatorTest extends Specification {
+class LimitSemesterDisciplinesValidatorSpockTest extends Specification {
 
     def contextMock = Mock(ConstraintValidatorContext)
     def annotationMock = Mock(LimitSemesterDisciplines)

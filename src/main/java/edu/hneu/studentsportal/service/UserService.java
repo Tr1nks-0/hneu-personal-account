@@ -2,16 +2,36 @@ package edu.hneu.studentsportal.service;
 
 import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
+import edu.hneu.studentsportal.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
-public interface UserService {
+@Service
+public class UserService {
 
-    void save(User user);
+    @Resource
+    private UserRepository userRepository;
 
-    User getUserForId(String id);
+    public void save(User user) {
+        userRepository.save(user);
+    }
 
-    List<User> getAdmins();
+    public User getUserForId(String id) {
+        return userRepository.findOne(id);
+    }
 
-    User create(String id, UserRole role);
+    public List<User> getAdmins() {
+        return userRepository.findAllByRole(UserRole.ADMIN);
+    }
+
+    public User create(String id, UserRole role) {
+        User user = new User();
+        user.setId(id);
+        user.setRole(role);
+        save(user);
+        return user;
+    }
+
 }

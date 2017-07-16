@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestOperations
 import spock.lang.Specification
 
-class StudentEmailReceivingServiceTest extends Specification {
+class StudentEmailReceivingServiceSpockTest extends Specification {
 
     static final String EMAIL_INTEGRATION_SERVICE_URL = 'test.email.service'
     static final String STUDENT_EMAIL = 'student@email'

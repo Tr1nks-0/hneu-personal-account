@@ -6,7 +6,7 @@ import edu.hneu.studentsportal.repository.EducationProgramRepository
 import edu.hneu.studentsportal.repository.SpecialityRepository
 import spock.lang.Specification
 
-class DisciplinesExcelParserUnitTest extends Specification {
+class DisciplinesExcelParserSpockTest extends Specification {
 
     static final String DISCIPLINES_FILE = 'parser/disciplines.xlsx'
 

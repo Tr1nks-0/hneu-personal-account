@@ -5,10 +5,10 @@ import edu.hneu.studentsportal.repository.DisciplineRepository
 import edu.hneu.studentsportal.repository.GroupRepository
 import edu.hneu.studentsportal.repository.StudentRepository
 import edu.hneu.studentsportal.service.DisciplineMarkService
-import edu.hneu.studentsportal.service.DisciplineService
+import edu.hneu.studentsportal.conditions.DisciplineConditions
 import spock.lang.Specification
 
-class StudentMarksExcelParserUnitTest extends Specification {
+class StudentMarksExcelParserSpockTest extends Specification {
 
     static final String STUDENTS_MARKS = 'parser/8.04.51.16.04.xlsx'
 
@@ -20,14 +20,14 @@ class StudentMarksExcelParserUnitTest extends Specification {
     def disciplineRepositoryMock = Mock(DisciplineRepository)
     def studentRepositoryMock = Mock(StudentRepository)
     def disciplineMarkServiceMock = Mock(DisciplineMarkService)
-    def disciplineServiceMock = Mock(DisciplineService)
+    def disciplineServiceMock = Mock(DisciplineConditions)
 
     def studentMarksExcelParser = new StudentMarksExcelParser(
             groupRepository: groupRepositoryMock,
             disciplineRepository: disciplineRepositoryMock,
             studentRepository: studentRepositoryMock,
             disciplineMarkService: disciplineMarkServiceMock,
-            disciplineService: disciplineServiceMock
+            disciplineConditions: disciplineServiceMock
     )
 
     def setup() {

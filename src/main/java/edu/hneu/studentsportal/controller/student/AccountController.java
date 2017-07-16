@@ -3,7 +3,7 @@ package edu.hneu.studentsportal.controller.student;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.pojo.Schedule;
+import edu.hneu.studentsportal.domain.dto.schedule.Schedule;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.CustomUserDetailsService;
 import edu.hneu.studentsportal.service.EmailService;

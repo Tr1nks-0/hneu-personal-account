@@ -68,8 +68,8 @@ public interface MessageService {
     @Message("error.discipline.not.found")
     String disciplineNotFoundError(String name);
 
-    @Message("invalid.student.profile.marks.file")
-    String invalidStudentMarksFile();
+    @Message("invalid.file")
+    String invalidFile();
 
     @Message("error.student.email.not.found")
     String emailNotFoundForStudent(String studentName);

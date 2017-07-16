@@ -5,7 +5,7 @@ import edu.hneu.studentsportal.repository.FacultyRepository
 import edu.hneu.studentsportal.repository.SpecialityRepository
 import spock.lang.Specification
 
-class FacultyRepositoryImplTest extends Specification {
+class FacultyRepositoryImplSpockTest extends Specification {
 
     static final int FACULTY_ID = 1
 

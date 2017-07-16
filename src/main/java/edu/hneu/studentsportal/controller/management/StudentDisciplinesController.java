@@ -7,7 +7,7 @@ import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.repository.DisciplineMarkRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.MessageService;
-import edu.hneu.studentsportal.service.impl.DisciplineMarkServiceImpl;
+import edu.hneu.studentsportal.service.DisciplineMarkService;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -38,7 +38,7 @@ public class StudentDisciplinesController implements ExceptionHandlingController
     @Resource
     private DisciplineMarkRepository disciplineMarkRepository;
     @Resource
-    private DisciplineMarkServiceImpl studentDisciplineMarksService;
+    private DisciplineMarkService studentDisciplineMarksService;
     @Resource
     private MessageService messageService;
 

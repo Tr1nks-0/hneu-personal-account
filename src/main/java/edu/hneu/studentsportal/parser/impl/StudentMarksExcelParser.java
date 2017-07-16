@@ -11,7 +11,7 @@ import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.DisciplineMarkService;
-import edu.hneu.studentsportal.service.DisciplineService;
+import edu.hneu.studentsportal.conditions.DisciplineConditions;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Scope;
@@ -59,7 +59,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     @Resource
     private DisciplineMarkService disciplineMarkService;
     @Resource
-    private DisciplineService disciplineService;
+    private DisciplineConditions disciplineConditions;
 
     @Override
     public Map<Student, List<DisciplineMark>> extractModel() {
@@ -103,7 +103,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     }
 
     private Discipline getDiscipline(String disciplineName) {
-        if (disciplineService.isMagmaynorLabel(disciplineName))
+        if (disciplineConditions.isMasterDisciplineLabel(disciplineName))
             return new Discipline(disciplineName, DisciplineType.MAGMAYNOR, getCourse(), getSemester());
         else
             return findDiscipline(disciplineName).orElseThrow(() -> new IllegalArgumentException(messageService.disciplineNotFoundError(disciplineName)));
@@ -127,7 +127,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
                 .filter(i -> getStringCellValue(i).contains(NUMBER_MARKER))
                 .map(i -> i + 2)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentMarksFile()));
+                .orElseThrow(() -> new IllegalArgumentException(messageService.invalidFile()));
     }
 
     private boolean isNotEndFile(int row) {

@@ -37,10 +37,9 @@ public class ImportDisciplinesController implements ExceptionHandlingController 
     }
 
     @PostMapping
-    @SneakyThrows
     public String importDisciplines(@RequestParam("file") MultipartFile multipartFile, Model model) {
         File file = fileService.getFile(multipartFile);
-        List<Discipline> disciplines = fileService.perform(file, () -> importService.importDisciplines(file));
+        List<Discipline> disciplines = fileService.perform(file, importService::importDisciplines);
         model.addAttribute("disciplines", disciplines);
         return "management/imported-disciplines-page";
     }
