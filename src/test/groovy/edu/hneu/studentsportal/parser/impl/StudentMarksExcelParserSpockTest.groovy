@@ -20,14 +20,12 @@ class StudentMarksExcelParserSpockTest extends Specification {
     def disciplineRepositoryMock = Mock(DisciplineRepository)
     def studentRepositoryMock = Mock(StudentRepository)
     def disciplineMarkServiceMock = Mock(DisciplineMarkService)
-    def disciplineServiceMock = Mock(DisciplineConditions)
 
     def studentMarksExcelParser = new StudentMarksExcelParser(
             groupRepository: groupRepositoryMock,
             disciplineRepository: disciplineRepositoryMock,
             studentRepository: studentRepositoryMock,
-            disciplineMarkService: disciplineMarkServiceMock,
-            disciplineConditions: disciplineServiceMock
+            disciplineMarkService: disciplineMarkServiceMock
     )
 
     def setup() {

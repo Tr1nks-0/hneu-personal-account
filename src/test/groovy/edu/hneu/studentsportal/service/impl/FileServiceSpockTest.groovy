@@ -10,7 +10,7 @@ import java.util.function.Function
 
 class FileServiceSpockTest extends Specification {
 
-    private static final String FILE_NAME = 'file name'
+    static final String FILE_NAME = 'file name'
 
     def fileService = new FileService()
 

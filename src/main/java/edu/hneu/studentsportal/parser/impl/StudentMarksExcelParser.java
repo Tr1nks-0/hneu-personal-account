@@ -58,8 +58,6 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     private StudentRepository studentRepository;
     @Resource
     private DisciplineMarkService disciplineMarkService;
-    @Resource
-    private DisciplineConditions disciplineConditions;
 
     @Override
     public Map<Student, List<DisciplineMark>> extractModel() {
@@ -103,7 +101,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     }
 
     private Discipline getDiscipline(String disciplineName) {
-        if (disciplineConditions.isMasterDisciplineLabel(disciplineName))
+        if (DisciplineConditions.isMasterDisciplineLabel(disciplineName))
             return new Discipline(disciplineName, DisciplineType.MAGMAYNOR, getCourse(), getSemester());
         else
             return findDiscipline(disciplineName).orElseThrow(() -> new IllegalArgumentException(messageService.disciplineNotFoundError(disciplineName)));

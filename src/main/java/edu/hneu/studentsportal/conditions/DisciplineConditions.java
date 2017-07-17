@@ -2,9 +2,12 @@ package edu.hneu.studentsportal.conditions;
 
 import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.enums.DisciplineType;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang.Validate;
 
-public class DisciplineConditions {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class DisciplineConditions {
 
     public static boolean isMasterDiscipline(Discipline discipline) {
         Validate.notNull(discipline, "The discipline must not be null!");

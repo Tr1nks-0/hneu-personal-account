@@ -56,6 +56,7 @@ public class ImportService {
             List<DisciplineMark> updatedMarks = disciplineMarkService.updateStudentMarks(student, importedMarks);
             if (CollectionUtils.isNotEmpty(updatedMarks)) {
                 studentRepository.save(student);
+                log.info(format("Student[%s] marks[%s] were updated", student, updatedMarks));
                 updatedStudentsMarks.put(student, updatedMarks);
             }
         });
@@ -67,6 +68,7 @@ public class ImportService {
         studentsChoice.forEach((student, disciplines) -> {
             List<DisciplineMark> newMarks = createNewMarksFromStudentChoice(student, disciplines);
             student.getDisciplineMarks().addAll(newMarks);
+            log.info(format("New marks[%s] were added to student[%s]", newMarks, student));
         });
         studentRepository.save(studentsChoice.keySet());
         return studentsChoice;
@@ -80,10 +82,9 @@ public class ImportService {
     }
 
     private List<DisciplineMark> createNewMarksFromStudentChoice(Student student, List<Discipline> disciplines) {
-        List<Discipline> studentMarks = disciplineMarkService.extract(student.getDisciplineMarks(), DisciplineMark::getDiscipline);
-        Predicate<DisciplineMark> doesStudentHaveMark = mark -> isFalse(studentMarks.contains(mark.getDiscipline()));
-        List<DisciplineMark> newMarks = disciplines.stream().map(DisciplineMark::new).collect(toList());
-        return newMarks.stream().filter(doesStudentHaveMark).collect(toList());
+        List<Discipline> studentDisciplines = disciplineMarkService.extract(student.getDisciplineMarks(), DisciplineMark::getDiscipline);
+        Predicate<Discipline> doesStudentHaveDiscipline = discipline -> isFalse(studentDisciplines.contains(discipline));
+        return disciplines.stream().filter(doesStudentHaveDiscipline).map(DisciplineMark::new).collect(toList());
     }
 
 }

@@ -43,4 +43,12 @@ class UserServiceSpockTest extends Specification {
             1 * userRepositoryMock.save(*_)
     }
 
+    def 'should return admins list'() {
+        given:
+            userRepositoryMock.findAllByRole(UserRole.ADMIN) >> [userMock]
+        when:
+            def admins = userService.getAdmins()
+        then:
+            [userMock] == admins
+    }
 }
