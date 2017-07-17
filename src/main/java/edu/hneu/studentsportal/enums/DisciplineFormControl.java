@@ -22,6 +22,6 @@ public enum DisciplineFormControl {
     public static DisciplineFormControl of(String name) {
         for(DisciplineFormControl disciplineFormControl : values())
             if(disciplineFormControl.name.equalsIgnoreCase(name)) return disciplineFormControl;
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Cannot find discipline form control for name: " + name);
     }
 }

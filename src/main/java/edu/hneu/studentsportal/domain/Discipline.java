@@ -56,7 +56,7 @@ public class Discipline {
     @Enumerated(EnumType.ORDINAL)
     private DisciplineDegree degree;
 
-//    @NotNull
+    @NotNull
     @Column(name="control_form")
     @Enumerated(EnumType.ORDINAL)
     private DisciplineFormControl controlForm;
@@ -65,11 +65,12 @@ public class Discipline {
     @Length(min = 3, max = 100)
     private String label;
 
-//    @NotNull
-//    @Length(min = 1, max = 100)
+    @NotNull
+    @Length(min = 1, max = 100)
+    @Column(unique = true)
     private String code;
 
-//    @NotNull
+    @NotNull
     @Enumerated(EnumType.ORDINAL)
     private DisciplineType type;
 

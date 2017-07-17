@@ -17,7 +17,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.nio.file.Files;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_STUDENTS_URL;
 
@@ -44,14 +43,10 @@ public class ImportStudentController implements ExceptionHandlingController {
     @SneakyThrows
     public String importStudent(@RequestParam("file") MultipartFile multipartFile, RedirectAttributes redirectAttributes) {
         File file = fileService.getFile(multipartFile);
-        try {
-            Student student = importService.importStudent(file);
-            emailService.sendProfileWasCreatedEmail(student);
-            redirectAttributes.addFlashAttribute("student", student);
-            return "redirect:/management/students/" + student.getId();
-        } finally {
-            Files.deleteIfExists(file.toPath());
-        }
+        Student student = fileService.perform(file, importService::importStudent);
+        emailService.sendProfileWasCreatedEmail(student);
+        redirectAttributes.addFlashAttribute("student", student);
+        return "redirect:/management/students/" + student.getId();
     }
 
     @Override

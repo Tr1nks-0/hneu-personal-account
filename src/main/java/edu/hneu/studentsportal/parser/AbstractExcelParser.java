@@ -96,7 +96,7 @@ public abstract class AbstractExcelParser<E> {
 
     protected void validateHeaderColumn(int row, int col, String expectedLabel) {
         Validate.notEmpty(expectedLabel);
-        if (isFalse(StringUtils.equals(expectedLabel.trim(), getStringCellValue(row, col).trim()))) {
+        if (isFalse(StringUtils.equalsIgnoreCase(expectedLabel.trim(), getStringCellValue(row, col).trim()))) {
             throw new IllegalArgumentException(messageService.invalidFile());
         }
     }

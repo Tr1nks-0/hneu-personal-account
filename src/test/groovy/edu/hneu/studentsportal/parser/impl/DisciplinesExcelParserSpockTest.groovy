@@ -23,8 +23,6 @@ class DisciplinesExcelParserSpockTest extends Specification {
 
     def setup() {
         specialityRepositoryMock.findByCode('122') >> Optional.of(specialityMock)
-        educationProgramRepositoryMock.findByCode('51') >> Optional.empty()
-        educationProgramRepositoryMock.findByCode('51,54') >> Optional.empty()
         educationProgramRepositoryMock.findByCode('51-ІСУТОД') >> Optional.of(educationProgramMock)
     }
 
@@ -34,7 +32,7 @@ class DisciplinesExcelParserSpockTest extends Specification {
         when:
             def disciplines = disciplinesExcelParser.parse(excelFile)
         then:
-            disciplines.size() == 5
+            disciplines.size() == 18
     }
 
     def loadResource = {

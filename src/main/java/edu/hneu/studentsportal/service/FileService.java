@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.service;
 
-import javaslang.control.Try;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
@@ -27,8 +26,10 @@ public class FileService {
 
     @SneakyThrows
     public <E> E perform(File file, Function<File, E> function) {
-        E response = Try.of(() -> function.apply(file)).getOrElseThrow(() -> new IllegalStateException("Cannot perform operation on the file!"));
-        Files.deleteIfExists(file.toPath());
-        return response;
+        try {
+            return function.apply(file);
+        } finally {
+            Files.deleteIfExists(file.toPath());
+        }
     }
 }

@@ -19,12 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_STUDENTS_CHOICE_URL;
-import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_STUDENTS_MARKS_URL;
 
 @Log4j
 @Controller
@@ -47,13 +45,9 @@ public class ImportStudentsChoiceController implements ExceptionHandlingControll
     @SneakyThrows
     public String importStudentsChoice(@RequestParam("file") MultipartFile multipartFile, Model model) {
         File file = fileService.getFile(multipartFile);
-        try {
-            Map<Student, List<Discipline>> studentsChoice = importService.importStudentsChoice(file);
-            studentsChoice.keySet().forEach(emailService::sendProfileWasChangedEmail);
-            model.addAttribute("studentsChoice", studentsChoice);
-        } finally {
-            Files.deleteIfExists(file.toPath());
-        }
+        Map<Student, List<Discipline>> studentsChoice = fileService.perform(file, importService::importStudentsChoice);
+        studentsChoice.keySet().forEach(emailService::sendProfileWasChangedEmail);
+        model.addAttribute("studentsChoice", studentsChoice);
         return "management/imported-students-choice";
     }
 
