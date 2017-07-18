@@ -25,8 +25,9 @@ import javax.validation.constraints.NotNull;
 public class Discipline {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Length(min = 1, max = 100)
+    @Column(unique = true)
+    private String code;
 
     @NotNull
     @Min(value = 0)
@@ -64,11 +65,6 @@ public class Discipline {
     @NotNull
     @Length(min = 3, max = 100)
     private String label;
-
-    @NotNull
-    @Length(min = 1, max = 100)
-    @Column(unique = true)
-    private String code;
 
     @NotNull
     @Enumerated(EnumType.ORDINAL)

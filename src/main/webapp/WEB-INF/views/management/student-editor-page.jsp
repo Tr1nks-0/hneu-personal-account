@@ -122,7 +122,7 @@
                                                         <td class="col-md-2"><form:select path="disciplineMarks[${i.index}].discipline.type" items="${disciplineTypes}" itemLabel="name" cssClass="form-control" disabled="true"/>
                                                         <td class="col-md-1"><form:input path="disciplineMarks[${i.index}].mark" cssClass="form-control" type="number"/></td>
                                                         <form:hidden path="disciplineMarks[${i.index}].id"/>
-                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.id"/>
+                                                        <form:hidden path="disciplineMarks[${i.index}].discipline.code"/>
                                                         <form:hidden path="disciplineMarks[${i.index}].discipline.speciality"/>
                                                         <form:hidden path="disciplineMarks[${i.index}].discipline.educationProgram"/>
                                                         <form:hidden path="disciplineMarks[${i.index}].discipline.course"/>

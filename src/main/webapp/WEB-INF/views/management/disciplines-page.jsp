@@ -107,11 +107,11 @@
                         <table class="table no-margin">
                             <thead>
                                 <tr>
-                                    <th><spring:message code="form.label.name"/></th>
-                                    <th><spring:message code="form.label.code"/></th>
-                                    <th><spring:message code="form.label.discipline.credits"/></th>
-                                    <th><spring:message code="form.label.discipline.control.form"/></th>
-                                    <th><spring:message code="form.label.discipline.type"/></th>
+                                    <th class="center"><spring:message code="form.label.name"/></th>
+                                    <th class="center"><spring:message code="form.label.code"/></th>
+                                    <th class="center"><spring:message code="form.label.discipline.credits"/></th>
+                                    <th class="center"><spring:message code="form.label.discipline.control.form"/></th>
+                                    <th class="center"><spring:message code="form.label.discipline.type"/></th>
                                     <th></th>
                                 </tr>
                             <thead>
@@ -120,11 +120,11 @@
                                     <tr>
                                         <td>${discipline.label}</td>
                                         <td>${discipline.code}</td>
-                                        <td>${discipline.credits}</td>
-                                        <td>${discipline.controlForm.name}</td>
-                                        <td>${discipline.type.name}</td>
+                                        <td class="center">${discipline.credits}</td>
+                                        <td class="center">${discipline.controlForm.name}</td>
+                                        <td class="center">${discipline.type.name}</td>
                                         <td>
-                                            <button data-discipline="${discipline.id}" class="delete-discipline btn btn-danger btn-xs pull-right">
+                                            <button data-discipline="${discipline.code}" class="delete-discipline btn btn-danger btn-xs pull-right">
                                                 <i class="fa fa-remove"></i>
                                             </button>
                                         </td>

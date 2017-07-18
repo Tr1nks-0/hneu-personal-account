@@ -89,7 +89,7 @@ public class DisciplineMarkService {
     }
 
     private Optional<DisciplineMark> getPreviousDisciplineMark(DisciplineMark importedMark, List<DisciplineMark> existingMarks) {
-        return existingMarks.stream().filter(sm -> sm.getDiscipline().getId().equals(importedMark.getDiscipline().getId())).findFirst();
+        return existingMarks.stream().filter(sm -> sm.getDiscipline().getCode().equals(importedMark.getDiscipline().getCode())).findFirst();
     }
 
     private List<Discipline> extractMagmaynors(List<DisciplineMark> disciplineMarks) {

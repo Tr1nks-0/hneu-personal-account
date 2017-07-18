@@ -10,7 +10,7 @@
 
         <ol class="breadcrumb panel panel-default">
             <li><i class="fa fa-home"></i></li>
-            <li><a href="/management/import/student-marks"><spring:message code="form.label.management.import.disciplines"/></a></li>
+            <li><a href="/management/import/disciplines"><spring:message code="form.label.management.import.disciplines"/></a></li>
             <li class="active"><spring:message code="form.label.management.imported.disciplines"/></li>
         </ol>
 

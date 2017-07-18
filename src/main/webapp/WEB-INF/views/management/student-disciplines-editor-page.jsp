@@ -46,7 +46,7 @@
                     <div class="input-group">
                         <form:select path="discipline" cssClass="selectpicker selectpicker-left-from-control form-control">
                             <c:forEach items="${disciplines}" var="discipline">
-                                <form:option value="${discipline.id}" label="${discipline.type.name} - ${discipline.label}"/>
+                                <form:option value="${discipline.code}" label="${discipline.type.name} - ${discipline.label}"/>
                             </c:forEach>
                         </form:select>
                         <div class="input-group-btn">
