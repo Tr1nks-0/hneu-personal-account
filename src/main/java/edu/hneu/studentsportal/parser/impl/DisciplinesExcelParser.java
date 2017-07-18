@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.EducationProgram;
 import edu.hneu.studentsportal.domain.Speciality;
-import edu.hneu.studentsportal.enums.DisciplineDegree;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.parser.AbstractExcelParser;
@@ -21,7 +20,6 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Objects.nonNull;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
@@ -51,9 +49,8 @@ public class DisciplinesExcelParser extends AbstractExcelParser<List<Discipline>
     }
 
     private void validateDisciplinesExcelFile(int row) {
-        validateHeaders(row, newArrayList("Факультет", "Спеціальність", "Спеціалізація",
-                "Освітній ступінь", "Тип", "Код", "Назви навчальних  дисциплін", "Кількість кредитів ЄКТС",
-                "Курс", "Семестр", "Форма контроля"));
+        validateHeaders(row, newArrayList("Спеціальність", "Спеціалізація", "Тип", "Код",
+                "Назви навчальних  дисциплін", "Кількість кредитів ЄКТС", "Курс", "Семестр", "Форма контроля"));
     }
 
     private boolean isNotFileEnd(int row) {
@@ -64,35 +61,30 @@ public class DisciplinesExcelParser extends AbstractExcelParser<List<Discipline>
         return Discipline.builder()
                 .speciality(parseSpeciality(indexer))
                 .educationProgram(parseEducationProgram(indexer))
-                .degree(parseDegree(indexer))
-                .type(DisciplineType.of(getStringCellValue(indexer, 4)))
-                .code(getStringCellValue(indexer, 5))
-                .label(getStringCellValue(indexer, 6))
-                .credits(getIntegerCellValue(indexer, 7))
-                .course(getIntegerCellValue(indexer, 8))
-                .semester(getIntegerCellValue(indexer, 9))
-                .controlForm(DisciplineFormControl.of(getStringCellValue(indexer, 10)))
+                .type(DisciplineType.of(getStringCellValue(indexer, 2)))
+                .code(getStringCellValue(indexer, 3))
+                .label(getStringCellValue(indexer, 4))
+                .credits(getIntegerCellValue(indexer, 5))
+                .course(getIntegerCellValue(indexer, 6))
+                .semester(getIntegerCellValue(indexer, 7))
+                .controlForm(DisciplineFormControl.of(getStringCellValue(indexer, 8)))
                 .build();
     }
 
     private Speciality parseSpeciality(Indexer indexer) {
-        String code = parseCode(getString1CellValue(indexer));
+        String code = parseCode(getStringCellValue(indexer));
         return specialityRepository.findByCode(String.valueOf(code))
                 .orElseThrow(() -> new IllegalStateException("Cannot find speciality for code: " + code));
     }
 
     private EducationProgram parseEducationProgram(Indexer indexer) {
-        String code = parseCode(getString2CellValue(indexer));
+        String code = parseCode(getString1CellValue(indexer));
         return educationProgramRepository.findByCode(code)
                 .orElseThrow(() -> new IllegalStateException("Cannot find education program for code: " + code));
     }
 
     private String parseCode(String line) {
         return line.split("\\.")[0];
-    }
-
-    private DisciplineDegree parseDegree(Indexer indexer) {
-        return DisciplineDegree.parse(getStringCellValue(indexer, 3).toLowerCase());
     }
 
 }

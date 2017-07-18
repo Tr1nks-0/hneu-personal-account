@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.domain;
 
-import edu.hneu.studentsportal.enums.DisciplineDegree;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import lombok.*;
@@ -53,12 +52,7 @@ public class Discipline {
     private Speciality speciality;
 
     @NotNull
-    @Column(name="degree")
-    @Enumerated(EnumType.ORDINAL)
-    private DisciplineDegree degree;
-
-    @NotNull
-    @Column(name="control_form")
+    @Column(name = "control_form")
     @Enumerated(EnumType.ORDINAL)
     private DisciplineFormControl controlForm;
 
