@@ -62,7 +62,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     @Override
     public Map<Student, List<DisciplineMark>> extractModel() {
         if (isFalse(getStringCellValue(7, 4).contains(DISCIPLINES_HEADER)))
-            throw new IllegalArgumentException(messageService.invalidStudentMarksError());
+            throw new IllegalArgumentException(messageService.invalidFile());
 
         List<Student> students = studentRepository.findByGroup(getGroup());
         List<Discipline> disciplines = getDisciplines();

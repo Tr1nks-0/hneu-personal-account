@@ -62,9 +62,6 @@ public interface MessageService {
     @Message("invalid.student.profile.photo")
     String invalidStudentPhotoError();
 
-    @Message("invalid.student.profile.marks.file")
-    String invalidStudentMarksError();
-
     @Message("error.discipline.not.found")
     String disciplineNotFoundError(String name);
 
