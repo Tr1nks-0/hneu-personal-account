@@ -14,10 +14,6 @@ import java.util.Optional;
 public interface DisciplineRepository extends JpaRepository<Discipline, Long> {
 
 
-    Optional<Discipline> findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgramAndCreditsAndControlForm(String label, Integer course, Integer semester,
-                                                                                                                 Speciality speciality, EducationProgram educationProgram,
-                                                                                                                 Integer credits, DisciplineFormControl controlForm);
-
     Optional<Discipline> findByLabelAndCourseAndSemesterAndSpecialityAndEducationProgram(String label, Integer course, Integer semester,
                                                                                          Speciality speciality, EducationProgram educationProgram);
 

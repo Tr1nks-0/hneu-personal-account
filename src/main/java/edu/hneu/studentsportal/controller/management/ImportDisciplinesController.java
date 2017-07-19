@@ -4,7 +4,6 @@ import edu.hneu.studentsportal.controller.ExceptionHandlingController;
 import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ImportService;
-import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -32,7 +31,8 @@ public class ImportDisciplinesController implements ExceptionHandlingController 
     private FileService fileService;
 
     @GetMapping
-    public String importDisciplines() {
+    public String importDisciplines(Model model) {
+        populateTitle(model);
         return "management/import-disciplines-page";
     }
 
@@ -41,6 +41,7 @@ public class ImportDisciplinesController implements ExceptionHandlingController 
         File file = fileService.getFile(multipartFile);
         List<Discipline> disciplines = fileService.perform(file, importService::importDisciplines);
         model.addAttribute("disciplines", disciplines);
+        populateTitle(model);
         return "management/imported-disciplines-page";
     }
 
@@ -52,5 +53,9 @@ public class ImportDisciplinesController implements ExceptionHandlingController 
     @Override
     public Logger logger() {
         return log;
+    }
+
+    private void populateTitle(Model model) {
+        model.addAttribute("title", "import-disciplines");
     }
 }

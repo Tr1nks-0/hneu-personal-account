@@ -1,5 +1,6 @@
 package edu.hneu.studentsportal.controller.management;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import edu.hneu.studentsportal.controller.ExceptionHandlingController;
 import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.Student;
@@ -37,7 +38,8 @@ public class ImportStudentsChoiceController implements ExceptionHandlingControll
     private EmailService emailService;
 
     @GetMapping
-    public String importStudent() {
+    public String importStudent(Model model) {
+        populateTitle(model);
         return "management/import-students-choice-page";
     }
 
@@ -48,6 +50,7 @@ public class ImportStudentsChoiceController implements ExceptionHandlingControll
         Map<Student, List<Discipline>> studentsChoice = fileService.perform(file, importService::importStudentsChoice);
         studentsChoice.keySet().forEach(emailService::sendProfileWasChangedEmail);
         model.addAttribute("studentsChoice", studentsChoice);
+        populateTitle(model);
         return "management/imported-students-choice";
     }
 
@@ -59,5 +62,9 @@ public class ImportStudentsChoiceController implements ExceptionHandlingControll
     @Override
     public Logger logger() {
         return log;
+    }
+
+    private void populateTitle(Model model) {
+        model.addAttribute("title", "import-students-choice");
     }
 }

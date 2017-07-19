@@ -4,6 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
     <title><c:out value="${title}"/></title>
@@ -20,7 +21,7 @@
     <![endif]-->
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini <c:if test="${'Розклад' eq title}">sidebar-collapse</c:if> ">
+<body class="hold-transition skin-blue sidebar-mini">
 
 <div class="wrapper">
     <header class="main-header">
@@ -40,26 +41,43 @@
         <section class="sidebar">
             <ul class="sidebar-menu">
                 <li class="header">ГОЛОВНЕ МЕНЮ</li>
-                <li>
-                    <a href="/management/import/disciplines">
-                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.import.disciplines"/></span>
+
+                <li class="treeview <c:if test='${fn:startsWith(title, "import")}'>active menu-open</c:if>">
+                    <a href="#">
+                        <i class="fa fa-download"></i>
+                            <span><spring:message code="form.label.management.import"/></span>
+                            <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
                     </a>
+                    <ul class="treeview-menu">
+                        <li <c:if test="${title eq 'import-disciplines'}">class="active"</c:if>>
+                            <a href="/management/import/disciplines">
+                                <i class="fa fa-circle-o text-aqua"></i>
+                                <spring:message code="form.label.management.import.disciplines"/>
+                            </a>
+                        </li>
+                        <li <c:if test="${title eq 'import-profile'}">class="active"</c:if>>
+                            <a href="/management/import/student">
+                                <i class="fa fa-circle-o text-aqua"></i>
+                                <spring:message code="form.label.management.import.profiles"/>
+                            </a>
+                        </li>
+                        <li <c:if test="${title eq 'import-student-marks'}">class="active"</c:if>>
+                            <a href="/management/import/student-marks">
+                                <i class="fa fa-circle-o text-aqua"></i>
+                                <spring:message code="form.label.management.import.totals"/>
+                            </a>
+                        </li>
+                        <li <c:if test="${title eq 'import-students-choice'}">class="active"</c:if>>
+                            <a href="/management/import/students-choice">
+                                <i class="fa fa-circle-o text-aqua"></i>
+                                <spring:message code="form.label.management.import.student.choice"/>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li>
-                    <a href="/management/import/student">
-                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.add.profiles"/></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/management/import/student-marks">
-                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.add.totals"/></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/management/import/students-choice">
-                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.import.student.choice"/></span>
-                    </a>
-                </li>
+
                 <li>
                     <a href="/management/groups">
                         <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.groups"/></span>

@@ -34,14 +34,12 @@
                             <th class="center"><spring:message code="form.label.name"/></th>
                             <th class="center"><spring:message code="form.label.discipline.course"/></th>
                             <th class="center"><spring:message code="form.label.discipline.semester"/></th>
-                            <th class="center"><spring:message code="form.label.discipline.degree"/></th>
                         </tr>
                         <c:forEach items="${disciplines}" var="discipline" varStatus="i">
                             <tr>
                                 <td>${discipline.label}</td>
                                 <td class="center">${discipline.course}</td>
                                 <td class="center">${discipline.semester}</td>
-                                <td class="center">${discipline.degree.name}</td>
                             </tr>
                         </c:forEach>
                     </table>

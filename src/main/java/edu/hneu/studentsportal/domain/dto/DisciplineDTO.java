@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.parser;
+package edu.hneu.studentsportal.domain.dto;
 
 import edu.hneu.studentsportal.domain.EducationProgram;
 import edu.hneu.studentsportal.domain.Speciality;

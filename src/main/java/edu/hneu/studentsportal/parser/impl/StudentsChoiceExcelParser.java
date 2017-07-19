@@ -1,9 +1,7 @@
 package edu.hneu.studentsportal.parser.impl;
 
 import com.google.common.collect.Maps;
-import edu.hneu.studentsportal.domain.Discipline;
-import edu.hneu.studentsportal.domain.Group;
-import edu.hneu.studentsportal.domain.Student;
+import edu.hneu.studentsportal.domain.*;
 import edu.hneu.studentsportal.parser.AbstractExcelParser;
 import edu.hneu.studentsportal.parser.Indexer;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.String.format;
@@ -54,7 +53,7 @@ public class StudentsChoiceExcelParser extends AbstractExcelParser<Map<Student, 
     }
 
     private void validateStudentsChoiceExcelFile(int row) {
-        validateHeaders(row, newArrayList("Прізвище", "Ім'я", "По батькові", "№ академічної групи", "Код", "Курс", "Семестр"));
+        validateHeaders(row, newArrayList("Прізвище", "Ім'я", "По батькові", "№ академічної групи", "Код", "Назва", "Курс", "Семестр", "Маг-майнер"));
     }
 
     private boolean isNotFileEnd(int row) {
@@ -63,23 +62,45 @@ public class StudentsChoiceExcelParser extends AbstractExcelParser<Map<Student, 
 
     private Group findGroup(Indexer indexer) {
         String groupName = getStringCellValue(indexer, 3);
-        return groupRepository.findByName(groupName)
-                .orElseThrow(() -> new IllegalStateException("Cannot find group for name: " + groupName));
+        Optional<Group> group = groupRepository.findByName(groupName);
+        return group.orElseThrow(() -> new IllegalStateException("Cannot find group for name: " + groupName));
     }
 
     private Student findStudent(Indexer indexer, Group group) {
         String surname = getStringCellValue(indexer);
         String fullName = getString1CellValue(indexer) + " " + getString2CellValue(indexer);
-        return studentRepository.findByNameAndSurnameAndGroup(fullName, surname, group)
-                .orElseThrow(() -> new IllegalStateException(format("Cannot find student for full name[%s %s] and group[%s]", fullName, surname, group.getName())));
+        Optional<Student> student = studentRepository.findByNameAndSurnameAndGroup(fullName, surname, group);
+        return student.orElseThrow(() -> new IllegalStateException(format("Cannot find student for full name[%s %s] and group[%s]", fullName, surname, group.getName())));
     }
 
     private Discipline findDiscipline(Indexer indexer, Group group) {
         String code = getStringCellValue(indexer, 4);
-        int course = getIntegerCellValue(indexer, 5);
-        int semester = getIntegerCellValue(indexer, 6);
-        return disciplineRepository.findByCodeAndCourseAndSemesterAndSpecialityAndEducationProgram(code, course, semester, group.getSpeciality(), group.getEducationProgram())
-                .orElseThrow(() -> new IllegalStateException(format("Cannot find discipline for code:", code)));
+        int course = getIntegerCellValue(indexer, 6);
+        int semester = getIntegerCellValue(indexer, 7);
+        Speciality speciality = group.getSpeciality();
+        EducationProgram educationProgram = group.getEducationProgram();
+        Optional<Discipline> discipline = disciplineRepository.findByCodeAndCourseAndSemesterAndSpecialityAndEducationProgram(code, course, semester, speciality, educationProgram);
+        return discipline.orElseGet(() -> {
+            String masterDisciplineTemplate = "МАГ" + getIntegerCellValue(indexer, 8);
+            Discipline masterDiscipline = disciplineRepository.findByCodeAndCourseAndSemesterAndSpecialityAndEducationProgram(masterDisciplineTemplate, course, semester, speciality, educationProgram)
+                    .orElseThrow(() -> new IllegalStateException(format("Cannot find discipline for code:", code)));
+
+            Discipline newDiscipline = Discipline.builder()
+                    .code(code)
+                    .label(getStringCellValue(indexer, 5))
+                    .credits(masterDiscipline.getCredits())
+                    .course(masterDiscipline.getCourse())
+                    .semester(masterDiscipline.getSemester())
+                    .educationProgram(masterDiscipline.getEducationProgram())
+                    .speciality(masterDiscipline.getSpeciality())
+                    .controlForm(masterDiscipline.getControlForm())
+                    .type(masterDiscipline.getType())
+                    .build();
+
+            disciplineRepository.save(newDiscipline);
+            log.info(format("New discipline[%s] was created.", newDiscipline));
+            return newDiscipline;
+        });
     }
 
     private void putOrUpdateStudentsChoice(Map<Student, List<Discipline>> choice, Student student, Discipline discipline) {

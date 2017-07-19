@@ -9,7 +9,7 @@
 
         <ol class="breadcrumb panel panel-default">
             <li><i class="fa fa-home"></i></li>
-            <li class="active"><spring:message code="form.label.management.add.totals"/></li>
+            <li class="active"><spring:message code="form.label.management.import.totals"/></li>
         </ol>
 
         <info:error error="${error}"/>

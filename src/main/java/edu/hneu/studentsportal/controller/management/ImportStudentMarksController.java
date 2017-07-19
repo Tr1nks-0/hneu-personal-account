@@ -37,7 +37,8 @@ public class ImportStudentMarksController implements ExceptionHandlingController
     private EmailService emailService;
 
     @GetMapping
-    public String importStudentMarks() {
+    public String importStudentMarks(Model model) {
+        populateTitle(model);
         return "management/import-student-marks-page";
     }
 
@@ -48,6 +49,7 @@ public class ImportStudentMarksController implements ExceptionHandlingController
         Map<Student, List<DisciplineMark>> studentsMarks = fileService.perform(file, importService::importStudentMarks);
         studentsMarks.keySet().forEach(emailService::sendProfileWasChangedEmail);
         model.addAttribute("studentsMarks", studentsMarks);
+        populateTitle(model);
         return "management/imported-students-marks";
     }
 
@@ -59,5 +61,9 @@ public class ImportStudentMarksController implements ExceptionHandlingController
     @Override
     public Logger logger() {
         return log;
+    }
+
+    private void populateTitle(Model model) {
+        model.addAttribute("title", "import-student-marks");
     }
 }

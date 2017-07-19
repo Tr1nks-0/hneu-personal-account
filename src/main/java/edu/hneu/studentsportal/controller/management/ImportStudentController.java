@@ -11,6 +11,7 @@ import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -35,17 +36,19 @@ public class ImportStudentController implements ExceptionHandlingController {
     private MessageService messageService;
 
     @GetMapping
-    public String importStudent() {
+    public String importStudent(Model model) {
+        populateTitle(model);
         return "management/import-student-page";
     }
 
     @PostMapping
     @SneakyThrows
-    public String importStudent(@RequestParam("file") MultipartFile multipartFile, RedirectAttributes redirectAttributes) {
+    public String importStudent(@RequestParam("file") MultipartFile multipartFile, RedirectAttributes redirectAttributes, Model model) {
         File file = fileService.getFile(multipartFile);
         Student student = fileService.perform(file, importService::importStudent);
         emailService.sendProfileWasCreatedEmail(student);
         redirectAttributes.addFlashAttribute("student", student);
+        populateTitle(model);
         return "redirect:/management/students/" + student.getId();
     }
 
@@ -62,5 +65,9 @@ public class ImportStudentController implements ExceptionHandlingController {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
         return handleErrorInternal(e, messageService.studentExistsError(), redirectAttributes);
+    }
+
+    private void populateTitle(Model model) {
+        model.addAttribute("title", "import-profile");
     }
 }

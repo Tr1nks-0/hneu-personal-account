@@ -10,7 +10,7 @@
 
         <ol class="breadcrumb panel panel-default">
             <li><i class="fa fa-home"></i></li>
-            <li><a href="/management/import/student-marks"><spring:message code="form.label.management.add.totals"/></a></li>
+            <li><a href="/management/import/student-marks"><spring:message code="form.label.management.import.totals"/></a></li>
             <li class="active"><spring:message code="form.label.management.imported.student.marks"/></li>
         </ol>
 
@@ -21,7 +21,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-12 panel-title">
-                        <spring:message code="form.label.management.students"/> ${group.name}
+                        <spring:message code="form.label.management.imported.student.marks"/> ${group.name}
                     </div>
                 </div>
             </div>
