@@ -91,6 +91,7 @@ public class StudentsController implements ExceptionHandlingController {
         model.addAttribute("disciplineFormControls", DisciplineFormControl.values());
         model.addAttribute("student", student);
         model.addAttribute("courses", disciplineMarkService.getStudentCourses(student));
+        model.addAttribute("title", "management-students");
         return "management/student-editor-page";
     }
 }

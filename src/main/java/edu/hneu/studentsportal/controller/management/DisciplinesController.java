@@ -129,7 +129,7 @@ public class DisciplinesController implements ExceptionHandlingController {
         model.addAttribute("disciplineTypes", DisciplineType.values());
         model.addAttribute("disciplines", disciplineRepository.findByCourseAndSemesterAndSpecialityAndEducationProgram(
                 discipline.getCourse(), discipline.getSemester(), speciality, educationProgram));
+        model.addAttribute("title", "management-disciplines");
         return "management/disciplines-page";
     }
-
 }

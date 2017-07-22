@@ -77,35 +77,45 @@
                         </li>
                     </ul>
                 </li>
-
-                <li>
-                    <a href="/management/groups">
-                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.groups"/></span>
+                <li class="treeview <c:if test='${fn:startsWith(title, "management")}'>active menu-open</c:if>">
+                    <a href="#">
+                        <i class="fa fa-laptop"></i>
+                        <span><spring:message code="form.label.management"/></span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
                     </a>
+                    <ul class="treeview-menu">
+                        <li <c:if test="${title eq 'management-groups'}">class="active"</c:if>>
+                            <a href="/management/groups">
+                                <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.groups"/></span>
+                            </a>
+                        </li>
+                        <li <c:if test="${title eq 'management-faculties'}">class="active"</c:if>>
+                            <a href="/management/faculties">
+                                <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.faculties" /></span>
+                            </a>
+                        </li>
+                        <li <c:if test="${title eq 'management-specialities'}">class="active"</c:if>>
+                            <a href="/management/specialities">
+                                <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.specialities" /></span>
+                            </a>
+                        </li>
+                        <li <c:if test="${title eq 'management-education-programs'}">class="active"</c:if>>
+                            <a href="/management/education-programs">
+                                <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.education.programs" /></span>
+                            </a>
+                        </li>
+                        <li <c:if test="${title eq 'management-disciplines'}">class="active"</c:if>>
+                            <a href="/management/disciplines">
+                                <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.disciplines" /></span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li>
-                    <a href="/management/faculties">
-                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.faculties" /></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/management/specialities">
-                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.specialities" /></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/management/education-programs">
-                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.education.programs" /></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/management/disciplines">
-                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.disciplines" /></span>
-                    </a>
-                </li>
-                <li>
+                <li <c:if test="${title eq 'management-settings'}">class="active"</c:if>>
                     <a href="/management/configs">
-                        <i class="fa fa-circle-o text-aqua"></i> <span><spring:message code="form.label.management.configurations" /></span>
+                        <i class="fa fa-cogs"></i> <span><spring:message code="form.label.management.configurations" /></span>
                     </a>
                 </li>
                 <li>

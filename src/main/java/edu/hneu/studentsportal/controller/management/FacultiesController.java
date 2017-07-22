@@ -80,6 +80,7 @@ public class FacultiesController implements ExceptionHandlingController {
     private String prepareFacultyPage(Model model, Faculty faculty) {
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("faculty", faculty);
+        model.addAttribute("title", "management-faculties");
         return "management/faculties-page";
     }
 }

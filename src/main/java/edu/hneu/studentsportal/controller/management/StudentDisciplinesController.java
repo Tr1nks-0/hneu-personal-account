@@ -119,6 +119,7 @@ public class StudentDisciplinesController implements ExceptionHandlingController
         model.addAttribute("selectedCourse", course);
         model.addAttribute("selectedSemester", semester);
         model.addAttribute("courses", studentDisciplineMarksService.getStudentCourses(student));
+        model.addAttribute("title", "management-student-disciplines");
         return "management/student-disciplines-editor-page";
     }
 }

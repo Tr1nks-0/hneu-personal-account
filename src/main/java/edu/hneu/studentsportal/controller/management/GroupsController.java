@@ -118,6 +118,7 @@ public class GroupsController implements ExceptionHandlingController{
         model.addAttribute("specialities", specialityRepository.findAllByFaculty(faculty));
         model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
         model.addAttribute("groups", groupRepository.findBySpecialityAndEducationProgram(speciality, group.getEducationProgram()));
+        model.addAttribute("title", "management-groups");
         return "management/groups-page";
     }
 

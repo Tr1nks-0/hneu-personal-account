@@ -97,6 +97,7 @@ public class SpecialitiesController implements ExceptionHandlingController{
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("speciality", speciality);
         model.addAttribute("specialities", specialityRepository.findAllByFaculty(speciality.getFaculty()));
+        model.addAttribute("title", "management-specialities");
         return "management/specialities-page";
     }
 }

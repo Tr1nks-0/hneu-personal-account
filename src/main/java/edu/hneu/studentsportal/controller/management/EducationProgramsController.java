@@ -103,6 +103,7 @@ public class EducationProgramsController implements ExceptionHandlingController 
         model.addAttribute("selectedFaculty", faculty);
         model.addAttribute("specialities", specialityRepository.findAllByFaculty(faculty));
         model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
+        model.addAttribute("title", "management-education-programs");
         return "management/education-programs-page";
     }
 }
