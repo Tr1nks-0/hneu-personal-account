@@ -113,7 +113,7 @@
                         </li>
                     </ul>
                 </li>
-                <li <c:if test="${title eq 'management-settings'}">class="active"</c:if>>
+                <li <c:if test="${title eq 'settings'}">class="active"</c:if>>
                     <a href="/management/configs">
                         <i class="fa fa-cogs"></i> <span><spring:message code="form.label.management.configurations" /></span>
                     </a>

@@ -4,6 +4,12 @@
 
 <%@ include file="../jspf/management-header.jspf" %>
 
+<style>
+    #import-doc-example > img {
+        max-width: 100%;
+    }
+</style>
+
 <div class="content-wrapper">
     <div class="content">
 
@@ -20,6 +26,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <spring:message code="form.label.management.add.profiles.message"/>
+                        <a class="link" data-toggle="collapse" href="#import-doc-example" aria-expanded="false" aria-controls="import-doc-example">
+                            <spring:message code="form.label.management.import.doc.example"/>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -38,6 +47,9 @@
                         </span>
                     </div>
                 </form>
+            </div>
+            <div class="panel-footer text-center collapse" id="import-doc-example">
+                <img src="/resources/img/profile-download-img.png"/>
             </div>
         </div>
     </div>

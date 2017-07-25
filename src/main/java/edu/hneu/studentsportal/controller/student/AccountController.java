@@ -5,10 +5,7 @@ import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.domain.dto.schedule.Schedule;
 import edu.hneu.studentsportal.repository.StudentRepository;
-import edu.hneu.studentsportal.service.CustomUserDetailsService;
-import edu.hneu.studentsportal.service.EmailService;
-import edu.hneu.studentsportal.service.ScheduleService;
-import edu.hneu.studentsportal.service.UserService;
+import edu.hneu.studentsportal.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
@@ -39,6 +36,8 @@ public class AccountController {
     private ScheduleService scheduleService;
     @Resource
     private EmailService emailService;
+    @Resource
+    private DisciplineMarkService disciplineMarkService;
     @Autowired
     private OAuth2RestOperations oAuth2RestTemplate;
 
@@ -57,6 +56,7 @@ public class AccountController {
         model.addAttribute("currentCourse", scheduleService.getCurrentCourse(student));
         session.setAttribute("groupId", student.getGroup().getId());
         session.setAttribute("email", student.getEmail());
+        model.addAttribute("courses", disciplineMarkService.getStudentCourses(student));
         return new ModelAndView("student/account", "profile", student);
     }
 

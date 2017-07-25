@@ -41,7 +41,7 @@ public class ConfigurationsController implements ExceptionHandlingController {
     @GetMapping
     public String getConfigs(Model model) {
         model.addAttribute("admins", userService.getAdmins());
-        model.addAttribute("title", "management-settings");
+        model.addAttribute("title", "settings");
         return "management/configurations-page";
     }
 
