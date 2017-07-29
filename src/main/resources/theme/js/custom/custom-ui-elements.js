@@ -54,5 +54,12 @@ jQuery(document).ready(function () {
         window.open('', 'marks-window');
         $('#studentForm').submit()
     });
+
+    // User account marks toggling
+
+    $('.show-marks > i').click(function() {
+        var faImageClass = $(this).parent().attr('aria-expanded') === 'true' ? 'fa-chevron-left' : 'fa-chevron-down';
+        $(this).attr('class', 'fa ' + faImageClass);
+    });
 });
 

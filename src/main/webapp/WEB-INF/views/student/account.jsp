@@ -64,8 +64,11 @@
                                         <c:set var="showCourse" value="false"/>
                                     </c:if>
                                     <span class="label label-default">СЕМЕСТР №${semester}</span>
+                                    <span class="pull-right show-marks" data-toggle="collapse" data-target="#marks${course}${semester}">
+                                        <i class="fa fa-chevron-left"></i>
+                                    </span>
                                 </div>
-                                <div class="panel-body">
+                                <div class="panel-body collapse" id="marks${course}${semester}">
                                     <div class="table-responsive">
                                         <table class="table no-margin">
                                             <thead>
@@ -99,4 +102,3 @@
 </div>
 
 <%@ include file="../jspf/footer.jspf" %>
-
