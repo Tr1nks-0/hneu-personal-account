@@ -12,7 +12,7 @@
 
 </head>
 <body class="gradient-background">
-<div class="mask parent">
+<div class="parent">
     <div class="child">
         <div class="container">
             <div id="login-form" class="row">
