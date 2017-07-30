@@ -57,6 +57,7 @@
                 <c:forEach items="${profile.disciplineMarks}" var="disciplineMark" varStatus="i">
                     <c:if test="${disciplineMark.discipline.course == course and disciplineMark.discipline.semester == semester}">
                         <c:if test="${showSemester}">
+                            <c:set var="notCollapsedSemester" value="${course eq currentCourse}"/>
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <c:if test="${showCourse}">
@@ -64,11 +65,18 @@
                                         <c:set var="showCourse" value="false"/>
                                     </c:if>
                                     <span class="label label-default">СЕМЕСТР №${semester}</span>
-                                    <span class="pull-right show-marks" data-toggle="collapse" data-target="#marks${course}${semester}">
-                                        <i class="fa fa-chevron-left"></i>
+                                    <span class="pull-right show-marks" data-toggle="collapse" data-target="#marks${course}${semester}" aria-expanded="${notCollapsedSemester}">
+                                        <c:choose>
+                                            <c:when test="${notCollapsedSemester}">
+                                                <i class="fa fa-chevron-down"></i>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i class="fa fa-chevron-left"></i>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </span>
                                 </div>
-                                <div class="panel-body collapse" id="marks${course}${semester}">
+                                <div class="panel-body collapse <c:if test="${notCollapsedSemester}">in</c:if>" id="marks${course}${semester}">
                                     <div class="table-responsive">
                                         <table class="table no-margin">
                                             <thead>
