@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.controller.management;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import edu.hneu.studentsportal.controller.ExceptionHandlingController;
 import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.Student;

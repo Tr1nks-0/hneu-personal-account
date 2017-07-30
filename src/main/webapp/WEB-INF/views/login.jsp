@@ -16,12 +16,6 @@
     <div class="child">
         <div class="container">
             <div id="login-form" class="row">
-                <c:if test="${error}">
-                    <div class="alert no-border alert-danger col-md-12">
-                        <spring:message code="form.login.error.login"/>
-                    </div>
-                </c:if>
-
                 <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
                     <div class="panel panel-default box-shadow">
                         <div class="panel-heading">
@@ -29,6 +23,11 @@
                                 <img class="center logo" src="/resources/img/logo-md-black.svg"/>
                             </div>
                         </div>
+                        <c:if test="${error}">
+                            <div class="alert alert-danger no-border no-radius col-md-12">
+                                <spring:message code="form.login.error.login"/>
+                            </div>
+                        </c:if>
                         <div class="panel-body">
                             <spring:message code="form.login.label.login.description"/>
                         </div>
