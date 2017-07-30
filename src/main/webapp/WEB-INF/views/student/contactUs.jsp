@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <form class="form-horizontal" role="form" method="post" action="/account/sendEmail">
+                        <form class="form-horizontal" role="form" method="post" action="/account/contactUs">
                             <div class="input-group">
                                 <textarea class="form-control" rows="1" name="message" id="message" required="required" maxlength="250"></textarea>
                                 <span class="input-group-btn">

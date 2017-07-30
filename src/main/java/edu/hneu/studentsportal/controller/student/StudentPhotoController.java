@@ -13,13 +13,13 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("/students")
-public class StudentController {
+@RequestMapping("/students/{id}/photo")
+public class StudentPhotoController {
 
     @Resource
     private StudentRepository studentRepository;
 
-    @GetMapping("/{id}/photo")
+    @GetMapping
     @SneakyThrows
     public void getPhoto(@PathVariable long id, HttpServletResponse response) {
         Student student = studentRepository.findOne(id);
