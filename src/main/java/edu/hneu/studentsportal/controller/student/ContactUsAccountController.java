@@ -31,7 +31,7 @@ public class ContactUsAccountController {
     public String contactUs(@RequestParam(required = false) Boolean success, Model model) {
         model.addAttribute("success", success);
         model.addAttribute("title", "top.menu.contacts");
-        return "student/contactUs";
+        return "student/contact-us";
     }
 
     @PostMapping

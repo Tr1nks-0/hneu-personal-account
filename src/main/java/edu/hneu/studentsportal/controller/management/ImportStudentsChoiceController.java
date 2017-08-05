@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.controller.ExceptionHandlingController;
+import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.service.EmailService;
@@ -27,7 +27,7 @@ import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_STUD
 @Log4j
 @Controller
 @RequestMapping(IMPORT_STUDENTS_CHOICE_URL)
-public class ImportStudentsChoiceController implements ExceptionHandlingController {
+public class ImportStudentsChoiceController implements ExceptionHandlerController {
 
     @Resource
     private ImportService importService;

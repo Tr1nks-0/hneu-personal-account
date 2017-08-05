@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-public interface ExceptionHandlingController {
+public interface ExceptionHandlerController {
 
     String baseUrl();
 

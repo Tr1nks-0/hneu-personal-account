@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.controller.ExceptionHandlingController;
+import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.domain.EducationProgram;
 import edu.hneu.studentsportal.domain.Faculty;
 import edu.hneu.studentsportal.domain.Group;
@@ -33,7 +33,7 @@ import static java.util.Objects.isNull;
 @Log4j
 @Controller
 @RequestMapping(MANAGE_GROUPS_URL)
-public class GroupsController implements ExceptionHandlingController{
+public class GroupsController implements ExceptionHandlerController {
 
     @Resource
     private FacultyRepository facultyRepository;

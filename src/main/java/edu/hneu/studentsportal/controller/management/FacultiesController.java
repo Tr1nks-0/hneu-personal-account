@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.controller.ExceptionHandlingController;
+import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.domain.Faculty;
 import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.repository.FacultyRepository;
@@ -25,7 +25,7 @@ import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_FACU
 @Log4j
 @Controller
 @RequestMapping(MANAGE_FACULTIES_URL)
-public class FacultiesController implements ExceptionHandlingController {
+public class FacultiesController implements ExceptionHandlerController {
 
     @Resource
     private FacultyRepository facultyRepository;

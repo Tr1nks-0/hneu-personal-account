@@ -1,6 +1,6 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.controller.ExceptionHandlingController;
+import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Student;
@@ -31,7 +31,7 @@ import static org.apache.commons.collections4.ListUtils.union;
 @Log4j
 @Controller
 @RequestMapping(MANAGE_STUDENT_DISCIPLINES_URL)
-public class StudentDisciplinesController implements ExceptionHandlingController {
+public class StudentDisciplinesController implements ExceptionHandlerController {
 
     @Resource
     private StudentRepository studentRepository;
