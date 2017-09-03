@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns:th="http://www.w3.org/1999/xhtml">
+<head
+        th:include="fragments/head">
+</head>
+<body class="gradient-background">
+<div class="parent">
+    <div class="child">
+        <div class="container">
+            <div id="login-form" class="row">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+                    <div class="panel panel-default box-shadow">
+                        <div class="panel-heading">
+                            <div class="panel-title">
+                                <img class="center logo" src="/resources/img/logo-md-black.svg"/>
+                            </div>
+                        </div>
+                        <div class="alert alert-danger no-border no-radius col-md-12"
+                             th:if="${error != null}"
+                             th:text="#{form.login.error.login}">
+                        </div>
+                        <div class="panel-body"
+                             th:text="#{form.login.label.login.description}">
+                        </div>
+                        <div class="panel-footer">
+                            <a href="/connect/google" class="btn btn-block btn-social btn-google">
+                                <span class="fa fa-google"></span> Sign in with Google
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="fragments/scripts" th:remove="tag"></div>
+</body>
+</html>

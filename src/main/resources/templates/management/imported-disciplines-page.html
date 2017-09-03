@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:include="fragments/management/header" th:remove="tag"></header>
+    <aside th:include="fragments/management/sidebar" th:remove="tag"></aside>
+
+    <div class="content-wrapper">
+        <div class="content">
+
+            <ol class="breadcrumb panel panel-default">
+                <li><i class="fa fa-home"></i></li>
+                <li>
+                    <a href="/management/import/disciplines"
+                       th:text="#{form.label.management.import.disciplines}"></a>
+                </li>
+                <li class="active" th:text="#{form.label.management.imported.disciplines}"></li>
+            </ol>
+
+            <div th:include="fragments/error" th:remove="tag"></div>
+            <div th:include="fragments/success" th:remove="tag"></div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 panel-title">
+                            <span th:text="#{form.label.management.imported.disciplines}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <table class="table no-margin" th:if="${!#lists.isEmpty(disciplines)}">
+                        <tr>
+                            <th class="center" th:text="#{form.label.name}"></th>
+                            <th class="center" th:text="#{form.label.discipline.course}"></th>
+                            <th class="center" th:text="#{form.label.discipline.semester}"></th>
+                        </tr>
+                        <tr th:each="discipline: ${disciplines}">
+                            <td th:text="${discipline.label}"></td>
+                            <td class="center" th:text="${discipline.course}"></td>
+                            <td class="center" th:text="${discipline.semester}"></td>
+                        </tr>
+                    </table>
+                    <p th:text="#{items.not.found}" th:if="${#lists.isEmpty(disciplines)}"></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div th:include="fragments/management/footer" th:remove="tag"></div>
+</div>
+</body>
+</html>

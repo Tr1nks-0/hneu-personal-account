@@ -1,0 +1,97 @@
+<aside class="main-sidebar" xmlns:th="http://www.w3.org/1999/xhtml">
+    <section class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="header">ГОЛОВНЕ МЕНЮ</li>
+
+            <li class="treeview" th:classappend="${#strings.startsWith(title, 'import')} ? 'active menu-open' : ''">
+                <a href="#">
+                    <i class="fa fa-download"></i>
+                    <span th:text="#{form.label.management.import}"></span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li th:class="${#strings.equals(title, 'import-disciplines')} ? active : ''">
+                        <a href="/management/import/disciplines">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span th:text="#{form.label.management.import.disciplines}"></span>
+                        </a>
+                    </li>
+                    <li th:class="${#strings.equals(title, 'import-profile')} ? active : ''">
+                        <a href="/management/import/student">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span th:text="#{form.label.management.import.profiles}"></span>
+                        </a>
+                    </li>
+                    <li th:class="${#strings.equals(title, 'import-student-marks')} ? active : ''">
+                        <a href="/management/import/student-marks">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span th:text="#{form.label.management.import.totals}"></span>
+                        </a>
+                    </li>
+                    <li th:class="${#strings.equals(title, 'import-students-choice')} ? active : ''">
+                        <a href="/management/import/students-choice">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span th:text="#{form.label.management.import.student.choice}"></span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview"
+                th:classappend="${#strings.startsWith(title, 'management')} ? 'active menu-open' : ''">
+                <a href="#">
+                    <i class="fa fa-laptop"></i>
+                    <span th:text="#{form.label.management}"></span>
+                    <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li th:class="${#strings.equals(title, 'management-groups')} ? active : ''">
+                        <a href="/management/groups">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span th:text="#{form.label.management.groups}"></span>
+                        </a>
+                    </li>
+                    <li th:class="${#strings.equals(title, 'management-faculties')} ? active : ''">
+                        <a href="/management/faculties">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span th:text="#{form.label.management.faculties}"></span>
+                        </a>
+                    </li>
+                    <li th:class="${#strings.equals(title, 'management-specialities')} ? active : ''">
+                        <a href="/management/specialities">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span th:text="#{form.label.management.specialities}"></span>
+                        </a>
+                    </li>
+                    <li th:class="${#strings.equals(title, 'management-education-programs')} ? active : ''">
+                        <a href="/management/education-programs">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span th:text="#{form.label.management.education.programs}"></span>
+                        </a>
+                    </li>
+                    <li th:class="${#strings.equals(title, 'management-disciplines')} ? active : ''">
+                        <a href="/management/disciplines">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span th:text="#{form.label.management.disciplines}"></span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li th:class="${#strings.equals(title, 'settings')} ? active : ''">
+                <a href="/management/configs">
+                    <i class="fa fa-cogs"></i>
+                    <span th:text="#{form.label.management.configurations}"></span>
+                </a>
+            </li>
+            <li>
+                <a href="/logout">
+                    <i class="fa fa-share"></i>
+                    <span th:text="#{top.menu.exit}"></span>
+                </a>
+            </li>
+        </ul>
+    </section>
+</aside>

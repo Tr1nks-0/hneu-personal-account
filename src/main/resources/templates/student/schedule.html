@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper" th:with="profileImage='/students/'+ ${profile.id}+ '/photo'">
+    <header th:include="fragments/student/header" th:remove="tag"></header>
+    <aside th:include="fragments/student/sidebar" th:remove="tag"></aside>
+
+    <div class="content-wrapper schedule-wrapper" th:if="${!#lists.isEmpty(pairs)}">
+        <section class="content-header">
+            <div class="row">
+                <a class="btn" th:href="@{/account/schedule(week=${week-1})}"
+                   th:if="${week gt 1}">Попередня</a>
+                <a class="btn float-right"
+                   th:href="@{/account/schedule(week=${week+1})}"
+                   th:if="${week lt 53}">Наступна</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table schedule-table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th th:each="day : ${days}">
+                            <span class="day" th:text="${day.name}"></span><br/>
+                            <span class="date" th:text="${day.displayName}"></span>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="pairNumber : ${#numbers.sequence( 1, 7)}">
+                        <td><span class="pair-number" th:text="${pairNumber}"></span></td>
+                        <div th:each="day : ${#numbers.sequence(1, 7)}" th:remove="tag">
+                            <div th:if="${!#lists.isEmpty(pairs[pairNumber]) and !#lists.isEmpty(pairs[pairNumber][day])}"
+                                 th:with="pair=${pairs[pairNumber][day]}"
+                                 th:remove="tag">
+                                <td class="pair pair-multy" th:if="${!#lists.isEmpty(pair.scheduleElement)}">
+                                    <div class="pair-description-multy"
+                                         th:each="scheduleElement : ${pair.scheduleElement}">
+                                        <p><b th:text="${scheduleElement.subject.shortName}"></b></p>
+                                        <p class="info-tag">
+                                            <i class="fa fa-graduation-cap"></i>
+                                            <span th:text="${scheduleElement.teacher.displayName}"></span>
+                                        </p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="info-tag"
+                                                   th:each="group : ${scheduleElement.groups.group}"
+                                                   th:if="${#strings.equals(group.main, 'true')}">
+                                                    <i class="fa fa-group"></i>
+                                                    <span th:text="${group.displayName}"></span>
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="info-tag">
+                                                    <i class="fa fa-map-marker"></i>
+                                                    <span th:text="${scheduleElement.room.shortName}"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="type-small">
+                                            <p class="label label-info"
+                                               th:text="${scheduleElement.type.value}"></p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="pair" th:if="${#lists.isEmpty(pair.scheduleElement)}">
+                                    <div class="pair-description">
+                                        <b th:text="${pair.subject.value}"></b><br/>
+                                        <div class="time">
+                                            <p th:text="${pair.start + '-' + pair.breakStart}"></p>
+                                            <p th:text="${pair.breakEnd + '-' + pair.end}"></p>
+                                        </div>
+                                        <p class="info-tag">
+                                            <i class="fa fa-graduation-cap"></i>
+                                            <span th:text="${pair.teacher.displayName}"></span>
+                                        </p>
+                                        <p class="info-tag">
+                                            <i class="fa fa-map-marker"></i>
+                                            <span th:text="${pair.room.shortName}"></span>
+                                        </p>
+                                        <p th:each="group : ${pair.groups.group}"
+                                           th:if="${#strings.equals(group.main, 'true')}"
+                                           class="info-tag">
+                                            <i class="fa fa-group"></i>
+                                            <span th:text="${group.displayName}"></span>
+                                        </p>
+                                        <div class="type">
+                                            <span class="label label-info" th:text="${pair.type.value}"></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </div>
+                            <td th:if="${#lists.isEmpty(pairs[pairNumber]) || #lists.isEmpty(pairs[pairNumber][day])}"></td>
+                        </div>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <div class="content-wrapper" th:if="${#lists.isEmpty(pairs)}">
+        <section class="content-header" style="padding: 0px">
+            <iframe class="schedule-frame" src="http://services.ksue.edu.ua:8081/schedule/schedule?group=${groupId}">
+            </iframe>
+        </section>
+    </div>
+
+    <div th:include="fragments/student/footer" th:remove="tag"></div>
+</div>
+</body>
+</html>

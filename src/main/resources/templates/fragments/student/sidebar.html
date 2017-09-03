@@ -1,0 +1,58 @@
+<aside class="main-sidebar" xmlns:th="http://www.w3.org/1999/xhtml">
+    <section class="sidebar">
+        <div class="user-panel">
+            <div class="image">
+                <img th:src="@{${profileImage}}" class="img-circle profile-photo-large" alt="User Image"/>
+            </div>
+            <div class="info">
+                <p th:text="${profile.surname + ' '+ profile.name}"></p>
+                <p th:text="${profile.group.name}"></p>
+            </div>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="header">ГОЛОВНЕ МЕНЮ</li>
+            <li th:class="${#strings.equals(title,'top.menu.home')} ? active : ''">
+                <a href="/account">
+                    <i class="fa fa-home "></i>
+                    <span th:text="#{top.menu.home}"></span>
+                </a>
+            </li>
+            <li th:class="${#strings.equals(title,'top.menu.schedule')} ? active : ''">
+                <a href="/account/schedule">
+                    <i class="fa fa-calendar"></i>
+                    <span th:text="#{top.menu.schedule}"></span>
+                </a>
+            </li>
+            <li>
+                <form method="post" id="studentForm" name="studentForm"
+                      action="http://services.ksue.edu.ua:8081/student/report" target="marks-window">
+                    <input type="hidden" name="lastName" value="${profile.surname}"/>
+                    <input type="hidden" name="code" value="${profile.passportNumber}"/>
+                </form>
+                <a class="current-marks">
+                    <i class="fa fa-bar-chart"></i>
+                    <span th:text="#{top.menu.journal}"></span>
+                </a>
+            </li>
+            <li th:class="${#strings.equals(title,'top.menu.documents')} ? active : ''">
+                <a href="/account/documents">
+                    <i class="fa fa-files-o"></i>
+                    <span th:text="#{top.menu.documents}"></span>
+                </a>
+            </li>
+            <li th:class="${#strings.equals(title,'top.menu.contacts')} ? active : ''">
+                <a href="/account/contactUs">
+                    <i class="fa fa-envelope"></i>
+                    <span th:text="#{top.menu.contacts}"></span>
+                </a>
+            </li>
+            <li>
+                <a href="/logout">
+                    <i class="fa fa-share"></i>
+                    <span th:text="#{top.menu.exit}"></span>
+                </a>
+            </li>
+        </ul>
+    </section>
+</aside>

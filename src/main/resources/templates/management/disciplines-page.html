@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:include="fragments/management/header" th:remove="tag"></header>
+    <aside th:include="fragments/management/sidebar" th:remove="tag"></aside>
+
+    <div class="content-wrapper">
+        <div class="content">
+
+            <ol class="breadcrumb panel panel-default">
+                <li><i class="fa fa-home"></i></li>
+                <li><a href="/management/faculties" th:text="#{form.label.management.faculties}"></a></li>
+                <li><a href="/management/specialities" th:text="#{form.label.management.specialities}"></a></li>
+                <li><a href="/management/education-programs" th:text="#{form.label.management.education.programs}"></a>
+                </li>
+                <li class="active" th:text="#{form.label.management.disciplines}"></li>
+            </ol>
+
+            <form action="#" th:action="@{/management/disciplines}" id="discipline" th:object="${discipline}" method="post">
+
+                <div th:include="fragments/error" th:remove="tag"></div>
+                <div th:include="fragments/success" th:remove="tag"></div>
+                <div class="alert alert-danger alert-dismissible" th:errors="*"></div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-12 panel-title" th:text="#{form.label.management.disciplines.add}"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-9 form-group">
+                                <label for="faculty" class="control-label"
+                                       th:text="#{form.label.student.faculty}"></label>
+                                <select id="faculty" name="faculty" class="form-control">
+                                    <option th:each="faculty : ${faculties}"
+                                            th:value="${faculty.id}"
+                                            th:text="${faculty.name}"
+                                            th:selected="${faculty.id == selectedFaculty.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="course" class="control-label"
+                                       th:text="#{form.label.student.profile.course}"></label>
+                                <select id="course" th:field="*{course}" class="form-control">
+                                    <option th:each="course : ${#numbers.sequence(1,6)}"
+                                            th:value="${course}"
+                                            th:text="${course}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-9 form-group">
+                                <label for="speciality" class="control-label"
+                                       th:text="#{form.label.student.speciality}"></label>
+                                <select id="speciality" th:field="*{speciality}" class="form-control">
+                                    <option th:each="speciality : ${specialities}"
+                                            th:value="${speciality.id}"
+                                            th:text="${speciality.name}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="semester" class="control-label"
+                                       th:text="#{form.label.student.profile.semester}"></label>
+                                <select id="semester" th:field="*{semester}" class="form-control">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <label for="educationProgram" class="control-label"
+                                       th:text="#{form.label.student.educationProgram}"></label>
+                                <select id="educationProgram" th:field="*{educationProgram}" class="form-control">
+                                    <option value="">&nbsp;</option>
+                                    <option th:each="educationProgram : ${educationPrograms}"
+                                            th:value="${educationProgram.id}"
+                                            th:text="${educationProgram.name}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-6 form-group">
+                            <label for="label" class="control-label" th:text="#{form.label.name}"></label>
+                            <input type="text" id="label" th:field="*{label}" class="form-control" required="required"/>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label for="code" class="control-label" th:text="#{form.label.code}"></label>
+                            <input type="text" id="code" th:field="*{code}" class="form-control" required="required"/>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label for="credits" class="control-label"
+                                   th:text="#{form.label.discipline.credits}"></label>
+                            <input type="number" id="credits" th:field="*{credits}" class="form-control" required="required"/>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="type" class="control-label" th:text="#{form.label.discipline.type}"></label>
+                            <select id="type" th:field="*{type}" class="form-control">
+                                <option th:each="disciplineType : ${disciplineTypes}"
+                                        th:value="${disciplineType}"
+                                        th:text="${disciplineType.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="controlForm" class="control-label"
+                                   th:text="#{form.label.discipline.control.form}"></label>
+                            <select id="controlForm" th:field="*{controlForm}" class="form-control">
+                                <option th:each="controlForm : ${controlForms}"
+                                        th:value="${controlForm}"
+                                        th:text="${controlForm.name}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="submit" th:value="#{btn.save}" class="btn btn-success float-right"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 panel-title" th:text="#{form.label.management.disciplines}"></div>
+                    </div>
+                </div>
+                <div class="panel-body disciplines-management-panel">
+                    <table class="table no-margin" th:if="${!#lists.isEmpty(disciplines)}">
+                        <thead>
+                        <tr>
+                            <th class="center" th:text="#{form.label.name}"></th>
+                            <th class="center" th:text="#{form.label.code}"></th>
+                            <th class="center" th:text="#{form.label.discipline.credits}"></th>
+                            <th class="center" th:text="#{form.label.discipline.control.form}"></th>
+                            <th class="center" th:text="#{form.label.discipline.type}"></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="discipline : ${disciplines}">
+                            <td th:text="${discipline.label}"></td>
+                            <td th:text="${discipline.code}"></td>
+                            <td class="center" th:text="${discipline.credits}"></td>
+                            <td class="center" th:text="${discipline.controlForm.name}"></td>
+                            <td class="center" th:text="${discipline.type.name}"></td>
+                            <td>
+                                <button th:attr="data-discipline=${discipline.code}"
+                                        class="delete-discipline btn btn-danger btn-xs pull-right">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <p th:if="${#lists.isEmpty(disciplines)}" th:text="#{items.not.found}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:include="fragments/management/footer" th:remove="tag"></div>
+</div>
+</body>
+</html>

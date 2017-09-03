@@ -3,13 +3,17 @@ package edu.hneu.studentsportal.controller.management;
 import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.feature.SiteFeature;
-import edu.hneu.studentsportal.service.*;
+import edu.hneu.studentsportal.service.MessageService;
+import edu.hneu.studentsportal.service.UserService;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
@@ -33,6 +37,8 @@ public class ConfigurationsController implements ExceptionHandlerController {
     public String getConfigs(Model model) {
         model.addAttribute("admins", userService.getAdmins());
         model.addAttribute("title", "settings");
+        model.addAttribute("SEND_EMAIL_AFTER_PROFILE_CREATION", SiteFeature.SEND_EMAIL_AFTER_PROFILE_CREATION.isActive());
+        model.addAttribute("SEND_EMAIL_AFTER_PROFILE_MODIFICATION", SiteFeature.SEND_EMAIL_AFTER_PROFILE_MODIFICATION.isActive());
         return "management/configurations-page";
     }
 
@@ -40,7 +46,7 @@ public class ConfigurationsController implements ExceptionHandlerController {
     public String saveEmailConfigs(HttpServletRequest request) {
         BiConsumer<String, SiteFeature> changeFeatureStateIfNeeded = (name, feature) -> {
             boolean flag = nonNull(request.getParameter(name));
-            if(flag != feature.isActive())
+            if (flag != feature.isActive())
                 feature.toggle();
         };
         changeFeatureStateIfNeeded.accept("sendEmailAfterProfileCreation", SiteFeature.SEND_EMAIL_AFTER_PROFILE_CREATION);

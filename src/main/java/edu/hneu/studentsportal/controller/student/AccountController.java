@@ -59,7 +59,7 @@ public class AccountController {
         model.addAttribute("currentCourse", scheduleService.getCurrentCourse(student));
         session.setAttribute("groupId", student.getGroup().getId());
         session.setAttribute("email", student.getEmail());
-        model.addAttribute("courses", disciplineMarkService.getStudentCourses(student));
+        model.addAttribute("groupedMarks", disciplineMarkService.getStudentMarksGroupedByCourseAndSemester(student));
         return new ModelAndView("student/account", "profile", student);
     }
 

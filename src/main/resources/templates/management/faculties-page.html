@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:include="fragments/management/header" th:remove="tag"></header>
+    <aside th:include="fragments/management/sidebar" th:remove="tag"></aside>
+
+    <div class="content-wrapper">
+        <div class="content">
+
+            <ol class="breadcrumb panel panel-default">
+                <li><i class="fa fa-home"></i></li>
+                <li class="active" th:text="#{form.label.management.faculties}"></li>
+            </ol>
+
+            <form action="#" th:action="@{/management/faculties}" th:object="${faculty}" method="post">
+
+                <div th:include="fragments/error" th:remove="tag"></div>
+                <div th:include="fragments/success" th:remove="tag"></div>
+                <div class="alert alert-danger alert-dismissible" th:errors="*"></div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-12 panel-title"
+                                 th:text="#{form.label.management.faculties.add}"></div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label for="code" class="control-label" th:text="#{form.label.code}"></label>
+                            <input type="text" id="code" th:field="*{code}" class="form-control" required="required"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="control-label" th:text="#{form.label.student.faculty}"></label>
+                            <input type="text" id="name" th:field="*{name}" class="form-control" required="required"/>
+                        </div>
+                        <input type="submit" th:value="#{btn.save}" class="btn btn-success
+                        float-right"/>
+                    </div>
+                </div>
+            </form>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 panel-title" th:text="#{form.label.management.faculties}"></div>
+                    </div>
+                </div>
+                <div class="panel-body faculties-management-panel">
+                    <table class="table no-margin">
+                        <thead>
+                        <tr>
+                            <th th:text="#{form.label.code}"></th>
+                            <th th:text="#{form.label.name}"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="faculty : ${faculties}">
+                            <td th:text="${faculty.code}"></td>
+                            <td th:text="${faculty.name}"></td>
+                            <td>
+                                <button th:attr="data-faculty=${faculty.id}" class="delete-faculty btn btn-danger btn-xs pull-right">
+                                    <i class="fa fa-remove"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:include="fragments/management/footer" th:remove="tag"></div>
+</div>
+</body>
+</html>

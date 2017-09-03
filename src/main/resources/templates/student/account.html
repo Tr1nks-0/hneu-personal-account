@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://java.sun.com/JSP/Page">
+<head th:include="fragments/head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper" th:with="profileImage='/students/'+ ${profile.id}+ '/photo'">
+    <header th:include="fragments/student/header" th:remove="tag"></header>
+    <aside th:include="fragments/student/sidebar" th:remove="tag"></aside>
+
+    <div class="content-wrapper">
+        <div class="content">
+            <ol class="breadcrumb panel panel-default">
+                <li><a href="/account"><i class="fa fa-home"></i></a></li>
+                <li class="active" th:text="#{form.label.student.profile.head.second}"></li>
+            </ol>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="student-info col-md-6 col-sm-12 col-xs-12">
+                        <table class="table-sm no-margin no-border">
+                            <tr>
+                                <td rowspan="3"><i class="info-label ion-ios-book-outline"></i></td>
+                                <td th:text="#{form.label.student.faculty}"></td>
+                                <td th:text="${profile.faculty.name}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{form.label.student.incomeYear}"></td>
+                                <td th:text="${profile.incomeYear}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{form.label.student.group}"></td>
+                                <td th:text="${profile.group.name}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="student-info col-md-6 col-sm-12 col-xs-12"
+                         th:if="${not #lists.isEmpty(profile.contactInfo)}">
+                        <table class="table-sm no-margin no-border">
+                            <tr>
+                                <td rowspan="2"><i class="info-label ion ion-ios-telephone-outline"></i></td>
+                                <td th:text="#{form.label.student.contacts}"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div th:each="contact : ${profile.contactInfo}"
+                                         th:text="${contact}"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div th:each="marksPerCourse : ${groupedMarks}">
+                <div th:each="marksPerSemester : ${marksPerCourse.value}">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="label label-primary" th:text="${'Курс №' + marksPerCourse.key}"></span>
+                            <span class="label label-default" th:text="${'СЕМЕСТР №' + marksPerSemester.key}"></span>
+                            <span class="pull-right show-marks"
+                                  data-toggle="collapse"
+                                  th:attr="data-target='#marks' + ${marksPerCourse.key} + ${marksPerSemester.key},aria-expanded=${marksPerCourse.key == currentCourse}">
+                                <i class="fa"
+                                   th:classappend="${marksPerCourse.key == currentCourse} ? fa-chevron-down : fa-chevron-left"></i>
+                            </span>
+                        </div>
+                        <div class="panel-body"
+                             th:classappend="${marksPerCourse.key != currentCourse} ? collapse : in"
+                             th:id="'marks'+ ${marksPerCourse.key} + ${marksPerSemester.key}">
+                            <div class="table-responsive">
+                                <table class="table no-margin">
+                                    <thead>
+                                    <tr>
+                                        <th th:text="#{form.label.student.profile.table.tab1}"></th>
+                                        <th class="center hidden-xs"
+                                            th:text="#{form.label.student.profile.table.tab2}"></th>
+                                        <th class="center hidden-xs"
+                                            th:text="#{form.label.student.profile.table.tab3}"></th>
+                                        <th class="center"
+                                            th:text="#{form.label.student.profile.table.tab4}"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="disciplineMark : ${marksPerSemester.value}">
+                                        <td class="col-md-6"
+                                            th:text="${disciplineMark.discipline.label}"></td>
+                                        <td class="col-md-2 center hidden-xs"
+                                            th:text="${disciplineMark.discipline.credits}"></td>
+                                        <td class="col-md-2 center hidden-xs"
+                                            th:text="${disciplineMark.discipline.controlForm.name}"></td>
+                                        <td class="col-md-2 center"
+                                            th:include="fragments/student/discipline-mark"
+                                            th:with="mark=${disciplineMark.mark}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:include="fragments/student/footer" th:remove="tag"></div>
+</div>
+</body>
+</html>

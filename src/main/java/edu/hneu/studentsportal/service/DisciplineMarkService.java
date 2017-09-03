@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.Objects.nonNull;
@@ -95,5 +97,12 @@ public class DisciplineMarkService {
     private List<Discipline> extractMagmaynors(List<DisciplineMark> disciplineMarks) {
         List<Discipline> studentDisciplines = extract(disciplineMarks, DisciplineMark::getDiscipline);
         return studentDisciplines.stream().filter(DisciplineConditions::isMasterDiscipline).collect(toList());
+    }
+
+    public Map<Integer, Map<Integer, List<DisciplineMark>>> getStudentMarksGroupedByCourseAndSemester(Student student) {
+        Function<DisciplineMark, Integer> extractSemester = m -> m.getDiscipline().getSemester();
+        Function<DisciplineMark, Integer> extractCourse = m -> m.getDiscipline().getCourse();
+        return student.getDisciplineMarks().stream()
+                .collect(Collectors.groupingBy(extractSemester, Collectors.groupingBy(extractCourse)));
     }
 }

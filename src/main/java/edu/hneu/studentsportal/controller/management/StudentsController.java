@@ -45,6 +45,7 @@ public class StudentsController implements ExceptionHandlerController {
         List<Student> students = studentRepository.findByGroup(group);
         model.addAttribute("students", students);
         model.addAttribute("group", group);
+        model.addAttribute("title", "management-students");
         return "management/group-students-page";
     }
 

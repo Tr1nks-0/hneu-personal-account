@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:include="fragments/management/header" th:remove="tag"></header>
+    <aside th:include="fragments/management/sidebar" th:remove="tag"></aside>
+
+    <div class="content-wrapper">
+        <div class="content">
+
+            <ol class="breadcrumb panel panel-default">
+                <li><i class="fa fa-home"></i></li>
+                <li><a th:href="@{/management/students(groupId=${group.id})}" th:text="${group.name}"></a></li>
+                <li class="active" th:text="#{form.label.management.students}"></li>
+            </ol>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 panel-title">
+                            <span th:text="#{form.label.management.students}"></span>
+                            <span th:text="${group.name}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="list-group" th:if="${!#lists.isEmpty(students)}">
+                    <li class="list-group-item" th:each="student : ${students}">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <a th:href="@{/management/students/__${student.id}__}">
+                                    <span th:text="${student.surname + ' ' + student.name}"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="panel-body" th:text="#{items.not.found}" th:if="${#lists.isEmpty(students)}"></div>
+            </div>
+        </div>
+    </div>
+    <div th:include="fragments/management/footer" th:remove="tag"></div>
+</div>
+</body>
+</html>
+

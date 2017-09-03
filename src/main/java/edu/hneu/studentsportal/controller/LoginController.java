@@ -25,6 +25,7 @@ public class LoginController {
             model.addAttribute("error", true);
         else if (nonNull(principal))
             return "redirect:/account";
+        model.addAttribute("title", "title.login");
         return "login";
     }
 }

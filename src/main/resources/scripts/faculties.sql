@@ -1,1 +1,1 @@
-INSERT INTO faculty (id, code, name) VALUE (1, 'ЕІ', 'Економічної інформатики');
+INSERT INTO faculty (id, code, name) VALUE (04, "ЕІ", "Економічної інформатики");

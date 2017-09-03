@@ -1,0 +1,42 @@
+<footer xmlns:th="http://java.sun.com/JSP/Page" class="main-footer">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-md-4 col-sm-6">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="http://www.hneu.edu.ua/">
+                        <i class="ion ion-link"></i>
+                        Сайт університету</a></li>
+                    <li><a href="http://www.ikt.hneu.edu.ua/">
+                        <i class="ion ion-link"></i>
+                        Сайт персональних навчальнихсистем</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="http://www.ei.hneu.edu.ua/"><i class="ion ion-link"></i>Сайт факультету ЕІ</a></li>
+                    <li><a href="http://library.hneu.edu.ua/index.php"><i class="ion ion-link"></i>Сайт бібліотеки ХНЕУ</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <ul class="nav nav-pills nav-stacked">
+                    <li>
+                        <a href="http://mon.gov.ua/">
+                            <i class="ion ion-link"></i>
+                            Сайт МОН України
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div>
+        <strong>
+            <span th:text="${'Copyright &copy; 2016-' + #dates.year(#dates.createNow())}"></span>
+            <a href="http://www.hneu.edu.ua/">Simon Kuznets Kharkiv National University of Economics</a>.
+        </strong>
+        All rights reserved.
+    </div>
+    <div th:include="fragments/scripts" th:remove="tag"></div>
+</footer>
+
