@@ -27,8 +27,8 @@
             <li>
                 <form method="post" id="studentForm" name="studentForm"
                       action="http://services.ksue.edu.ua:8081/student/report" target="marks-window">
-                    <input type="hidden" name="lastName" value="${profile.surname}"/>
-                    <input type="hidden" name="code" value="${profile.passportNumber}"/>
+                    <input type="hidden" name="lastName" th:value="${profile.surname}"/>
+                    <input type="hidden" name="code" th:value="${profile.passportNumber}"/>
                 </form>
                 <a class="current-marks">
                     <i class="fa fa-bar-chart"></i>

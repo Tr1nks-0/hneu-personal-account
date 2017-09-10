@@ -100,9 +100,9 @@ public class DisciplineMarkService {
     }
 
     public Map<Integer, Map<Integer, List<DisciplineMark>>> getStudentMarksGroupedByCourseAndSemester(Student student) {
-        Function<DisciplineMark, Integer> extractSemester = m -> m.getDiscipline().getSemester();
         Function<DisciplineMark, Integer> extractCourse = m -> m.getDiscipline().getCourse();
+        Function<DisciplineMark, Integer> extractSemester = m -> m.getDiscipline().getSemester();
         return student.getDisciplineMarks().stream()
-                .collect(Collectors.groupingBy(extractSemester, Collectors.groupingBy(extractCourse)));
+                .collect(Collectors.groupingBy(extractCourse, Collectors.groupingBy(extractSemester)));
     }
 }

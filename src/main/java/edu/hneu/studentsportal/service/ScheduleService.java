@@ -32,10 +32,17 @@ public class ScheduleService {
     public long getWeekOrDefault(Long week) {
         if (isNull(week)) {
             LocalDate currentDate = LocalDate.now();
-            int educationYear = currentDate.getMonth().compareTo(Month.JANUARY) >= 0 ? currentDate.getYear() - 1 : currentDate.getYear();
+            int educationYear = getEducationYear(currentDate);
             week = WEEKS.between(LocalDate.of(educationYear, Month.SEPTEMBER, 1), LocalDate.now()) + 1;
         }
         return week;
+    }
+
+    private int getEducationYear(LocalDate currentDate) {
+        Month currentMonth = currentDate.getMonth();
+        if(currentMonth.compareTo(Month.JANUARY) >= 0 && currentMonth.compareTo(Month.AUGUST) <= 0)
+            return currentDate.getYear() - 1;
+        return currentDate.getYear();
     }
 
     public Map<Integer, Map<Integer, ScheduleElement>> getPairs(Schedule schedule) {
