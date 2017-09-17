@@ -1,11 +1,12 @@
-package edu.hneu.studentsportal.repository.impl
+package edu.hneu.studentsportal.service
 
 import edu.hneu.studentsportal.domain.Faculty
 import edu.hneu.studentsportal.repository.FacultyRepository
 import edu.hneu.studentsportal.repository.SpecialityRepository
+import edu.hneu.studentsportal.service.FacultyService
 import spock.lang.Specification
 
-class FacultyRepositoryImplSpockTest extends Specification {
+class FacultyServiceSpockTest extends Specification {
 
     static final int FACULTY_ID = 1
 
@@ -13,11 +14,10 @@ class FacultyRepositoryImplSpockTest extends Specification {
     def specialityRepositoryMock = Mock(SpecialityRepository)
     def facultyMock = Mock(Faculty)
 
-    def facultyRepository = new FacultyRepositoryImpl(
+    def facultyService = new FacultyService(
         facultyRepository: facultyRepositoryMock,
         specialityRepository: specialityRepositoryMock
     )
-
 
     def 'should find faculty with specialities'() {
         given:
@@ -25,7 +25,7 @@ class FacultyRepositoryImplSpockTest extends Specification {
             facultyMock.getId() >> FACULTY_ID
             specialityRepositoryMock.checkFacultyHasSpecialities(FACULTY_ID) >> Optional.of(BigInteger.valueOf(FACULTY_ID))
         when:
-            def faculty = facultyRepository.findByIdWithSpecialitiesOrDefault(FACULTY_ID)
+            def faculty = facultyService.findByIdWithSpecialitiesOrDefault(FACULTY_ID)
         then:
             facultyMock == faculty
     }
@@ -38,7 +38,7 @@ class FacultyRepositoryImplSpockTest extends Specification {
             specialityRepositoryMock.findFirstFacultyIdWithSpecialities() >> Optional.of(BigInteger.valueOf(FACULTY_ID))
             facultyRepositoryMock.findOne(FACULTY_ID) >> facultyMock
         when:
-            def faculty = facultyRepository.findByIdWithSpecialitiesOrDefault(FACULTY_ID)
+            def faculty = facultyService.findByIdWithSpecialitiesOrDefault(FACULTY_ID)
         then:
             facultyMock == faculty
     }
@@ -49,7 +49,7 @@ class FacultyRepositoryImplSpockTest extends Specification {
             specialityRepositoryMock.findFirstFacultyIdWithSpecialities() >> Optional.of(BigInteger.valueOf(FACULTY_ID))
             facultyRepositoryMock.findOne(FACULTY_ID) >> facultyMock
         when:
-            def faculty = facultyRepository.findByIdWithSpecialitiesOrDefault(FACULTY_ID)
+            def faculty = facultyService.findByIdWithSpecialitiesOrDefault(FACULTY_ID)
         then:
             facultyMock == faculty
     }

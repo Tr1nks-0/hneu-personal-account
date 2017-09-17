@@ -1,11 +1,11 @@
-package edu.hneu.studentsportal.repository.impl
+package edu.hneu.studentsportal.service
 
 import edu.hneu.studentsportal.domain.Faculty
 import edu.hneu.studentsportal.domain.Speciality
 import edu.hneu.studentsportal.repository.SpecialityRepository
 import spock.lang.Specification
 
-class SpecialityRepositoryImplSpockTest extends Specification {
+class SpecialityServiceSpockTest extends Specification {
 
     static final int SPECIALITY_ID = 1
     static final int FACULTY_ID = 1
@@ -14,7 +14,7 @@ class SpecialityRepositoryImplSpockTest extends Specification {
     def facultyMock = Mock(Faculty)
     def specialityMock = Mock(Speciality)
 
-    def specialityRepository = new SpecialityRepositoryImpl(
+    def specialityService = new SpecialityService(
             specialityRepository: specialityRepositoryMock
     )
 
@@ -22,7 +22,7 @@ class SpecialityRepositoryImplSpockTest extends Specification {
         given:
             specialityRepositoryMock.findById(SPECIALITY_ID) >> Optional.of(specialityMock)
         when:
-            def speciality = specialityRepository.findByIdOrDefault(SPECIALITY_ID, facultyMock)
+            def speciality = specialityService.findByIdOrDefault(SPECIALITY_ID, facultyMock)
         then:
             specialityMock ==  speciality
     }
@@ -33,7 +33,7 @@ class SpecialityRepositoryImplSpockTest extends Specification {
             facultyMock.getId() >> FACULTY_ID
             specialityRepositoryMock.findFirstSpecialityForFaculty(FACULTY_ID) >> specialityMock
         when:
-            def speciality = specialityRepository.findByIdOrDefault(SPECIALITY_ID, facultyMock)
+            def speciality = specialityService.findByIdOrDefault(SPECIALITY_ID, facultyMock)
         then:
             specialityMock ==  speciality
     }

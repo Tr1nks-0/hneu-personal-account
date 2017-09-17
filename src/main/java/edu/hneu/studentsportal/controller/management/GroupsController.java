@@ -10,7 +10,9 @@ import edu.hneu.studentsportal.repository.EducationProgramRepository;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
+import edu.hneu.studentsportal.service.FacultyService;
 import edu.hneu.studentsportal.service.MessageService;
+import edu.hneu.studentsportal.service.SpecialityService;
 import javaslang.control.Try;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
@@ -38,7 +40,11 @@ public class GroupsController implements ExceptionHandlerController {
     @Resource
     private FacultyRepository facultyRepository;
     @Resource
+    private FacultyService facultyService;
+    @Resource
     private SpecialityRepository specialityRepository;
+    @Resource
+    private SpecialityService specialityService;
     @Resource
     private EducationProgramRepository educationProgramRepository;
     @Resource
@@ -53,10 +59,10 @@ public class GroupsController implements ExceptionHandlerController {
                             Model model) {
         if (facultyRepository.findAll().isEmpty())
             return "redirect:/management/faculties";
-        Faculty faculty = facultyRepository.findByIdWithSpecialitiesOrDefault(facultyId);
+        Faculty faculty = facultyService.findByIdWithSpecialitiesOrDefault(facultyId);
         if (isNull(faculty))
             return "redirect:/management/specialities";
-        Speciality speciality = specialityRepository.findByIdOrDefault(specialityId, faculty);
+        Speciality speciality = specialityService.findByIdOrDefault(specialityId, faculty);
         EducationProgram educationProgram = educationProgramRepository.findById(educationProgramId);
         Group group = new Group();
         group.setSpeciality(speciality);

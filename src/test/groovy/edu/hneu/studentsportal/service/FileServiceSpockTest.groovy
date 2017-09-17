@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.service.impl
+package edu.hneu.studentsportal.service
 
 import edu.hneu.studentsportal.service.FileService
 import org.springframework.web.multipart.MultipartFile

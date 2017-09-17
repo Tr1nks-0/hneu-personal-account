@@ -1,18 +1,18 @@
-package edu.hneu.studentsportal.repository.impl;
+package edu.hneu.studentsportal.service;
 
 import edu.hneu.studentsportal.domain.Faculty;
 import edu.hneu.studentsportal.domain.Speciality;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
-import edu.hneu.studentsportal.repository.SpecialityRepositoryCustom;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-public class SpecialityRepositoryImpl implements SpecialityRepositoryCustom {
+@Service
+public class SpecialityService {
 
     @Resource
     private SpecialityRepository specialityRepository;
 
-    @Override
     public Speciality findByIdOrDefault(Long specialityId, Faculty faculty) {
         return specialityRepository.findById(specialityId)
                 .orElseGet(() -> specialityRepository.findFirstSpecialityForFaculty(faculty.getId()));

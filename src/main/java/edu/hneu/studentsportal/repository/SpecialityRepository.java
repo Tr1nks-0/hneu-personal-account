@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SpecialityRepository extends JpaRepository<Speciality, Long>, SpecialityRepositoryCustom {
+public interface SpecialityRepository extends JpaRepository<Speciality, Long> {
 
     Optional<Speciality> findById(Long id);
 
