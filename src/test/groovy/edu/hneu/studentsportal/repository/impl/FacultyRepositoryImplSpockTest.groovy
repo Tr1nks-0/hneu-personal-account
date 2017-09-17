@@ -18,24 +18,6 @@ class FacultyRepositoryImplSpockTest extends Specification {
         specialityRepository: specialityRepositoryMock
     )
 
-    def 'should find faculty by id when it is exists'() {
-        given:
-            facultyRepositoryMock.findById(FACULTY_ID) >> Optional.of(facultyMock)
-        when:
-            def faculty = facultyRepository.findByIdOrDefault(FACULTY_ID)
-        then:
-            facultyMock == faculty
-    }
-
-    def 'should find first faculty when faculty by id was not found'() {
-        given:
-            facultyRepositoryMock.findById(FACULTY_ID) >> Optional.empty()
-            facultyRepositoryMock.findFirst() >> facultyMock
-        when:
-            def faculty = facultyRepository.findByIdOrDefault(FACULTY_ID)
-        then:
-            facultyMock == faculty
-    }
 
     def 'should find faculty with specialities'() {
         given:

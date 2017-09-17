@@ -6,6 +6,4 @@ public interface FacultyRepositoryCustom {
 
     Faculty findByIdWithSpecialitiesOrDefault(Long id);
 
-    Faculty findByIdOrDefault(Long id);
-
 }

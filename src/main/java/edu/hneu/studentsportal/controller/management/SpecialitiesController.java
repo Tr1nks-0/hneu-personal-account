@@ -42,7 +42,7 @@ public class SpecialitiesController implements ExceptionHandlerController {
         List<Faculty> faculties = facultyRepository.findAll();
         if(faculties.isEmpty())
             return "redirect:/management/faculties";
-        Faculty faculty = facultyRepository.findByIdOrDefault(facultyId);
+        Faculty faculty = facultyRepository.findById(facultyId).orElseGet(() -> facultyRepository.findFirst());
         return prepareSpecialityPage(model, new Speciality(faculty));
     }
 

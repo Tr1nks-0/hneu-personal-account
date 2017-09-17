@@ -23,11 +23,6 @@ public class FacultyRepositoryImpl implements FacultyRepositoryCustom {
                 .orElseGet(getFirstFacultyWithSpecialities());
     }
 
-    @Override
-    public Faculty findByIdOrDefault(Long id) {
-        return facultyRepository.findById(id).orElseGet(() -> facultyRepository.findFirst());
-    }
-
     private Supplier<Faculty> getFirstFacultyWithSpecialities() {
         return () -> specialityRepository.findFirstFacultyIdWithSpecialities()
                 .map(BigInteger::longValue)
