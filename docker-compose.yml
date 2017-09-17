@@ -14,7 +14,7 @@ services:
   storage:
     image: mysql
     container_name: hneu-personal-account-db
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: mysqld --character-set-server=utf8mb4
     ports:
       - 3306:3306
     environment:
