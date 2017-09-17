@@ -84,7 +84,7 @@ public class StudentsController implements ExceptionHandlerController {
     }
 
     private String prepareStudentEditorPage(Model model, Student student) {
-        model.addAttribute("specialities", specialityRepository.findAllByFaculty(student.getFaculty()));
+        model.addAttribute("specialities", specialityRepository.findAllByFacultyId(student.getFaculty().getId()));
         model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(student.getSpeciality()));
         model.addAttribute("groups", groupRepository.findBySpecialityAndEducationProgram(student.getSpeciality(), student.getEducationProgram()));
         model.addAttribute("faculties", facultyRepository.findAll());

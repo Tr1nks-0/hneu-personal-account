@@ -129,7 +129,7 @@ public class DisciplinesController implements ExceptionHandlerController {
         model.addAttribute("discipline", discipline);
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("selectedFaculty", faculty);
-        model.addAttribute("specialities", specialityRepository.findAllByFaculty(faculty));
+        model.addAttribute("specialities", specialityRepository.findAllByFacultyId(faculty.getId()));
         model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
         model.addAttribute("controlForms", DisciplineFormControl.values());
         model.addAttribute("disciplineTypes", DisciplineType.values());

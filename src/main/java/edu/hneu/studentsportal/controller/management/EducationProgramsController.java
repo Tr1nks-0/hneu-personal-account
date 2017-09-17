@@ -62,7 +62,7 @@ public class EducationProgramsController implements ExceptionHandlerController {
 
     @PostMapping
     public String createEducationProgram(@ModelAttribute @Valid EducationProgram educationProgram, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return prepareEducationProgramPage(model, educationProgram);
         } else {
             educationProgramRepository.save(educationProgram);
@@ -107,7 +107,7 @@ public class EducationProgramsController implements ExceptionHandlerController {
         model.addAttribute("educationProgram", educationProgram);
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("selectedFaculty", faculty);
-        model.addAttribute("specialities", specialityRepository.findAllByFaculty(faculty));
+        model.addAttribute("specialities", specialityRepository.findAllByFacultyId(faculty.getId()));
         model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
         model.addAttribute("title", "management-education-programs");
         return "management/education-programs-page";

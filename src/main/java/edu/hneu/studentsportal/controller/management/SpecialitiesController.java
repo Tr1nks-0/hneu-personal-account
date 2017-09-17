@@ -69,7 +69,7 @@ public class SpecialitiesController implements ExceptionHandlerController {
     @ResponseBody
     public List<Speciality> getSpecialitiesForFaculty(@RequestParam long facultyId) {
         Faculty faculty = facultyRepository.getOne(facultyId);
-        return specialityRepository.findAllByFaculty(faculty);
+        return specialityRepository.findAllByFacultyId(faculty.getId());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -96,7 +96,7 @@ public class SpecialitiesController implements ExceptionHandlerController {
     private String prepareSpecialityPage(Model model, Speciality speciality) {
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("speciality", speciality);
-        model.addAttribute("specialities", specialityRepository.findAllByFaculty(speciality.getFaculty()));
+        model.addAttribute("specialities", specialityRepository.findAllByFacultyId(speciality.getFaculty().getId()));
         model.addAttribute("title", "management-specialities");
         return "management/specialities-page";
     }

@@ -18,7 +18,7 @@ public interface SpecialityRepository extends JpaRepository<Speciality, Long> {
 
     Optional<Speciality> findByNameAndFaculty(String specialityName, Faculty faculty);
 
-    List<Speciality> findAllByFaculty(Faculty faculty);
+    List<Speciality> findAllByFacultyId(Long facultyId);
 
     Optional<Speciality> findByCode(String code);
 
