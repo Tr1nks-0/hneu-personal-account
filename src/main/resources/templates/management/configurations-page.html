@@ -62,25 +62,64 @@
                                 </div>
                             </div>
                             <div class="panel-body">
-
                                 <div class="checkbox">
                                     <label>
-                                        <input name="sendEmailAfterProfileCreation" type="checkbox"
-                                               th:checked="${SEND_EMAIL_AFTER_PROFILE_CREATION}"
-                                               data-toggle="toggle"/>
+                                        <input name="SEND_EMAIL_AFTER_PROFILE_CREATION" type="checkbox"
+                                               th:checked="${SEND_EMAIL_AFTER_PROFILE_CREATION}" data-toggle="toggle"/>
                                         <span th:text="#{form.label.management.configurations.emails.after.profile.creation}"></span>
                                     </label>
                                 </div>
-
                                 <div class="checkbox">
                                     <label>
-                                        <input name="sendEmailAfterImportingMarks" type="checkbox"
-                                               th:checked="${SEND_EMAIL_AFTER_PROFILE_MODIFICATION}"
-                                               data-toggle="toggle"/>
+                                        <input name="SEND_EMAIL_AFTER_PROFILE_MODIFICATION" type="checkbox"
+                                               th:checked="${SEND_EMAIL_AFTER_PROFILE_MODIFICATION}" data-toggle="toggle"/>
                                         <span th:text="#{form.label.management.configurations.emails.after.importing.marks}"></span>
                                     </label>
                                 </div>
+                            </div>
+                        </div>
+                    </form>
 
+                    <form method="post" action="/management/configs/account-features">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <span th:text="#{form.label.management.configurations.account.features}"></span>
+                                        <button type="submit" class="btn btn-xs btn-success pull-right"
+                                                th:text="#{btn.save}"></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="VIEW_SCHEDULE" type="checkbox"
+                                               th:checked="${VIEW_SCHEDULE}" data-toggle="toggle"/>
+                                        <span th:text="#{form.label.management.configurations.account.features.schedule}"></span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="VIEW_CURRENT_MARKS" type="checkbox"
+                                               th:checked="${VIEW_CURRENT_MARKS}" data-toggle="toggle"/>
+                                        <span th:text="#{form.label.management.configurations.account.features.current.marks}"></span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="VIEW_DOCUMENTS" type="checkbox"
+                                               th:checked="${VIEW_DOCUMENTS}" data-toggle="toggle"/>
+                                        <span th:text="#{form.label.management.configurations.account.features.documents}"></span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="SEND_EMAIL_TO_DECAN" type="checkbox"
+                                               th:checked="${SEND_EMAIL_TO_DECAN}" data-toggle="toggle"/>
+                                        <span th:text="#{form.label.management.configurations.account.features.contact.form}"></span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </form>

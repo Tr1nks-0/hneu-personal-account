@@ -18,7 +18,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.function.BiConsumer;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_CONFIGURATIONS_URL;
 import static java.util.Objects.nonNull;
@@ -37,21 +36,33 @@ public class ConfigurationsController implements ExceptionHandlerController {
     public String getConfigs(Model model) {
         model.addAttribute("admins", userService.getAdmins());
         model.addAttribute("title", "settings");
-        model.addAttribute("SEND_EMAIL_AFTER_PROFILE_CREATION", SiteFeature.SEND_EMAIL_AFTER_PROFILE_CREATION.isActive());
-        model.addAttribute("SEND_EMAIL_AFTER_PROFILE_MODIFICATION", SiteFeature.SEND_EMAIL_AFTER_PROFILE_MODIFICATION.isActive());
+        for (SiteFeature feature : SiteFeature.values()) {
+            model.addAttribute(feature.name(), feature.isActive());
+        }
         return "management/configurations-page";
     }
 
     @PostMapping("/email-sending")
     public String saveEmailConfigs(HttpServletRequest request) {
-        BiConsumer<String, SiteFeature> changeFeatureStateIfNeeded = (name, feature) -> {
-            boolean flag = nonNull(request.getParameter(name));
-            if (flag != feature.isActive())
-                feature.toggle();
-        };
-        changeFeatureStateIfNeeded.accept("sendEmailAfterProfileCreation", SiteFeature.SEND_EMAIL_AFTER_PROFILE_CREATION);
-        changeFeatureStateIfNeeded.accept("sendEmailAfterImportingMarks", SiteFeature.SEND_EMAIL_AFTER_PROFILE_MODIFICATION);
+        changeFeatureStateIfNeeded(request, SiteFeature.SEND_EMAIL_AFTER_PROFILE_CREATION.name(), SiteFeature.SEND_EMAIL_AFTER_PROFILE_CREATION);
+        changeFeatureStateIfNeeded(request, SiteFeature.SEND_EMAIL_AFTER_PROFILE_MODIFICATION.name(), SiteFeature.SEND_EMAIL_AFTER_PROFILE_MODIFICATION);
         return "redirect:" + MANAGE_CONFIGURATIONS_URL;
+    }
+
+    @PostMapping("/account-features")
+    public String saveAccountFeaturesConfigs(HttpServletRequest request) {
+        changeFeatureStateIfNeeded(request, SiteFeature.VIEW_SCHEDULE.name(), SiteFeature.VIEW_SCHEDULE);
+        changeFeatureStateIfNeeded(request, SiteFeature.VIEW_CURRENT_MARKS.name(), SiteFeature.VIEW_CURRENT_MARKS);
+        changeFeatureStateIfNeeded(request, SiteFeature.VIEW_DOCUMENTS.name(), SiteFeature.VIEW_DOCUMENTS);
+        changeFeatureStateIfNeeded(request, SiteFeature.SEND_EMAIL_TO_DECAN.name(), SiteFeature.SEND_EMAIL_TO_DECAN);
+        return "redirect:" + MANAGE_CONFIGURATIONS_URL;
+    }
+
+    private void changeFeatureStateIfNeeded(HttpServletRequest request, String name, SiteFeature feature) {
+        boolean flag = nonNull(request.getParameter(name));
+        if (flag != feature.isActive()) {
+            feature.toggle();
+        }
     }
 
     @PostMapping("/admins")

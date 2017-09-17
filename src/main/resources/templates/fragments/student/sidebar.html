@@ -1,4 +1,4 @@
-<aside class="main-sidebar" xmlns:th="http://www.w3.org/1999/xhtml">
+<aside class="main-sidebar" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz">
     <section class="sidebar">
         <div class="user-panel">
             <div class="image">
@@ -18,13 +18,13 @@
                     <span th:text="#{top.menu.home}"></span>
                 </a>
             </li>
-            <li th:class="${#strings.equals(title,'top.menu.schedule')} ? active : ''">
+            <li th:class="${#strings.equals(title,'top.menu.schedule')} ? active : ''" togglz:active="VIEW_SCHEDULE">
                 <a href="/account/schedule">
                     <i class="fa fa-calendar"></i>
                     <span th:text="#{top.menu.schedule}"></span>
                 </a>
             </li>
-            <li>
+            <li togglz:active="VIEW_CURRENT_MARKS">
                 <form method="post" id="studentForm" name="studentForm"
                       action="http://services.ksue.edu.ua:8081/student/report" target="marks-window">
                     <input type="hidden" name="lastName" th:value="${profile.surname}"/>
@@ -35,13 +35,13 @@
                     <span th:text="#{top.menu.journal}"></span>
                 </a>
             </li>
-            <li th:class="${#strings.equals(title,'top.menu.documents')} ? active : ''">
+            <li th:class="${#strings.equals(title,'top.menu.documents')} ? active : ''" togglz:active="VIEW_DOCUMENTS">
                 <a href="/account/documents">
                     <i class="fa fa-files-o"></i>
                     <span th:text="#{top.menu.documents}"></span>
                 </a>
             </li>
-            <li th:class="${#strings.equals(title,'top.menu.contacts')} ? active : ''">
+            <li th:class="${#strings.equals(title,'top.menu.contacts')} ? active : ''" togglz:active="SEND_EMAIL_TO_DECAN">
                 <a href="/account/contactUs">
                     <i class="fa fa-envelope"></i>
                     <span th:text="#{top.menu.contacts}"></span>
