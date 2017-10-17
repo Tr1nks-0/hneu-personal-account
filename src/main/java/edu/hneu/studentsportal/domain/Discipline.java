@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @Table(name = "discipline", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
-                "label", "course", "semester", "education_program_id", "speciality_id"
+                "code", "label", "course", "semester", "education_program_id", "speciality_id"
         })
 })
 @NoArgsConstructor
@@ -24,8 +24,10 @@ import javax.validation.constraints.NotNull;
 public class Discipline {
 
     @Id
-    @Length(min = 1, max = 100)
-    @Column(unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Length(max = 100)
     private String code;
 
     @NotNull

@@ -29,8 +29,7 @@ class InitializationOnStartUpListener implements ApplicationListener<ContextRefr
                 new ClassPathResource('scripts/faculties.sql'),
                 new ClassPathResource('scripts/specialities.sql'),
                 new ClassPathResource('scripts/educationPrograms.sql'),
-                new ClassPathResource('scripts/groups.sql'),
-                //new ClassPathResource('scripts/disciplines.sql')
+                new ClassPathResource('scripts/groups.sql')
         )
         DatabasePopulatorUtils.execute(databasePopulator, dataSource)
 

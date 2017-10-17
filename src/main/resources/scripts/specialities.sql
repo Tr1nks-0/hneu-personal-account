@@ -1,1 +1,2 @@
-INSERT INTO speciality (id, code, name, faculty_id) VALUES (122, "122", "Комп'ютерні науки", 04);
+INSERT INTO speciality (id, code, name, faculty_id) VALUES (122, 'КН', "Комп'ютерні науки", 04);
+INSERT INTO speciality (id, code, name, faculty_id) VALUES (126, 'ІУСТ', 'Інформаційні управляючі системи та технології', 04);
