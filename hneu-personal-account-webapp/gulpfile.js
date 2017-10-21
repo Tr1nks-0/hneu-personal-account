@@ -24,9 +24,8 @@ gulp.task('cssMinify', function () {
 });
 
 function lessStream() {
-   return gulp.src('./src/main/resources/theme/less/**/*.less')
+   return gulp.src('./src/main/resources/theme/less/styles.less')
         .pipe(less())
-        .pipe(concat('less-files.less'));
 }
 
 function cssStream() {
