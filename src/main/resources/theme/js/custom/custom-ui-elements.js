@@ -61,5 +61,11 @@ jQuery(document).ready(function () {
         var faImageClass = $(this).parent().attr('aria-expanded') === 'true' ? 'fa-chevron-left' : 'fa-chevron-down';
         $(this).attr('class', 'fa ' + faImageClass);
     });
+
+    $('form').submit(function() {
+        $(this).find("input[type='submit']").prop('disabled',true);
+        $('.spinner').css('display', 'block');
+    });
+
 });
 
