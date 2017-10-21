@@ -90,3 +90,9 @@ sourceSets {
 gulp_build.dependsOn npmInstall
 gulp_build.dependsOn installGulp
 build.dependsOn gulp_build
+
+// clear node_modules folder while cleaning
+task cleanNodeDir(type: Delete) {
+    delete 'node_modules'
+}
+clean.dependsOn cleanNodeDir
