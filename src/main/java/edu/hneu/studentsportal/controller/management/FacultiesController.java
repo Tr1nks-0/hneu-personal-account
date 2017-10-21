@@ -43,6 +43,7 @@ public class FacultiesController implements ExceptionHandlerController {
             return prepareFacultyPage(model, faculty);
         } else {
             facultyRepository.save(faculty);
+            log.info(String.format("New [%s] has been added", faculty.toString()));
             redirectAttributes.addFlashAttribute("success", "success.add.faculty");
             return "redirect:/management/faculties";
         }

@@ -52,6 +52,7 @@ public class SpecialitiesController implements ExceptionHandlerController {
             return prepareSpecialityPage(model, speciality);
         } else {
             specialityRepository.save(speciality);
+            log.info(String.format("New [%s] has been added", speciality.toString()));
             redirectAttributes.addFlashAttribute("success", "success.add.speciality");
             return "redirect:/management/specialities?facultyId=" + speciality.getFaculty().getId();
         }

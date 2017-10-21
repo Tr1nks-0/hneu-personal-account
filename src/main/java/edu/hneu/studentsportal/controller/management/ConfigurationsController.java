@@ -19,6 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.stream.Stream;
+
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_CONFIGURATIONS_URL;
 import static java.util.Objects.nonNull;
 
@@ -36,9 +38,7 @@ public class ConfigurationsController implements ExceptionHandlerController {
     public String getConfigs(Model model) {
         model.addAttribute("admins", userService.getAdmins());
         model.addAttribute("title", "settings");
-        for (SiteFeature feature : SiteFeature.values()) {
-            model.addAttribute(feature.name(), feature.isActive());
-        }
+        Stream.of(SiteFeature.values()).forEach(feature -> model.addAttribute(feature.name(), feature.isActive()));
         return "management/configurations-page";
     }
 
@@ -62,6 +62,7 @@ public class ConfigurationsController implements ExceptionHandlerController {
         boolean flag = nonNull(request.getParameter(name));
         if (flag != feature.isActive()) {
             feature.toggle();
+            log.info(String.format("Configuration [%s] is changed, new value is [%s]", feature.toString(), feature.isActive()));
         }
     }
 
@@ -69,6 +70,7 @@ public class ConfigurationsController implements ExceptionHandlerController {
     public String addAdmin(HttpServletRequest request) {
         String email = request.getParameter("email");
         userService.create(email, UserRole.ADMIN);
+        log.info(String.format("New admin [%s] has been added", email));
         return "redirect:" + MANAGE_CONFIGURATIONS_URL;
     }
 

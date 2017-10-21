@@ -61,6 +61,7 @@ public class StudentsController implements ExceptionHandlerController {
             return prepareStudentEditorPage(model, student);
         } else {
             studentRepository.save(student);
+            log.info(String.format("New [%s] has been added", student.toString()));
             redirectAttributes.addFlashAttribute("success", "success.save.student");
             return "redirect:/management/students/" + student.getId();
         }
@@ -70,6 +71,7 @@ public class StudentsController implements ExceptionHandlerController {
     @ResponseBody
     public void deleteStudent(@PathVariable long id) {
         studentRepository.delete(id);
+        log.warn(String.format("Student[%s] has been deleted", id));
     }
 
 

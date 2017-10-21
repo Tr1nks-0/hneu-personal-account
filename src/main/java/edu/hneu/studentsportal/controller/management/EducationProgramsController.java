@@ -66,6 +66,7 @@ public class EducationProgramsController implements ExceptionHandlerController {
             return prepareEducationProgramPage(model, educationProgram);
         } else {
             educationProgramRepository.save(educationProgram);
+            log.info(String.format("New [%s] has been added", educationProgram.toString()));
             redirectAttributes.addFlashAttribute("success", "success.add.education.program");
             return "redirect:/management/education-programs?facultyId=" + educationProgram.getSpeciality().getFaculty().getId()
                     + "&specialityId=" + educationProgram.getSpeciality().getId();

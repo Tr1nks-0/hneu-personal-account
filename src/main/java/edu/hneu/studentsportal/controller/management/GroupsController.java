@@ -72,16 +72,16 @@ public class GroupsController implements ExceptionHandlerController {
 
     @PostMapping
     public String createGroup(@ModelAttribute @Valid Group group, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return prepareGroupPage(model, group);
         } else {
             groupRepository.save(group);
+            log.info(String.format("New [%s] has been added", group.toString()));
             redirectAttributes.addFlashAttribute("success", "success.add.discipline");
             redirectAttributes.addAttribute("facultyId", group.getSpeciality().getFaculty().getId());
             redirectAttributes.addAttribute("specialityId", group.getSpeciality().getId());
             Optional.ofNullable(group.getEducationProgram()).map(EducationProgram::getId).ifPresent(id ->
-                    redirectAttributes.addAttribute("educationProgramId", id)
-            );
+                    redirectAttributes.addAttribute("educationProgramId", id));
             return "redirect:/management/groups";
         }
     }

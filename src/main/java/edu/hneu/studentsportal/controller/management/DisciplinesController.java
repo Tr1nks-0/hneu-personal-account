@@ -81,14 +81,14 @@ public class DisciplinesController implements ExceptionHandlerController {
             return prepareDisciplinesPage(model, discipline);
         } else {
             disciplineRepository.save(discipline);
+            log.info(String.format("New [%s] has been added", discipline.toString()));
             redirectAttributes.addFlashAttribute("success", "success.add.discipline");
             redirectAttributes.addAttribute("facultyId", discipline.getSpeciality().getFaculty().getId());
             redirectAttributes.addAttribute("specialityId", discipline.getSpeciality().getId());
             redirectAttributes.addAttribute("course", discipline.getCourse());
             redirectAttributes.addAttribute("semester", discipline.getSemester());
             Optional.ofNullable(discipline.getEducationProgram()).map(EducationProgram::getId).ifPresent(id ->
-                    redirectAttributes.addAttribute("educationProgramId", id)
-            );
+                    redirectAttributes.addAttribute("educationProgramId", id));
             return "redirect:/management/disciplines";
         }
     }
