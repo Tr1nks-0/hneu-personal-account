@@ -64,7 +64,7 @@ public class ImportDisciplinesController implements ExceptionHandlerController {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
-        return handleErrorInternal(e, messageService.studentExistsError(), redirectAttributes);
+        return handleErrorInternal(e, messageService.disciplineExistsError(), redirectAttributes);
     }
 
     @Override

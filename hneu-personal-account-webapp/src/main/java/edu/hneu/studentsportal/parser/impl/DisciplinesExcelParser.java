@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
@@ -72,19 +73,15 @@ public class DisciplinesExcelParser extends AbstractExcelParser<List<Discipline>
     }
 
     private Speciality parseSpeciality(Indexer indexer) {
-        String code = parseCode(getStringCellValue(indexer));
-        return specialityRepository.findByCode(String.valueOf(code))
-                .orElseThrow(() -> new IllegalStateException("Cannot find speciality for code: " + code));
+        Integer id = getIntegerCellValue(indexer, 0);
+        return specialityRepository.findById(Long.valueOf(id))
+                .orElseThrow(() -> new IllegalStateException("Cannot find speciality for code: " + id));
     }
 
     private EducationProgram parseEducationProgram(Indexer indexer) {
-        String code = parseCode(getString1CellValue(indexer));
-        return educationProgramRepository.findByCode(code)
-                .orElseThrow(() -> new IllegalStateException("Cannot find education program for code: " + code));
-    }
-
-    private String parseCode(String line) {
-        return line.split("\\.")[0];
+        Integer id = getIntegerCellValue(indexer, 0);
+        return Optional.ofNullable(educationProgramRepository.findById(Long.valueOf(id)))
+                .orElseThrow(() -> new IllegalStateException("Cannot find education program for code: " + id));
     }
 
 }

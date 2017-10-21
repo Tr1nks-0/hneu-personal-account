@@ -27,6 +27,8 @@ public class Student {
     @GeneratedValue
     private long id;
 
+    private Long scheduleServiceId;
+
     @NotNull
     @Column(unique = true)
     @Length(min = 3, max = 50)

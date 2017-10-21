@@ -32,16 +32,20 @@
 
                 <div class="panel-body">
                     <table class="table no-margin" th:if="${!#lists.isEmpty(disciplines)}">
-                        <tr>
-                            <th class="center" th:text="#{form.label.name}"></th>
-                            <th class="center" th:text="#{form.label.discipline.course}"></th>
-                            <th class="center" th:text="#{form.label.discipline.semester}"></th>
-                        </tr>
-                        <tr th:each="discipline: ${disciplines}">
-                            <td th:text="${discipline.label}"></td>
-                            <td class="center" th:text="${discipline.course}"></td>
-                            <td class="center" th:text="${discipline.semester}"></td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th class="center" th:text="#{form.label.name}"></th>
+                                <th class="center" th:text="#{form.label.discipline.course}"></th>
+                                <th class="center" th:text="#{form.label.discipline.semester}"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="discipline: ${disciplines}">
+                                <td th:text="${discipline.label}"></td>
+                                <td class="center" th:text="${discipline.course}"></td>
+                                <td class="center" th:text="${discipline.semester}"></td>
+                            </tr>
+                        </tbody>
                     </table>
                     <p th:text="#{items.not.found}" th:if="${#lists.isEmpty(disciplines)}"></p>
                 </div>

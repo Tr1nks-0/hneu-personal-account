@@ -18,7 +18,7 @@ public final class ExcelValidator {
     @SneakyThrows
     public static void validate(File file) {
         Path path = Paths.get(file.toURI());
-        if (Stream.of(EXTENSIONS).noneMatch(path.getFileName()::endsWith)) {
+        if (Stream.of(EXTENSIONS).noneMatch(path.getFileName().toString()::endsWith)) {
             Files.deleteIfExists(path);
             throw new IllegalArgumentException(String.format("File[%s] is not an excel file", path.getFileName()));
         }
