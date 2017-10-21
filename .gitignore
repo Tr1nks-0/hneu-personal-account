@@ -1,12 +1,6 @@
-.settings/
-target/
 .idea/
-TrainingHneu.iml
-.classpath
-.project
-studentsportal.iml
-/C:/
-build/
-out/
-node_modules/
-/package-lock.json
+.gradle/
+/hneu-personal-account-webapp/build/
+/hneu-personal-account-webapp/node_modules/
+/hneu-personal-account-deployment/build/
+/hneu-personal-account-webapp/package-lock.json

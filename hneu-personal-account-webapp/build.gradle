@@ -1,0 +1,92 @@
+group 'edu.hneu.studentsportal'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.3.RELEASE'
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.1.1'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'com.moowork.gulp'
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.security:spring-security-taglibs:3.2.3.RELEASE'
+    compile 'org.springframework.security.oauth:spring-security-oauth2:2.1.0.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    compile 'org.springframework.social:spring-social-google:1.0.0.RELEASE'
+    compile 'com.google.api-client:google-api-client:1.22.0'
+    compile 'com.google.apis:google-api-services-gmail:v1-rev48-1.22.0'
+
+    compile 'mysql:mysql-connector-java'
+
+    compile 'javax.servlet:javax.servlet-api:3.1.0'
+    compile 'javax.servlet.jsp:javax.servlet.jsp-api:2.3.1'
+    compile 'javax.servlet:jstl'
+    compile 'org.apache.tomcat.embed:tomcat-embed-jasper'
+
+    compile 'javax.validation:validation-api:1.1.0.Final'
+    compile 'org.hibernate:hibernate-validator:5.4.1.Final'
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.7.1'
+
+    compile 'org.springframework.boot:spring-boot-starter-mail:1.2.6.RELEASE'
+    compile 'org.freemarker:freemarker:2.3.23'
+
+    compile 'org.codehaus.groovy:groovy-all:2.4.9'
+    compile 'org.apache.poi:poi-ooxml:3.9'
+    compile 'org.apache.commons:commons-collections4:4.0'
+    compile 'com.google.guava:guava:18.0'
+    compile 'commons-lang:commons-lang:2.6'
+    compile 'commons-fileupload:commons-fileupload:1.2.2'
+    compile 'commons-io:commons-io:1.3.2'
+    compile 'io.javaslang:javaslang:2.0.6'
+
+    compile 'org.togglz:togglz-spring-boot-starter:2.4.1.Final'
+    compile 'org.togglz:togglz-spring-security:2.4.1.Final'
+    compile 'com.github.heneke.thymeleaf:thymeleaf-extras-togglz:1.0.1.RELEASE'
+
+    compile 'org.springframework.boot:spring-boot-devtools:1.3.0.RELEASE'
+    compileOnly 'org.projectlombok:lombok:1.16.14'
+
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testCompile 'org.togglz:togglz-junit:2.4.1.Final'
+    testCompile 'junit:junit:4.11'
+    testCompile 'cglib:cglib:3.2.0'
+    testRuntime 'org.objenesis:objenesis:2.1'
+}
+
+//setup groovy and java support
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src/main/groovy']
+        }
+    }
+    test {
+        groovy {
+            srcDirs = ['src/test/groovy']
+        }
+    }
+}
+
+//setup build tasks for ui
+gulp_build.dependsOn npmInstall
+gulp_build.dependsOn installGulp
+build.dependsOn gulp_build

@@ -1,0 +1,58 @@
+spring:
+  freemarker:
+      template-loader-path: classpath:/emails/
+
+# Database settings
+db:
+  driver: com.mysql.jdbc.Driver
+  username: ${DATABASE_USER:stud_portal_admin}
+  password: ${DATABASE_PASSWORD:HNEUportal2017}
+  url: ${DATABASE_URL:jdbc:mysql://localhost:3306/stud_portal?useUnicode=yes&characterEncoding=UTF-8&useSSL=false}
+hibernate:
+  dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  show_sql: false
+  format_sql: true
+  hbm2ddl:
+    auto: update
+
+# Integration and email credentials
+integration:
+  service:
+    schedule:
+      url: http://services.ksue.edu.ua:8081/schedule/xml?auth=com.alcsan.atimetable_19092013_552ca3ffa5&group=%s&week=%s
+    emails:
+      url: ${EMAILS_PROVIDER_URL:http://212.111.199.46:65008}
+communication:
+  mail:
+    decan: ${DECAN_EMAIL:oleksandr.rozdolskyi2012@gmail.com}
+    support:
+      username: ${SUPPORT_EMAIL:'oleksandr.rozdolskyi2012@gmail.com'}
+      password: ${SUPPORT_EMAIL_PASSWORD:'Rozdolski1994'}
+
+# Security
+security:
+  oauth2:
+    client:
+      client-id: acme
+      client-secret: acmesecret
+      scope: read,write
+      auto-approve-scopes: '.*'
+google:
+  client:
+    clientId: 624736482499-j8aftskiu2rnpasgucc2fumgpulltka3.apps.googleusercontent.com
+    clientSecret: MXEPao9tGhk8l5fkTZ5zsqVH
+    accessTokenUri: https://www.googleapis.com/oauth2/v3/token
+    userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+    scope: email,https://www.googleapis.com/auth/gmail.send,https://mail.google.com/
+    auto-approve-scopes: '.*'
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://www.googleapis.com/plus/v1/people/me
+
+---
+
+spring:
+  profiles: init
+hibernate:
+  hbm2ddl:
+    auto: create

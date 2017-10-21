@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+
+  webapp:
+    build: ../../hneu-personal-account-webapp
+    container_name: hneu-personal-account-webapp
+    volumes:
+      - ./run-wrapper.sh:/usr/local/bin/run-wrapper.sh
+    command: /bin/sh -c run-wrapper.sh -Dspring.profiles.active=
+    links:
+      - storage
+    ports:
+      - 80:8080
+    environment:
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_URL: jdbc:mysql://storage/${DATABASE}?useUnicode=yes&characterEncoding=UTF-8&useSSL=false
+      EMAILS_PROVIDER_URL: ${EMAILS_PROVIDER_URL}
+    restart: always
+
+  storage:
+    image: mysql
+    container_name: hneu-personal-account-db
+    command: mysqld --character-set-server=utf8mb4
+    volumes:
+      - /tmp/mysql/data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE}
+    restart: always
