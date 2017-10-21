@@ -11,8 +11,8 @@ public interface ExceptionHandlerController {
 
     Logger logger();
 
-    @ExceptionHandler(RuntimeException.class)
-    default String handleError(RuntimeException e, RedirectAttributes redirectAttributes) {
+    @ExceptionHandler(Exception.class)
+    default String handleError(Exception e, RedirectAttributes redirectAttributes) {
         return handleErrorInternal(e, e.getMessage(), redirectAttributes);
     }
 

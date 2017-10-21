@@ -56,7 +56,7 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
     public Student extractModel() {
         Indexer indexer = Indexer.of(3);
         if (isFalse(getStringCellValue(indexer.getValue()).toLowerCase().contains(VALID_HEADER_HOLDER)))
-            throw new IllegalArgumentException(messageService.invalidStudentError());
+            throw new IllegalArgumentException(messageService.invalidFile());
         indexer.next();
 
         Student student = new Student();

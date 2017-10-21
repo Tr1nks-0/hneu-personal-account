@@ -20,7 +20,10 @@ public interface MessageService {
 
     //errors
 
-    @Message("invalid.student.profile.file.not.found")
+    @Message("invalid.file.not.found")
+    String fileNotFoundError();
+
+    @Message("invalid.file.not.found.by.path")
     String fileNotFoundError(String path);
 
     @Message("error.student.profile.exists")
@@ -40,9 +43,6 @@ public interface MessageService {
 
     @Message("error.discipline.exists")
     String disciplineExistsError();
-
-    @Message("invalid.student.profile.file")
-    String invalidStudentError();
 
     @Message("invalid.student.profile.faculty")
     String invalidStudentFacultyError();
@@ -70,9 +70,6 @@ public interface MessageService {
 
     @Message("error.student.email.not.found")
     String emailNotFoundForStudent(String studentName);
-
-    @Message("limit.semester.disciplines.message")
-    String semesterDisciplinesLimitExceededError();
 
     @Message("error.admin.exists")
     String adminExistsError();
