@@ -20,7 +20,6 @@ import static java.util.Objects.isNull;
 @Service
 public class ScheduleService {
 
-
     @Value("${integration.service.schedule.url}")
     public String scheduleProviderServiceUrl;
 

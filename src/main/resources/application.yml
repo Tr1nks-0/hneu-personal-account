@@ -65,9 +65,9 @@ db:
 communication:
   mail:
     decan: dekanstei@gmail.com
-    support: #TODO: request credentials
-      username: 'oleksandr.rozdolskyi2012@gmail.com'
-      password: 'Rozdolski1994'
+    support:
+      username: 'students.portal@hneu.net'
+      password: 'Amn36z42S'
 
 ---
 
