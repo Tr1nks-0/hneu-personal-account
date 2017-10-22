@@ -16,6 +16,7 @@ import java.util.stream.IntStream;
 
 import static java.time.temporal.ChronoUnit.WEEKS;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Service
 public class ScheduleService {
@@ -23,8 +24,10 @@ public class ScheduleService {
     @Value("${integration.service.schedule.url}")
     public String scheduleProviderServiceUrl;
 
-    public Schedule load(long groupId, long week) {
+    public Schedule load(long groupId, long week, Long studentId) {
         String url = String.format(scheduleProviderServiceUrl, groupId, week);
+        if (nonNull(studentId))
+            url = url + "&student=" + studentId;
         return new RestTemplate().getForObject(url, Schedule.class);
     }
 

@@ -27,7 +27,7 @@ public class Student {
     @GeneratedValue
     private long id;
 
-    private Long scheduleServiceId;
+    private Long scheduleStudentId;
 
     @NotNull
     @Column(unique = true)

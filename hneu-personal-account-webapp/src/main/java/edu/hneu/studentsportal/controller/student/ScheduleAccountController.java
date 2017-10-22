@@ -24,7 +24,7 @@ public class ScheduleAccountController {
     @GetMapping
     public String schedule(@ModelAttribute("profile") Student profile, @RequestParam(required = false) Long week, Model model) {
         week = scheduleService.getWeekOrDefault(week);
-        Schedule schedule = scheduleService.load(profile.getGroup().getId(), week);
+        Schedule schedule = scheduleService.load(profile.getGroup().getId(), week, profile.getScheduleStudentId());
         model.addAttribute("pairs", scheduleService.getPairs(schedule));
         model.addAttribute("days", schedule.getWeek().getDay());
         model.addAttribute("week", week);
