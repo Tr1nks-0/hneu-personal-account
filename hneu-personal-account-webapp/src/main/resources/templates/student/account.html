@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://java.sun.com/JSP/Page">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:include="fragments/head"></head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper" th:with="profileImage='/students/'+ ${profile.id}+ '/photo'">
@@ -18,31 +18,22 @@
                     <div class="student-info col-md-6 col-sm-12 col-xs-12">
                         <table class="table-sm no-margin no-border">
                             <tr>
-                                <td rowspan="3"><i class="info-label ion-ios-book-outline"></i></td>
-                                <td th:text="#{form.label.student.faculty}"></td>
-                                <td th:text="${profile.faculty.name}"></td>
+                                <td rowspan="3" class="hidden-xs"><i class="info-label ion-ios-book-outline"></i></td>
+                                <td th:text="#{form.label.student.faculty} + ' ' + ${profile.faculty.name}"></td>
                             </tr>
-                            <tr>
-                                <td th:text="#{form.label.student.incomeYear}"></td>
-                                <td th:text="${profile.incomeYear}"></td>
-                            </tr>
-                            <tr>
-                                <td th:text="#{form.label.student.group}"></td>
-                                <td th:text="${profile.group.name}"></td>
-                            </tr>
+                            <tr><td th:text="#{form.label.student.incomeYear} + ' ' + ${profile.incomeYear}"></td></tr>
+                            <tr><td th:text="#{form.label.student.group} + ' ' + ${profile.group.name}"></td></tr>
                         </table>
                     </div>
-                    <div class="student-info col-md-6 col-sm-12 col-xs-12"
-                         th:if="${not #lists.isEmpty(profile.contactInfo)}">
+                    <div class="student-info col-md-6 col-sm-12 col-xs-12" th:if="${not #lists.isEmpty(profile.contactInfo)}">
                         <table class="table-sm no-margin no-border">
                             <tr>
-                                <td rowspan="2"><i class="info-label ion ion-ios-telephone-outline"></i></td>
+                                <td rowspan="2" class="hidden-xs"><i class="info-label ion ion-ios-telephone-outline"></i></td>
                                 <td th:text="#{form.label.student.contacts}"></td>
                             </tr>
                             <tr>
                                 <td>
-                                    <div th:each="contact : ${profile.contactInfo}"
-                                         th:text="${contact}"></div>
+                                    <div th:each="contact : ${profile.contactInfo}" th:text="${contact}"></div>
                                 </td>
                             </tr>
                         </table>
