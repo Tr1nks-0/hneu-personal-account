@@ -84,7 +84,7 @@
                                     </tr>
                                     <tr>
                                         <td><label for="scheduleStudentId" class="control-label" th:text="#{form.label.student.scheduleStudentId}"></label></td>
-                                        <td><input id="scheduleStudentId" th:field="*{scheduleStudentId}" class="form-control"/></td>
+                                        <td><input id="scheduleStudentId" th:field="*{scheduleStudentId}" class="form-control" type="number"/></td>
                                     </tr>
                                 </table>
                             </div>
@@ -94,63 +94,52 @@
                             <div class="col-md-12">
                                 <div class="table-responsive">
                                     <table class="table no-margin">
-
-                                        <div th:each="course : ${courses}" th:remove="tag">
+                                        <thead>
                                             <tr>
-                                                <td colspan="5">
-                                                    <span class="label label-primary" th:text="${'Курс №' + course}"></span>
-                                                </td>
+                                                <th class="center" th:text="#{form.label.discipline.label}"></th>
+                                                <th class="center" th:text="#{form.label.discipline.semester}"></th>
+                                                <th class="center" th:text="#{form.label.discipline.credits}"></th>
+                                                <th class="center" th:text="#{form.label.discipline.control.form}"></th>
+                                                <th class="center" th:text="#{form.label.discipline.type}"></th>
+                                                <th class="center" th:text="#{form.label.discipline.mark}"></th>
                                             </tr>
-                                            <div th:each="semester : ${#numbers.sequence(1, 2)}" th:remove="tag">
-                                                <div th:each="disciplineMarks,i : ${student.disciplineMarks}">
-                                                    <div th:if="${disciplineMarks.discipline.course == course and disciplineMarks.discipline.semester == semester}">
-                                                        <tr>
-                                                            <td class="col-md-5">
-                                                                <input th:field="*{disciplineMarks[__${i.index}__].discipline.label}" class="form-control" disabled="true"/>
-                                                            </td>
-                                                            <td class="col-md-1">
-                                                                <input th:field="*{disciplineMarks[__${i.index}__].discipline.credits}"
-                                                                       class="form-control" type="number" disabled="true"/>
-                                                            </td>
-                                                            <td class="col-md-2">
-                                                                <select th:field="*{disciplineMarks[__${i.index}__].discipline.controlForm}" class="form-control" disabled="true">
-                                                                    <option th:each="disciplineFormControl : ${disciplineFormControls}"
-                                                                            th:value="${disciplineFormControl}"
-                                                                            th:text="${disciplineFormControl.name}">
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                            <td class="col-md-2">
-                                                                <select th:field="*{disciplineMarks[__${i.index}__].discipline.type}" class="form-control" disabled="true">
-                                                                    <option th:each="disciplineType : ${disciplineTypes}"
-                                                                            th:value="${disciplineType}"
-                                                                            th:text="${disciplineType.name}">
-                                                                    </option>
-                                                                </select>
-                                                            </td>
-                                                            <td class="col-md-1">
-                                                                <input th:field="*{disciplineMarks[__${i.index}__].mark}"
-                                                                       class="form-control" type="number" disabled="true"/>
-                                                            </td>
-                                                            <td class="col-md-1">
-                                                                <input th:field="*{disciplineMarks[__${i.index}__].mark}" class="form-control" type="number"/>
-                                                            </td>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].id}"/>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.id}"/>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.code}"/>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.speciality}"/>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.educationProgram}"/>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.course}"/>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.semester}"/>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.credits}"/>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.controlForm}"/>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.label}"/>
-                                                            <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.type}"/>
-                                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <div th:each="course : ${courses}" th:remove="tag">
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <span class="label label-primary" th:text="${'Курс №' + course}"></span>
+                                                    </td>
+                                                </tr>
+                                                <div th:each="semester : ${#numbers.sequence(1, 2)}" th:remove="tag">
+                                                    <div th:each="disciplineMark,i : ${student.disciplineMarks}">
+                                                        <div th:if="${disciplineMark.discipline.course == course and disciplineMark.discipline.semester == semester}">
+                                                            <tr>
+                                                                <td class="col-md-4 vertical-center" th:text="${disciplineMark.discipline.label}"></td>
+                                                                <td class="col-md-1 vertical-center center" th:text="${disciplineMark.discipline.semester}"></td>
+                                                                <td class="col-md-1 vertical-center center" th:text="${disciplineMark.discipline.credits}"></td>
+                                                                <td class="col-md-2 vertical-center center" th:text="${disciplineMark.discipline.controlForm.name}"></td>
+                                                                <td class="col-md-2 vertical-center center" th:text="${disciplineMark.discipline.type.name}"></td>
+                                                                <td class="col-md-1">
+                                                                    <input th:field="*{disciplineMarks[__${i.index}__].mark}" class="form-control" type="number"/>
+                                                                </td>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].id}"/>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.id}"/>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.code}"/>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.speciality}"/>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.educationProgram}"/>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.course}"/>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.semester}"/>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.credits}"/>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.controlForm}"/>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.label}"/>
+                                                                <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.type}"/>
+                                                            </tr>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>

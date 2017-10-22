@@ -60,8 +60,8 @@ public class StudentProfileExcelParser extends AbstractExcelParser<Student> {
         indexer.next();
 
         Student student = new Student();
-        student.setSurname(getString2CellValue(indexer.next()));
-        student.setName(getString2CellValue(indexer.next()));
+        student.setSurname(getString2CellValue(indexer.next()).trim());
+        student.setName(getString2CellValue(indexer.next()).trim());
         student.setPassportNumber(getString2CellValue(indexer.next()).split("\\.")[0]);
         student.setFaculty(extractFaculty(indexer));
         student.setIncomeYear(getIntegerCellValue(indexer.next(), 2));
