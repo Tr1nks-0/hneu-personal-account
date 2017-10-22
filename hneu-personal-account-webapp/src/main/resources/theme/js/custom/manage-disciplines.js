@@ -17,7 +17,6 @@ $("#discipline #educationProgram").change(function() {
         + "&educationProgramId=" +educationProgram;
 });
 
-
 $("#discipline #course").change(function() {
     var faculty = $("#discipline #faculty option:selected").val();
     var speciality = $("#discipline #speciality option:selected").val();

@@ -9,7 +9,6 @@
     <div class="content-wrapper">
         <div class="content">
 
-
             <ol class="breadcrumb panel panel-default">
                 <li><i class="fa fa-home"></i></li>
                 <li class="active" th:text="#{form.label.management.configurations}"></li>
@@ -23,18 +22,15 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-md-12" th:text="#{form.label.management.configurations.admins}">
-                                </div>
+                                <div class="col-md-12" th:text="#{form.label.management.configurations.admins}"></div>
                             </div>
                         </div>
                         <div class="panel-body">
                             <p th:text="#{form.label.management.configurations.admins.add}"></p>
                             <form action="/management/configs/admins" method="post">
                                 <div class="form-group">
-                                    <label for="email" class="control-label"
-                                           th:text="#{form.label.student.email}"></label>
-                                    <input id="email" name="email" class="form-control" required="required"
-                                           type="email"/>
+                                    <label for="email" class="control-label" th:text="#{form.label.student.email}"></label>
+                                    <input id="email" name="email" class="form-control" required="required" type="email"/>
                                 </div>
                                 <input type="submit" th:value="#{btn.add}" class="btn btn-sm btn-success float-right"/>
                             </form>
@@ -42,7 +38,12 @@
                         <ul class="list-group">
                             <li class="list-group-item" th:each="admin : ${admins}">
                                 <div class="row">
-                                    <div class="col-md-12" th:text="${admin.id}"></div>
+                                    <div class="col-md-11" th:text="${admin.id}"></div>
+                                    <div class="col-md-1">
+                                        <button th:if="${admins.size() > 1}" th:attr="data-admin=${admin.id}" class="delete-admin btn btn-danger btn-xs pull-right">
+                                            <i class="fa fa-remove"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -56,8 +57,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <span th:text="#{form.label.management.configurations.emails}"></span>
-                                        <button type="submit" class="btn btn-xs btn-success pull-right"
-                                                th:text="#{btn.save}"></button>
+                                        <button type="submit" class="btn btn-xs btn-success pull-right" th:text="#{btn.save}"></button>
                                     </div>
                                 </div>
                             </div>
@@ -86,37 +86,32 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <span th:text="#{form.label.management.configurations.account.features}"></span>
-                                        <button type="submit" class="btn btn-xs btn-success pull-right"
-                                                th:text="#{btn.save}"></button>
+                                        <button type="submit" class="btn btn-xs btn-success pull-right" th:text="#{btn.save}"></button>
                                     </div>
                                 </div>
                             </div>
                             <div class="panel-body">
                                 <div class="checkbox">
                                     <label>
-                                        <input name="VIEW_SCHEDULE" type="checkbox"
-                                               th:checked="${VIEW_SCHEDULE}" data-toggle="toggle"/>
+                                        <input name="VIEW_SCHEDULE" type="checkbox" th:checked="${VIEW_SCHEDULE}" data-toggle="toggle"/>
                                         <span th:text="#{form.label.management.configurations.account.features.schedule}"></span>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label>
-                                        <input name="VIEW_CURRENT_MARKS" type="checkbox"
-                                               th:checked="${VIEW_CURRENT_MARKS}" data-toggle="toggle"/>
+                                        <input name="VIEW_CURRENT_MARKS" type="checkbox" th:checked="${VIEW_CURRENT_MARKS}" data-toggle="toggle"/>
                                         <span th:text="#{form.label.management.configurations.account.features.current.marks}"></span>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label>
-                                        <input name="VIEW_DOCUMENTS" type="checkbox"
-                                               th:checked="${VIEW_DOCUMENTS}" data-toggle="toggle"/>
+                                        <input name="VIEW_DOCUMENTS" type="checkbox" th:checked="${VIEW_DOCUMENTS}" data-toggle="toggle"/>
                                         <span th:text="#{form.label.management.configurations.account.features.documents}"></span>
                                     </label>
                                 </div>
                                 <div class="checkbox">
                                     <label>
-                                        <input name="SEND_EMAIL_TO_DECAN" type="checkbox"
-                                               th:checked="${SEND_EMAIL_TO_DECAN}" data-toggle="toggle"/>
+                                        <input name="SEND_EMAIL_TO_DECAN" type="checkbox" th:checked="${SEND_EMAIL_TO_DECAN}" data-toggle="toggle"/>
                                         <span th:text="#{form.label.management.configurations.account.features.contact.form}"></span>
                                     </label>
                                 </div>
@@ -125,7 +120,6 @@
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 

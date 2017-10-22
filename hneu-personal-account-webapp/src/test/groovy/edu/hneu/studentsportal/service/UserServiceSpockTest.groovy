@@ -50,4 +50,13 @@ class UserServiceSpockTest extends Specification {
         then:
             [userMock] == admins
     }
+
+    def 'should remove admins'() {
+        given:
+            def email = 'some@email.com'
+        when:
+            userService.delete(email)
+        then:
+            1 * userRepositoryMock.delete(email)
+    }
 }

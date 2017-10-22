@@ -37,4 +37,7 @@ public class UserService {
         return user;
     }
 
+    public void delete(String email) {
+        userRepository.delete(email);
+    }
 }

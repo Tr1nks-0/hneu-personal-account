@@ -22,8 +22,8 @@ class DisciplinesExcelParserSpockTest extends Specification {
     )
 
     def setup() {
-        specialityRepositoryMock.findById('122') >> Optional.of(specialityMock)
-        educationProgramRepositoryMock.findById('51-ІСУТОД') >> Optional.of(educationProgramMock)
+        specialityRepositoryMock.findById(122) >> Optional.of(specialityMock)
+        educationProgramRepositoryMock.findById(122) >> educationProgramMock
     }
 
     def 'should parse only disciplines with existed faculties, specialities, education programs'() {

@@ -2,18 +2,17 @@ package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.enums.UserRole;
+import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.feature.SiteFeature;
 import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.service.UserService;
+import javaslang.control.Try;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
@@ -72,6 +71,14 @@ public class ConfigurationsController implements ExceptionHandlerController {
         userService.create(email, UserRole.ADMIN);
         log.info(String.format("New admin [%s] has been added", email));
         return "redirect:" + MANAGE_CONFIGURATIONS_URL;
+    }
+
+    @PostMapping("/admins/{email}/delete")
+    @ResponseBody
+    public void delete(@PathVariable String email) {
+        Try.run(() -> userService.delete(email)).onFailure(e -> {
+            throw new CannotDeleteResourceException(e);
+        });
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
