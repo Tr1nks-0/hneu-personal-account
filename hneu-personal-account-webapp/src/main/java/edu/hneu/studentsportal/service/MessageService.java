@@ -73,4 +73,7 @@ public interface MessageService {
 
     @Message("error.admin.exists")
     String adminExistsError();
+
+    @Message("error.cannot.delete.admin")
+    String cannotDeleteAdmin();
 }

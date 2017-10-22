@@ -74,11 +74,10 @@ public class ConfigurationsController implements ExceptionHandlerController {
     }
 
     @PostMapping("/admins/{email}/delete")
-    @ResponseBody
-    public void delete(@PathVariable String email) {
-        Try.run(() -> userService.delete(email)).onFailure(e -> {
-            throw new CannotDeleteResourceException(e);
-        });
+    public String delete(@PathVariable String email, RedirectAttributes redirectAttributes) {
+        Try.run(() -> userService.delete(email)).onFailure(e ->
+                redirectAttributes.addFlashAttribute("error", messageService.cannotDeleteAdmin()));
+        return "redirect:" + MANAGE_CONFIGURATIONS_URL;
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

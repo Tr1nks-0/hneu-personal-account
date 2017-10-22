@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://java.sun.com/JSP/Page">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:include="fragments/head"></head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -40,9 +40,30 @@
                                 <div class="row">
                                     <div class="col-md-11" th:text="${admin.id}"></div>
                                     <div class="col-md-1">
-                                        <button th:if="${admins.size() > 1}" th:attr="data-admin=${admin.id}" class="delete-admin btn btn-danger btn-xs pull-right">
+                                        <button type="button" class="btn btn-danger btn-xs pull-right" data-toggle="modal"
+                                                th:if="${admins.size() > 1}"
+                                                th:attr="data-target='#myModal' + ${admin.id.hashCode()}">
                                             <i class="fa fa-remove"></i>
                                         </button>
+                                        <div class="modal fade" th:if="${admins.size() > 1}" th:id="'myModal' + ${admin.id.hashCode()}" role="dialog">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        <h4 class="modal-title" th:text="#{modal.delete.admin.header}"></h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p th:text="#{modal.delete.admin.body}"></p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <form method="post" action="#" th:action="@{/management/configs/admins/__${admin.id}__/delete}">
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal" th:text="#{btn.cancel}"></button>
+                                                            <input type="submit" class="btn btn-success" th:value="#{btn.ok}"/>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
