@@ -30,8 +30,8 @@
                     <tr th:each="pairNumber : ${#numbers.sequence( 1, 7)}">
                         <td><span class="pair-number" th:text="${pairNumber}"></span></td>
                         <div th:each="day : ${#numbers.sequence(1, 7)}" th:remove="tag">
-                            <div th:if="${!#lists.isEmpty(pairs[pairNumber]) and !#lists.isEmpty(pairs[pairNumber][day])}"
-                                 th:with="pair=${pairs[pairNumber][day]}"
+                            <div th:if="${!#maps.isEmpty(pairs[__${pairNumber}__])} and ${pairs[__${pairNumber}__][__${day}__] != null}"
+                                 th:with="pair=${pairs[__${pairNumber}__][__${day}__]}"
                                  th:remove="tag">
                                 <td class="pair pair-multy" th:if="${!#lists.isEmpty(pair.scheduleElement)}">
                                     <div class="pair-description-multy"
@@ -90,7 +90,7 @@
                                     </div>
                                 </td>
                             </div>
-                            <td th:if="${#lists.isEmpty(pairs[pairNumber]) || #lists.isEmpty(pairs[pairNumber][day])}"></td>
+                            <td th:if="${#maps.isEmpty(pairs[__${pairNumber}__])} or ${pairs[__${pairNumber}__][__${day}__] == null}"></td>
                         </div>
                     </tr>
                     </tbody>
