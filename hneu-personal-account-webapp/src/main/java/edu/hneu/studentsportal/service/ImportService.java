@@ -35,6 +35,7 @@ public class ImportService {
     private final StudentRepository studentRepository;
     private final DisciplineMarkService disciplineMarkService;
     private final DisciplineRepository disciplineRepository;
+    private final StudentEmailReceivingService studentEmailReceivingService;
 
     public Student importStudent(File file) {
         Student student = parserFactory.newStudentProfileExcelParser().parse(file);

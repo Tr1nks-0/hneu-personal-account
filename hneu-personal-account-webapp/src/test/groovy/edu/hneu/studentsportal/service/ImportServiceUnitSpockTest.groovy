@@ -24,6 +24,7 @@ class ImportServiceUnitSpockTest extends Specification {
     def disciplineRepositoryMock = Mock(DisciplineRepository)
     def studentRepositoryMock = Mock(StudentRepository)
     def disciplineMarkServiceMock = Mock(DisciplineMarkService)
+    def studentEmailReceivingServiceMock = Mock(StudentEmailReceivingService)
     def userServiceMock = Mock(UserService)
     def disciplineMock1 = Mock(Discipline)
     def disciplineMock2 = Mock(Discipline)
@@ -39,7 +40,8 @@ class ImportServiceUnitSpockTest extends Specification {
             userServiceMock,
             studentRepositoryMock,
             disciplineMarkServiceMock,
-            disciplineRepositoryMock
+            disciplineRepositoryMock,
+            studentEmailReceivingServiceMock
     )
 
     def setup() {
