@@ -79,7 +79,7 @@ public class DisciplinesExcelParser extends AbstractExcelParser<List<Discipline>
     }
 
     private EducationProgram parseEducationProgram(Indexer indexer) {
-        Integer id = getIntegerCellValue(indexer, 0);
+        Integer id = getIntegerCellValue(indexer, 1);
         return Optional.ofNullable(educationProgramRepository.findById(Long.valueOf(id)))
                 .orElseThrow(() -> new IllegalStateException("Cannot find education program for code: " + id));
     }
