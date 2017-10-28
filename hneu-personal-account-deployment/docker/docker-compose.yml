@@ -17,6 +17,8 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       DATABASE_URL: jdbc:mysql://storage/${DATABASE}?useUnicode=yes&characterEncoding=UTF-8&useSSL=false
       EMAILS_PROVIDER_URL: ${EMAILS_PROVIDER_URL}
+      SUPPORT_EMAIL: ${SUPPORT_EMAIL}
+      SUPPORT_EMAIL_PASSWORD: ${SUPPORT_EMAIL_PASSWORD}
     restart: always
 
   storage:
