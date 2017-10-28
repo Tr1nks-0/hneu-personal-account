@@ -76,4 +76,7 @@ public interface MessageService {
 
     @Message("error.cannot.delete.admin")
     String cannotDeleteAdmin();
+
+    @Message("error.something.went.wrong")
+    String somethingWentWrong();
 }

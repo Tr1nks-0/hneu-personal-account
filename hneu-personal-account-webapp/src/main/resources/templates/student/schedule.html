@@ -100,8 +100,7 @@
     </div>
     <div class="content-wrapper" th:if="${#lists.isEmpty(pairs)}">
         <section class="content-header" style="padding: 0px">
-            <iframe class="schedule-frame" src="http://services.ksue.edu.ua:8081/schedule/schedule?group=${groupId}">
-            </iframe>
+            <div th:include="fragments/error" th:remove="tag"></div>
         </section>
     </div>
 

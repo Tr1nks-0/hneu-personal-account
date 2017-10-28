@@ -4,6 +4,8 @@ import com.google.api.client.util.Maps;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.domain.dto.schedule.Schedule;
 import edu.hneu.studentsportal.domain.dto.schedule.ScheduleElement;
+import javaslang.control.Option;
+import javaslang.control.Try;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -28,7 +30,11 @@ public class ScheduleService {
         String url = String.format(scheduleProviderServiceUrl, groupId, week);
         if (nonNull(studentId))
             url = url + "&student=" + studentId;
-        return new RestTemplate().getForObject(url, Schedule.class);
+        return load(url);
+    }
+
+    private Schedule load(final String url) {
+        return Try.of(() -> new RestTemplate().getForObject(url, Schedule.class)).getOrElse(() -> null);
     }
 
     public long getWeekOrDefault(Long week) {
