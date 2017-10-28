@@ -26,8 +26,8 @@ communication:
   mail:
     decan: ${DECAN_EMAIL:oleksandr.rozdolskyi2012@gmail.com}
     support:
-      username: ${SUPPORT_EMAIL:'oleksandr.rozdolskyi2012@gmail.com'}
-      password: ${SUPPORT_EMAIL_PASSWORD:'Rozdolski1994'}
+      username: ${SUPPORT_EMAIL:oleksandr.rozdolskyi2012@gmail.com}
+      password: ${SUPPORT_EMAIL_PASSWORD:Rozdolski1994}
 
 # Security
 security:
