@@ -3,7 +3,9 @@ package edu.hneu.studentsportal.service;
 import edu.hneu.studentsportal.conditions.DisciplineConditions;
 import edu.hneu.studentsportal.domain.*;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,10 +23,10 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DisciplineMarkService {
 
-    @Resource
-    private DisciplineRepository disciplineRepository;
+    private final DisciplineRepository disciplineRepository;
 
     public List<DisciplineMark> getStudentMarks(Student student, int course, int semester) {
         Predicate<DisciplineMark> hasGivenCourse = m -> m.getDiscipline().getCourse() == course;

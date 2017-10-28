@@ -2,6 +2,7 @@ package edu.hneu.studentsportal.controller.student;
 
 import edu.hneu.studentsportal.service.CustomUserDetailsService;
 import edu.hneu.studentsportal.service.EmailService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
@@ -18,14 +19,12 @@ import java.security.Principal;
 @Log4j
 @Controller
 @RequestMapping("/account/contactUs")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ContactUsAccountController {
 
-    @Resource
-    private CustomUserDetailsService userDetailsService;
-    @Resource
-    private EmailService emailService;
-    @Autowired
-    private OAuth2RestOperations oAuth2RestTemplate;
+    private final CustomUserDetailsService userDetailsService;
+    private final EmailService emailService;
+    private final OAuth2RestOperations oAuth2RestTemplate;
 
     @GetMapping
     public String contactUs(@RequestParam(required = false) Boolean success, Model model) {

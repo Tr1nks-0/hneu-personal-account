@@ -9,16 +9,14 @@
     <aside th:include="fragments/student/sidebar" th:remove="tag"></aside>
 
     <div class="content-wrapper">
-        <div class="content">
+        <div class="content contact-us">
 
             <ol class="breadcrumb panel panel-default">
                 <li><a href="/account"><i class="fa fa-home"></i></a></li>
                 <li class="active">Написати листа декану</li>
             </ol>
 
-            <div class="alert alert-success" th:if="${success}">
-                Повідомлення успішно відправлено!
-            </div>
+            <div class="alert alert-success" th:if="${success}" th:text="#{success.email.sent}"></div>
 
             <div class="row">
                 <div class="col-md-12">

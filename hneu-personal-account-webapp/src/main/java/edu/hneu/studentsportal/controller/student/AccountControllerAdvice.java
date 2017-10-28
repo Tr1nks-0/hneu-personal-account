@@ -3,6 +3,8 @@ package edu.hneu.studentsportal.controller.student;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -14,12 +16,11 @@ import java.util.Optional;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @ControllerAdvice
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AccountControllerAdvice {
 
-    @Resource
-    private StudentRepository studentRepository;
-    @Resource
-    private CustomUserDetailsService userDetailsService;
+    private final StudentRepository studentRepository;
+    private final CustomUserDetailsService userDetailsService;
 
     @ModelAttribute(value = "profile")
     public Student getProfile(HttpSession session, Principal principal) {

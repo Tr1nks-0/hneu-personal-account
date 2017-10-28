@@ -7,8 +7,10 @@ import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.repository.*;
 import edu.hneu.studentsportal.service.DisciplineMarkService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,20 +26,15 @@ import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_STUD
 @Log4j
 @Controller
 @RequestMapping(MANAGE_STUDENTS_URL)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentsController implements ExceptionHandlerController {
 
-    @Resource
-    private StudentRepository studentRepository;
-    @Resource
-    private FacultyRepository facultyRepository;
-    @Resource
-    private SpecialityRepository specialityRepository;
-    @Resource
-    private EducationProgramRepository educationProgramRepository;
-    @Resource
-    private GroupRepository groupRepository;
-    @Resource
-    private DisciplineMarkService disciplineMarkService;
+    private final StudentRepository studentRepository;
+    private final FacultyRepository facultyRepository;
+    private final SpecialityRepository specialityRepository;
+    private final EducationProgramRepository educationProgramRepository;
+    private final GroupRepository groupRepository;
+    private final DisciplineMarkService disciplineMarkService;
 
     @GetMapping
     public String getStudents(@RequestParam Long groupId, Model model) {

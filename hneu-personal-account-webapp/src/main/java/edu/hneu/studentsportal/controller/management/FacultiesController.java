@@ -6,8 +6,10 @@ import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.service.MessageService;
 import javaslang.control.Try;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +27,11 @@ import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_FACU
 @Log4j
 @Controller
 @RequestMapping(MANAGE_FACULTIES_URL)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class FacultiesController implements ExceptionHandlerController {
 
-    @Resource
-    private FacultyRepository facultyRepository;
-    @Resource
-    private MessageService messageService;
+    private final FacultyRepository facultyRepository;
+    private final MessageService messageService;
 
     @GetMapping
     public String getFaculties(Model model) {

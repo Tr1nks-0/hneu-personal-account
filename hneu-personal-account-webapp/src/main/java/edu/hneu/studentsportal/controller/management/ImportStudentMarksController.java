@@ -9,9 +9,11 @@ import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ImportService;
 import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.validator.ExcelValidator;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,16 +33,13 @@ import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_STUD
 @Log4j
 @Controller
 @RequestMapping(IMPORT_STUDENTS_MARKS_URL)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ImportStudentMarksController implements ExceptionHandlerController {
 
-    @Resource
-    private ImportService importService;
-    @Resource
-    private FileService fileService;
-    @Resource
-    private EmailService emailService;
-    @Resource
-    private MessageService messageService;
+    private final ImportService importService;
+    private final FileService fileService;
+    private final EmailService emailService;
+    private final MessageService messageService;
 
     @GetMapping
     public String importStudentMarks(Model model) {

@@ -24,7 +24,6 @@ class ImportServiceUnitSpockTest extends Specification {
     def disciplineRepositoryMock = Mock(DisciplineRepository)
     def studentRepositoryMock = Mock(StudentRepository)
     def disciplineMarkServiceMock = Mock(DisciplineMarkService)
-    def studentEmailReceivingServiceMock = Mock(StudentEmailReceivingService)
     def userServiceMock = Mock(UserService)
     def disciplineMock1 = Mock(Discipline)
     def disciplineMock2 = Mock(Discipline)
@@ -36,12 +35,11 @@ class ImportServiceUnitSpockTest extends Specification {
     def email = 'test@test.ua'
 
     def importService = new ImportService(
-            parserFactory: parseFactoryMock,
-            disciplineRepository: disciplineRepositoryMock,
-            disciplineMarkService: disciplineMarkServiceMock,
-            studentRepository: studentRepositoryMock,
-            userService: userServiceMock,
-            studentEmailReceivingService: studentEmailReceivingServiceMock
+            parseFactoryMock,
+            userServiceMock,
+            studentRepositoryMock,
+            disciplineMarkServiceMock,
+            disciplineRepositoryMock
     )
 
     def setup() {
@@ -94,15 +92,15 @@ class ImportServiceUnitSpockTest extends Specification {
             1 * studentRepositoryMock.save(studentMock)
     }
 
-    def 'should update created student with email when import student'() {
-        given:
-            studentProfileExcelParserMock.parse(fileMock) >> studentMock
-            studentEmailReceivingServiceMock.receiveStudentEmail(studentMock) >> email
-        when:
-            importService.importStudent(fileMock)
-        then:
-            1 * studentMock.setEmail(email)
-    }
+//    def 'should update created student with email when import student'() {
+//        given:
+//            studentProfileExcelParserMock.parse(fileMock) >> studentMock
+//            studentEmailReceivingServiceMock.receiveStudentEmail(studentMock) >> email
+//        when:
+//            importService.importStudent(fileMock)
+//        then:
+//            1 * studentMock.setEmail(email)
+//    }
 
     def 'should create user in the system when import student'() {
         given:

@@ -19,13 +19,10 @@ class StudentEmailReceivingServiceSpockTest extends Specification {
     def restTemplateMock = Mock(RestOperations)
     def restEntityMock = Mock(ResponseEntity)
 
-    def studentEmailReceivingService = new StudentEmailReceivingService(
-        messageService: messageServiceMock,
-        emailsIntegrationServiceUrl: EMAIL_INTEGRATION_SERVICE_URL,
-        restTemplate: restTemplateMock
-    )
+    def studentEmailReceivingService = new StudentEmailReceivingService(messageServiceMock, restTemplateMock)
 
     def setup() {
+        studentEmailReceivingService.emailsIntegrationServiceUrl = EMAIL_INTEGRATION_SERVICE_URL
         studentMock.getName() >> 'Олександр'
         studentMock.getSurname() >> 'Роздольський'
         studentMock.getGroup() >> groupMock

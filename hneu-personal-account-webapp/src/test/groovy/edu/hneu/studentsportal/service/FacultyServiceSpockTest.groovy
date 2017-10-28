@@ -13,10 +13,7 @@ class FacultyServiceSpockTest extends Specification {
     def specialityRepositoryMock = Mock(SpecialityRepository)
     def facultyMock = Mock(Faculty)
 
-    def facultyService = new FacultyService(
-        facultyRepository: facultyRepositoryMock,
-        specialityRepository: specialityRepositoryMock
-    )
+    def facultyService = new FacultyService(facultyRepositoryMock, specialityRepositoryMock)
 
     def 'should find faculty with specialities'() {
         given:

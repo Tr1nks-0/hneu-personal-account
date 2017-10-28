@@ -12,8 +12,10 @@ import edu.hneu.studentsportal.service.FacultyService;
 import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.service.SpecialityService;
 import javaslang.control.Try;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,20 +35,15 @@ import static java.util.Objects.isNull;
 @Log4j
 @Controller
 @RequestMapping(MANAGE_EDUCATION_PROGRAMS_URL)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class EducationProgramsController implements ExceptionHandlerController {
 
-    @Resource
-    private FacultyRepository facultyRepository;
-    @Resource
-    private FacultyService facultyService;
-    @Resource
-    private SpecialityRepository specialityRepository;
-    @Resource
-    private SpecialityService specialityService;
-    @Resource
-    private EducationProgramRepository educationProgramRepository;
-    @Resource
-    private MessageService messageService;
+    private final FacultyRepository facultyRepository;
+    private final FacultyService facultyService;
+    private final SpecialityRepository specialityRepository;
+    private final SpecialityService specialityService;
+    private final EducationProgramRepository educationProgramRepository;
+    private final MessageService messageService;
 
     @GetMapping
     public String getEducationPrograms(@RequestParam(required = false) Long facultyId, @RequestParam(required = false) Long specialityId, Model model) {

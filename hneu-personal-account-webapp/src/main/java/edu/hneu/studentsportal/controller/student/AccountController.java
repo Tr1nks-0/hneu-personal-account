@@ -8,8 +8,10 @@ import edu.hneu.studentsportal.service.CustomUserDetailsService;
 import edu.hneu.studentsportal.service.DisciplineMarkService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import edu.hneu.studentsportal.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,18 +33,14 @@ import static java.util.Objects.nonNull;
 @Log4j
 @Controller
 @RequestMapping("/account")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AccountController {
 
-    @Resource
-    private StudentRepository studentRepository;
-    @Resource
-    private UserService userService;
-    @Resource
-    private CustomUserDetailsService userDetailsService;
-    @Resource
-    private ScheduleService scheduleService;
-    @Resource
-    private DisciplineMarkService disciplineMarkService;
+    private final StudentRepository studentRepository;
+    private final UserService userService;
+    private final CustomUserDetailsService userDetailsService;
+    private final ScheduleService scheduleService;
+    private final DisciplineMarkService disciplineMarkService;
 
     @GetMapping
     public ModelAndView account(HttpSession session, Model model, Principal principal, HttpServletRequest request) {

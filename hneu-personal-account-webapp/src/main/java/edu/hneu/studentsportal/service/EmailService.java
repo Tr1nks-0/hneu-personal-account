@@ -6,8 +6,10 @@ import edu.hneu.studentsportal.feature.SiteFeature;
 import freemarker.template.Configuration;
 import javaslang.control.Try;
 import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -26,18 +28,13 @@ import static org.apache.commons.lang.CharEncoding.UTF_8;
 
 @Log4j
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class EmailService {
 
-    @Resource
-    private JavaMailSender mailSender;
-    @Resource
-    private EmailService emailService;
-    @Resource
-    private Configuration freeMarkerConfiguration;
-    @Resource
-    private MessageService messageService;
-    @Resource
-    private GmailService gmailService;
+    private final JavaMailSender mailSender;
+    private final Configuration freeMarkerConfiguration;
+    private final MessageService messageService;
+    private final GmailService gmailService;
 
     @Value("${communication.mail.decan}")
     public String decanMail;
@@ -47,7 +44,7 @@ public class EmailService {
     public void sendProfileWasCreatedEmail(Student student) {
         if (SiteFeature.SEND_EMAIL_AFTER_PROFILE_CREATION.isActive()) {
             Map<String, Object> modelForTemplate = ImmutableMap.of("name", student.getName());
-            String emailBody = emailService.buildHtmlForTemplate("profileWasCreatedEmailTemplate.ftl", modelForTemplate);
+            String emailBody = this.buildHtmlForTemplate("profileWasCreatedEmailTemplate.ftl", modelForTemplate);
             MimeMessage message = mimeMessageBuilder().of(mailSender.createMimeMessage())
                     .from(supportMail)
                     .to(student.getEmail())
@@ -62,7 +59,7 @@ public class EmailService {
     public void sendProfileWasChangedEmail(Student student) {
         if (SiteFeature.SEND_EMAIL_AFTER_PROFILE_MODIFICATION.isActive()) {
             Map<String, Object> modelForTemplate = ImmutableMap.of("message", messageService.userWasChangedEmailBody());
-            String emailBody = emailService.buildHtmlForTemplate("profileWasChangedEmailTemplate.ftl", modelForTemplate);
+            String emailBody = this.buildHtmlForTemplate("profileWasChangedEmailTemplate.ftl", modelForTemplate);
             MimeMessage message = mimeMessageBuilder().of(mailSender.createMimeMessage())
                     .from(supportMail)
                     .to(student.getEmail())

@@ -8,8 +8,10 @@ import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.factory.ParserFactory;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,20 +27,14 @@ import static org.apache.commons.lang.BooleanUtils.isFalse;
 
 @Log4j
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ImportService {
 
-    @Resource
-    private ParserFactory parserFactory;
-    @Resource
-    private UserService userService;
-    @Resource
-    private StudentRepository studentRepository;
-    @Resource
-    private DisciplineMarkService disciplineMarkService;
-    @Resource
-    private DisciplineRepository disciplineRepository;
-    @Resource
-    private StudentEmailReceivingService studentEmailReceivingService;
+    private final ParserFactory parserFactory;
+    private final UserService userService;
+    private final StudentRepository studentRepository;
+    private final DisciplineMarkService disciplineMarkService;
+    private final DisciplineRepository disciplineRepository;
 
     public Student importStudent(File file) {
         Student student = parserFactory.newStudentProfileExcelParser().parse(file);

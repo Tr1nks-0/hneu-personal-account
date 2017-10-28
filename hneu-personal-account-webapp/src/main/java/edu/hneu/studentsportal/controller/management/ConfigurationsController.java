@@ -2,22 +2,21 @@ package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.feature.SiteFeature;
 import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.service.UserService;
 import javaslang.control.Try;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.stream.Stream;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_CONFIGURATIONS_URL;
@@ -26,12 +25,11 @@ import static java.util.Objects.nonNull;
 @Log4j
 @Controller
 @RequestMapping(MANAGE_CONFIGURATIONS_URL)
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ConfigurationsController implements ExceptionHandlerController {
 
-    @Resource
-    private UserService userService;
-    @Resource
-    private MessageService messageService;
+    private final UserService userService;
+    private final MessageService messageService;
 
     @GetMapping
     public String getConfigs(Model model) {

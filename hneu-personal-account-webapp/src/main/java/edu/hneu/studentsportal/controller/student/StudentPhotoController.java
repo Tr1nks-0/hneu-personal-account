@@ -2,22 +2,23 @@ package edu.hneu.studentsportal.controller.student;
 
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.repository.StudentRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/students/{id}/photo")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentPhotoController {
 
-    @Resource
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     @GetMapping
     @SneakyThrows

@@ -13,9 +13,7 @@ class UserServiceSpockTest extends Specification {
     def userRepositoryMock = Mock(UserRepository)
     def userMock = Mock(User)
 
-    def userService = new UserService(
-            userRepository: userRepositoryMock
-    )
+    def userService = new UserService(userRepositoryMock)
 
     def 'should save user'() {
         when:

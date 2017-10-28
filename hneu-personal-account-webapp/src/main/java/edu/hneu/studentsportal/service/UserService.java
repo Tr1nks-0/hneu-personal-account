@@ -3,18 +3,21 @@ package edu.hneu.studentsportal.service;
 import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
+
 import static java.lang.String.format;
+
 @Log4j
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserService {
 
-    @Resource
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public void save(User user) {
         userRepository.save(user);

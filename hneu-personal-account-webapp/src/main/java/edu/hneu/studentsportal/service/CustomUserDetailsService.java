@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,10 +22,10 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service("userDetailsService ")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Resource
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
