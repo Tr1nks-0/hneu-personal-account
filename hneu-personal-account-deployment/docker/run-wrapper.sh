@@ -5,4 +5,4 @@ until $(nc -zv storage 3306);do
   sleep 3
 done
 
-java -Djava.security.egd=file:/dev/./urandom $1 -jar /app.jar
+java -Djava.security.egd=file:/dev/./urandom -jar /app.jar

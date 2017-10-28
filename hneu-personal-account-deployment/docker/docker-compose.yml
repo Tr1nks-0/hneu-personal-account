@@ -7,7 +7,7 @@ services:
     container_name: hneu-personal-account-webapp
     volumes:
       - ./run-wrapper.sh:/usr/local/bin/run-wrapper.sh
-    command: /bin/sh -c run-wrapper.sh -Dspring.profiles.active=
+    command: /bin/sh -c run-wrapper.sh
     links:
       - storage
     ports:
