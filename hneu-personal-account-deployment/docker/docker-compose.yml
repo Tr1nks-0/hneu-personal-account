@@ -24,7 +24,7 @@ services:
   storage:
     image: mysql
     container_name: hneu-personal-account-db
-    command: mysqld --character-set-server=utf8mb4
+    command: mysqld --character-set-server=utf8mb4 --max-allowed-packet=67108864
     volumes:
       - /tmp/mysql/data:/var/lib/mysql
     ports:
