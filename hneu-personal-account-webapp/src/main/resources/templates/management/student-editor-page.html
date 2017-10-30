@@ -28,10 +28,29 @@
                             <div class="col-md-12 panel-title">
                                 <span th:text="${student.surname + ' ' + student.name}"></span>
                                 <div class="pull-right">
-                                    <button id="delete-student" class="btn btn-xs btn-danger"
-                                            th:attr="data-student=${student.id},data-group=${student.group.id}">
+                                    <button type="button" class="btn btn-xs btn-danger" data-toggle="modal"
+                                            th:attr="data-target='#deleteStudentModal'">
                                         <i class="fa fa-remove"></i>
                                     </button>
+                                    <div class="modal fade" th:id="deleteStudentModal" role="dialog">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title" th:text="#{modal.delete.student.header}"></h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p th:text="#{modal.delete.student.body}"></p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal" th:text="#{btn.cancel}"></button>
+                                                    <button id="delete-student" type="button" class="btn btn-success" th:text="#{btn.ok}"
+                                                            th:attr="data-student=${student.id},data-group=${student.group.id}">
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <button id="save-student" class="btn btn-xs btn-success">
                                         <i class="fa fa-save"></i>
                                     </button>
