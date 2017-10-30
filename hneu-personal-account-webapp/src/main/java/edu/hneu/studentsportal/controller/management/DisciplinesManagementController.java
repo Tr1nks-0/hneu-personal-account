@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.EducationProgram;
 import edu.hneu.studentsportal.domain.Faculty;
@@ -29,7 +28,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -40,7 +38,7 @@ import static java.util.Objects.isNull;
 @Controller
 @RequestMapping(MANAGE_DISCIPLINES_URL)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class DisciplinesController implements ExceptionHandlerController {
+public class DisciplinesManagementController extends AbstractManagementController {
 
     private final FacultyRepository facultyRepository;
     private final FacultyService facultyService;
@@ -73,7 +71,7 @@ public class DisciplinesController implements ExceptionHandlerController {
 
     @PostMapping
     public String createDiscipline(@ModelAttribute @Valid Discipline discipline, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return prepareDisciplinesPage(model, discipline);
         } else {
             disciplineRepository.save(discipline);
@@ -99,7 +97,7 @@ public class DisciplinesController implements ExceptionHandlerController {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
-        return handleErrorInternal(e, messageService.disciplineExistsError(), redirectAttributes);
+        return handleErrorInternal(e, messageService.disciplinesExistError(), redirectAttributes);
     }
 
     @ExceptionHandler(CannotDeleteResourceException.class)

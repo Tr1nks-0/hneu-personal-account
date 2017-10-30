@@ -1,14 +1,11 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.domain.EducationProgram;
 import edu.hneu.studentsportal.domain.Faculty;
-import edu.hneu.studentsportal.domain.Group;
 import edu.hneu.studentsportal.domain.Speciality;
 import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.repository.EducationProgramRepository;
 import edu.hneu.studentsportal.repository.FacultyRepository;
-import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
 import edu.hneu.studentsportal.service.FacultyService;
 import edu.hneu.studentsportal.service.MessageService;
@@ -27,72 +24,72 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.List;
 
-import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_GROUPS_URL;
+import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_EDUCATION_PROGRAMS_URL;
 import static java.util.Objects.isNull;
 
 @Log4j
 @Controller
-@RequestMapping(MANAGE_GROUPS_URL)
+@RequestMapping(MANAGE_EDUCATION_PROGRAMS_URL)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class GroupsController implements ExceptionHandlerController {
+public class EducationProgramsManagementController extends AbstractManagementController {
 
     private final FacultyRepository facultyRepository;
     private final FacultyService facultyService;
     private final SpecialityRepository specialityRepository;
     private final SpecialityService specialityService;
     private final EducationProgramRepository educationProgramRepository;
-    private final GroupRepository groupRepository;
     private final MessageService messageService;
 
     @GetMapping
-    public String getGroups(@RequestParam(required = false) Long facultyId,
-                            @RequestParam(required = false) Long specialityId,
-                            @RequestParam(required = false) Long educationProgramId,
-                            Model model) {
-        if (facultyRepository.findAll().isEmpty())
+    public String getEducationPrograms(@RequestParam(required = false) Long facultyId, @RequestParam(required = false) Long specialityId, Model model) {
+        List<Faculty> faculties = facultyRepository.findAll();
+        if (faculties.isEmpty())
             return "redirect:/management/faculties";
         Faculty faculty = facultyService.findByIdWithSpecialitiesOrDefault(facultyId);
         if (isNull(faculty))
             return "redirect:/management/specialities";
         Speciality speciality = specialityService.findByIdOrDefault(specialityId, faculty);
-        EducationProgram educationProgram = educationProgramRepository.findById(educationProgramId);
-        Group group = new Group();
-        group.setSpeciality(speciality);
-        group.setEducationProgram(educationProgram);
-        return prepareGroupPage(model, group);
+        return prepareEducationProgramPage(model, new EducationProgram(speciality));
     }
 
     @PostMapping
-    public String createGroup(@ModelAttribute @Valid Group group, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+    public String createEducationProgram(@ModelAttribute @Valid EducationProgram educationProgram, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return prepareGroupPage(model, group);
+            return prepareEducationProgramPage(model, educationProgram);
         } else {
-            groupRepository.save(group);
-            log.info(String.format("New [%s] has been added", group.toString()));
-            redirectAttributes.addFlashAttribute("success", "success.add.discipline");
-            redirectAttributes.addAttribute("facultyId", group.getSpeciality().getFaculty().getId());
-            redirectAttributes.addAttribute("specialityId", group.getSpeciality().getId());
-            Optional.ofNullable(group.getEducationProgram()).map(EducationProgram::getId).ifPresent(id ->
-                    redirectAttributes.addAttribute("educationProgramId", id));
-            return "redirect:/management/groups";
+            educationProgramRepository.save(educationProgram);
+            log.info(String.format("New [%s] has been added", educationProgram.toString()));
+            redirectAttributes.addFlashAttribute("success", "success.add.education.program");
+            return "redirect:/management/education-programs?facultyId=" + educationProgram.getSpeciality().getFaculty().getId()
+                    + "&specialityId=" + educationProgram.getSpeciality().getId();
         }
     }
 
     @PostMapping("/{id}/delete")
     @ResponseBody
     public void delete(@PathVariable long id) {
-        Try.run(() -> groupRepository.delete(id)).onFailure(e -> {
+        Try.run(() -> educationProgramRepository.delete(id)).onFailure(e -> {
             throw new CannotDeleteResourceException(e);
         });
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
+        return handleErrorInternal(e, messageService.educationProgramExistsError(), redirectAttributes);
+    }
+
+    @ExceptionHandler(CannotDeleteResourceException.class)
+    public ResponseEntity<String> handleError(CannotDeleteResourceException e) {
+        log.warn("Cannot delete education program due to: " + e.getMessage(), e);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
     @Override
     public String baseUrl() {
-        return MANAGE_GROUPS_URL;
+        return MANAGE_EDUCATION_PROGRAMS_URL;
     }
 
     @Override
@@ -100,28 +97,15 @@ public class GroupsController implements ExceptionHandlerController {
         return log;
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
-        return handleErrorInternal(e, messageService.groupExistsError(), redirectAttributes);
-    }
-
-    @ExceptionHandler(CannotDeleteResourceException.class)
-    public ResponseEntity<String> handleError(CannotDeleteResourceException e) {
-        log.warn("Cannot delete group due to: " + e.getMessage(), e);
-        return new ResponseEntity<>(HttpStatus.CONFLICT);
-    }
-
-    private String prepareGroupPage(Model model, Group group) {
-        Speciality speciality = group.getSpeciality();
+    private String prepareEducationProgramPage(Model model, EducationProgram educationProgram) {
+        Speciality speciality = educationProgram.getSpeciality();
         Faculty faculty = speciality.getFaculty();
-        model.addAttribute("group", group);
+        model.addAttribute("educationProgram", educationProgram);
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("selectedFaculty", faculty);
         model.addAttribute("specialities", specialityRepository.findAllByFacultyId(faculty.getId()));
         model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
-        model.addAttribute("groups", groupRepository.findBySpecialityAndEducationProgram(speciality, group.getEducationProgram()));
-        model.addAttribute("title", "management-groups");
-        return "management/groups-page";
+        model.addAttribute("title", "management-education-programs");
+        return "management/education-programs-page";
     }
-
 }

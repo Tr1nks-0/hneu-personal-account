@@ -12,8 +12,10 @@ import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import edu.hneu.studentsportal.service.DisciplineMarkService;
 import edu.hneu.studentsportal.conditions.DisciplineConditions;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +36,7 @@ import static org.apache.commons.lang.math.NumberUtils.isNumber;
 @Log4j
 @Component
 @Scope("prototype")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, List<DisciplineMark>>> {
 
     private static final int MAX_NUMBER_OF_ITERATIONS = 100;
@@ -50,19 +53,15 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     private static final String FILE_END_PREFIX = "Декан факультету";
     private static final String DISCIPLINES_HEADER = "Cередній бал за дисциплінами";
 
-    @Resource
-    private GroupRepository groupRepository;
-    @Resource
-    private DisciplineRepository disciplineRepository;
-    @Resource
-    private StudentRepository studentRepository;
-    @Resource
-    private DisciplineMarkService disciplineMarkService;
+    private final GroupRepository groupRepository;
+    private final DisciplineRepository disciplineRepository;
+    private final StudentRepository studentRepository;
+    private final DisciplineMarkService disciplineMarkService;
 
     @Override
     public Map<Student, List<DisciplineMark>> extractModel() {
         if (isFalse(getStringCellValue(7, 4).contains(DISCIPLINES_HEADER)))
-            throw new IllegalArgumentException(messageService.invalidFile());
+            throw new IllegalStateException(messageService.invalidFile());
 
         List<Student> students = studentRepository.findByGroup(getGroup());
         List<Discipline> disciplines = getDisciplines();
@@ -84,7 +83,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
 
     private Group getGroup() {
         final String groupName = getStringCellValue(GROUP_ID_ROW_INDEX, GROUP_NAME_CELL).toLowerCase().replace(GROUP_PREFIX, StringUtils.EMPTY).trim();
-        return groupRepository.findByName(groupName).orElseThrow(() -> new IllegalArgumentException(messageService.invalidStudentGroupError(groupName)));
+        return groupRepository.findByName(groupName).orElseThrow(() -> new IllegalStateException(messageService.invalidStudentGroupError(groupName)));
     }
 
     private List<Discipline> getDisciplines() {
@@ -104,7 +103,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
         if (DisciplineConditions.isMasterDisciplineLabel(disciplineName))
             return new Discipline(disciplineName, DisciplineType.MAGMAYNOR, getCourse(), getSemester());
         else
-            return findDiscipline(disciplineName).orElseThrow(() -> new IllegalArgumentException(messageService.disciplineNotFoundError(disciplineName)));
+            return findDiscipline(disciplineName).orElseThrow(() -> new IllegalStateException(messageService.disciplineNotFoundError(disciplineName)));
     }
 
     private Optional<Discipline> findDiscipline(String disciplineName) {
@@ -125,7 +124,7 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
                 .filter(i -> getStringCellValue(i).contains(NUMBER_MARKER))
                 .map(i -> i + 2)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(messageService.invalidFile()));
+                .orElseThrow(() -> new IllegalStateException(messageService.invalidFile()));
     }
 
     private boolean isNotEndFile(int row) {

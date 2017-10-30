@@ -8,7 +8,9 @@ import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import javaslang.control.Try;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -25,14 +27,12 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 @Log4j
 @Component
 @Scope("prototype")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentsChoiceExcelParser extends AbstractExcelParser<Map<Student, List<Discipline>>> {
 
-    @Resource
-    private StudentRepository studentRepository;
-    @Resource
-    private GroupRepository groupRepository;
-    @Resource
-    private DisciplineRepository disciplineRepository;
+    private final StudentRepository studentRepository;
+    private final GroupRepository groupRepository;
+    private final DisciplineRepository disciplineRepository;
 
     @Override
     public Map<Student, List<Discipline>> extractModel() {
@@ -83,7 +83,7 @@ public class StudentsChoiceExcelParser extends AbstractExcelParser<Map<Student, 
         return discipline.orElseGet(() -> {
             String masterDisciplineTemplate = "МАГ" + getIntegerCellValue(indexer, 8);
             Discipline masterDiscipline = disciplineRepository.findByCodeAndCourseAndSemesterAndSpecialityAndEducationProgram(masterDisciplineTemplate, course, semester, speciality, educationProgram)
-                    .orElseThrow(() -> new IllegalStateException(format("Cannot find discipline for code:", code)));
+                    .orElseThrow(() -> new IllegalStateException("Cannot find discipline for code: " +  code));
 
             Discipline newDiscipline = Discipline.builder()
                     .code(code)

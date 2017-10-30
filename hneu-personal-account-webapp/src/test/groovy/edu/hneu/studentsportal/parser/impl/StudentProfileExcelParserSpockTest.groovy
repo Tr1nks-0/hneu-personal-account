@@ -2,6 +2,7 @@ package edu.hneu.studentsportal.parser.impl
 
 import edu.hneu.studentsportal.domain.*
 import edu.hneu.studentsportal.repository.*
+import edu.hneu.studentsportal.service.MessageService
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -13,6 +14,7 @@ class StudentProfileExcelParserSpockTest extends Specification {
 
     @Shared def bachelorGroupMock = Mock(Group)
     @Shared def masterGroupMock = Mock(Group)
+
     def facultyMock = Mock(Faculty)
     def specialityMock = Mock(Speciality)
     def educationProgramMock = Mock(EducationProgram)
@@ -22,13 +24,15 @@ class StudentProfileExcelParserSpockTest extends Specification {
     def facultyRepositoryMock = Mock(FacultyRepository)
     def specialityRepositoryMock = Mock(SpecialityRepository)
     def educationProgramRepositoryMock = Mock(EducationProgramRepository)
+    def messageServiceMock = Mock(MessageService)
 
     def studentProfileExcelParser = new StudentProfileExcelParser(
-            groupRepository: groupRepositoryMock,
-            disciplineRepository: disciplineRepositoryMock,
-            facultyRepository: facultyRepositoryMock,
-            specialityRepository: specialityRepositoryMock,
-            educationProgramRepository: educationProgramRepositoryMock,
+            groupRepositoryMock,
+            disciplineRepositoryMock,
+            facultyRepositoryMock,
+            specialityRepositoryMock,
+            educationProgramRepositoryMock,
+            messageServiceMock
     )
 
     def setup() {

@@ -15,22 +15,15 @@ class StudentsChoiceExcelParserSpockTest extends Specification {
     static final String GROUP1 = '8.02.22.16.04'
     static final String GROUP2 = '8.04.51.16.04'
 
-    @Shared
-    def groupMock = Mock(Group)
-    @Shared
-    def studentMock = Mock(Student)
-    @Shared
-    def discipline = Mock(Discipline)
+    @Shared def groupMock = Mock(Group)
+    @Shared def studentMock = Mock(Student)
+    @Shared def discipline = Mock(Discipline)
 
     def studentRepositoryMock = Mock(StudentRepository)
     def groupRepositoryMock = Mock(GroupRepository)
     def disciplineRepositoryMock = Mock(DisciplineRepository)
 
-    def studentChoiceExcelParser = new StudentsChoiceExcelParser(
-            studentRepository: studentRepositoryMock,
-            groupRepository: groupRepositoryMock,
-            disciplineRepository: disciplineRepositoryMock
-    )
+    def studentChoiceExcelParser = new StudentsChoiceExcelParser(studentRepositoryMock, groupRepositoryMock, disciplineRepositoryMock)
 
     def setup() {
         groupRepositoryMock.findByName(GROUP1) >> Optional.empty()

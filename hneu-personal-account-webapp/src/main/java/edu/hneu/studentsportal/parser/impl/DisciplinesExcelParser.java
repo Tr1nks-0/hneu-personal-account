@@ -12,7 +12,9 @@ import edu.hneu.studentsportal.parser.Indexer;
 import edu.hneu.studentsportal.repository.EducationProgramRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
 import javaslang.control.Try;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +29,11 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 @Log4j
 @Component
 @Scope("prototype")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DisciplinesExcelParser extends AbstractExcelParser<List<Discipline>> {
 
-    @Resource
-    private SpecialityRepository specialityRepository;
-    @Resource
-    private EducationProgramRepository educationProgramRepository;
+    private final SpecialityRepository specialityRepository;
+    private final EducationProgramRepository educationProgramRepository;
 
     @Override
     public List<Discipline> extractModel() {

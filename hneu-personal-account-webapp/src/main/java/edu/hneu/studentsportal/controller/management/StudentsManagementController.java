@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.domain.Group;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
@@ -17,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -27,7 +25,7 @@ import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_STUD
 @Controller
 @RequestMapping(MANAGE_STUDENTS_URL)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class StudentsController implements ExceptionHandlerController {
+public class StudentsManagementController extends AbstractManagementController {
 
     private final StudentRepository studentRepository;
     private final FacultyRepository facultyRepository;
@@ -70,7 +68,6 @@ public class StudentsController implements ExceptionHandlerController {
         studentRepository.delete(id);
         log.warn(String.format("Student[%s] has been deleted", id));
     }
-
 
     @Override
     public String baseUrl() {

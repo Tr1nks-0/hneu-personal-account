@@ -41,8 +41,8 @@ public interface MessageService {
     @Message("error.education.program.exists")
     String educationProgramExistsError();
 
-    @Message("error.discipline.exists")
-    String disciplineExistsError();
+    @Message("error.disciplines.exist")
+    String disciplinesExistError();
 
     @Message("invalid.student.profile.faculty")
     String invalidStudentFacultyError();

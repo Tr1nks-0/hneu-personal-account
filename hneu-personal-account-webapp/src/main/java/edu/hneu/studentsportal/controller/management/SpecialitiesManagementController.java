@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.domain.Faculty;
 import edu.hneu.studentsportal.domain.Speciality;
 import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
@@ -21,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -31,7 +29,7 @@ import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_SPEC
 @Controller
 @RequestMapping(MANAGE_SPECIALITIES_URL)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class SpecialitiesController implements ExceptionHandlerController {
+public class SpecialitiesManagementController extends AbstractManagementController {
 
     private final FacultyRepository facultyRepository;
     private final SpecialityRepository specialityRepository;
@@ -40,7 +38,7 @@ public class SpecialitiesController implements ExceptionHandlerController {
     @GetMapping
     public String getSpecialities(@RequestParam(required = false) Long facultyId, Model model) {
         List<Faculty> faculties = facultyRepository.findAll();
-        if(faculties.isEmpty())
+        if (faculties.isEmpty())
             return "redirect:/management/faculties";
         Faculty faculty = facultyRepository.findById(facultyId).orElseGet(() -> faculties.get(0));
         return prepareSpecialityPage(model, new Speciality(faculty));
@@ -48,7 +46,7 @@ public class SpecialitiesController implements ExceptionHandlerController {
 
     @PostMapping
     public String createSpeciality(@ModelAttribute @Valid Speciality speciality, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return prepareSpecialityPage(model, speciality);
         } else {
             specialityRepository.save(speciality);

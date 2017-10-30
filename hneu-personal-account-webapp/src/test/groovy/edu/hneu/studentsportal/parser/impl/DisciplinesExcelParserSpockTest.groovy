@@ -16,10 +16,7 @@ class DisciplinesExcelParserSpockTest extends Specification {
     def specialityMock = Mock(Speciality)
     def educationProgramMock = Mock(EducationProgram)
 
-    def disciplinesExcelParser = new DisciplinesExcelParser(
-            specialityRepository: specialityRepositoryMock,
-            educationProgramRepository: educationProgramRepositoryMock
-    )
+    def disciplinesExcelParser = new DisciplinesExcelParser(specialityRepositoryMock, educationProgramRepositoryMock)
 
     def setup() {
         specialityRepositoryMock.findById(122) >> Optional.of(specialityMock)

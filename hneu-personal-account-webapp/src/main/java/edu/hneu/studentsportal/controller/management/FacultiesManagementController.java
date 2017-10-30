@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.domain.Faculty;
 import edu.hneu.studentsportal.exceptions.CannotDeleteResourceException;
 import edu.hneu.studentsportal.repository.FacultyRepository;
@@ -19,7 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_FACULTIES_URL;
@@ -28,7 +26,7 @@ import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_FACU
 @Controller
 @RequestMapping(MANAGE_FACULTIES_URL)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class FacultiesController implements ExceptionHandlerController {
+public class FacultiesManagementController extends AbstractManagementController {
 
     private final FacultyRepository facultyRepository;
     private final MessageService messageService;

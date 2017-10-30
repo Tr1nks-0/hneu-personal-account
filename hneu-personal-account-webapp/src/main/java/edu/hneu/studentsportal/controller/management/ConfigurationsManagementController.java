@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.controller.ExceptionHandlerController;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.feature.SiteFeature;
 import edu.hneu.studentsportal.service.MessageService;
@@ -26,7 +25,7 @@ import static java.util.Objects.nonNull;
 @Controller
 @RequestMapping(MANAGE_CONFIGURATIONS_URL)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ConfigurationsController implements ExceptionHandlerController {
+public class ConfigurationsManagementController extends AbstractManagementController {
 
     private final UserService userService;
     private final MessageService messageService;
