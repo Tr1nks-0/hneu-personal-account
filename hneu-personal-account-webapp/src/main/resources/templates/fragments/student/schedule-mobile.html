@@ -1,0 +1,27 @@
+<div xmlns:th="http://www.thymeleaf.org" class="panel-group" id="accordion">
+    <div class="panel panel-default" th:each="day : ${days}"
+         th:if="${pairsCountPerDay['__${day.day}__'] > 0}">
+        <div class="panel-heading">
+            <div>
+                <a data-toggle="collapse" data-parent="#accordion" th:href="${'#' + day.name}">
+                    <span th:text="${day.name}"></span>
+                    <span th:text="${day.displayName}"></span>
+                    <span class="pull-right badge badge-light" th:text="${pairsCountPerDay['__${day.day}__']}"></span>
+                </a>
+            </div>
+        </div>
+        <div th:id="${day.name}" class="panel-collapse collapse">
+            <div th:each="pairNumber : ${#numbers.sequence( 1, 7)}" th:remove="tag">
+                <div th:if="${!#maps.isEmpty(pairs[__${pairNumber}__])} and ${pairs[__${pairNumber}__][__${day.day}__] != null}"
+                     th:with="pair=${pairs[__${pairNumber}__][__${day.day}__]}" class="panel-body">
+                    <div th:if="${!#lists.isEmpty(pair.scheduleElement)}" th:remove="tag">
+                        <div class="pair" th:each="scheduleElement : ${pair.scheduleElement}"
+                             th:include="fragments/student/schedule-mobile-pair-item"></div>
+                    </div>
+                    <div class="pair" th:if="${#lists.isEmpty(pair.scheduleElement)}"
+                         th:include="fragments/student/schedule-mobile-pair-item"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

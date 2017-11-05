@@ -1,0 +1,81 @@
+<div class="table-responsive" xmlns:th="http://www.thymeleaf.org">
+    <table class="table schedule-table table-striped table-hover">
+        <thead>
+        <tr>
+            <th></th>
+            <th th:each="day : ${days}" th:if="${pairsCountPerDay['__${day.day}__'] > 0}">
+                <span class="day" th:text="${day.name}"></span><br/>
+                <span class="date" th:text="${day.displayName}"></span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="pairNumber : ${#numbers.sequence( 1, 7)}" th:if="${!#maps.isEmpty(pairs[__${pairNumber}__])}">
+            <td><span class="pair-number" th:text="${pairNumber}"></span></td>
+            <div th:each="day : ${#numbers.sequence(1, 7)}" th:if="${pairsCountPerDay['__${day}__'] > 0}" th:remove="tag">
+                <div th:if="${!#maps.isEmpty(pairs[__${pairNumber}__])} and ${pairs[__${pairNumber}__][__${day}__] != null}"
+                     th:with="pair=${pairs[__${pairNumber}__][__${day}__]}"
+                     th:remove="tag">
+                    <td class="pair pair-multy" th:if="${!#lists.isEmpty(pair.scheduleElement)}">
+                        <div class="pair-description-multy"
+                             th:each="scheduleElement : ${pair.scheduleElement}">
+                            <p><b th:text="${scheduleElement.subject.shortName}"></b></p>
+                            <p class="info-tag">
+                                <i class="fa fa-graduation-cap"></i>
+                                <span th:text="${scheduleElement.teacher.displayName}"></span>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="info-tag"
+                                       th:each="group : ${scheduleElement.groups.group}"
+                                       th:if="${#strings.equals(group.main, 'true')}">
+                                        <i class="fa fa-group"></i>
+                                        <span th:text="${group.displayName}"></span>
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="info-tag">
+                                        <i class="fa fa-map-marker"></i>
+                                        <span th:text="${scheduleElement.room.shortName}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="type-small">
+                                <p class="label label-info"
+                                   th:text="${scheduleElement.type.value}"></p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="pair" th:if="${#lists.isEmpty(pair.scheduleElement)}">
+                        <div class="pair-description">
+                            <b th:text="${pair.subject.value}"></b><br/>
+                            <div class="time">
+                                <p th:text="${pair.start + '-' + pair.breakStart}"></p>
+                                <p th:text="${pair.breakEnd + '-' + pair.end}"></p>
+                            </div>
+                            <p class="info-tag">
+                                <i class="fa fa-graduation-cap"></i>
+                                <span th:text="${pair.teacher.displayName}"></span>
+                            </p>
+                            <p class="info-tag">
+                                <i class="fa fa-map-marker"></i>
+                                <span th:text="${pair.room.shortName}"></span>
+                            </p>
+                            <p th:each="group : ${pair.groups.group}"
+                               th:if="${#strings.equals(group.main, 'true')}"
+                               class="info-tag">
+                                <i class="fa fa-group"></i>
+                                <span th:text="${group.displayName}"></span>
+                            </p>
+                            <div class="type">
+                                <span class="label label-info" th:text="${pair.type.value}"></span>
+                            </div>
+                        </div>
+                    </td>
+                </div>
+                <td th:if="${#maps.isEmpty(pairs[__${pairNumber}__])} or ${pairs[__${pairNumber}__][__${day}__] == null}"></td>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+</div>

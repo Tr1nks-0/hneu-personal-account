@@ -2,6 +2,7 @@ package edu.hneu.studentsportal.controller.student;
 
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.domain.dto.schedule.Schedule;
+import edu.hneu.studentsportal.domain.dto.schedule.ScheduleElement;
 import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+
+import java.util.Map;
 
 import static java.util.Objects.nonNull;
 
@@ -36,6 +39,7 @@ public class ScheduleAccountController {
         Schedule schedule = scheduleService.load(profile.getGroup().getId(), week, profile.getScheduleStudentId());
         if (nonNull(schedule)) {
             model.addAttribute("pairs", scheduleService.getPairs(schedule));
+            model.addAttribute("pairsCountPerDay", scheduleService.getPairsCountPerDay(schedule));
             model.addAttribute("days", schedule.getWeek().getDay());
         } else {
             model.addAttribute("error", messageService.somethingWentWrong());

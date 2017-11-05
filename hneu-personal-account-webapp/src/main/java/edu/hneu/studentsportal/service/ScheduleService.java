@@ -19,6 +19,8 @@ import java.util.stream.IntStream;
 import static java.time.temporal.ChronoUnit.WEEKS;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 public class ScheduleService {
@@ -71,5 +73,11 @@ public class ScheduleService {
             pairsPerDays.put(Integer.valueOf(scheduleElement.getDay()), scheduleElement);
             pairs.put(pairNumber, pairsPerDays);
         };
+    }
+
+    public Map<String, Long> getPairsCountPerDay(Schedule schedule) {
+        return schedule.getScheduleElements().getScheduleElement()
+                .stream()
+                .collect(groupingBy(s -> s.getDay().toString(), counting()));
     }
 }

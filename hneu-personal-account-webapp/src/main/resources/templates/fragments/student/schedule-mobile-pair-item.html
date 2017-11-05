@@ -1,0 +1,35 @@
+<div xmlns:th="http://www.thymeleaf.org" class="pair-description">
+    <div class="col-xs-12 col-sm-12 discipline-label">
+        <b th:text="${pair.subject.value}"></b>
+        <span class="pair-type label label-info pull-right"
+              th:text="${pair.type.value}"></span>
+    </div>
+    <table>
+        <tr class="info-tag">
+            <td class="text-center"><i class="fa fa-map-marker"></i></td>
+            <td><span th:text="${pair.room.shortName}"></span></td>
+        </tr>
+        <tr class="info-tag">
+            <td class="text-center"><i class="fa fa-graduation-cap"></i></td>
+            <td><span th:text="${pair.teacher.displayName}"></span></td>
+        </tr>
+        <tr class="info-tag">
+            <td class="text-center"><i class="fa fa-group"></i></td>
+            <td>
+            <span th:each="group : ${pair.groups.group}"
+                  th:if="${#strings.equals(group.main, 'true')}"
+                  th:text="${group.displayName}"></span>
+                <br/>
+            </td>
+        </tr>
+        <tr class="info-tag">
+            <td class="text-center" style="vertical-align: top !important;"><i
+                    class="fa fa-clock-o"></i></td>
+            <td>
+                <span th:text="${pair.start + '-' + pair.breakStart}"></span>
+                <br/>
+                <span th:text="${pair.breakEnd + '-' + pair.end}"></span>
+            </td>
+        </tr>
+    </table>
+</div>
