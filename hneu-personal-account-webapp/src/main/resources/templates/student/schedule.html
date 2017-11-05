@@ -22,7 +22,7 @@
             </div>
 
             <div th:if="${#lists.isEmpty(pairs)}">
-
+                <h4 th:text="#{student.schedule.pairs.list.empty}"></h4>
             </div>
 
             <div th:include="fragments/error" th:remove="tag"></div>
