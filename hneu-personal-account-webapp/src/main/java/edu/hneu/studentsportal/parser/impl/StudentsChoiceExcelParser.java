@@ -10,11 +10,11 @@ import edu.hneu.studentsportal.repository.StudentRepository;
 import javaslang.control.Try;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -69,8 +69,8 @@ public class StudentsChoiceExcelParser extends AbstractExcelParser<Map<Student, 
     private Student findStudent(Indexer indexer, Group group) {
         String surname = getStringCellValue(indexer);
         String fullName = getString1CellValue(indexer) + " " + getString2CellValue(indexer);
-        Optional<Student> student = studentRepository.findByNameAndSurnameAndGroup(fullName, surname, group);
-        return student.orElseThrow(() -> new IllegalStateException(format("Cannot find student for full name[%s %s] and group[%s]", fullName, surname, group.getName())));
+        return studentRepository.findByNameAndSurnameAndGroup(fullName, surname, group)
+                .orElseThrow(() -> new IllegalStateException(format("Cannot find student for full name[%s %s] and group[%s]", fullName, surname, group.getName())));
     }
 
     private Discipline findDiscipline(Indexer indexer, Group group) {
@@ -79,28 +79,35 @@ public class StudentsChoiceExcelParser extends AbstractExcelParser<Map<Student, 
         int semester = getIntegerCellValue(indexer, 7);
         Speciality speciality = group.getSpeciality();
         EducationProgram educationProgram = group.getEducationProgram();
-        Optional<Discipline> discipline = disciplineRepository.findByCodeAndCourseAndSemesterAndSpecialityAndEducationProgram(code, course, semester, speciality, educationProgram);
-        return discipline.orElseGet(() -> {
-            String masterDisciplineTemplate = "МАГ" + getIntegerCellValue(indexer, 8);
-            Discipline masterDiscipline = disciplineRepository.findByCodeAndCourseAndSemesterAndSpecialityAndEducationProgram(masterDisciplineTemplate, course, semester, speciality, educationProgram)
-                    .orElseThrow(() -> new IllegalStateException("Cannot find discipline for code: " +  code));
+        Discipline discipline = findDiscipline(code, course, semester, speciality, educationProgram);
+        String label = getStringCellValue(indexer, 5);
+        if (StringUtils.equalsIgnoreCase(discipline.getLabel(), label))
+            return discipline;
+        else
+            return createNewDiscipline(discipline, label);
+    }
 
-            Discipline newDiscipline = Discipline.builder()
-                    .code(code)
-                    .label(getStringCellValue(indexer, 5))
-                    .credits(masterDiscipline.getCredits())
-                    .course(masterDiscipline.getCourse())
-                    .semester(masterDiscipline.getSemester())
-                    .educationProgram(masterDiscipline.getEducationProgram())
-                    .speciality(masterDiscipline.getSpeciality())
-                    .controlForm(masterDiscipline.getControlForm())
-                    .type(masterDiscipline.getType())
-                    .build();
+    private Discipline createNewDiscipline(Discipline discipline, String label) {
+        Discipline newDiscipline = Discipline.builder()
+                .code(discipline.getCode())
+                .label(label)
+                .credits(discipline.getCredits())
+                .course(discipline.getCourse())
+                .semester(discipline.getSemester())
+                .educationProgram(discipline.getEducationProgram())
+                .speciality(discipline.getSpeciality())
+                .controlForm(discipline.getControlForm())
+                .type(discipline.getType())
+                .build();
+        disciplineRepository.save(newDiscipline);
+        log.info(format("New discipline[%s] was created.", newDiscipline));
+        return newDiscipline;
+    }
 
-            disciplineRepository.save(newDiscipline);
-            log.info(format("New discipline[%s] was created.", newDiscipline));
-            return newDiscipline;
-        });
+    private Discipline findDiscipline(String code, int course, int semester, Speciality speciality, EducationProgram educationProgram) {
+        return disciplineRepository
+                .findByCodeAndCourseAndSemesterAndSpecialityAndEducationProgram(code, course, semester, speciality, educationProgram)
+                .orElseThrow(() -> new IllegalStateException(format("Cannot find discipline: code=%s, course=%s, semester=%s, speciality=%s, educationProgram=%s", code, course, semester, speciality, educationProgram)));
     }
 
     private void putOrUpdateStudentsChoice(Map<Student, List<Discipline>> choice, Student student, Discipline discipline) {
