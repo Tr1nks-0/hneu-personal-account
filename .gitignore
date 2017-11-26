@@ -3,4 +3,4 @@
 /hneu-personal-account-webapp/build/
 /hneu-personal-account-webapp/node_modules/
 /hneu-personal-account-deployment/build/
-/hneu-personal-account-webapp/package-lock.json
+/hneu-personal-account-deployment/docker/.env
