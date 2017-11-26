@@ -1,6 +1,10 @@
 .idea/
 .gradle/
-/hneu-personal-account-webapp/build/
-/hneu-personal-account-webapp/node_modules/
 /hneu-personal-account-deployment/build/
 /hneu-personal-account-deployment/docker/.env
+/hneu-personal-account-webapp/build/
+/hneu-personal-account-webapp/node_modules/
+/hneu-personal-account-webapp/src/main/resources/theme/css/main.css
+/hneu-personal-account-webapp/src/main/resources/theme/css/main.min.css
+/hneu-personal-account-webapp/src/main/resources/theme/js/main.js
+/hneu-personal-account-webapp/src/main/resources/theme/js/main.min.js
