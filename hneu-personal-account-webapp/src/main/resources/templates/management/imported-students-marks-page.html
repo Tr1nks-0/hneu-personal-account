@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://java.sun.com/JSP/Page">
+<html xmlns:th="http://www.thymeleaf.org">
 <head th:include="fragments/head"></head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -11,7 +11,7 @@
 
             <ol class="breadcrumb panel panel-default">
                 <li><i class="fa fa-home"></i></li>
-                <li><a href="/management/import/student-marks"
+                <li><a th:href="@{/management/import/student-marks}"
                        th:text="#{form.label.management.import.totals}"></a></li>
                 <li class="active" th:text="#{form.label.management.imported.student.marks}"></li>
             </ol>
@@ -30,15 +30,15 @@
 
                 <div class="panel-body">
                     <ul class="list-group" id="accordion" th:if="${!#maps.isEmpty(studentsMarks)}">
-                        <li class="list-group-item" th:each="studentMarks : ${studentsMarks}">
+                        <li class="list-group-item" th:each="studentMarks,i : ${studentsMarks}">
                             <div th:with="student=${studentMarks.key}">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse${i.index}"
+                                <a data-toggle="collapse" data-parent="#accordion" th:href="@{#collapse__${i.index}__}"
                                    th:text="${student.surname + ' ' + student.name}"></a>
-                                <a href="/management/students/${student.id}" class="float-right">
+                                <a th:href="@{/management/students/__${student.id}__}" class="float-right">
                                     <i class="fa fa-edit"></i>
                                 </a>
                             </div>
-                            <div id="collapse${i.index}" class="panel-collapse collapse">
+                            <div th:id="'collapse' + ${i.index}" class="panel-collapse collapse">
                                 <table class="table no-margin">
                                     <tr th:each="mark : ${studentMarks.value}"
                                         th:if="${#strings.equals(mark.previousMark, mark.mark)}">

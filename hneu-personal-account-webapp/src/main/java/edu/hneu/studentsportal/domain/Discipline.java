@@ -45,12 +45,12 @@ public class Discipline {
     @Max(value = 2)
     private Integer semester;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "education_program_id")
     private EducationProgram educationProgram;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Speciality speciality;
 
     @NotNull

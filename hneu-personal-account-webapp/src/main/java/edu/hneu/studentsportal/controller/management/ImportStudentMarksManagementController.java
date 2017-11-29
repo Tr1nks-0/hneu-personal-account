@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORTED_STUDENTS_MARKS_URL;
 import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_STUDENTS_MARKS_URL;
 
 @Log4j
@@ -43,19 +44,24 @@ public class ImportStudentMarksManagementController extends AbstractManagementCo
     @GetMapping
     public String importStudentMarks(Model model) {
         populateTitle(model);
-        return "management/import-student-marks-page";
+        return "management/import-students-marks-page";
     }
 
     @PostMapping
     @SneakyThrows
-    public String importStudentMarks(@RequestParam("file") MultipartFile multipartFile, Model model) {
+    public String importStudentMarks(@RequestParam("file") MultipartFile multipartFile, RedirectAttributes redirectAttributes) {
         File file = fileService.getFile(multipartFile);
         ExcelValidator.validate(file);
         Map<Student, List<DisciplineMark>> studentsMarks = fileService.perform(file, importService::importStudentMarks);
         studentsMarks.keySet().forEach(emailService::sendProfileWasChangedEmail);
-        model.addAttribute("studentsMarks", studentsMarks);
+        redirectAttributes.addFlashAttribute("studentsMarks", studentsMarks);
+        return "redirect:" + IMPORTED_STUDENTS_MARKS_URL;
+    }
+
+    @GetMapping("/imported")
+    public String importedStudentMarks(Model model) {
         populateTitle(model);
-        return "management/imported-students-marks";
+        return "management/imported-students-marks-page";
     }
 
     @ExceptionHandler({IllegalArgumentException.class, InvalidFormatException.class, InvocationTargetException.class})

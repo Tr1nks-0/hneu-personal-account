@@ -32,7 +32,7 @@ public class EducationProgram {
 
     @NonNull
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Speciality speciality;
 
 }

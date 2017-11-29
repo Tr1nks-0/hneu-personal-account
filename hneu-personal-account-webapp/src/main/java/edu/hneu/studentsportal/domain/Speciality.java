@@ -31,7 +31,7 @@ public class Speciality {
 
     @NonNull
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Faculty faculty;
 
 }

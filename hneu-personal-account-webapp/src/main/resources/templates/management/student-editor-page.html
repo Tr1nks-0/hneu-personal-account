@@ -140,7 +140,7 @@
                                                                 <td class="col-md-2 vertical-center center" th:text="${disciplineMark.discipline.controlForm.name}"></td>
                                                                 <td class="col-md-2 vertical-center center" th:text="${disciplineMark.discipline.type.name}"></td>
                                                                 <td class="col-md-1">
-                                                                    <input th:field="*{disciplineMarks[__${i.index}__].mark}" class="form-control" type="number"/>
+                                                                    <input th:field="*{disciplineMarks[__${i.index}__].mark}" class="form-control" type="text"/>
                                                                 </td>
                                                                 <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].id}"/>
                                                                 <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.id}"/>
