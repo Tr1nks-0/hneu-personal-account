@@ -148,7 +148,10 @@ public class StudentMarksExcelParser extends AbstractExcelParser<Map<Student, Li
     }
 
     private IntPredicate isDisciplineMark(int row) {
-        return i -> isNumber(getStringCellValue(row, i));
+        return i -> {
+            String mark = getStringCellValue(row, i);
+            return isNumber(mark) || "з".equalsIgnoreCase(mark) || "н".equalsIgnoreCase(mark);
+        };
     }
 
     private IntFunction<DisciplineMark> getDisciplineMark(int row, List<Discipline> disciplines) {
