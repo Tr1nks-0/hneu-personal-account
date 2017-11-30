@@ -1,19 +1,17 @@
 <span xmlns:th="http://java.sun.com/JSP/Page">
-    <th:block th:switch="${mark}">
-        <div th:case="${mark ge '90' or mark eq 'з'}">
-            <label class="label label-success" th:text="${mark}"></label>
-        </div>
-        <div th:case="${mark ge '74' and mark lt '90'}">
-            <label class="label label-default" th:text="${mark}"></label>
-        </div>
-        <div th:case="${mark ge '60' and mark lt '74'}">
-            <label class="label label-warning" th:text="${mark}"></label>
-        </div>
-        <div th:case="${(mark ge '0' and mark lt '60') or mark eq 'н'}">
-            <label class="label label-danger" th:text="${mark}"></label>
-        </div>
-        <div th:case="*">
-            N/A
-        </div>
-    </th:block>
+    <div th:if="${mark ge '90' or mark eq 'з'}">
+        <label class="label label-success" th:text="${mark}"></label>
+    </div>
+    <div th:if="${mark ge '74' and mark lt '90'}">
+        <label class="label label-default" th:text="${mark}"></label>
+    </div>
+    <div th:if="${mark ge '60' and mark lt '74'}">
+        <label class="label label-warning" th:text="${mark}"></label>
+    </div>
+    <div th:if="${(mark ge '0' and mark lt '60') or mark eq 'н'}">
+        <label class="label label-danger" th:text="${mark}"></label>
+    </div>
+    <div th:if="${mark == null or mark eq ''}">
+        N/A
+    </div>
 </span>
