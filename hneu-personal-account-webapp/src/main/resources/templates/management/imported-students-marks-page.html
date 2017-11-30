@@ -41,10 +41,10 @@
                             <div th:id="'collapse' + ${i.index}" class="panel-collapse collapse">
                                 <table class="table no-margin">
                                     <tr th:each="mark : ${studentMarks.value}"
-                                        th:if="${#strings.equals(mark.previousMark, mark.mark)}">
+                                        th:if="${!#strings.equals(mark.previousMark, mark.mark)}">
                                         <td>
                                             <span th:text="${mark.discipline.label}"></span>
-                                            <span th:text="${mark.discipline.type}"></span>
+                                            <span class="label label-default" th:text="${mark.discipline.type.name}"></span>
                                         </td>
                                         <td>
                                             <span th:text="${mark.previousMark}"></span>
