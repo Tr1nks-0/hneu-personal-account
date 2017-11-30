@@ -1,5 +1,6 @@
 package edu.hneu.studentsportal.controller.student;
 
+import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
@@ -18,14 +19,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.net.ConnectException;
 import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -43,7 +46,8 @@ public class AccountController {
     private final DisciplineMarkService disciplineMarkService;
 
     @GetMapping
-    public ModelAndView account(HttpSession session, Model model, Principal principal, HttpServletRequest request) {
+    public ModelAndView account(@RequestParam(required = false) Integer course, HttpSession session,
+                                Model model, Principal principal, HttpServletRequest request) {
         String email = userDetailsService.extractUserEmail(principal);
         if (isNull(email))
             return redirectToLoginWithError(request);
@@ -53,12 +57,23 @@ public class AccountController {
         Student student = studentRepository.findByEmail(email);
         if (isNull(student))
             return redirectToLoginWithError(request);
+
+        List<Integer> courses = disciplineMarkService.getStudentCourses(student);
+        int currentCourse = scheduleService.getCurrentCourse(student);
+        int selectedCourse = nonNull(course) && courses.contains(course) ? course : currentCourse;
+        Map<Integer, List<DisciplineMark>> marks = getMarks(student, selectedCourse);
+
         model.addAttribute("title", "top.menu.home");
-        model.addAttribute("currentCourse", scheduleService.getCurrentCourse(student));
+        model.addAttribute("courses", courses);
+        model.addAttribute("selectedCourse", selectedCourse);
+        model.addAttribute("groupedMarks", marks);
         session.setAttribute("groupId", student.getGroup().getId());
         session.setAttribute("email", student.getEmail());
-        model.addAttribute("groupedMarks", disciplineMarkService.getStudentMarksGroupedByCourseAndSemester(student));
         return new ModelAndView("student/account", "profile", student);
+    }
+
+    private Map<Integer, List<DisciplineMark>> getMarks(Student student, int currentCourse) {
+        return disciplineMarkService.getStudentMarksGroupedBySemester(disciplineMarkService.getStudentMarks(student, currentCourse));
     }
 
     @ExceptionHandler(ConnectException.class)
