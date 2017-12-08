@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:include="fragments/management/header" th:remove="tag"></header>
+    <aside th:include="fragments/management/sidebar" th:remove="tag"></aside>
+
+    <div class="content-wrapper">
+        <div class="content">
+
+            <ol class="breadcrumb panel panel-default">
+                <li><i class="fa fa-home"></i></li>
+                <li class="active" th:text="#{form.label.management.create.student}"></li>
+            </ol>
+
+            <form action="#" id="create-student" th:action="@{/management/students/create}"
+                  th:object="${student}" enctype="multipart/form-data" method="post">
+
+                <div th:include="fragments/error" th:remove="tag"></div>
+                <div th:include="fragments/success" th:remove="tag"></div>
+                <div class="alert alert-danger alert-dismissible" th:errors="*"></div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-12 panel-title">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label for="faculty" class="control-label"
+                                       th:text="#{form.label.student.faculty}"></label>
+                                <select id="faculty" name="faculty" class="form-control" th:required="required">
+                                    <option th:each="faculty : ${faculties}"
+                                            th:value="${faculty.id}"
+                                            th:text="${faculty.name}"
+                                            th:selected="${faculty.id == selectedFaculty.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="speciality" class="control-label"
+                                       th:text="#{form.label.student.speciality}"></label>
+                                <select id="speciality" name="speciality" class="form-control" th:required="required">
+                                    <option th:each="speciality : ${specialities}"
+                                            th:value="${speciality.id}"
+                                            th:text="${speciality.name}"
+                                            th:selected="${speciality.id == selectedSpeciality.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="educationProgram" class="control-label"
+                                       th:text="#{form.label.student.educationProgram}"></label>
+                                <select id="educationProgram" name="educationProgram" class="form-control">
+                                    <option value="">&nbsp;</option>
+                                    <option th:each="educationProgram : ${educationPrograms}"
+                                            th:value="${educationProgram.id}"
+                                            th:text="${educationProgram.name}"
+                                            th:selected="${selectedEducationProgram != null and educationProgram.id == selectedEducationProgram.id}">
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="group" class="control-label"
+                                       th:text="#{form.label.student.group}"></label>
+                                <select id="group" th:field="*{group}" class="form-control" th:required="required">
+                                    <option th:each="group : ${groups}"
+                                            th:value="${group.id}"
+                                            th:text="${group.name}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="incomeYear" class="control-label"
+                                       th:text="#{form.label.student.incomeYear}"></label>
+                                <input id="incomeYear" th:type="number" th:field="*{incomeYear}" class="form-control"
+                                       th:required="required"/>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="surname" class="control-label"
+                                       th:text="#{form.label.student.surname}"></label>
+                                <input id="surname" th:type="text" th:field="*{surname}" class="form-control"
+                                       pattern="^[А-Яа-яёЁЇїІіЄєҐґ\s]+$" th:required="required"/>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="name" class="control-label"
+                                       th:text="#{form.label.student.name}"></label>
+                                <input id="name" th:type="text" th:field="*{name}" class="form-control"
+                                       pattern="^[А-Яа-яёЁЇїІіЄєҐґ\s]+$" th:required="required"/>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="passportNumber" class="control-label"
+                                       th:text="#{form.label.student.passportNumber}"></label>
+                                <input id="passportNumber" th:type="text" th:field="*{passportNumber}"
+                                       pattern="\d+" class="form-control" th:required="required"/>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <label for="contacts" class="control-label"
+                                       th:text="#{form.label.student.scheduleStudentId}"></label>
+                                <input id="scheduleStudentId" th:type="number" th:field="*{scheduleStudentId}" class="form-control"
+                                       th:required="required"/>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="contacts" class="control-label"
+                                       th:text="#{form.label.student.contacts.in}"></label>
+                                <input id="contacts" th:type="text" th:field="*{contactInfo}" class="form-control"
+                                       pattern="^[А-Яа-яёЁЇїІіЄєҐґ0-9+,]+$" th:required="required"/>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <label for="photo" th:text="#{form.label.student.photo}"></label>
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-default btn-file">
+                                            <span th:text="#{form.label.management.browse}"></span>&hellip;
+                                            <input th:field="*{photo}" type="file"
+                                                   th:placeholder="#{form.label.management.profiles}" accept=".png" th:required="required"/>
+                                    </span>
+                                    </span>
+                                        <input id="photo" type="text" class="form-control" readonly="readonly"/>
+                                        <span class="input-group-btn">
+                                </span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <input type="submit" th:value="#{btn.save}" class="btn btn-success float-right"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div th:include="fragments/management/footer" th:remove="tag"></div>
+</div>
+</body>
+</html>

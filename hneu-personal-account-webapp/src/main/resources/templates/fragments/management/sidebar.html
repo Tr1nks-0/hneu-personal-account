@@ -48,6 +48,12 @@
                 </span>
                 </a>
                 <ul class="treeview-menu">
+                    <li th:class="${#strings.equals(title, 'management-create-student')} ? active : ''">
+                        <a href="/management/students/create">
+                            <i class="fa fa-circle-o text-aqua"></i>
+                            <span th:text="#{form.label.management.create.student}"></span>
+                        </a>
+                    </li>
                     <li th:class="${#strings.equals(title, 'management-groups')} ? active : ''">
                         <a href="/management/groups">
                             <i class="fa fa-circle-o text-aqua"></i>

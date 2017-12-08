@@ -13,9 +13,11 @@ class StudentEmailReceivingServiceSpockTest extends Specification {
     static final String REQUEST_EMAIL_URL = 'test.email.service/EmailToOutController?name=олександр&surname=роздольський&groupId=8.04.51.16.01'
     static final String ERROR_MESSAGE = 'error message'
 
+    static final String STUDENT_NAME = 'Олександр'
+    static final String STUDENT_SURNAME = 'Роздольський'
+    static final String STUDENT_GROUP_NAME = '8.04.51.16.01'
+
     def messageServiceMock = Mock(MessageService)
-    def studentMock = Mock(Student)
-    def groupMock = Mock(Group)
     def restTemplateMock = Mock(RestOperations)
     def restEntityMock = Mock(ResponseEntity)
 
@@ -23,10 +25,6 @@ class StudentEmailReceivingServiceSpockTest extends Specification {
 
     def setup() {
         studentEmailReceivingService.emailsIntegrationServiceUrl = EMAIL_INTEGRATION_SERVICE_URL
-        studentMock.getName() >> 'Олександр'
-        studentMock.getSurname() >> 'Роздольський'
-        studentMock.getGroup() >> groupMock
-        groupMock.getName() >> '8.04.51.16.01'
         restTemplateMock.getForEntity(REQUEST_EMAIL_URL, String.class) >> restEntityMock
     }
 
@@ -34,7 +32,7 @@ class StudentEmailReceivingServiceSpockTest extends Specification {
         given:
             restEntityMock.getBody() >> STUDENT_EMAIL
         when:
-            def email = studentEmailReceivingService.receiveStudentEmail(studentMock)
+            def email = studentEmailReceivingService.receiveStudentEmail(STUDENT_NAME, STUDENT_SURNAME, STUDENT_GROUP_NAME)
         then:
             STUDENT_EMAIL == email
     }
@@ -44,7 +42,7 @@ class StudentEmailReceivingServiceSpockTest extends Specification {
             restEntityMock.getBody() >> null
             messageServiceMock.emailNotFoundForStudent(*_) >> ERROR_MESSAGE
         when:
-            studentEmailReceivingService.receiveStudentEmail(studentMock)
+            studentEmailReceivingService.receiveStudentEmail(STUDENT_NAME, STUDENT_SURNAME, STUDENT_GROUP_NAME)
         then:
             IllegalArgumentException ex = thrown()
             ex.message == ERROR_MESSAGE
