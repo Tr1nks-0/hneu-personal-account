@@ -6,6 +6,7 @@ import edu.hneu.studentsportal.repository.EducationProgramRepository;
 import edu.hneu.studentsportal.repository.FacultyRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.SpecialityRepository;
+import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -38,6 +39,7 @@ public class CreateStudentManagementController extends AbstractManagementControl
     private final EducationProgramRepository educationProgramRepository;
     private final GroupRepository groupRepository;
     private final StudentService studentService;
+    private final EmailService emailService;
 
     @GetMapping
     public String createStudent(Model model,
@@ -79,6 +81,7 @@ public class CreateStudentManagementController extends AbstractManagementControl
             return prepareStudentPage(model, student);
         } else {
             Student newStudent = studentService.createStudent(student);
+            emailService.sendProfileWasCreatedEmail(newStudent);
             redirectAttributes.addFlashAttribute("success", "success.add.student");
             return "redirect:/management/students/" + newStudent.getId();
         }
