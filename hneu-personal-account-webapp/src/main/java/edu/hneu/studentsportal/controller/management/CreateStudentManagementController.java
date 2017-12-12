@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -102,6 +103,11 @@ public class CreateStudentManagementController extends AbstractManagementControl
     @ExceptionHandler(IllegalArgumentException.class)
     protected String handleError(IllegalArgumentException e, RedirectAttributes redirectAttributes) {
         return handleErrorInternal(e, e.getMessage(), redirectAttributes);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
+        return handleErrorInternal(e, messageService.studentExistsError(), redirectAttributes);
     }
 
     @Override
