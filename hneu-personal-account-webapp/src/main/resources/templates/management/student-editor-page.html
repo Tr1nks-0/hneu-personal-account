@@ -63,47 +63,39 @@
                             <div class="col-md-2 col-sm-3 col-xs-12 text-center">
                                 <img th:src="@{/students/__${student.id}__/photo}" class="img-thumbnail" style="max-height: 140px; margin: 15px"/>
                             </div>
-                            <div class="col-md-10 col-sm-9 col-xs-12">
+                            <div class="col-md-10 col-sm-9 col-xs-12 table-responsive">
                                 <table class="table no-margin">
                                     <tr>
                                         <td><label class="control-label" th:text="#{form.label.student.email}"></label></td>
-                                        <td th:text="${student.email}"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label class="control-label" th:text="#{form.label.student.name}"></label></td>
-                                        <td th:text="${student.name}"></td>
+                                        <td th:text="${student.email}" colspan="3"></td>
                                     </tr>
                                     <tr>
                                         <td><label class="control-label" th:text="#{form.label.student.surname}"></label></td>
                                         <td th:text="${student.surname}"></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="col-md-3"><label class="control-label" th:text="#{form.label.student.passportNumber}"></label></td>
-                                        <td th:text="${student.passportNumber}"></td>
+                                        <td><label class="control-label" th:text="#{form.label.student.name}"></label></td>
+                                        <td th:text="${student.name}"></td>
                                     </tr>
                                     <tr>
                                         <td><label class="control-label" th:text="#{form.label.student.faculty}"></label></td>
                                         <td th:text="${student.faculty.name}"></td>
-                                    </tr>
-                                    <tr>
                                         <td><label class="control-label" th:text="#{form.label.student.speciality}"></label></td>
                                         <td th:text="${student.speciality.name}"></td>
                                     </tr>
                                     <tr>
+                                        <td><label class="control-label" th:text="#{form.label.student.educationProgram}"></label></td>
+                                        <td th:text="${student.educationProgram.name}"></td>
                                         <td><label class="control-label" th:text="#{form.label.student.group}"></label></td>
                                         <td th:text="${student.group.name}"></td>
                                     </tr>
-                                    <tr th:if="${student.educationProgram != null}">
-                                        <td><label class="control-label" th:text="#{form.label.student.educationProgram}"></label></td>
-                                        <td th:text="${student.educationProgram.name}"></td>
+                                    <tr>
+                                        <td><label class="control-label" th:text="#{form.label.student.passportNumber}"></label></td>
+                                        <td th:text="${student.passportNumber}"></td>
+                                        <td><label for="scheduleStudentId" class="control-label" th:text="#{form.label.student.scheduleStudentId}"></label></td>
+                                        <td><input id="scheduleStudentId" th:field="*{scheduleStudentId}" class="form-control" type="number"/></td>
                                     </tr>
                                     <tr>
                                         <td><label for="contactInfo" class="control-label" th:text="#{form.label.student.contacts}"></label></td>
-                                        <td><input id="contactInfo" th:field="*{contactInfo}" class="form-control"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><label for="scheduleStudentId" class="control-label" th:text="#{form.label.student.scheduleStudentId}"></label></td>
-                                        <td><input id="scheduleStudentId" th:field="*{scheduleStudentId}" class="form-control" type="number"/></td>
+                                        <td colspan="3"><input id="contactInfo" th:field="*{contactInfo}" class="form-control"/></td>
                                     </tr>
                                 </table>
                             </div>
