@@ -2,11 +2,11 @@ package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.domain.*;
 import edu.hneu.studentsportal.domain.dto.StudentDTO;
-import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.repository.*;
-import edu.hneu.studentsportal.service.FileService;
-import edu.hneu.studentsportal.service.StudentEmailReceivingService;
-import edu.hneu.studentsportal.service.UserService;
+import edu.hneu.studentsportal.repository.EducationProgramRepository;
+import edu.hneu.studentsportal.repository.FacultyRepository;
+import edu.hneu.studentsportal.repository.GroupRepository;
+import edu.hneu.studentsportal.repository.SpecialityRepository;
+import edu.hneu.studentsportal.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.http.client.utils.URIBuilder;
@@ -19,13 +19,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.io.*;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.CREATE_STUDENTS_URL;
 import static java.util.Objects.nonNull;
-import static java.util.stream.Collectors.toList;
 
 @Log4j
 @Controller
@@ -37,11 +36,7 @@ public class CreateStudentManagementController extends AbstractManagementControl
     private final SpecialityRepository specialityRepository;
     private final EducationProgramRepository educationProgramRepository;
     private final GroupRepository groupRepository;
-    private final StudentEmailReceivingService studentEmailReceivingService;
-    private final StudentRepository studentRepository;
-    private final UserService userService;
-    private final DisciplineRepository disciplineRepository;
-    private final FileService fileService;
+    private final StudentService studentService;
 
     @GetMapping
     public String createStudent(Model model,
@@ -82,29 +77,7 @@ public class CreateStudentManagementController extends AbstractManagementControl
         if (bindingResult.hasErrors()) {
             return prepareStudentPage(model, student);
         } else {
-            String studentEmail = studentEmailReceivingService.receiveStudentEmail(student.getName(), student.getSurname(), student.getGroup().getName());
-            List<Discipline> disciplines = disciplineRepository.findBySpecialityAndEducationProgram(student.getSpeciality(), student.getEducationProgram());
-            List<DisciplineMark> marks = disciplines.stream().map(DisciplineMark::new).collect(toList());
-
-            Student newStudent = Student.builder()
-                    .scheduleStudentId(student.getScheduleStudentId())
-                    .email(studentEmail)
-                    .name(student.getName())
-                    .surname(student.getSurname())
-                    .passportNumber(student.getPassportNumber())
-                    .faculty(student.getFaculty())
-                    .speciality(student.getSpeciality())
-                    .educationProgram(student.getEducationProgram())
-                    .incomeYear(student.getIncomeYear())
-                    .photo(fileService.getProfilePhoto(student.getPhoto()))
-                    .group(student.getGroup())
-                    .contactInfo(student.getContactInfo())
-                    .disciplineMarks(marks)
-                    .build();
-
-            userService.create(studentEmail, UserRole.STUDENT);
-            newStudent = studentRepository.save(newStudent);
-            log.info(String.format("New [%s] has been added", newStudent));
+            Student newStudent = studentService.createStudent(student);
             redirectAttributes.addFlashAttribute("success", "success.add.student");
             return "redirect:/management/students/" + newStudent.getId();
         }
