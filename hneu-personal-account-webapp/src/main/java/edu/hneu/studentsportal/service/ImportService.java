@@ -4,7 +4,6 @@ package edu.hneu.studentsportal.service;
 import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Student;
-import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.parser.factory.ParserFactory;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
@@ -14,7 +13,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -31,20 +29,9 @@ import static org.apache.commons.lang.BooleanUtils.isFalse;
 public class ImportService {
 
     private final ParserFactory parserFactory;
-    private final UserService userService;
     private final StudentRepository studentRepository;
     private final DisciplineMarkService disciplineMarkService;
     private final DisciplineRepository disciplineRepository;
-    private final StudentEmailReceivingService studentEmailReceivingService;
-
-    public Student importStudent(File file) {
-        Student student = parserFactory.newStudentProfileExcelParser().parse(file);
-        student.setEmail(studentEmailReceivingService.receiveStudentEmail(student));
-        userService.create(student.getEmail(), UserRole.STUDENT);
-        studentRepository.save(student);
-        log.info(format("New student[%s] has been created.", student));
-        return student;
-    }
 
     public Map<Student, List<DisciplineMark>> importStudentMarks(File file) {
         Map<Student, List<DisciplineMark>> importedStudentsMarks = parserFactory.newStudentMarksExcelParser().parse(file);

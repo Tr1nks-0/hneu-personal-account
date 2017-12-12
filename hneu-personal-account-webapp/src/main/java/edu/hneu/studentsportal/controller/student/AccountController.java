@@ -53,7 +53,7 @@ public class AccountController {
             return redirectToLoginWithError(request);
         User currentUser = userService.getUserForId(email);
         if (nonNull(currentUser) && currentUser.getRole() == UserRole.ADMIN)
-            return new ModelAndView("redirect:management/import/student");
+            return new ModelAndView("redirect:management/students/create");
         Student student = studentRepository.findByEmail(email);
         if (isNull(student))
             return redirectToLoginWithError(request);

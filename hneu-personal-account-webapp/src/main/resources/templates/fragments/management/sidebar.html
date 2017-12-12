@@ -18,12 +18,6 @@
                             <span th:text="#{form.label.management.import.disciplines}"></span>
                         </a>
                     </li>
-                    <li th:class="${#strings.equals(title, 'import-profile')} ? active : ''">
-                        <a href="/management/import/student">
-                            <i class="fa fa-circle-o text-aqua"></i>
-                            <span th:text="#{form.label.management.import.profiles}"></span>
-                        </a>
-                    </li>
                     <li th:class="${#strings.equals(title, 'import-student-marks')} ? active : ''">
                         <a href="/management/import/student-marks">
                             <i class="fa fa-circle-o text-aqua"></i>
