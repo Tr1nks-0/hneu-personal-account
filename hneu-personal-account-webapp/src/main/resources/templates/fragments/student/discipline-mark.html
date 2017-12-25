@@ -1,5 +1,5 @@
 <span xmlns:th="http://java.sun.com/JSP/Page">
-    <div th:if="${mark ge '90' or mark eq 'з'}">
+    <div th:if="${mark ge '90' or mark eq 'з' or mark eq '100'}">
         <label class="label label-success" th:text="${mark}"></label>
     </div>
     <div th:if="${mark ge '74' and mark lt '90'}">
@@ -8,7 +8,7 @@
     <div th:if="${mark ge '60' and mark lt '74'}">
         <label class="label label-warning" th:text="${mark}"></label>
     </div>
-    <div th:if="${(mark ge '0' and mark lt '60') or mark eq 'н'}">
+    <div th:if="${(mark ge '0' and mark lt '60' and mark ne '100') or mark eq 'н'}">
         <label class="label label-danger" th:text="${mark}"></label>
     </div>
     <div th:if="${mark == null or mark eq ''}">
