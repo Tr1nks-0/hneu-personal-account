@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:include="fragments/management/header" th:remove="tag"></header>
+    <aside th:include="fragments/management/sidebar" th:remove="tag"></aside>
+
+    <div class="content-wrapper">
+        <div class="content">
+
+            <ol class="breadcrumb panel panel-default">
+                <li><i class="fa fa-home"></i></li>
+                <li><a href="/management/groups" th:text="#{form.label.management.groups}"></a></li>
+                <li><a th:href="@{/management/groups/__${group.id}__/disciplines(course=${course},semester=${semester})}" th:text="${group.name}"></a></li>
+                <li class="active" th:text="#{form.label.management.disciplines}"></li>
+            </ol>
+
+            <div th:include="fragments/error" th:remove="tag"></div>
+            <div th:include="fragments/success" th:remove="tag"></div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <table class="col-md-12">
+                                <tr>
+                                    <td colspan="2">
+                                        <strong th:text="#{form.label.discipline} + ': '"></strong>
+                                        <span th:text="${discipline.label}"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong th:text="#{form.label.discipline.type} + ': '"></strong>
+                                        <span th:text="${discipline.type.name}"></span>
+                                    </td>
+                                    <td>
+                                        <strong th:text="#{form.label.discipline.course} + ': '"></strong>
+                                        <span th:text="${discipline.course}"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong th:text="#{form.label.discipline.control.form} + ': '"></strong>
+                                        <span th:text="${discipline.controlForm.name}"></span>
+                                    </td>
+                                    <td>
+                                        <strong th:text="#{form.label.discipline.semester} + ': '"></strong>
+                                        <span th:text="${discipline.semester}"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <strong th:text="#{form.label.discipline.credits} + ': '"></strong>
+                                        <span th:text="${discipline.credits}"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form action="#" th:action="@{/management/groups/__${group.id}__/disciplines/__${discipline.id}__(course=${course},semester=${semester})}"
+                  th:object="${disciplineMarks}" method="post">
+
+                <div class="panel panel-default">
+                    <div class="panel-body disciplines-management-panel">
+                        <table class="table table-striped no-margin" th:if="${!#lists.isEmpty(disciplineMarks.marks)}">
+                            <thead>
+                            <tr>
+                                <th th:text="#{form.label.student}"></th>
+                                <th class="center" th:text="#{form.label.student.currentMark}"></th>
+                                <th class="center" th:text="#{form.label.student.newMark}"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="mark,i : ${disciplineMarks.marks}">
+                                <td class="col-md-8 vertical-center"
+                                    th:text="${mark.student.surname} + ' ' + ${mark.student.name}"></td>
+                                <td class="col-md-2 vertical-center center"
+                                    th:text="${mark.mark != null ? mark.mark : '-'}"></td>
+                                <td class="col-md-2">
+                                    <input th:field="*{marks[__${i.index}__].mark}" class="form-control" type="text"
+                                           pattern="^\d{1,2}|100|З|з|Н|н$"/>
+                                </td>
+                                <input type="hidden" th:field="*{marks[__${i.index}__].id}"/>
+                                <input type="hidden" th:field="*{marks[__${i.index}__].student}"/>
+                                <input type="hidden" th:field="*{marks[__${i.index}__].previousMark}"/>
+                                <input type="hidden" th:field="*{marks[__${i.index}__].discipline}"/>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <p th:if="${#lists.isEmpty(disciplineMarks.marks)}" th:text="#{items.not.found}"></p>
+                    </div>
+                    <div class="panel-footer" th:if="${!#lists.isEmpty(disciplineMarks.marks)}">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button class="pull-right btn btn-success">
+                                    <span th:text="#{btn.save}"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div th:include="fragments/management/footer" th:remove="tag"></div>
+</div>
+</body>
+</html>

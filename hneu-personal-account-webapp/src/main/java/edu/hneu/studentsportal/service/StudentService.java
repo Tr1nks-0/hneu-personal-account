@@ -41,7 +41,7 @@ public class StudentService {
         List<Discipline> disciplines = disciplineRepository.findBySpecialityAndEducationProgram(studentDTO.getSpeciality(), studentDTO.getEducationProgram());
         List<DisciplineMark> marks = disciplines.stream().map(DisciplineMark::new).collect(toList());
 
-        Student newStudent = Student.builder()
+        final Student student = Student.builder()
                 .scheduleStudentId(studentDTO.getScheduleStudentId())
                 .email(studentEmail)
                 .name(studentDTO.getName().trim())
@@ -57,10 +57,11 @@ public class StudentService {
                 .disciplineMarks(marks)
                 .build();
 
+        marks.forEach(m -> m.setStudent(student));
         userService.create(studentEmail, UserRole.STUDENT);
-        newStudent = studentRepository.save(newStudent);
-        log.info(String.format("New [%s] has been added", newStudent));
-        return newStudent;
+        Student createdStudent = studentRepository.save(student);
+        log.info(String.format("New [%s] has been added", createdStudent));
+        return createdStudent;
     }
 
     public String receiveStudentEmail(String name, String surname, String groupName) {

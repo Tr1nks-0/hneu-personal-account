@@ -25,6 +25,10 @@ public class DisciplineMark {
     @Cascade(CascadeType.SAVE_UPDATE)
     private Discipline discipline;
 
+    @ManyToOne
+    @Cascade(CascadeType.ALL)
+    private Student student;
+
     private String mark;
     private String previousMark;
 

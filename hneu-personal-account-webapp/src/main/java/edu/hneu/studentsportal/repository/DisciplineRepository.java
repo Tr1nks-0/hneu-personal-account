@@ -22,4 +22,6 @@ public interface DisciplineRepository extends JpaRepository<Discipline, Long> {
     List<Discipline> findBySpecialityAndEducationProgram(Speciality speciality, EducationProgram educationProgram);
 
     Optional<Discipline> findByCodeAndCourseAndSemesterAndSpecialityAndEducationProgram(String code, int course, int semester, Speciality speciality, EducationProgram educationProgram);
+
+    Optional<Discipline> findById(Long disciplineId);
 }

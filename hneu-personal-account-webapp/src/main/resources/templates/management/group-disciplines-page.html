@@ -50,8 +50,8 @@
                     <table class="table no-margin" th:if="${!#lists.isEmpty(disciplines)}">
                         <thead>
                         <tr>
-                            <th class="center" th:text="#{form.label.name}"></th>
-                            <th class="center" th:text="#{form.label.code}"></th>
+                            <th th:text="#{form.label.name}"></th>
+                            <th th:text="#{form.label.code}"></th>
                             <th class="center" th:text="#{form.label.discipline.credits}"></th>
                             <th class="center" th:text="#{form.label.discipline.control.form}"></th>
                             <th class="center" th:text="#{form.label.discipline.type}"></th>
@@ -60,7 +60,9 @@
                         <tbody>
                         <tr th:each="discipline : ${disciplines}">
                             <td>
-                                <a th:href="@{/management/groups/__${group.id}__/disciplines/__${discipline.id}__}" th:text="${discipline.label}"></a>
+                                <a th:href="@{/management/groups/__${group.id}__/disciplines/__${discipline.id}__(course=${selectedCourse},semester=${selectedSemester})}"
+                                   th:text="${discipline.label}">
+                                </a>
                             </td>
                             <td th:text="${discipline.code}"></td>
                             <td class="center" th:text="${discipline.credits}"></td>
