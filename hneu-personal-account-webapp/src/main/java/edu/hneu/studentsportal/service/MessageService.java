@@ -44,27 +44,6 @@ public interface MessageService {
     @Message("error.disciplines.exist")
     String disciplinesExistError();
 
-    @Message("invalid.student.profile.faculty")
-    String invalidStudentFacultyError();
-
-    @Message("invalid.student.profile.speciality")
-    String invalidStudentSpecialityError();
-
-    @Message("invalid.student.profile.education.program")
-    String invalidStudentEducationProgramError();
-
-    @Message("invalid.student.profile.group")
-    String invalidStudentGroupError(String group);
-
-    @Message("invalid.student.profile.discipline")
-    String invalidStudentDisciplineError(String discipline);
-
-    @Message("invalid.student.profile.photo")
-    String invalidStudentPhotoError();
-
-    @Message("error.discipline.not.found")
-    String disciplineNotFoundError(String name);
-
     @Message("invalid.file")
     String invalidFile();
 

@@ -14,8 +14,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Student findByEmail(String email);
 
-    List<Student> findByGroup(Group group);
-
     List<Student> findByGroup(Group group, Sort sort);
 
     Optional<Student> findByNameAndSurnameAndGroup(String name, String surname, Group group);

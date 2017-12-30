@@ -2,10 +2,8 @@ package edu.hneu.studentsportal.service
 
 import edu.hneu.studentsportal.domain.Discipline
 import edu.hneu.studentsportal.domain.DisciplineMark
-import edu.hneu.studentsportal.domain.Student
 import edu.hneu.studentsportal.parser.factory.ParserFactory
 import edu.hneu.studentsportal.parser.impl.DisciplinesExcelParser
-import edu.hneu.studentsportal.parser.impl.StudentMarksExcelParser
 import edu.hneu.studentsportal.parser.impl.StudentsChoiceExcelParser
 import edu.hneu.studentsportal.repository.DisciplineRepository
 import edu.hneu.studentsportal.repository.StudentRepository
@@ -17,7 +15,6 @@ class ImportServiceUnitSpockTest extends Specification {
     def parseFactoryMock = Mock(ParserFactory)
     def disciplinesExcelParserMock = Mock(DisciplinesExcelParser)
     def studentsChoiceExcelParserMock = Mock(StudentsChoiceExcelParser)
-    def studentMarksExcelParserMock = Mock(StudentMarksExcelParser)
     def disciplineRepositoryMock = Mock(DisciplineRepository)
     def studentRepositoryMock = Mock(StudentRepository)
     def disciplineMarkServiceMock = Mock(DisciplineMarkService)
@@ -25,7 +22,6 @@ class ImportServiceUnitSpockTest extends Specification {
     def disciplineMock2 = Mock(Discipline)
     def disciplineMarkMock1 = Mock(DisciplineMark)
     def disciplineMarkMock2 = Mock(DisciplineMark)
-    def studentMock = Mock(Student)
 
     def disciplines = [disciplineMock1, disciplineMock2]
 
@@ -59,21 +55,6 @@ class ImportServiceUnitSpockTest extends Specification {
         importService.importDisciplines(fileMock)
         then:
         1 * disciplineRepositoryMock.save(disciplines)
-    }
-
-    def 'should update imported marks with existed for a student when import student marks'() {
-        given:
-        parseFactoryMock.newStudentMarksExcelParser() >> studentMarksExcelParserMock
-        def importedMarks = [disciplineMarkMock1, disciplineMarkMock2]
-        studentMarksExcelParserMock.parse(fileMock) >> [(studentMock): importedMarks]
-        disciplineMarkServiceMock.updateStudentMarks(studentMock, importedMarks) >> importedMarks
-        when:
-        def studentMarks = importService.importStudentMarks(fileMock)
-        then:
-        1 == studentMarks.size()
-        studentMarks.keySet().contains(studentMock)
-        importedMarks == studentMarks.get(studentMock)
-        1 * studentRepositoryMock.save(studentMock)
     }
 }
 

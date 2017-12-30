@@ -58,7 +58,7 @@ public class AccountController {
         if (isNull(student))
             return redirectToLoginWithError(request);
 
-        List<Integer> courses = disciplineMarkService.getStudentCourses(student);
+        List<Integer> courses = disciplineMarkService.getCourses(student);
         int currentCourse = scheduleService.getCurrentCourse(student);
         int selectedCourse = nonNull(course) && courses.contains(course) ? course : currentCourse;
         Map<Integer, List<DisciplineMark>> marks = getMarks(student, selectedCourse);

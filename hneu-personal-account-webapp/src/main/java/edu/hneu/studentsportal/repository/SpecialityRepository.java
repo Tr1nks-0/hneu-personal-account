@@ -16,8 +16,6 @@ public interface SpecialityRepository extends JpaRepository<Speciality, Long> {
 
     Optional<Speciality> findById(Long id);
 
-    Optional<Speciality> findByNameAndFaculty(String specialityName, Faculty faculty);
-
     List<Speciality> findAllByFacultyId(Long facultyId);
 
     @Query(value = "SELECT 1 * s.faculty_id FROM speciality s JOIN faculty f ON s.faculty_id=f.id WHERE s.faculty_id=:facultyId LIMIT 1", nativeQuery = true)

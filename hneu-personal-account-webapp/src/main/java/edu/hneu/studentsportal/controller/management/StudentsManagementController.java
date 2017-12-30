@@ -75,7 +75,7 @@ public class StudentsManagementController extends AbstractManagementController {
         model.addAttribute("disciplineTypes", DisciplineType.values());
         model.addAttribute("disciplineFormControls", DisciplineFormControl.values());
         model.addAttribute("student", student);
-        model.addAttribute("courses", disciplineMarkService.getStudentCourses(student));
+        model.addAttribute("courses", disciplineMarkService.getCourses(student));
         model.addAttribute("title", "management-students");
         return "management/student-editor-page";
     }

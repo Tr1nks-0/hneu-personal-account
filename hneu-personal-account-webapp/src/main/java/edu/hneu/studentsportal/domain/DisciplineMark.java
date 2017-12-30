@@ -30,7 +30,6 @@ public class DisciplineMark {
     private Student student;
 
     private String mark;
-    private String previousMark;
 
     public DisciplineMark(Discipline discipline, String mark) {
         this.discipline = discipline;

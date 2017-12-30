@@ -33,20 +33,6 @@ public class ImportService {
     private final DisciplineMarkService disciplineMarkService;
     private final DisciplineRepository disciplineRepository;
 
-    public Map<Student, List<DisciplineMark>> importStudentMarks(File file) {
-        Map<Student, List<DisciplineMark>> importedStudentsMarks = parserFactory.newStudentMarksExcelParser().parse(file);
-        Map<Student, List<DisciplineMark>> updatedStudentsMarks = new HashMap<>();
-        importedStudentsMarks.forEach((student, importedMarks) -> {
-            List<DisciplineMark> updatedMarks = disciplineMarkService.updateStudentMarks(student, importedMarks);
-            if (CollectionUtils.isNotEmpty(updatedMarks)) {
-                studentRepository.save(student);
-                log.info(format("Student[%s] marks[%s] were updated", student, updatedMarks));
-                updatedStudentsMarks.put(student, updatedMarks);
-            }
-        });
-        return updatedStudentsMarks;
-    }
-
     public Map<Student, List<Discipline>> importStudentsChoice(File file) {
         Map<Student, List<Discipline>> studentsChoice = parserFactory.newStudentsChoiceParser().parse(file);
         studentsChoice.forEach((student, disciplines) -> {
