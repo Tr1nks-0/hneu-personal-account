@@ -9,22 +9,24 @@
     <div class="content-wrapper">
         <div class="content">
 
-            <ol class="breadcrumb panel panel-default">
+
+            <ol class="panel panel-default breadcrumb">
                 <li><i class="fa fa-home"></i></li>
-                <li><a th:href="@{/management/students(groupId=${group.id})}" th:text="${group.name}"></a></li>
+                <li><a href="/management/groups" th:text="#{form.label.management.groups}"></a></li>
+                <li th:text="${group.name}"></li>
                 <li class="active" th:text="#{form.label.management.students}"></li>
             </ol>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-md-12 panel-title">
-                            <span th:text="#{form.label.management.students}"></span>
-                            <span th:text="${group.name}"></span>
+                        <div class="col-md-12">
+                            <a class="btn btn-default pull-right" th:href="@{/management/groups/__${group.id}__/disciplines}"
+                               th:text="#{form.label.student.marks}">
+                            </a>
                         </div>
                     </div>
                 </div>
-
                 <ul class="list-group" th:if="${!#lists.isEmpty(students)}">
                     <li class="list-group-item" th:each="student : ${students}">
                         <div class="row">

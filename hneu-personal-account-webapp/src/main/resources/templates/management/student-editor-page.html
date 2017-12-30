@@ -11,7 +11,8 @@
 
             <ol class="breadcrumb panel panel-default">
                 <li><i class="fa fa-home"></i></li>
-                <li><a th:href="@{/management/students(groupId=${student.group.id})}"
+                <li><a href="/management/groups" th:text="#{form.label.management.groups}"></a></li>
+                <li><a th:href="@{/management/groups/__${student.group.id}__/students}"
                        th:text="${student.group.name}"></a></li>
                 <li class="active" th:text="${student.surname + ' ' + student.name}"></li>
             </ol>

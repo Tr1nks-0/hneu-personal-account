@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.controller.management;
 
-import edu.hneu.studentsportal.domain.Group;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_STUDENTS_URL;
 
@@ -33,16 +31,6 @@ public class StudentsManagementController extends AbstractManagementController {
     private final EducationProgramRepository educationProgramRepository;
     private final GroupRepository groupRepository;
     private final DisciplineMarkService disciplineMarkService;
-
-    @GetMapping
-    public String getStudents(@RequestParam Long groupId, Model model) {
-        Group group = groupRepository.findById(groupId).orElseThrow(IllegalArgumentException::new);
-        List<Student> students = studentRepository.findByGroup(group);
-        model.addAttribute("students", students);
-        model.addAttribute("group", group);
-        model.addAttribute("title", "management-students");
-        return "management/group-students-page";
-    }
 
     @GetMapping("/{id}")
     public String getStudent(@PathVariable long id, Model model) {

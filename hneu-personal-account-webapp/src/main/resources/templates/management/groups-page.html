@@ -94,7 +94,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="group : ${groups}">
-                            <td><a th:href="@{/management/students(groupId=${group.id})}" th:text="${group.id}"></a></td>
+                            <td><a th:href="@{/management/groups/__${group.id}__/students}" th:text="${group.id}"></a></td>
                             <td th:text="${group.name}"></td>
                             <td>
                                 <button th:attr="group-id=${group.id}"

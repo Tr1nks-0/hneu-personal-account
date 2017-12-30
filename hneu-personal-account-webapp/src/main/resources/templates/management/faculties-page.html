@@ -28,16 +28,21 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <div class="form-group">
-                            <label for="code" class="control-label" th:text="#{form.label.code}"></label>
-                            <input type="text" id="code" th:field="*{code}" class="form-control" required="required"/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="code" class="control-label" th:text="#{form.label.code}"></label>
+                                    <input type="text" id="code" th:field="*{code}" class="form-control" pattern="^\d{1,10}$" required="required"/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name" class="control-label" th:text="#{form.label.name}"></label>
+                                    <input type="text" id="name" th:field="*{name}" class="form-control" pattern="^[А-Яа-яёЁЇїІіЄєҐґ\'\s]{3,100}$" required="required"/>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="name" class="control-label" th:text="#{form.label.student.faculty}"></label>
-                            <input type="text" id="name" th:field="*{name}" class="form-control" required="required"/>
-                        </div>
-                        <input type="submit" th:value="#{btn.save}" class="btn btn-success
-                        float-right"/>
+                        <input type="submit" th:value="#{btn.save}" class="btn btn-success float-right"/>
                     </div>
                 </div>
             </form>
@@ -49,7 +54,7 @@
                     </div>
                 </div>
                 <div class="panel-body faculties-management-panel">
-                    <table class="table no-margin">
+                    <table class="table table-striped no-margin">
                         <thead>
                         <tr>
                             <th th:text="#{form.label.code}"></th>

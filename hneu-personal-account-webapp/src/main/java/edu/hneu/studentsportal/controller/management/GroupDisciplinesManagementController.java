@@ -30,9 +30,9 @@ public class GroupDisciplinesManagementController extends AbstractManagementCont
     private final GroupRepository groupRepository;
 
     @GetMapping("/{groupId}/disciplines")
-    public String getDisciplines(@PathVariable(required = false) Long groupId,
-                                 @RequestParam(required = false, defaultValue = "1") int course,
-                                 @RequestParam(required = false, defaultValue = "1") int semester, Model model) {
+    public String getDisciplines(@PathVariable Long groupId,
+                                 @RequestParam(defaultValue = "1") int course,
+                                 @RequestParam(defaultValue = "1") int semester, Model model) {
         Group group = groupRepository.findById(groupId).orElseThrow(IllegalArgumentException::new);
         List<Discipline> disciplines = disciplineRepository.findBySpecialityAndEducationProgram(group.getSpeciality(), group.getEducationProgram());
         model.addAttribute("group", group);
