@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class GroupDisciplineMarksManagementController extends AbstractManagement
                                  Model model) {
         Group group = groupRepository.findById(groupId).orElseThrow(IllegalArgumentException::new);
         Discipline discipline = disciplineRepository.findById(disciplineId).orElseThrow(IllegalArgumentException::new);
-        List<DisciplineMark> marks = disciplineMarkRepository.findByDiscipline(discipline);
+        List<DisciplineMark> marks = disciplineMarkRepository.findByDiscipline(discipline, new Sort(Sort.Direction.ASC, "student.surname", "student.name"));
         model.addAttribute("group", group);
         model.addAttribute("discipline", discipline);
         model.addAttribute("disciplineMarks", new DisciplineMarksDTO(marks));

@@ -77,8 +77,11 @@
                             </thead>
                             <tbody>
                             <tr th:each="mark,i : ${disciplineMarks.marks}">
-                                <td class="col-md-8 vertical-center"
-                                    th:text="${mark.student.surname} + ' ' + ${mark.student.name}"></td>
+                                <td class="col-md-8 vertical-center">
+                                    <a th:href="@{/management/students/__${mark.student.id}__}">
+                                        <span th:text="${mark.student.surname + ' ' + mark.student.name}"></span>
+                                    </a>
+                                </td>
                                 <td class="col-md-2 vertical-center center"
                                     th:text="${mark.mark != null ? mark.mark : '-'}"></td>
                                 <td class="col-md-2">

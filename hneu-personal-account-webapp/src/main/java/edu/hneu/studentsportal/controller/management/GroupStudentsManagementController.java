@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ public class GroupStudentsManagementController extends AbstractManagementControl
     @GetMapping("/{groupId}/students")
     public String getDisciplines(@PathVariable Long groupId, Model model) {
         Group group = groupRepository.findById(groupId).orElseThrow(IllegalArgumentException::new);
-        List<Student> students = studentRepository.findByGroup(group);
+        List<Student> students = studentRepository.findByGroup(group, new Sort(Sort.Direction.ASC, "surname", "name"));
         model.addAttribute("students", students);
         model.addAttribute("group", group);
         model.addAttribute("title", "management-students");
