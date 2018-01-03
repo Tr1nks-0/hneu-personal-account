@@ -62,6 +62,8 @@ public class Discipline {
     @Length(min = 3, max = 100)
     private String label;
 
+    private boolean secondary;
+
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     private DisciplineType type;

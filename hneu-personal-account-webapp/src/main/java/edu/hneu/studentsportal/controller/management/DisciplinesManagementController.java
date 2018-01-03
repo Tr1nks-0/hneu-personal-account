@@ -20,6 +20,7 @@ import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,10 +30,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_DISCIPLINES_URL;
+import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.*;
 import static java.util.Objects.isNull;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 @Log4j
 @Controller
@@ -117,7 +121,6 @@ public class DisciplinesManagementController extends AbstractManagementControlle
     }
 
     private String prepareDisciplinesPage(Model model, Discipline discipline) {
-        EducationProgram educationProgram = discipline.getEducationProgram();
         Speciality speciality = discipline.getSpeciality();
         Faculty faculty = speciality.getFaculty();
         model.addAttribute("discipline", discipline);
@@ -127,9 +130,15 @@ public class DisciplinesManagementController extends AbstractManagementControlle
         model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
         model.addAttribute("controlForms", DisciplineFormControl.values());
         model.addAttribute("disciplineTypes", DisciplineType.values());
-        model.addAttribute("disciplines", disciplineRepository.findByCourseAndSemesterAndSpecialityAndEducationProgram(
-                discipline.getCourse(), discipline.getSemester(), speciality, educationProgram));
+        model.addAttribute("disciplines", findAllDisciplinesLike(discipline));
         model.addAttribute("title", "management-disciplines");
         return "management/disciplines-page";
+    }
+
+    private List<Discipline> findAllDisciplinesLike(Discipline discipline) {
+        Specifications<Discipline> spec = where(hasCourseAndSemester(discipline.getCourse(), discipline.getSemester()))
+                .and(hasSpeciality(discipline.getSpeciality()))
+                .and(hasEducationProgram(discipline.getEducationProgram()));
+        return disciplineRepository.findAll(spec);
     }
 }

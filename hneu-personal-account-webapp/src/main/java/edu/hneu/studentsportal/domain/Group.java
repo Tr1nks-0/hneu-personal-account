@@ -27,6 +27,7 @@ public class Group {
     @ManyToOne(fetch = FetchType.LAZY)
     private Speciality speciality;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "education_program_id")
     private EducationProgram educationProgram;

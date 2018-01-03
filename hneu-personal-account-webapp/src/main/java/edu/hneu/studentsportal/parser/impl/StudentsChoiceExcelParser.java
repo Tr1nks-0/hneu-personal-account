@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,9 +21,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.*;
 import static java.lang.String.format;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
 import static org.apache.commons.lang.StringUtils.isEmpty;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 @Log4j
 @Component
@@ -105,9 +108,13 @@ public class StudentsChoiceExcelParser extends AbstractExcelParser<Map<Student, 
     }
 
     private Discipline findDiscipline(String code, int course, int semester, Speciality speciality, EducationProgram educationProgram) {
-        return disciplineRepository
-                .findByCodeAndCourseAndSemesterAndSpecialityAndEducationProgram(code, course, semester, speciality, educationProgram)
-                .orElseThrow(() -> new IllegalStateException(format("Cannot find discipline: code=%s, course=%s, semester=%s, speciality=%s, educationProgram=%s", code, course, semester, speciality, educationProgram)));
+        Specifications<Discipline> spec = where(hasCode(code)
+                .and(hasCourseAndSemester(course, semester))
+                .and(hasSpeciality(speciality))
+                .and(hasEducationProgram(educationProgram)));
+        return Optional.ofNullable(disciplineRepository.findOne(spec))
+                .orElseThrow(() -> new IllegalStateException(format("Cannot find discipline: code=%s, course=%s, semester=%s, speciality=%s, educationProgram=%s",
+                        code, course, semester, speciality, educationProgram)));
     }
 
     private void putOrUpdateStudentsChoice(Map<Student, List<Discipline>> choice, Student student, Discipline discipline) {

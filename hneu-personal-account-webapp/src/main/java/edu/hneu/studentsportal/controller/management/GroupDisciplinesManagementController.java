@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_GROUPS_URL;
-import static java.util.stream.Collectors.toList;
+import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.*;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 @Log4j
 @Controller
@@ -34,22 +35,20 @@ public class GroupDisciplinesManagementController extends AbstractManagementCont
                                  @RequestParam(defaultValue = "1") int course,
                                  @RequestParam(defaultValue = "1") int semester, Model model) {
         Group group = groupRepository.findById(groupId).orElseThrow(IllegalArgumentException::new);
-        List<Discipline> disciplines = disciplineRepository.findBySpecialityAndEducationProgram(group.getSpeciality(), group.getEducationProgram());
         model.addAttribute("group", group);
-        model.addAttribute("disciplines", filterDisciplinesByCourseAndSemester(disciplines, course, semester));
-        model.addAttribute("courses", countCourses(disciplines));
+        model.addAttribute("disciplines", getGroupDisciplines(group, course, semester));
+        model.addAttribute("lastCourse", disciplineRepository.getLastCourse(group.getSpeciality().getId(), group.getEducationProgram().getId()));
         model.addAttribute("selectedCourse", course);
         model.addAttribute("selectedSemester", semester);
         model.addAttribute("title", "management-disciplines");
         return "management/group-disciplines-page";
     }
 
-    private List<Discipline> filterDisciplinesByCourseAndSemester(List<Discipline> disciplines, int course, int semester) {
-        return disciplines.stream().filter(d -> d.getCourse() == course && d.getSemester() == semester).collect(toList());
-    }
-
-    private List<Integer> countCourses(List<Discipline> disciplines) {
-        return disciplines.stream().map(Discipline::getCourse).distinct().collect(toList());
+    private List<Discipline> getGroupDisciplines(Group group, int course, int semester) {
+        return disciplineRepository.findAll(where(hasSpeciality(group.getSpeciality()))
+                .and(hasEducationProgram(group.getEducationProgram()))
+                .and(hasCourseAndSemester(course, semester))
+                .and(isNotTemporal()));
     }
 
     @Override
