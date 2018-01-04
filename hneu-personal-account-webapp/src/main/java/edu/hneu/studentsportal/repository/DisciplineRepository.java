@@ -47,5 +47,9 @@ public interface DisciplineRepository extends JpaRepository<Discipline, Long>, J
                     cb.or(cb.equal(root.get("type"), DisciplineType.REGULAR), cb.isTrue(root.get("secondary"))))
             );
         }
+
+        public static Specifications<Discipline> isTemporal() {
+            return Specifications.where((root, query, cb) -> cb.and(cb.isFalse(root.get("secondary"))));
+        }
     }
 }

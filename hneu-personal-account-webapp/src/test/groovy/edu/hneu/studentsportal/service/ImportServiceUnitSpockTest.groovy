@@ -16,8 +16,6 @@ class ImportServiceUnitSpockTest extends Specification {
     def disciplinesExcelParserMock = Mock(DisciplinesExcelParser)
     def studentsChoiceExcelParserMock = Mock(StudentsChoiceExcelParser)
     def disciplineRepositoryMock = Mock(DisciplineRepository)
-    def studentRepositoryMock = Mock(StudentRepository)
-    def disciplineMarkServiceMock = Mock(DisciplineMarkService)
     def disciplineMock1 = Mock(Discipline)
     def disciplineMock2 = Mock(Discipline)
     def disciplineMarkMock1 = Mock(DisciplineMark)
@@ -25,12 +23,7 @@ class ImportServiceUnitSpockTest extends Specification {
 
     def disciplines = [disciplineMock1, disciplineMock2]
 
-    def importService = new ImportService(
-            parseFactoryMock,
-            studentRepositoryMock,
-            disciplineMarkServiceMock,
-            disciplineRepositoryMock
-    )
+    def importService = new ImportService(parseFactoryMock, disciplineRepositoryMock)
 
     def setup() {
         parseFactoryMock.newDisciplinesParser() >> disciplinesExcelParserMock

@@ -25,14 +25,14 @@ public class DisciplineMark {
     @Cascade(CascadeType.SAVE_UPDATE)
     private Discipline discipline;
 
+    @NonNull
     @ManyToOne
     @Cascade(CascadeType.ALL)
     private Student student;
 
     private String mark;
 
-    public DisciplineMark(Discipline discipline, String mark) {
+    public DisciplineMark(Discipline discipline) {
         this.discipline = discipline;
-        this.mark = mark;
     }
 }

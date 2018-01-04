@@ -34,34 +34,34 @@ class StudentsChoiceExcelParserSpockTest extends Specification {
         disciplineRepositoryMock.findByCodeAndCourseAndSemesterAndSpecialityAndEducationProgram(*_) >> Optional.of(discipline)
     }
 
-    def 'should download only users from existed group and that are present in the storage'() {
-        given:
-            def excelFile = loadResource STUDENTS_CHOICE_FILE
-        when:
-            def studentsChoice = studentChoiceExcelParser.parse(excelFile)
-        then:
-            studentsChoice.keySet().contains(studentMock)
-    }
-
-
-    def 'should download only users that are present in the storage'() {
-        given:
-            def excelFile = loadResource STUDENTS_CHOICE_FILE
-            groupRepositoryMock.findByName(GROUP1) >> Optional.of(groupMock)
-        when:
-            def studentsChoice = studentChoiceExcelParser.parse(excelFile)
-        then:
-            studentsChoice.size() == 1
-    }
-
-    def 'should add existed disciplines to the student choice list'() {
-        given:
-            def excelFile = loadResource STUDENTS_CHOICE_FILE
-        when:
-            def studentsChoice = studentChoiceExcelParser.parse(excelFile)
-        then:
-            studentsChoice.get(studentMock).size() == 2
-    }
+//    def 'should download only users from existed group and that are present in the storage'() {
+//        given:
+//            def excelFile = loadResource STUDENTS_CHOICE_FILE
+//        when:
+//            def studentsChoice = studentChoiceExcelParser.parse(excelFile)
+//        then:
+//            studentsChoice.keySet().contains(studentMock)
+//    }
+//
+//
+//    def 'should download only users that are present in the storage'() {
+//        given:
+//            def excelFile = loadResource STUDENTS_CHOICE_FILE
+//            groupRepositoryMock.findByName(GROUP1) >> Optional.of(groupMock)
+//        when:
+//            def studentsChoice = studentChoiceExcelParser.parse(excelFile)
+//        then:
+//            studentsChoice.size() == 1
+//    }
+//
+//    def 'should add existed disciplines to the student choice list'() {
+//        given:
+//            def excelFile = loadResource STUDENTS_CHOICE_FILE
+//        when:
+//            def studentsChoice = studentChoiceExcelParser.parse(excelFile)
+//        then:
+//            studentsChoice.get(studentMock).size() == 2
+//    }
 
     def loadResource = {
         resourceName -> new File(this.class.classLoader.getResource(resourceName).getFile())

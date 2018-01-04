@@ -32,28 +32,26 @@
 
                 <div class="panel-body">
                     <ul class="list-group" id="accordion" th:if="${!#maps.isEmpty(studentsChoice)}">
-                        <li class="list-group-item" th:each="studentChoice : ${studentsChoice}">
+                        <li class="list-group-item" th:each="studentChoice,i : ${studentsChoice}">
                             <div th:with="student=${studentChoice.key}">
                                 <a data-toggle="collapse" data-parent="#accordion"
-                                   href="#collapse${i.index}" th:text="${student.surname + ' ' +  student.name}"></a>
-                                <a href="/management/students/${student.id}" class="float-right">
-                                    <i class="fa fa-edit"></i>
-                                </a>
+                                   th:href="@{#collapse__${i.index}__}"
+                                   th:text="${student.surname + ' ' +  student.name}"></a>
                             </div>
-                            <div id="collapse${i.index}" class="panel-collapse collapse">
+                            <div th:id="'collapse' + ${i.index}" class="panel-collapse collapse">
                                 <table class="table no-margin">
-                                    <tr th:each="choice : ${studentChoice.value}">
-                                        <td th:text="${${choice.label}}"></td>
+                                    <tr th:each="discipline : ${studentChoice.value}">
+                                        <td th:text="${discipline.label}"></td>
                                         <td>
-                                            <span class="label label-info" th:text="${type.name}"></span>
+                                            <span class="label label-info" th:text="${discipline.type.name}"></span>
                                         </td>
                                         <td>
                                             <span th:text="#{form.label.student.profile.course}"></span>
-                                            <span th:text="${choice.course}"></span>
+                                            <span th:text="${discipline.course}"></span>
                                         </td>
                                         <td>
                                             <span th:text="#{form.label.student.profile.semester}"></span>
-                                            <span th:text="${choice.semester}"></span>
+                                            <span th:text="${discipline.semester}"></span>
                                         </td>
                                     </tr>
                                 </table>

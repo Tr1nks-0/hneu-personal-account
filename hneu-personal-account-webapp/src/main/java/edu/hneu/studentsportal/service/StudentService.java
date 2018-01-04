@@ -18,8 +18,7 @@ import org.springframework.web.client.RestOperations;
 
 import java.util.List;
 
-import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.hasEducationProgram;
-import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.hasSpeciality;
+import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.*;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -41,8 +40,11 @@ public class StudentService {
 
     public Student createStudent(StudentDTO studentDTO) {
         String studentEmail = receiveStudentEmail(studentDTO.getName(), studentDTO.getSurname(), studentDTO.getGroup().getName());
-        List<Discipline> disciplines = disciplineRepository.findAll(where(hasSpeciality(studentDTO.getSpeciality()))
-                .and(hasEducationProgram(studentDTO.getEducationProgram())));
+        List<Discipline> disciplines = disciplineRepository.findAll(
+                where(hasSpeciality(studentDTO.getSpeciality()))
+                        .and(hasEducationProgram(studentDTO.getEducationProgram()))
+                        .and(isTemporal())
+        );
         List<DisciplineMark> marks = disciplines.stream().map(DisciplineMark::new).collect(toList());
 
         final Student student = Student.builder()
@@ -61,7 +63,7 @@ public class StudentService {
                 .disciplineMarks(marks)
                 .build();
 
-        marks.forEach(m -> m.setStudent(student));
+        marks.forEach(mark -> mark.setStudent(student));
         userService.create(studentEmail, UserRole.STUDENT);
         Student createdStudent = studentRepository.save(student);
         log.info(String.format("New [%s] has been added", createdStudent));
