@@ -34,9 +34,10 @@
                     <table class="table no-margin" th:if="${!#lists.isEmpty(disciplines)}">
                         <thead>
                             <tr>
-                                <th class="center" th:text="#{form.label.name}"></th>
+                                <th th:text="#{form.label.name}"></th>
                                 <th class="center" th:text="#{form.label.discipline.course}"></th>
                                 <th class="center" th:text="#{form.label.discipline.semester}"></th>
+                                <th class="center" th:text="#{form.label.discipline.type}"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,6 +45,7 @@
                                 <td th:text="${discipline.label}"></td>
                                 <td class="center" th:text="${discipline.course}"></td>
                                 <td class="center" th:text="${discipline.semester}"></td>
+                                <td class="center" th:text="${discipline.type.name}"></td>
                             </tr>
                         </tbody>
                     </table>
