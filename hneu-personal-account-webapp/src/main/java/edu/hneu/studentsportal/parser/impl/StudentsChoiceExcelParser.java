@@ -8,10 +8,10 @@ import edu.hneu.studentsportal.parser.Indexer;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
+import edu.hneu.studentsportal.service.StudentService;
 import javaslang.control.Try;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.domain.Specifications;
@@ -36,6 +36,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class StudentsChoiceExcelParser extends AbstractExcelParser<Map<Student, List<Discipline>>> {
 
     private final StudentRepository studentRepository;
+    private final StudentService studentService;
     private final GroupRepository groupRepository;
     private final DisciplineRepository disciplineRepository;
 
@@ -136,7 +137,7 @@ public class StudentsChoiceExcelParser extends AbstractExcelParser<Map<Student, 
             log.info(format("New mark[%s] was added to student[%s]", newMark, student));
             student.getDisciplineMarks().add(newMark);
         }
-        studentRepository.save(student);
+        studentService.save(student);
     }
 
     private Optional<DisciplineMark> findStudentMarkWithTemporalDiscipline(Student student, DisciplineType disciplineType, Integer index) {

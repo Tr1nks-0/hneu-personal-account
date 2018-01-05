@@ -5,6 +5,7 @@ import edu.hneu.studentsportal.enums.DisciplineFormControl;
 import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.repository.*;
 import edu.hneu.studentsportal.service.DisciplineMarkService;
+import edu.hneu.studentsportal.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
@@ -26,6 +27,7 @@ import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_STUD
 public class StudentsManagementController extends AbstractManagementController {
 
     private final StudentRepository studentRepository;
+    private final StudentService studentService;
     private final FacultyRepository facultyRepository;
     private final SpecialityRepository specialityRepository;
     private final EducationProgramRepository educationProgramRepository;
@@ -43,7 +45,7 @@ public class StudentsManagementController extends AbstractManagementController {
         if (bindingResult.hasErrors()) {
             return prepareStudentEditorPage(model, student);
         } else {
-            studentRepository.save(student);
+            studentService.save(student);
             log.info(String.format("New [%s] has been added", student.toString()));
             redirectAttributes.addFlashAttribute("success", "success.save.student");
             return "redirect:/management/students/" + student.getId();

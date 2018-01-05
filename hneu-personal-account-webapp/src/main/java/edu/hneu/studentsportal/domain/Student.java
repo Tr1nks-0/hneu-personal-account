@@ -92,4 +92,6 @@ public class Student {
     @LimitSemesterDisciplines(count = 2, type = DisciplineType.MAGMAYNOR)
     private List<DisciplineMark> disciplineMarks;
 
+    private Double averageMark;
+
 }

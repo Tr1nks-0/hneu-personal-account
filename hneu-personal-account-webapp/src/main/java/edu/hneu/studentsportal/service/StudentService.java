@@ -10,6 +10,8 @@ import edu.hneu.studentsportal.repository.StudentRepository;
 import javaslang.control.Try;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -49,10 +51,10 @@ public class StudentService {
 
         final Student student = Student.builder()
                 .scheduleStudentId(studentDTO.getScheduleStudentId())
-                .email(studentEmail)
-                .name(studentDTO.getName().trim())
-                .surname(studentDTO.getSurname().trim())
-                .passportNumber(studentDTO.getPassportNumber().trim())
+                .email("oleksandr.rozdolskyi@hneu.net")
+                .name(studentDTO.getName())
+                .surname(studentDTO.getSurname())
+                .passportNumber(studentDTO.getPassportNumber())
                 .faculty(studentDTO.getFaculty())
                 .speciality(studentDTO.getSpeciality())
                 .educationProgram(studentDTO.getEducationProgram())
@@ -65,7 +67,7 @@ public class StudentService {
 
         marks.forEach(mark -> mark.setStudent(student));
         userService.create(studentEmail, UserRole.STUDENT);
-        Student createdStudent = studentRepository.save(student);
+        Student createdStudent = save(student);
         log.info(String.format("New [%s] has been added", createdStudent));
         return createdStudent;
     }
@@ -82,5 +84,23 @@ public class StudentService {
         } else {
             throw new IllegalArgumentException(messageService.emailNotFoundForStudent(formattedName + " " + formatterSurname));
         }
+    }
+
+    public Student save(Student student) {
+        student.setAverageMark(calculateAverageMark(student));
+        return studentRepository.save(student);
+    }
+
+    private Double calculateAverageMark(Student student) {
+        List<Double> studentMarks = student.getDisciplineMarks().stream()
+                .map(DisciplineMark::getMark)
+                .filter(NumberUtils::isNumber)
+                .map(Double::valueOf)
+                .collect(toList());
+        if (studentMarks.size() > 0) {
+            double total = studentMarks.stream().mapToDouble(m -> m).sum();
+            return Precision.round(total / studentMarks.size(), 2);
+        }
+        return null;
     }
 }
