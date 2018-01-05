@@ -20,10 +20,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.CREATE_STUDENTS_URL;
 import static java.util.Objects.nonNull;
@@ -42,7 +44,7 @@ public class CreateStudentManagementController extends AbstractManagementControl
     private final EmailService emailService;
 
     @GetMapping
-    public String createStudent(Model model,
+    public String createStudent(Model model, HttpSession session,
                                 @RequestParam(required = false) Long facultyId,
                                 @RequestParam(required = false) Long specialityId,
                                 @RequestParam(required = false) Long educationProgramId) throws URISyntaxException {
@@ -51,14 +53,19 @@ public class CreateStudentManagementController extends AbstractManagementControl
             return "redirect:/management/faculties";
         }
 
-        Faculty faculty = facultyRepository.findById(facultyId).orElse(faculties.get(0));
+        Faculty faculty = getFaculty(facultyId, session).orElse(faculties.get(0));
         List<Speciality> specialities = specialityRepository.findAllByFacultyId(faculty.getId());
         if (specialities.isEmpty()) {
             return "redirect:/management/specialities?facultyId=" + faculty.getId();
         }
 
-        Speciality speciality = specialityRepository.findById(specialityId).orElse(specialities.get(0));
-        EducationProgram educationProgram = educationProgramRepository.findById(educationProgramId);
+        Speciality speciality = getSpeciality(specialityId, session).orElse(specialities.get(0));
+        List<EducationProgram> educationPrograms = educationProgramRepository.findAllBySpeciality(speciality);
+        if (educationPrograms.isEmpty()) {
+            return "redirect:/management/education-programs?facultyId=" + faculty.getId() + "&specialityId=" + speciality.getId();
+        }
+
+        EducationProgram educationProgram = getEducationProgram(educationProgramId, session).orElse(educationPrograms.get(0));
         List<Group> groups = groupRepository.findBySpecialityAndEducationProgram(speciality, educationProgram);
         if (groups.isEmpty() && nonNull(educationProgram)) {
             return new URIBuilder("redirect:/management/groups")
@@ -68,18 +75,45 @@ public class CreateStudentManagementController extends AbstractManagementControl
                     .toString();
         }
 
-        return prepareStudentPage(model, StudentDTO.builder()
+        return prepareStudentPage(model, session, StudentDTO.builder()
                 .faculty(faculty)
                 .speciality(speciality)
                 .educationProgram(educationProgram)
                 .build());
     }
 
-    @PostMapping
-    public String createStudent(@ModelAttribute @Valid StudentDTO student, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) throws IOException {
-        if (bindingResult.hasErrors()) {
-            return prepareStudentPage(model, student);
+    private Optional<Faculty> getFaculty(Long facultyId, HttpSession session) {
+        if (nonNull(facultyId)) {
+            return facultyRepository.findById(facultyId);
         } else {
+            return Optional.ofNullable(session.getAttribute("selectedFaculty")).map(Faculty.class::cast);
+        }
+    }
+
+    private Optional<Speciality> getSpeciality(Long specialityId, HttpSession session) {
+        if (nonNull(specialityId)) {
+            return specialityRepository.findById(specialityId);
+        } else {
+            return Optional.ofNullable(session.getAttribute("selectedSpeciality")).map(Speciality.class::cast);
+        }
+    }
+
+    private Optional<EducationProgram> getEducationProgram(Long educationProgramId, HttpSession session) {
+        if (nonNull(educationProgramId)) {
+            return educationProgramRepository.findById(educationProgramId);
+        } else {
+            return Optional.ofNullable(session.getAttribute("selectedEducationProgram"))
+                    .map(EducationProgram.class::cast);
+        }
+    }
+
+    @PostMapping
+    public String createStudent(@ModelAttribute @Valid StudentDTO student, BindingResult bindingResult,
+                                RedirectAttributes redirectAttributes, Model model, HttpSession session) throws IOException {
+        if (bindingResult.hasErrors()) {
+            return prepareStudentPage(model, session, student);
+        } else {
+            storeStudentData(session, student);
             Student newStudent = studentService.createStudent(student);
             emailService.sendProfileWasCreatedEmail(newStudent);
             redirectAttributes.addFlashAttribute("success", "success.add.student");
@@ -87,20 +121,29 @@ public class CreateStudentManagementController extends AbstractManagementControl
         }
     }
 
-    private String prepareStudentPage(Model model, StudentDTO student) {
+    private String prepareStudentPage(Model model, HttpSession session, StudentDTO student) {
+        Optional.ofNullable(session.getAttribute("selectedGroup")).map(Group.class::cast).ifPresent(student::setGroup);
+        Optional.ofNullable(session.getAttribute("incomeYear")).map(Integer.class::cast).ifPresent(student::setIncomeYear);
+        storeStudentData(session, student);
+
         Faculty faculty = student.getFaculty();
         Speciality speciality = student.getSpeciality();
         EducationProgram educationProgram = student.getEducationProgram();
         model.addAttribute("faculties", facultyRepository.findAll());
         model.addAttribute("specialities", specialityRepository.findAllByFacultyId(faculty.getId()));
         model.addAttribute("educationPrograms", educationProgramRepository.findAllBySpeciality(speciality));
-        model.addAttribute("selectedFaculty", faculty);
-        model.addAttribute("selectedSpeciality", speciality);
-        model.addAttribute("selectedEducationProgram", educationProgram);
         model.addAttribute("groups", groupRepository.findBySpecialityAndEducationProgram(speciality, educationProgram));
         model.addAttribute("student", student);
         model.addAttribute("title", "management-create-student");
         return "management/create-student-page";
+    }
+
+    private void storeStudentData(HttpSession session, StudentDTO student) {
+        session.setAttribute("selectedFaculty", student.getFaculty());
+        session.setAttribute("selectedSpeciality", student.getSpeciality());
+        session.setAttribute("selectedEducationProgram", student.getEducationProgram());
+        session.setAttribute("selectedGroup", student.getGroup());
+        session.setAttribute("incomeYear", student.getIncomeYear());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

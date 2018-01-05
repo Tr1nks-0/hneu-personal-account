@@ -29,7 +29,7 @@
                             <div class="col-md-6 form-group">
                                 <label for="faculty" class="control-label"
                                        th:text="#{form.label.student.faculty}"></label>
-                                <select id="faculty" name="faculty" class="form-control">
+                                <select id="faculty" name="faculty" class="form-control" th:required="required">
                                     <option th:each="faculty : ${faculties}"
                                             th:value="${faculty.id}"
                                             th:text="${faculty.name}"
@@ -40,7 +40,7 @@
                             <div class="col-md-6 form-group">
                                 <label for="speciality" class="control-label"
                                        th:text="#{form.label.student.speciality}"></label>
-                                <select id="speciality" th:field="*{speciality}" class="form-control">
+                                <select id="speciality" th:field="*{speciality}" class="form-control" th:required="required">
                                     <option th:each="speciality : ${specialities}"
                                             th:value="${speciality.id}"
                                             th:text="${speciality.name}">
@@ -50,8 +50,7 @@
                             <div class="col-md-12 form-group">
                                 <label for="educationProgram" class="control-label"
                                        th:text="#{form.label.student.educationProgram}"></label>
-                                <select id="educationProgram" th:field="*{educationProgram}" class="form-control">
-                                    <option value="">&nbsp;</option>
+                                <select id="educationProgram" th:field="*{educationProgram}" class="form-control" th:required="required">
                                     <option th:each="educationProgram : ${educationPrograms}"
                                             th:value="${educationProgram.id}"
                                             th:text="${educationProgram.name}">

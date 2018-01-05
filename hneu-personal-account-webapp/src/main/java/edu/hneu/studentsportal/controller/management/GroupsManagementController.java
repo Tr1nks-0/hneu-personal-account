@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_GROUPS_URL;
@@ -57,7 +58,10 @@ public class GroupsManagementController extends AbstractManagementController {
         if (isNull(faculty))
             return "redirect:/management/specialities";
         Speciality speciality = specialityService.findByIdOrDefault(specialityId, faculty);
-        EducationProgram educationProgram = educationProgramRepository.findById(educationProgramId);
+        List<EducationProgram> educationPrograms = educationProgramRepository.findAllBySpeciality(speciality);
+        if (educationPrograms.isEmpty())
+            return "redirect:/management/education-programs?facultyId=" + faculty.getId() + "&specialityId=" + speciality.getId();
+        EducationProgram educationProgram = educationProgramRepository.findById(educationProgramId).orElse(educationPrograms.get(0));
         Group group = new Group();
         group.setSpeciality(speciality);
         group.setEducationProgram(educationProgram);

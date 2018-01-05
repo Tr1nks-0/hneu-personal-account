@@ -64,7 +64,10 @@ public class DisciplinesManagementController extends AbstractManagementControlle
         if (isNull(faculty))
             return "redirect:/management/specialities";
         Speciality speciality = specialityService.findByIdOrDefault(specialityId, faculty);
-        EducationProgram educationProgram = educationProgramRepository.findById(educationProgramId);
+        List<EducationProgram> educationPrograms = educationProgramRepository.findAllBySpeciality(speciality);
+        if (educationPrograms.isEmpty())
+            return "redirect:/management/education-programs?facultyId=" + faculty.getId() + "&specialityId=" + speciality.getId();
+        EducationProgram educationProgram = educationProgramRepository.findById(educationProgramId).orElse(educationPrograms.get(0));
         Discipline discipline = new Discipline();
         discipline.setEducationProgram(educationProgram);
         discipline.setSpeciality(speciality);

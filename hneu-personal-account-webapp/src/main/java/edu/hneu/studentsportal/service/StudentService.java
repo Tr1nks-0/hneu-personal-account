@@ -51,7 +51,7 @@ public class StudentService {
 
         final Student student = Student.builder()
                 .scheduleStudentId(studentDTO.getScheduleStudentId())
-                .email("oleksandr.rozdolskyi@hneu.net")
+                .email(studentEmail)
                 .name(studentDTO.getName())
                 .surname(studentDTO.getSurname())
                 .passportNumber(studentDTO.getPassportNumber())

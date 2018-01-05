@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
@@ -81,7 +79,7 @@ public class DisciplinesExcelParser extends AbstractExcelParser<List<Discipline>
 
     private EducationProgram parseEducationProgram(Indexer indexer) {
         Integer id = getIntegerCellValue(indexer, 1);
-        return Optional.ofNullable(educationProgramRepository.findById(Long.valueOf(id)))
+        return educationProgramRepository.findById(Long.valueOf(id))
                 .orElseThrow(() -> new IllegalStateException("Cannot find education program for code: " + id));
     }
 

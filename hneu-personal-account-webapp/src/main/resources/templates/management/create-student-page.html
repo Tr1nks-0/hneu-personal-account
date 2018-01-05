@@ -35,7 +35,7 @@
                                     <option th:each="faculty : ${faculties}"
                                             th:value="${faculty.id}"
                                             th:text="${faculty.name}"
-                                            th:selected="${faculty.id == selectedFaculty.id}">
+                                            th:selected="${faculty.id == session.selectedFaculty.id}">
                                     </option>
                                 </select>
                             </div>
@@ -46,7 +46,7 @@
                                     <option th:each="speciality : ${specialities}"
                                             th:value="${speciality.id}"
                                             th:text="${speciality.name}"
-                                            th:selected="${speciality.id == selectedSpeciality.id}">
+                                            th:selected="${speciality.id == session.selectedSpeciality.id}">
                                     </option>
                                 </select>
                             </div>
@@ -54,11 +54,10 @@
                                 <label for="educationProgram" class="control-label"
                                        th:text="#{form.label.student.educationProgram}"></label>
                                 <select id="educationProgram" name="educationProgram" class="form-control">
-                                    <option value="">&nbsp;</option>
                                     <option th:each="educationProgram : ${educationPrograms}"
                                             th:value="${educationProgram.id}"
                                             th:text="${educationProgram.name}"
-                                            th:selected="${selectedEducationProgram != null and educationProgram.id == selectedEducationProgram.id}">
+                                            th:selected="${session.selectedEducationProgram != null and educationProgram.id == session.selectedEducationProgram.id}">
                                     </option>
                                 </select>
                             </div>
