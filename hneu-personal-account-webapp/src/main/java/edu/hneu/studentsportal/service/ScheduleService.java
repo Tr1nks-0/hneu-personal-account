@@ -4,7 +4,6 @@ import com.google.api.client.util.Maps;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.domain.dto.schedule.Schedule;
 import edu.hneu.studentsportal.domain.dto.schedule.ScheduleElement;
-import javaslang.control.Option;
 import javaslang.control.Try;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -50,7 +49,7 @@ public class ScheduleService {
 
     private int getEducationYear(LocalDate currentDate) {
         Month currentMonth = currentDate.getMonth();
-        if(currentMonth.compareTo(Month.JANUARY) >= 0 && currentMonth.compareTo(Month.AUGUST) <= 0)
+        if (currentMonth.compareTo(Month.JANUARY) >= 0 && currentMonth.compareTo(Month.AUGUST) <= 0)
             return currentDate.getYear() - 1;
         return currentDate.getYear();
     }
@@ -63,7 +62,12 @@ public class ScheduleService {
     }
 
     public int getCurrentCourse(Student studentProfile) {
-        return LocalDate.now().getYear() - studentProfile.getIncomeYear() + 1;
+        LocalDate currentDate = LocalDate.now();
+        if (currentDate.getMonth().compareTo(Month.SEPTEMBER) >= 0 && currentDate.getMonth().compareTo(Month.DECEMBER) <= 0) {
+            return currentDate.getYear() - studentProfile.getIncomeYear() + 1;
+        } else {
+            return currentDate.getYear() - studentProfile.getIncomeYear();
+        }
     }
 
     private Consumer<ScheduleElement> groupByDayAndPairNumber(Map<Integer, Map<Integer, ScheduleElement>> pairs) {
