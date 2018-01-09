@@ -8,6 +8,7 @@ import edu.hneu.studentsportal.repository.DisciplineMarkRepository;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.service.EmailService;
+import edu.hneu.studentsportal.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.StringUtils;
@@ -37,6 +38,7 @@ public class GroupDisciplineMarksManagementController extends AbstractManagement
     private final DisciplineMarkRepository disciplineMarkRepository;
     private final GroupRepository groupRepository;
     private final EmailService emailService;
+    private final StudentService studentService;
 
     @GetMapping("/{groupId}/disciplines/{disciplineId}")
     public String getDisciplines(@PathVariable Long groupId,
@@ -71,7 +73,7 @@ public class GroupDisciplineMarksManagementController extends AbstractManagement
             }
         });
         if (isFalse(marksToSave.isEmpty())) {
-            disciplineMarkRepository.save(marksToSave);
+            marksToSave.forEach(mark -> studentService.save(mark.getStudent()));
             marksToSave.stream().map(DisciplineMark::getStudent).forEach(emailService::sendProfileWasChangedEmail);
             redirectAttributes.addFlashAttribute("success", "success.update.marks");
         }
