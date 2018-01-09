@@ -134,6 +134,7 @@ public class DisciplinesManagementController extends AbstractManagementControlle
         model.addAttribute("controlForms", DisciplineFormControl.values());
         model.addAttribute("disciplineTypes", DisciplineType.values());
         model.addAttribute("disciplines", findAllDisciplinesLike(discipline));
+        model.addAttribute("lastCourse", disciplineRepository.getLastCourse(speciality.getId(), discipline.getEducationProgram().getId()));
         model.addAttribute("title", "management-disciplines");
         return "management/disciplines-page";
     }
