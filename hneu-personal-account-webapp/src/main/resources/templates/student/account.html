@@ -18,7 +18,7 @@
                     <div class="student-info col-md-5 col-sm-12 col-xs-12">
                         <table class="table-sm no-margin no-border">
                             <tr>
-                                <td rowspan="3" class="info-label-container hidden-xs">
+                                <td rowspan="3" class="info-label-container hidden-xs hidden-sm">
                                     <i class="info-label ion-ios-book-outline"></i>
                                 </td>
                                 <td th:text="#{form.label.student.faculty} + ' ' + ${profile.faculty.name}"></td>
@@ -35,7 +35,7 @@
                          th:if="${not #lists.isEmpty(profile.contactInfo)}">
                         <table class="table-sm no-margin no-border">
                             <tr>
-                                <td rowspan="3" class="info-label-container hidden-xs">
+                                <td rowspan="3" class="info-label-container hidden-xs hidden-sm">
                                     <i class="info-label ion ion-ios-telephone-outline"></i>
                                 </td>
                                 <td th:text="#{form.label.student.contacts} + ':'"></td>
