@@ -16,7 +16,8 @@
                 <li class="active" th:text="#{form.label.management.education.programs}"></li>
             </ol>
 
-            <form action="#" id="educationProgram" th:action="@{/management/education-programs}" th:object="${educationProgram}"
+            <form action="#" id="educationProgram" th:action="@{/management/education-programs}"
+                  th:object="${educationProgram}"
                   method="post">
 
                 <div th:include="fragments/error" th:remove="tag"></div>
@@ -31,7 +32,7 @@
                                  th:text="#{form.label.management.education.programs.add}"></div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="faculty" class="control-label"
                                            th:text="#{form.label.student.faculty}"></label>
@@ -44,7 +45,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="speciality" class="control-label"
                                            th:text="#{form.label.student.speciality}"></label>
@@ -63,14 +64,16 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="code" class="control-label" th:text="#{form.label.code}"></label>
-                                    <input id="code" th:field="*{code}" class="form-control" required="required"/>
+                                    <input id="code" th:field="*{code}" class="form-control"
+                                           pattern="^[А-Яа-яёЁЇїІіЄєҐґ]{1,100}$" required="required"/>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="name" class="control-label"
                                            th:text="#{form.label.student.educationProgram}"></label>
-                                    <input id="name" th:field="*{name}" class="form-control" required="required"/>
+                                    <input id="name" th:field="*{name}" class="form-control"
+                                           pattern="^[А-Яа-яёЁЇїІіЄєҐґ\\'\s]{3,100}$" required="required"/>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +90,7 @@
                     </div>
                 </div>
                 <div class="panel-body education-programs-management-panel">
-                    <table class="table no-margin" th:if="${!#lists.isEmpty(educationPrograms)}">
+                    <table class="table table-striped no-margin" th:if="${!#lists.isEmpty(educationPrograms)}">
                         <thead>
                         <tr>
                             <th th:text="#{form.label.code}"></th>

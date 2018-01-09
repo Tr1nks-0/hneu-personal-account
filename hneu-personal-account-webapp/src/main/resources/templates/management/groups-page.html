@@ -40,7 +40,8 @@
                             <div class="col-md-6 form-group">
                                 <label for="speciality" class="control-label"
                                        th:text="#{form.label.student.speciality}"></label>
-                                <select id="speciality" th:field="*{speciality}" class="form-control" th:required="required">
+                                <select id="speciality" th:field="*{speciality}" class="form-control"
+                                        th:required="required">
                                     <option th:each="speciality : ${specialities}"
                                             th:value="${speciality.id}"
                                             th:text="${speciality.name}">
@@ -50,7 +51,8 @@
                             <div class="col-md-12 form-group">
                                 <label for="educationProgram" class="control-label"
                                        th:text="#{form.label.student.educationProgram}"></label>
-                                <select id="educationProgram" th:field="*{educationProgram}" class="form-control" th:required="required">
+                                <select id="educationProgram" th:field="*{educationProgram}" class="form-control"
+                                        th:required="required">
                                     <option th:each="educationProgram : ${educationPrograms}"
                                             th:value="${educationProgram.id}"
                                             th:text="${educationProgram.name}">
@@ -63,7 +65,8 @@
                     <div class="panel-body">
                         <div class="col-md-6 form-group">
                             <label for="name" class="control-label" th:text="#{form.label.name}"></label>
-                            <input type="text" id="name" th:field="*{name}" class="form-control" required="required"/>
+                            <input type="text" id="name" th:field="*{name}" class="form-control"
+                                   pattern="^[А-Яа-яёЁЇїІіЄєҐґ\\'\s]{3,100}$" required="required"/>
                         </div>
                         <div class="col-md-6 form-group">
                             <label for="id" class="control-label" th:text="#{form.label.code}"></label>
@@ -83,7 +86,7 @@
                     </div>
                 </div>
                 <div class="panel-body disciplines-management-panel">
-                    <table class="table no-margin" th:if="${!#lists.isEmpty(groups)}">
+                    <table class="table table-striped no-margin" th:if="${!#lists.isEmpty(groups)}">
                         <thead>
                         <tr>
                             <th th:text="#{form.label.code}"></th>
@@ -93,7 +96,8 @@
                         </thead>
                         <tbody>
                         <tr th:each="group : ${groups}">
-                            <td><a th:href="@{/management/groups/__${group.id}__/students}" th:text="${group.id}"></a></td>
+                            <td><a th:href="@{/management/groups/__${group.id}__/students}" th:text="${group.id}"></a>
+                            </td>
                             <td th:text="${group.name}"></td>
                             <td>
                                 <button th:attr="group-id=${group.id}"
