@@ -5,10 +5,7 @@ import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.domain.User;
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.repository.StudentRepository;
-import edu.hneu.studentsportal.service.CustomUserDetailsService;
-import edu.hneu.studentsportal.service.DisciplineMarkService;
-import edu.hneu.studentsportal.service.ScheduleService;
-import edu.hneu.studentsportal.service.UserService;
+import edu.hneu.studentsportal.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
@@ -44,6 +41,7 @@ public class AccountController {
     private final CustomUserDetailsService userDetailsService;
     private final ScheduleService scheduleService;
     private final DisciplineMarkService disciplineMarkService;
+    private final StudentService studentService;
 
     @GetMapping
     public ModelAndView account(@RequestParam(required = false) Integer course, HttpSession session,
@@ -67,6 +65,7 @@ public class AccountController {
         model.addAttribute("courses", courses);
         model.addAttribute("selectedCourse", selectedCourse);
         model.addAttribute("groupedMarks", marks);
+        model.addAttribute("studentRating", studentService.getStudentRating(student));
         session.setAttribute("groupId", student.getGroup().getId());
         session.setAttribute("email", student.getEmail());
         return new ModelAndView("student/account", "profile", student);

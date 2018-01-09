@@ -14,6 +14,8 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
@@ -21,6 +23,8 @@ import org.springframework.web.client.RestOperations;
 import java.util.List;
 
 import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.*;
+import static edu.hneu.studentsportal.repository.StudentRepository.StudentSpecifications.hasIncomeYear;
+import static edu.hneu.studentsportal.repository.StudentRepository.StudentSpecifications.hasSpecialityAndEducationProgram;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -102,5 +106,12 @@ public class StudentService {
             return Precision.round(total / studentMarks.size(), 2);
         }
         return null;
+    }
+
+    public Integer getStudentRating(Student student) {
+        Specifications<Student> specifications = where(hasSpecialityAndEducationProgram(student.getSpeciality(), student.getEducationProgram()))
+                .and(hasIncomeYear(student.getIncomeYear()));
+        List<Student> students = studentRepository.findAll(specifications, new Sort(Sort.Direction.ASC, "averageMark"));
+        return students.indexOf(student);
     }
 }

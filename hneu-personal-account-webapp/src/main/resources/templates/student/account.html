@@ -23,35 +23,36 @@
                                 </td>
                                 <td th:text="#{form.label.student.faculty} + ' ' + ${profile.faculty.name}"></td>
                             </tr>
-                            <tr><td th:text="#{form.label.student.incomeYear} + ' ' + ${profile.incomeYear}"></td></tr>
-                            <tr><td th:text="#{form.label.student.group} + ' ' + ${profile.group.name}"></td></tr>
+                            <tr>
+                                <td th:text="#{form.label.student.incomeYear} + ' ' + ${profile.incomeYear}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{form.label.student.group} + ' ' + ${profile.group.name}"></td>
+                            </tr>
                         </table>
                     </div>
-                    <div class="student-info col-md-4 col-sm-12 col-xs-12" th:if="${not #lists.isEmpty(profile.contactInfo)}">
+                    <div class="student-info col-md-4 col-sm-12 col-xs-12"
+                         th:if="${not #lists.isEmpty(profile.contactInfo)}">
                         <table class="table-sm no-margin no-border">
                             <tr>
-                                <td rowspan="2" class="info-label-container hidden-xs">
+                                <td rowspan="3" class="info-label-container hidden-xs">
                                     <i class="info-label ion ion-ios-telephone-outline"></i>
                                 </td>
                                 <td th:text="#{form.label.student.contacts} + ':'"></td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <div th:each="contact : ${profile.contactInfo}" th:text="${contact}"></div>
-                                </td>
+                            <tr rowspan="2">
+                                <td><div th:each="contact : ${profile.contactInfo}" th:text="${contact}"></div></td>
                             </tr>
                         </table>
                     </div>
                     <div class="student-info col-md-3 col-sm-12 col-xs-12" th:if="${profile.averageMark != null}">
                         <table class="table-sm no-margin no-border">
-                            <tr class="hidden-sm hidden-md hidden-lg">
-                                <td th:text="#{form.label.discipline.average} + ':'"></td>
-                            </tr>
+                            <tr><td th:text="#{form.label.discipline.rating} + ':'"></td></tr>
                             <tr>
-                                <td class="info-label-container hidden-xs">
-                                    <i class="info-label ion ion-ios-settings"></i>
+                                <td class="average-mark">
+                                    <i class="ion ion-ios-star-outline"></i>
+                                    <span th:text="${studentRating} + ' - ' + ${profile.averageMark}"></span>
                                 </td>
-                                <td class="average-mark" th:text="${profile.averageMark}"></td>
                             </tr>
                         </table>
                     </div>
