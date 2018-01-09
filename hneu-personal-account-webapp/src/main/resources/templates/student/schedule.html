@@ -17,13 +17,13 @@
                        th:if="${week lt 53}">Наступна</a>
                 </div>
 
-                <div class="hidden-xs hidden-sm" th:include="fragments/student/schedule-desktop"></div>
-                <div class="hidden-md hidden-lg" th:include="fragments/student/schedule-mobile"></div>
+                <div th:if="${!#maps.isEmpty(pairsCountPerDay)}">
+                    <div class="hidden-xs hidden-sm" th:include="fragments/student/schedule-desktop"></div>
+                    <div class="hidden-md hidden-lg" th:include="fragments/student/schedule-mobile"></div>
+                </div>
             </div>
 
-            <div th:if="${#lists.isEmpty(pairs)}">
-                <h4 th:text="#{student.schedule.pairs.list.empty}"></h4>
-            </div>
+            <div th:if="${#maps.isEmpty(pairsCountPerDay)}" th:text="#{items.not.found}"></div>
 
             <div th:include="fragments/error" th:remove="tag"></div>
         </section>
