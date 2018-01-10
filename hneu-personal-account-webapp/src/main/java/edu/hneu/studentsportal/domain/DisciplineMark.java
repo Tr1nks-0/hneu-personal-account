@@ -6,6 +6,7 @@ import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Data
 @Entity
@@ -30,6 +31,7 @@ public class DisciplineMark {
     @Cascade(CascadeType.ALL)
     private Student student;
 
+    @Pattern(regexp = "\\d{1,2}|100|залік")
     private String mark;
 
     public DisciplineMark(Discipline discipline) {

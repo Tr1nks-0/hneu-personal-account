@@ -38,21 +38,28 @@
                                 <td rowspan="3" class="info-label-container hidden-xs hidden-sm">
                                     <i class="info-label ion ion-ios-telephone-outline"></i>
                                 </td>
-                                <td th:text="#{form.label.student.contacts} + ':'"></td>
+                                <td><b th:text="#{form.label.student.contacts} + ':'"></b></td>
                             </tr>
                             <tr rowspan="2">
-                                <td><div th:each="contact : ${profile.contactInfo}" th:text="${contact}"></div></td>
+                                <td>
+                                    <div th:each="contact : ${profile.contactInfo}" th:text="${contact}"></div>
+                                </td>
                             </tr>
                         </table>
                     </div>
                     <div class="student-info col-md-3 col-sm-12 col-xs-12" th:if="${profile.averageMark != null}">
                         <table class="table-sm no-margin no-border">
-                            <tr><td th:text="#{form.label.discipline.rating} + ':'"></td></tr>
                             <tr>
-                                <td class="average-mark">
-                                    <i class="ion ion-ios-star-outline"></i>
-                                    <span th:text="${studentRating} + ' - ' + ${profile.averageMark}"></span>
+                                <td rowspan="3" class="info-label-container hidden-xs hidden-sm">
+                                    <i class="info-label ion-ios-star-outline"></i>
                                 </td>
+                                <td><b th:text="#{form.label.student.rating} + ': '"></b></td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{form.label.student.rating.place} + ': ' + ${studentRating}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="#{form.label.student.average.mark} + ': ' + ${profile.averageMark}"></td>
                             </tr>
                         </table>
                     </div>
@@ -77,7 +84,7 @@
             <div th:each="marksPerSemester : ${groupedMarks}">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <span class="label label-default" th:text="${'СЕМЕСТР №' + marksPerSemester.key}"></span>
+                        <span class="label label-default" th:text="${marksPerSemester.key + ' семестр'}"></span>
                         <span class="pull-right show-marks"
                               data-toggle="collapse"
                               th:attr="data-target='#marks' + ${marksPerSemester.key},aria-expanded=true">

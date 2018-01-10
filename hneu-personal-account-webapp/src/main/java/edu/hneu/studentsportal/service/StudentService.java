@@ -111,7 +111,7 @@ public class StudentService {
     public Integer getStudentRating(Student student) {
         Specifications<Student> specifications = where(hasSpecialityAndEducationProgram(student.getSpeciality(), student.getEducationProgram()))
                 .and(hasIncomeYear(student.getIncomeYear()));
-        List<Student> students = studentRepository.findAll(specifications, new Sort(Sort.Direction.ASC, "averageMark"));
-        return students.indexOf(student);
+        List<Student> students = studentRepository.findAll(specifications, new Sort(Sort.Direction.DESC, "averageMark"));
+        return students.indexOf(student) + 1;
     }
 }

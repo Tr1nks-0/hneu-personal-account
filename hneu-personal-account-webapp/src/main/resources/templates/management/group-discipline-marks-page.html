@@ -86,7 +86,7 @@
                                     th:text="${mark.mark != null ? mark.mark : '-'}"></td>
                                 <td class="col-md-2">
                                     <input th:field="*{marks[__${i.index}__].mark}" class="form-control" type="text"
-                                           pattern="^\d{1,2}|100|З|з|Н|н$"/>
+                                           pattern="^\d{1,2}|100|залік$"/>
                                 </td>
                                 <input type="hidden" th:field="*{marks[__${i.index}__].id}"/>
                                 <input type="hidden" th:field="*{marks[__${i.index}__].student}"/>

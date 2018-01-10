@@ -120,7 +120,7 @@
                                             <div th:each="course : ${courses}" th:remove="tag">
                                                 <tr>
                                                     <td colspan="5">
-                                                        <span class="label label-primary" th:text="${'Курс №' + course}"></span>
+                                                        <span class="label label-primary" th:text="${course + ' курс'}"></span>
                                                     </td>
                                                 </tr>
                                                 <div th:each="semester : ${#numbers.sequence(1, 2)}" th:remove="tag">
@@ -133,7 +133,7 @@
                                                                 <td class="col-md-2 vertical-center center" th:text="${disciplineMark.discipline.controlForm.name}"></td>
                                                                 <td class="col-md-2 vertical-center center" th:text="${disciplineMark.discipline.type.name}"></td>
                                                                 <td class="col-md-1">
-                                                                    <input th:field="*{disciplineMarks[__${i.index}__].mark}" class="form-control" type="text"/>
+                                                                    <input th:field="*{disciplineMarks[__${i.index}__].mark}" class="form-control" pattern="^\d{1,2}|100|залік$" type="text"/>
                                                                 </td>
                                                                 <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].id}"/>
                                                                 <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.id}"/>

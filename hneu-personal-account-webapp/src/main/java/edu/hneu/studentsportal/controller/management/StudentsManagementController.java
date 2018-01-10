@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_GROUPS_URL;
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_STUDENTS_URL;
 
 @Log4j
@@ -61,7 +62,7 @@ public class StudentsManagementController extends AbstractManagementController {
 
     @Override
     public String baseUrl() {
-        return MANAGE_STUDENTS_URL;
+        return MANAGE_GROUPS_URL;
     }
 
     @Override
