@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_DISCIPLINES_URL;
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_GROUPS_URL;
 import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.*;
+import static java.util.Objects.isNull;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 @Log4j
@@ -35,9 +37,13 @@ public class GroupDisciplinesManagementController extends AbstractManagementCont
                                  @RequestParam(defaultValue = "1") int course,
                                  @RequestParam(defaultValue = "1") int semester, Model model) {
         Group group = groupRepository.findById(groupId).orElseThrow(IllegalArgumentException::new);
+        Integer lastCourse = disciplineRepository.getLastCourse(group.getSpeciality().getId(), group.getEducationProgram().getId());
+        if (isNull(lastCourse)) {
+            return "redirect:" + IMPORT_DISCIPLINES_URL;
+        }
         model.addAttribute("group", group);
         model.addAttribute("disciplines", getGroupDisciplines(group, course, semester));
-        model.addAttribute("lastCourse", disciplineRepository.getLastCourse(group.getSpeciality().getId(), group.getEducationProgram().getId()));
+        model.addAttribute("lastCourse", lastCourse);
         model.addAttribute("selectedCourse", course);
         model.addAttribute("selectedSemester", semester);
         model.addAttribute("title", "management-disciplines");

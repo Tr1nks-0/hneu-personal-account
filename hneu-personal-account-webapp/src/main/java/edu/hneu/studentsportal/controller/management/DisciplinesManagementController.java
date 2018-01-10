@@ -33,6 +33,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_DISCIPLINES_URL;
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_DISCIPLINES_URL;
 import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.*;
 import static java.util.Objects.isNull;
@@ -125,6 +126,10 @@ public class DisciplinesManagementController extends AbstractManagementControlle
 
     private String prepareDisciplinesPage(Model model, Discipline discipline) {
         Speciality speciality = discipline.getSpeciality();
+        Integer lastCourse = disciplineRepository.getLastCourse(speciality.getId(), discipline.getEducationProgram().getId());
+        if (isNull(lastCourse)) {
+            return "redirect:" + IMPORT_DISCIPLINES_URL;
+        }
         Faculty faculty = speciality.getFaculty();
         model.addAttribute("discipline", discipline);
         model.addAttribute("faculties", facultyRepository.findAll());
@@ -134,7 +139,7 @@ public class DisciplinesManagementController extends AbstractManagementControlle
         model.addAttribute("controlForms", DisciplineFormControl.values());
         model.addAttribute("disciplineTypes", DisciplineType.values());
         model.addAttribute("disciplines", findAllDisciplinesLike(discipline));
-        model.addAttribute("lastCourse", disciplineRepository.getLastCourse(speciality.getId(), discipline.getEducationProgram().getId()));
+        model.addAttribute("lastCourse", lastCourse);
         model.addAttribute("title", "management-disciplines");
         return "management/disciplines-page";
     }

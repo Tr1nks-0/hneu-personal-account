@@ -4,8 +4,6 @@ public final class ControllerConstants {
 
     public static final String IMPORT_STUDENTS_URL = "/management/import/student";
     public static final String CREATE_STUDENTS_URL = "/management/students/create";
-    public static final String IMPORT_STUDENTS_MARKS_URL = "/management/import/student-marks";
-    public static final String IMPORTED_STUDENTS_MARKS_URL = "/management/import/student-marks/imported";
     public static final String IMPORT_STUDENTS_CHOICE_URL = "/management/import/students-choice";
     public static final String IMPORT_DISCIPLINES_URL = "/management/import/disciplines";
     public static final String MANAGE_DISCIPLINES_URL = "/management/disciplines";
