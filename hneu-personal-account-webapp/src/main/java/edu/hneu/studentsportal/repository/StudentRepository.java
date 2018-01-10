@@ -1,6 +1,8 @@
 package edu.hneu.studentsportal.repository;
 
-import edu.hneu.studentsportal.domain.*;
+import edu.hneu.studentsportal.domain.Group;
+import edu.hneu.studentsportal.domain.Speciality;
+import edu.hneu.studentsportal.domain.Student;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -24,16 +26,11 @@ public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpec
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     class StudentSpecifications {
 
-        public static Specifications<Student> hasSpecialityAndEducationProgram(Speciality speciality, EducationProgram educationProgram) {
+        public static Specifications<Student> hasSpecialityAndIncomeYear(Speciality speciality, Integer incomeYear) {
             return Specifications.where((root, query, cb) -> cb.and(
                     cb.equal(root.get("speciality"), speciality),
-                    cb.equal(root.get("educationProgram"), educationProgram))
+                    cb.equal(root.get("incomeYear"), incomeYear))
             );
         }
-
-        public static Specifications<Student> hasIncomeYear(Integer incomeYear) {
-            return Specifications.where((root, query, cb) -> cb.and(cb.equal(root.get("incomeYear"), incomeYear)));
-        }
-
     }
 }

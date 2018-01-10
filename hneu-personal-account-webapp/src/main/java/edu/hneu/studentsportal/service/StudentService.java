@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.service;
 
-import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.domain.dto.StudentDTO;
@@ -22,9 +21,7 @@ import org.springframework.web.client.RestOperations;
 
 import java.util.List;
 
-import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.*;
-import static edu.hneu.studentsportal.repository.StudentRepository.StudentSpecifications.hasIncomeYear;
-import static edu.hneu.studentsportal.repository.StudentRepository.StudentSpecifications.hasSpecialityAndEducationProgram;
+import static edu.hneu.studentsportal.repository.StudentRepository.StudentSpecifications.hasSpecialityAndIncomeYear;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -38,20 +35,15 @@ public class StudentService {
     private final RestOperations restTemplate;
     private final StudentRepository studentRepository;
     private final UserService userService;
-    private final DisciplineRepository disciplineRepository;
     private final FileService fileService;
+    private final DisciplineMarkService disciplineMarkService;
 
     @Value("${integration.service.emails.url}")
     public String emailsIntegrationServiceUrl;
 
     public Student createStudent(StudentDTO studentDTO) {
         String studentEmail = receiveStudentEmail(studentDTO.getName(), studentDTO.getSurname(), studentDTO.getGroup().getName());
-        List<Discipline> disciplines = disciplineRepository.findAll(
-                where(hasSpeciality(studentDTO.getSpeciality()))
-                        .and(hasEducationProgram(studentDTO.getEducationProgram()))
-                        .and(isTemporal())
-        );
-        List<DisciplineMark> marks = disciplines.stream().map(DisciplineMark::new).collect(toList());
+        List<DisciplineMark> marks = disciplineMarkService.createMarksForNewStudent(studentDTO.getSpeciality(), studentDTO.getEducationProgram());
 
         final Student student = Student.builder()
                 .scheduleStudentId(studentDTO.getScheduleStudentId())
@@ -109,8 +101,7 @@ public class StudentService {
     }
 
     public Integer getStudentRating(Student student) {
-        Specifications<Student> specifications = where(hasSpecialityAndEducationProgram(student.getSpeciality(), student.getEducationProgram()))
-                .and(hasIncomeYear(student.getIncomeYear()));
+        Specifications<Student> specifications = where(hasSpecialityAndIncomeYear(student.getSpeciality(), student.getIncomeYear()));
         List<Student> students = studentRepository.findAll(specifications, new Sort(Sort.Direction.DESC, "averageMark"));
         return students.indexOf(student) + 1;
     }

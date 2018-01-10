@@ -1,6 +1,5 @@
 package edu.hneu.studentsportal.service
 
-import edu.hneu.studentsportal.repository.DisciplineRepository
 import edu.hneu.studentsportal.repository.StudentRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestOperations
@@ -22,8 +21,8 @@ class StudentServiceSpockTest extends Specification {
     def restTemplateMock = Mock(RestOperations)
     def studentRepositoryMock = Mock(StudentRepository)
     def userServiceMock = Mock(UserService)
-    def disciplineRepositoryMock = Mock(DisciplineRepository)
     def fileServiceMock = Mock(FileService)
+    def disciplineMarkServiceMock = Mock(DisciplineMarkService)
     def restEntityMock = Mock(ResponseEntity)
 
     def studentEmailReceivingService = new StudentService(
@@ -31,8 +30,8 @@ class StudentServiceSpockTest extends Specification {
             restTemplateMock,
             studentRepositoryMock,
             userServiceMock,
-            disciplineRepositoryMock,
-            fileServiceMock
+            fileServiceMock,
+            disciplineMarkServiceMock
     )
 
     def setup() {
