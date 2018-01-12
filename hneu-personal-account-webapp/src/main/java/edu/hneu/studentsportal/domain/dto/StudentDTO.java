@@ -26,6 +26,7 @@ public class StudentDTO {
     private Faculty faculty;
     @NotNull
     private Speciality speciality;
+    @NotNull
     private EducationProgram educationProgram;
     @NotNull
     private Group group;

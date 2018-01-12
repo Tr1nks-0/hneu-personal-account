@@ -30,8 +30,8 @@ public class FileService {
     }
 
     @SneakyThrows
-    public byte[] getProfilePhoto(MultipartFile multipartFile) {
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(multipartFile.getBytes()));
+    public byte[] getProfilePhoto(byte[] photoBytes) {
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(photoBytes));
 
         // change the image size of a profile's photo
         final int width = 90;

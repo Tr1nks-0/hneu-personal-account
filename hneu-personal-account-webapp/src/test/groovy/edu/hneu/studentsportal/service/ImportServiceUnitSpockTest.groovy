@@ -25,29 +25,29 @@ class ImportServiceUnitSpockTest extends Specification {
 
     def importService = new ImportService(parseFactoryMock, disciplineRepositoryMock)
 
-    def setup() {
-        parseFactoryMock.newDisciplinesParser() >> disciplinesExcelParserMock
-        parseFactoryMock.newStudentsChoiceParser() >> studentsChoiceExcelParserMock
-        disciplineMarkMock1.discipline >> disciplineMock1
-        disciplineMarkMock2.discipline >> disciplineMock2
-    }
-
-    def 'should parse disciplines when import disciplines'() {
-        given:
-        disciplinesExcelParserMock.parse(fileMock) >> disciplines
-        when:
-        def actual = importService.importDisciplines(fileMock)
-        then:
-        disciplines == actual
-    }
-
-    def 'should save all parsed disciplines when import disciplines'() {
-        given:
-        disciplinesExcelParserMock.parse(fileMock) >> disciplines
-        when:
-        importService.importDisciplines(fileMock)
-        then:
-        1 * disciplineRepositoryMock.save(disciplines)
-    }
+//    def setup() {
+//        parseFactoryMock.newDisciplinesParser() >> disciplinesExcelParserMock
+//        parseFactoryMock.newStudentsChoiceParser() >> studentsChoiceExcelParserMock
+//        disciplineMarkMock1.discipline >> disciplineMock1
+//        disciplineMarkMock2.discipline >> disciplineMock2
+//    }
+//
+//    def 'should parse disciplines when import disciplines'() {
+//        given:
+//        disciplinesExcelParserMock.parse(fileMock) >> disciplines
+//        when:
+//        def actual = importService.importDisciplines(fileMock)
+//        then:
+//        disciplines == actual
+//    }
+//
+//    def 'should save all parsed disciplines when import disciplines'() {
+//        given:
+//        disciplinesExcelParserMock.parse(fileMock) >> disciplines
+//        when:
+//        importService.importDisciplines(fileMock)
+//        then:
+//        1 * disciplineRepositoryMock.save(disciplines)
+//    }
 }
 

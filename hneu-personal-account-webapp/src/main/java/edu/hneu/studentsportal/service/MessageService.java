@@ -50,6 +50,9 @@ public interface MessageService {
     @Message("error.student.email.not.found")
     String emailNotFoundForStudent(String studentName);
 
+    @Message("error.student.disciplines.not.found")
+    String cannotFindDisciplines(String speciality, String educationProgram);
+
     @Message("error.admin.exists")
     String adminExistsError();
 

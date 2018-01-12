@@ -65,7 +65,7 @@
                                 <img th:src="@{/students/__${student.id}__/photo}" class="img-thumbnail" style="max-height: 140px; margin: 15px"/>
                             </div>
                             <div class="col-md-10 col-sm-9 col-xs-12 table-responsive">
-                                <table class="table no-margin">
+                                <table class="table table-condensed no-margin">
                                     <tr>
                                         <td><label class="control-label" th:text="#{form.label.student.email}"></label></td>
                                         <td th:text="${student.email}" colspan="3"></td>
@@ -105,7 +105,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table class="table no-margin">
+                                    <table class="table table-condensed no-margin">
                                         <thead>
                                             <tr>
                                                 <th class="center" th:text="#{form.label.discipline.label}"></th>
@@ -117,15 +117,15 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <div th:each="course : ${courses}" th:remove="tag">
+                                            <th:block th:each="course : ${courses}" th:remove="tag">
                                                 <tr>
                                                     <td colspan="5">
                                                         <span class="label label-primary" th:text="${course + ' курс'}"></span>
                                                     </td>
                                                 </tr>
-                                                <div th:each="semester : ${#numbers.sequence(1, 2)}" th:remove="tag">
-                                                    <div th:each="disciplineMark,i : ${student.disciplineMarks}">
-                                                        <div th:if="${disciplineMark.discipline.course == course and disciplineMark.discipline.semester == semester}">
+                                                <th:block th:each="semester : ${#numbers.sequence(1, 2)}" th:remove="tag">
+                                                    <th:block th:each="disciplineMark,i : ${student.disciplineMarks}">
+                                                        <th:block th:if="${disciplineMark.discipline.course == course and disciplineMark.discipline.semester == semester}">
                                                             <tr>
                                                                 <td class="col-md-4 vertical-center" th:text="${disciplineMark.discipline.label}"></td>
                                                                 <td class="col-md-1 vertical-center center" th:text="${disciplineMark.discipline.semester}"></td>
@@ -147,10 +147,10 @@
                                                                 <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.label}"/>
                                                                 <input type="hidden" th:field="*{disciplineMarks[__${i.index}__].discipline.type}"/>
                                                             </tr>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                        </th:block>
+                                                    </th:block>
+                                                </th:block>
+                                            </th:block>
                                         </tbody>
                                     </table>
                                 </div>

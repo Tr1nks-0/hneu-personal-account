@@ -25,6 +25,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class DisciplineMarkService {
 
     private final DisciplineRepository disciplineRepository;
+    private final MessageService messageService;
 
     public List<DisciplineMark> getStudentMarks(Student student, Integer course) {
         Predicate<DisciplineMark> hasGivenCourse = m -> Objects.equals(m.getDiscipline().getCourse(), course);
@@ -49,10 +50,11 @@ public class DisciplineMarkService {
 
 
     public List<DisciplineMark> createMarksForNewStudent(Speciality speciality, EducationProgram educationProgram) {
-        Specifications<Discipline> specifications = where(hasSpeciality(speciality))
-                .and(hasEducationProgram(educationProgram))
-                .and(isTemporal());
+        Specifications<Discipline> specifications = where(hasSpeciality(speciality)).and(hasEducationProgram(educationProgram)).and(isTemporal());
         List<Discipline> disciplines = disciplineRepository.findAll(specifications);
+        if (disciplines.isEmpty()) {
+            throw new IllegalStateException(String.format(messageService.cannotFindDisciplines(speciality.getName(), educationProgram.getName())));
+        }
         return disciplines.stream().map(DisciplineMark::new).collect(toList());
     }
 }

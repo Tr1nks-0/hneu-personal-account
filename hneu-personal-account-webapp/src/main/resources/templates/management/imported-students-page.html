@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head"></head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+    <header th:include="fragments/management/header" th:remove="tag"></header>
+    <aside th:include="fragments/management/sidebar" th:remove="tag"></aside>
+
+    <div class="content-wrapper">
+        <div class="content">
+
+            <ol class="breadcrumb panel panel-default">
+                <li><i class="fa fa-home"></i></li>
+                <li>
+                    <a href="/management/import/students"
+                       th:text="#{form.label.management.import.students}"></a>
+                </li>
+                <li class="active" th:text="#{form.label.management.imported.students}"></li>
+            </ol>
+
+            <div th:include="fragments/error" th:remove="tag"></div>
+            <div th:include="fragments/success" th:remove="tag"></div>
+
+            <div class="panel panel-danger" th:if="${!#lists.isEmpty(notImportedStudents)}">
+                <div class="panel-heading" th:text="#{form.label.management.not.imported.students}"></div>
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="student : ${notImportedStudents}">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span th:text="${student}"></span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="panel-footer">
+                    <p th:text="#{message.cannot.import.student}"></p>
+                    <ul>
+                        <li th:text="#{message.cannot.import.student.issue1}"></li>
+                        <li th:text="#{message.cannot.import.student.issue2}"></li>
+                        <li th:text="#{message.cannot.import.student.issue3}"></li>
+                        <li th:text="#{message.cannot.import.student.issue4}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="panel panel-default" th:if="${!#lists.isEmpty(createdStudents)}">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12 panel-title">
+                            <span th:text="#{form.label.management.imported.students}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <table class="students-table table table-confessed no-margin">
+                        <th:block th:each="student: ${createdStudents}">
+                            <tr>
+                                <td class="photo">
+                                    <a th:href="@{/management/students/__${student.id}__}">
+                                        <img th:src="@{/students/__${student.id}__/photo}" class="img-thumbnail"/>
+                                    </a>
+                                </td>
+                                <td>
+                                    <p>
+                                        <b th:text="#{form.label.student.fio} + ': '"></b>
+                                        <span th:text="${student.surname} + ' ' + ${student.name}"></span>
+                                    </p>
+                                    <p>
+                                        <b th:text="#{form.label.student.group} + ': '"></b>
+                                        <span th:text="${student.group.name}"></span>
+                                    </p>
+                                    <p>
+                                        <b th:text="#{form.label.student.incomeYear} + ': '"></b>
+                                        <span th:text="${student.incomeYear}"></span>
+                                    </p>
+                                    <p>
+                                        <b th:text="#{form.label.student.passportNumber} + ': '"></b>
+                                        <span th:text="${student.passportNumber}"></span>
+                                    </p>
+                                    <p>
+                                        <b th:text="#{form.label.student.scheduleStudentId} + ': '"></b>
+                                        <span th:text="${student.scheduleStudentId}"></span>
+                                    </p>
+                                    <p>
+                                        <b th:text="#{form.label.student.contacts} + ': '"></b>
+                                        <span th:text="${student.contactInfo}"></span>
+                                    </p>
+                                </td>
+                            </tr>
+
+                        </th:block>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div th:include="fragments/management/footer" th:remove="tag"></div>
+</div>
+</body>
+</html>

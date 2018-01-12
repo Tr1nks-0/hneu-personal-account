@@ -1,8 +1,10 @@
 package edu.hneu.studentsportal.parser;
 
 import edu.hneu.studentsportal.service.MessageService;
+import javaslang.control.Try;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -42,8 +44,10 @@ public abstract class AbstractExcelParser<E> {
 
     protected String getStringCellValue(int row, int col) {
         Row rowValue = getRow(row);
-        if (nonNull(rowValue) && nonNull(rowValue.getCell(col)))
-            return rowValue.getCell(col).toString();
+        if (nonNull(rowValue) && nonNull(rowValue.getCell(col))) {
+            Cell cell = rowValue.getCell(col);
+            return Try.of(cell::getStringCellValue).getOrElse(() -> String.valueOf(Double.valueOf(cell.getNumericCellValue()).intValue()));
+        }
         return StringUtils.EMPTY;
     }
 

@@ -8,6 +8,7 @@ import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import javaslang.control.Try;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.math3.util.Precision;
@@ -41,6 +42,7 @@ public class StudentService {
     @Value("${integration.service.emails.url}")
     public String emailsIntegrationServiceUrl;
 
+    @SneakyThrows
     public Student createStudent(StudentDTO studentDTO) {
         String studentEmail = receiveStudentEmail(studentDTO.getName(), studentDTO.getSurname(), studentDTO.getGroup().getName());
         List<DisciplineMark> marks = disciplineMarkService.createMarksForNewStudent(studentDTO.getSpeciality(), studentDTO.getEducationProgram());
@@ -55,7 +57,7 @@ public class StudentService {
                 .speciality(studentDTO.getSpeciality())
                 .educationProgram(studentDTO.getEducationProgram())
                 .incomeYear(studentDTO.getIncomeYear())
-                .photo(fileService.getProfilePhoto(studentDTO.getPhoto()))
+                .photo(fileService.getProfilePhoto(studentDTO.getPhoto().getBytes()))
                 .group(studentDTO.getGroup())
                 .contactInfo(studentDTO.getContactInfo())
                 .disciplineMarks(marks)
