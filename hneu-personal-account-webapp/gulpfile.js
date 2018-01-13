@@ -6,9 +6,19 @@ var minify = require('gulp-minify-css');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var merge = require('merge-stream');
+var del = require('del');
 
 var cssSrcLocaltion = './src/main/resources/theme/css';
 var jsSrcLocaltion = './src/main/resources/theme/js';
+
+gulp.task('clean', function(){
+    return del([
+        './src/main/resources/theme/css/main.css',
+        './src/main/resources/theme/css/main.min.css',
+        './src/main/resources/theme/js/main.js',
+        './src/main/resources/theme/js/main.min.js'
+    ]);
+});
 
 gulp.task('css', function () {
     return merge(lessStream(), cssStream())
@@ -51,4 +61,4 @@ function jsStream() {
         .pipe(concat('js-files.js'));
 }
 
-gulp.task('build', ['css', 'js', 'cssMinify', 'jsMinify']);
+gulp.task('build', ['clean', 'css', 'js', 'cssMinify', 'jsMinify']);
