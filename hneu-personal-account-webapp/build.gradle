@@ -64,6 +64,8 @@ dependencies {
     compile 'org.togglz:togglz-spring-security:2.4.1.Final'
     compile 'com.github.heneke.thymeleaf:thymeleaf-extras-togglz:1.0.1.RELEASE'
 
+    compile group: 'org.xhtmlrenderer', name: 'flying-saucer-core', version: '9.1.6'
+    compile group: 'org.xhtmlrenderer', name: 'flying-saucer-pdf-itext5', version: '9.1.6'
     compile 'org.springframework.boot:spring-boot-devtools:1.3.0.RELEASE'
     compileOnly 'org.projectlombok:lombok:1.16.14'
 

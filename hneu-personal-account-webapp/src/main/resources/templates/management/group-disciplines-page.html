@@ -46,6 +46,16 @@
             </div>
 
             <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <a th:href="@{/management/groups/__${group.id}__/disciplines/marks/pdf(course=${selectedCourse},semester=${selectedSemester})}"
+                               target="_blank" class="btn btn-default pull-right">
+                                Друк оцінок у PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 <div class="panel-body disciplines-management-panel">
                     <table class="table table-striped no-margin" th:if="${!#lists.isEmpty(disciplines)}">
                         <thead>

@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <style type='text/css'>
+        * { font-family: 'Arial Unicode MS'; }
+    </style>
+</head>
+<table>
+    <tr><td>Міністерство освіти і науки України</td></tr>
+    <tr><td>ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ ЕКОНОМІЧНИЙ УНІВЕРСИТЕТ ім.С.Кузнеця</td></tr>
+    <tr>
+        <td th:text="'Факультет: ' + ${faculty}"></td>
+        <td th:text="'Навчальний рік: ' + '2016/2017'"></td>
+    </tr>
+    <tr>
+        <td th:text="'Спеціальність / Напрям підготовки: ' + ${speciality} + '/' + ${educationProgram}"></td>
+        <td th:text="'Навчальний семестр: ' + ${semester}"></td>
+    </tr>
+</table>
+<body>
+<h1>Hi! My name is <span th:text="${name}"></span></h1>
+</body>
+</html>
