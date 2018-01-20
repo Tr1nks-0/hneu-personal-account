@@ -2,6 +2,7 @@ package edu.hneu.studentsportal.controller.management;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import edu.hneu.studentsportal.domain.Student;
+import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ImportService;
 import edu.hneu.studentsportal.validator.ExcelValidator;
@@ -35,6 +36,7 @@ public class ImportStudentsManagementController extends AbstractManagementContro
 
     private final ImportService importService;
     private final FileService fileService;
+    private final EmailService emailService;
 
     @GetMapping
     public String importStudents(Model model) {
@@ -47,7 +49,11 @@ public class ImportStudentsManagementController extends AbstractManagementContro
         File file = fileService.getFile(multipartFile);
         ExcelValidator.validate(file);
         Map<String, Student> students = fileService.perform(file, importService::importStudents);
-        model.addAttribute("createdStudents", students.values().stream().filter(Objects::nonNull).collect(toList()));
+        List<Student> importedStudents = students.values().stream().filter(Objects::nonNull).collect(toList());
+        importedStudents.forEach(emailService::sendProfileWasCreatedEmail);
+        model.addAttribute("createdStudents", importedStudents.stream()
+                .sorted((s1, s2) -> String.valueOf(s1.getSurname() + " " + s1.getName()).compareTo(s2.getSurname() + " " + s2.getName()))
+                .collect(toList()));
         model.addAttribute("notImportedStudents", extractNotImportedStudents(students));
         populateTitle(model);
         return "management/imported-students-page";

@@ -13,6 +13,7 @@ import javaslang.control.Try;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.apache.poi.ss.usermodel.PictureData;
+import org.apache.poi.xssf.usermodel.XSSFPictureData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
@@ -60,8 +62,8 @@ public class StudentsExcelParser extends AbstractExcelParser<Map<String, Student
     }
 
     private void validateDisciplinesExcelFile(int row) {
-        validateHeaders(row, newArrayList("Фото", "Група", "Рік вступу", "Прізвище",
-                "Ім’я, по батькові", "Серія паспорту", "ID у сервісі розкладу студентів", "Контактна інформація (дані через кому, без пробілів)"));
+        validateHeaders(row, newArrayList("Фото", "Група", "Рік вступу", "Прізвище", "Ім’я, по батькові",
+                "Серія паспорту", "ID у сервісі розкладу студентів", "Контактна інформація (дані через кому, без пробілів)", "Контракт"));
     }
 
     private boolean isNotFileEnd(int row) {
@@ -93,6 +95,7 @@ public class StudentsExcelParser extends AbstractExcelParser<Map<String, Student
                 .educationProgram(educationProgram)
                 .photo(fileService.getProfilePhoto(getStudentPhoto(indexer)))
                 .disciplineMarks(marks)
+                .contract("+".equals(getStringCellValue(indexer, 8)))
                 .build();
         marks.forEach(mark -> mark.setStudent(student));
         return student;
@@ -100,9 +103,13 @@ public class StudentsExcelParser extends AbstractExcelParser<Map<String, Student
 
     private byte[] getStudentPhoto(Indexer indexer) {
         List<? extends PictureData> allPictures = workbook.getAllPictures();
-        if (allPictures.size() < indexer.getValue())
-            throw new IllegalStateException();
-        return allPictures.get(indexer.getValue() - 1).getData();
+        Optional<XSSFPictureData> profilePhoto = allPictures.stream()
+                .filter(XSSFPictureData.class::isInstance)
+                .map(XSSFPictureData.class::cast)
+                .filter(picture -> picture.getPackagePart().getPartName().getName().endsWith("image" + indexer.getValue() + ".png"))
+                .findFirst();
+        return profilePhoto.map(XSSFPictureData::getData)
+                .orElseThrow(() -> new IllegalStateException("Image not found for i=" + indexer.getValue()));
     }
 
     private Group parseGroup(Indexer indexer) {

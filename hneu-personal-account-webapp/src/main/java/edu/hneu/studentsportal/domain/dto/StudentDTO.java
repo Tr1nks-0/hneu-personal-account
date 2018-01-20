@@ -46,4 +46,5 @@ public class StudentDTO {
     private List<String> contactInfo;
     @NotNull
     private MultipartFile photo;
+    private boolean contract;
 }

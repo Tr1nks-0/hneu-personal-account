@@ -86,6 +86,11 @@
                                         <b th:text="#{form.label.student.contacts} + ': '"></b>
                                         <span th:text="${student.contactInfo}"></span>
                                     </p>
+                                    <p>
+                                        <b th:text="#{form.label.student.contract} + ': '"></b>
+                                        <span th:text="#{btn.yes}" th:if="${student.contract}"></span>
+                                        <span th:text="#{btn.no}" th:if="${!student.contract}"></span>
+                                    </p>
                                 </td>
                             </tr>
 

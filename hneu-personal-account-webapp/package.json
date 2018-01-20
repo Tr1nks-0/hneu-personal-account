@@ -13,12 +13,12 @@
   "dependencies": {},
   "private": true,
   "devDependencies": {
-    "gulp": "*",
+    "del": "*",
+    "gulp": "^3.9.1",
     "gulp-concat": "*",
     "gulp-less": "*",
-    "gulp-uglify": "*",
     "gulp-minify-css": "*",
-    "del": "*",
+    "gulp-uglify": "*",
     "merge-stream": "*"
   }
 }

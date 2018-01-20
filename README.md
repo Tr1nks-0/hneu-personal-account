@@ -4,19 +4,20 @@ The web application is developed to make it possible to store all students profi
 ## Setup development environemnt 
 Install the dependencies: 
 * Java 8;
-* IDEA (your choice)
+* IDEA (your choice) + lombok plugin;
 * Gradle (optional);
 * Node & npm;
-* Mysql Server (as an alternative you can use docker to quickly manage your database instances - use instruction below).
+* Mysql Server (as an alternative you can use docker to quickly manage your database instances - use an instruction below).
 
-### Quickly create database locally using Docker
+### Quickly create database locally using Docker 
+\* required Docker Engine to be installed on your machine
 ```
 docker run --name stud_portal_db -p 3306:3306 \
  -e MYSQL_ROOT_PASSWORD=root \
  -e MYSQL_DATABASE=stud_portal \
  -e MYSQL_USER=stud_portal_admin \
  -e MYSQL_PASSWORD=qwerty \
- -v /tmp/mysql/data:/var/lib/mysql \
+ -v /tmp/mysql/data-hneu-portal:/var/lib/mysql \
  -d mysql --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
  ```
  

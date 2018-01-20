@@ -61,6 +61,7 @@ public class StudentService {
                 .group(studentDTO.getGroup())
                 .contactInfo(studentDTO.getContactInfo())
                 .disciplineMarks(marks)
+                .contract(studentDTO.isContract())
                 .build();
 
         marks.forEach(mark -> mark.setStudent(student));
@@ -89,13 +90,13 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    private Double calculateAverageMark(Student student) {
+    public Double calculateAverageMark(Student student) {
         List<Double> studentMarks = student.getDisciplineMarks().stream()
                 .map(DisciplineMark::getMark)
                 .filter(NumberUtils::isNumber)
                 .map(Double::valueOf)
                 .collect(toList());
-        if (studentMarks.size() > 0) {
+        if (!studentMarks.isEmpty()) {
             double total = studentMarks.stream().mapToDouble(m -> m).sum();
             return Precision.round(total / studentMarks.size(), 2);
         }

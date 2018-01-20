@@ -1,0 +1,110 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'/>
+    <style type='text/css'>
+        * {
+            font-family: 'Arial Unicode MS', monospace;
+            font-size: 11px;
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        .student-marks {
+            background-color: #000;
+        }
+
+        .student-marks td, th, caption {
+            font-size: 10px;
+            background-color: #fff
+        }
+
+        .top-table .secondary td {
+            padding: 0;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+<table class="top-table">
+    <tr>
+        <td colspan="2" class="center">
+            Міністерство освіти і науки України
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="center" style="font-size: 13px">
+            ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ ЕКОНОМІЧНИЙ УНІВЕРСИТЕТім.С.Кузнеця
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="center" style="font-size: 12px">
+            ВІДОМІСТЬ ОБЛІКУ УСПІШНОСТІ
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="center">академічної групи з навчальних дисциплін</td>
+    </tr>
+    <tr class="secondary">
+        <td th:text="'Факультет: ' + ${faculty}"></td>
+        <td class="right" th:text="'Навчальний рік: ' + ${year}"></td>
+    </tr>
+    <tr class="secondary">
+        <td th:text="'Спеціальність: ' + ${speciality}"></td>
+        <td class="right" th:text="'Навчальний курс: ' + ${course}"></td>
+    </tr>
+    <tr class="secondary">
+        <td th:text="'Напрям підготовки: ' + ${educationProgram}"></td>
+        <td class="right" th:text="'Навчальний семестр: ' + ${semester}"></td>
+    </tr>
+    <tr class="secondary">
+        <td th:text="'Група: ' + ${group}"></td>
+        <td class="right" th:text="'На дату: ' + ${currentDate}"></td>
+    </tr>
+</table>
+<table cellspacing="1" class="student-marks">
+    <tr>
+        <td rowspan="2" class="center">№</td>
+        <td rowspan="2" class="center">ПІБ</td>
+        <td rowspan="2" class="center">Пропуски</td>
+        <td rowspan="2" class="center">Фін</td>
+        <td class="center" style="max-width: 70px" th:each="discipline : ${disciplines}"
+            th:text="${discipline.label}"></td>
+        <td rowspan="2" class="center">Сер. бал</td>
+    </tr>
+    <tr>
+        <td class="center" th:each="discipline : ${disciplines}" th:text="${discipline.controlForm.name}"></td>
+    </tr>
+    <tr th:each="student,i : ${students}">
+        <td class="center" th:text="${i.index + 1}"></td>
+        <td th:text="${student.surname} + ' ' + ${student.name}"></td>
+        <td class="center"></td>
+        <td class="center" th:text="${student.contract ? 'к' : ''}"></td>
+        <td class="center" th:each="discipline : ${disciplines}"
+            th:text="${studentsColumns[student.email][discipline.code] != null ? studentsColumns[student.email][discipline.code] : '-'}"></td>
+        <td class="center"
+            th:text="${studentsColumns[student.email]['average']}"></td>
+    </tr>
+</table>
+<table style="padding-top: 10px;">
+    <tr>
+        <td style="padding-left: 20px">Декан факультету економічної інформатики</td>
+        <td>Фахівець факультету економічної інформатики</td>
+    </tr>
+</table>
+</body>
+</html>

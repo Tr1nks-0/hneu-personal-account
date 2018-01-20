@@ -38,7 +38,6 @@ public class ImportStudentsChoiceManagementController extends AbstractManagement
     private final ImportService importService;
     private final FileService fileService;
     private final EmailService emailService;
-    private final MessageService messageService;
 
     @GetMapping
     public String importStudent(Model model) {

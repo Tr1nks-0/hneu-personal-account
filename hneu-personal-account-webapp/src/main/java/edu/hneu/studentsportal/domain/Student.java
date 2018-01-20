@@ -94,4 +94,7 @@ public class Student {
 
     private Double averageMark;
 
+    @NotNull
+    private Boolean contract;
+
 }

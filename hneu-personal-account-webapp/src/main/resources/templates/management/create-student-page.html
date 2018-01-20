@@ -97,14 +97,22 @@
                             <div class="col-md-3 form-group">
                                 <label for="contacts" class="control-label"
                                        th:text="#{form.label.student.scheduleStudentId}"></label>
-                                <input id="scheduleStudentId" th:type="number" th:field="*{scheduleStudentId}" class="form-control"
+                                <input id="scheduleStudentId" th:type="number" th:field="*{scheduleStudentId}"
+                                       class="form-control"
                                        th:required="required"/>
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-4 form-group">
                                 <label for="contacts" class="control-label"
                                        th:text="#{form.label.student.contacts.in}"></label>
                                 <input id="contacts" th:type="text" th:field="*{contactInfo}" class="form-control"
                                        pattern="^[А-Яа-яёЁЇїІіЄєҐґ0-9+,]+$" th:required="required"/>
+                            </div>
+                            <div class="col-md-2 form-group">
+                                <label for="contract" class="control-label" th:text="#{form.label.student.contract}"></label>
+                                <select id="contract" th:field="*{contract}" class="form-control">
+                                    <option th:value="true" th:text="#{btn.yes}"></option>
+                                    <option th:value="false" th:text="#{btn.no}"></option>
+                                </select>
                             </div>
                             <div class="col-md-12 form-group">
                                 <label for="photo" th:text="#{form.label.student.photo}"></label>
@@ -113,11 +121,12 @@
                                         <span class="btn btn-default btn-file">
                                             <span th:text="#{form.label.management.browse}"></span>&hellip;
                                             <input th:field="*{photo}" type="file"
-                                                   th:placeholder="#{form.label.management.profiles}" accept=".png" th:required="required"/>
+                                                   th:placeholder="#{form.label.management.profiles}" accept=".png"
+                                                   th:required="required"/>
                                     </span>
                                     </span>
-                                        <input id="photo" type="text" class="form-control" readonly="readonly"/>
-                                        <span class="input-group-btn">
+                                    <input id="photo" type="text" class="form-control" readonly="readonly"/>
+                                    <span class="input-group-btn">
                                 </span>
                                 </div>
                             </div>
