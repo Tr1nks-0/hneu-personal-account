@@ -83,7 +83,7 @@ public class GenerateSemesterStudentsMarksPdfReportController extends AbstractMa
                 .and(hasSpeciality(group.getSpeciality()))
                 .and(hasEducationProgram(group.getEducationProgram()))
                 .and(isNotTemporal());
-        return disciplineRepository.findAll(spec);
+        return disciplineRepository.findAll(spec, new Sort(Sort.Direction.ASC, "controlForm"));
     }
 
     private Map<String, Map<String, String>> getStudentsColumns(List<Student> students, List<Discipline> disciplines) {

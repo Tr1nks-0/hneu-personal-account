@@ -28,9 +28,14 @@
             background-color: #000;
         }
 
-        .student-marks td, th, caption {
+        .student-marks td {
             font-size: 10px;
             background-color: #fff
+        }
+
+        .student-marks th {
+            font-size: 10px;
+            background-color: #ebebeb
         }
 
         .top-table .secondary td {
@@ -78,16 +83,16 @@
 </table>
 <table cellspacing="1" class="student-marks">
     <tr>
-        <td rowspan="2" class="center">№</td>
-        <td rowspan="2" class="center">ПІБ</td>
-        <td rowspan="2" class="center">Пропуски</td>
-        <td rowspan="2" class="center">Фін</td>
-        <td class="center" style="max-width: 70px" th:each="discipline : ${disciplines}"
-            th:text="${discipline.label}"></td>
-        <td rowspan="2" class="center">Сер. бал</td>
+        <th rowspan="2" class="center">№</th>
+        <th rowspan="2" class="center">ПІБ</th>
+        <th rowspan="2" class="center">Пропуски</th>
+        <th rowspan="2" class="center">Фін</th>
+        <th class="center" style="max-width: 70px" th:each="discipline : ${disciplines}"
+            th:text="${discipline.label}"></th>
+        <th rowspan="2" class="center">Сер. бал</th>
     </tr>
     <tr>
-        <td class="center" th:each="discipline : ${disciplines}" th:text="${discipline.controlForm.name}"></td>
+        <th class="center" th:each="discipline : ${disciplines}" th:text="${discipline.controlForm.name}"></th>
     </tr>
     <tr th:each="student,i : ${students}">
         <td class="center" th:text="${i.index + 1}"></td>

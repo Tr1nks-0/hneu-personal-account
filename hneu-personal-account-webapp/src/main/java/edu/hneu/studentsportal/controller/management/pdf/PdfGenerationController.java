@@ -11,11 +11,9 @@ public interface PdfGenerationController {
     @SneakyThrows
     default void writePdfToResponse(HttpServletResponse response, Consumer<ServletOutputStream> consumer) {
         response.setContentType("application/pdf");
-        ServletOutputStream outputStream = response.getOutputStream();
-        try {
+        try (ServletOutputStream outputStream = response.getOutputStream()) {
             consumer.accept(outputStream);
-        } catch (Exception e) {
-            outputStream.close();
+        } finally {
             response.flushBuffer();
         }
     }
