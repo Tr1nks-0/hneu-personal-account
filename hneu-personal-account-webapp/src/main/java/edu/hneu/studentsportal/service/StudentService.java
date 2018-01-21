@@ -86,12 +86,12 @@ public class StudentService {
     }
 
     public Student save(Student student) {
-        student.setAverageMark(calculateAverageMark(student));
+        student.setAverageMark(calculateAverageMark(student.getDisciplineMarks()));
         return studentRepository.save(student);
     }
 
-    public Double calculateAverageMark(Student student) {
-        List<Double> studentMarks = student.getDisciplineMarks().stream()
+    public Double calculateAverageMark(List<DisciplineMark> disciplineMarks) {
+        List<Double> studentMarks = disciplineMarks.stream()
                 .map(DisciplineMark::getMark)
                 .filter(NumberUtils::isNumber)
                 .map(Double::valueOf)

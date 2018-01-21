@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 
 import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.*;
 import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 @Log4j
@@ -79,10 +80,9 @@ public class PdfGenerationService {
     private Map<String, Map<String, String>> getStudentsColumns(List<Student> students, List<Discipline> disciplines) {
         Map<String, Map<String, String>> studentsColumns = new HashMap<>();
         students.forEach(student -> {
-            Map<String, String> studentColumns = student.getDisciplineMarks().stream()
-                    .filter(m -> disciplines.contains(m.getDiscipline()))
-                    .collect(Collectors.toMap(m -> m.getDiscipline().getCode(), m -> nonNull(m.getMark()) ? m.getMark() : ""));
-            studentColumns.put("average", Optional.ofNullable(studentService.calculateAverageMark(student)).map(String::valueOf).orElse(""));
+            List<DisciplineMark> marks = student.getDisciplineMarks().stream().filter(m -> disciplines.contains(m.getDiscipline())).collect(toList());
+            Map<String, String> studentColumns = marks.stream().collect(Collectors.toMap(m -> m.getDiscipline().getCode(), m -> nonNull(m.getMark()) ? m.getMark() : ""));
+            studentColumns.put("average", Optional.ofNullable(studentService.calculateAverageMark(marks)).map(String::valueOf).orElse(""));
             studentsColumns.put(student.getEmail(), studentColumns);
         });
         return studentsColumns;
