@@ -76,7 +76,7 @@ public class AccountController {
     }
 
     @ExceptionHandler(ConnectException.class)
-    public ModelAndView handleError(HttpServletRequest request) throws ServletException {
+    public ModelAndView handleError(HttpServletRequest request) {
         return redirectToLoginWithError(request);
     }
 

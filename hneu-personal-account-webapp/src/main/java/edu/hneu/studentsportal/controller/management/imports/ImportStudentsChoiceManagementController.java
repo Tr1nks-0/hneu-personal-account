@@ -1,11 +1,16 @@
-package edu.hneu.studentsportal.controller.management;
+package edu.hneu.studentsportal.controller.management.imports;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import edu.hneu.studentsportal.controller.management.AbstractManagementController;
 import edu.hneu.studentsportal.domain.Discipline;
+import edu.hneu.studentsportal.domain.Student;
+import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.FileService;
 import edu.hneu.studentsportal.service.ImportService;
+import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.validator.ExcelValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,32 +26,36 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
-import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_DISCIPLINES_URL;
+import static edu.hneu.studentsportal.controller.ControllerConstants.IMPORT_STUDENTS_CHOICE_URL;
 
 @Log4j
 @Controller
-@RequestMapping(IMPORT_DISCIPLINES_URL)
+@RequestMapping(IMPORT_STUDENTS_CHOICE_URL)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ImportDisciplinesManagementController extends AbstractManagementController {
+public class ImportStudentsChoiceManagementController extends AbstractManagementController {
 
     private final ImportService importService;
     private final FileService fileService;
+    private final EmailService emailService;
 
     @GetMapping
-    public String importDisciplines(Model model) {
+    public String importStudent(Model model) {
         populateTitle(model);
-        return "management/import-disciplines-page";
+        return "management/import-students-choice-page";
     }
 
     @PostMapping
-    public String importDisciplines(@RequestParam("file") MultipartFile multipartFile, Model model) {
+    @SneakyThrows
+    public String importStudentsChoice(@RequestParam("file") MultipartFile multipartFile, Model model) {
         File file = fileService.getFile(multipartFile);
         ExcelValidator.validate(file);
-        List<Discipline> disciplines = fileService.perform(file, importService::importDisciplines);
-        model.addAttribute("disciplines", disciplines);
+        Map<Student, List<Discipline>> studentsChoice = fileService.perform(file, importService::importStudentsChoice);
+        studentsChoice.keySet().forEach(emailService::sendProfileWasChangedEmail);
+        model.addAttribute("studentsChoice", studentsChoice);
         populateTitle(model);
-        return "management/imported-disciplines-page";
+        return "management/imported-students-choice";
     }
 
     @ExceptionHandler({IllegalArgumentException.class, InvalidFormatException.class, InvocationTargetException.class})
@@ -61,7 +70,7 @@ public class ImportDisciplinesManagementController extends AbstractManagementCon
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
-        return handleErrorInternal(e, messageService.disciplinesExistError(), redirectAttributes);
+        return handleErrorInternal(e, messageService.studentExistsError(), redirectAttributes);
     }
 
     @ExceptionHandler(IllegalStateException.class)
@@ -71,7 +80,7 @@ public class ImportDisciplinesManagementController extends AbstractManagementCon
 
     @Override
     public String baseUrl() {
-        return IMPORT_DISCIPLINES_URL;
+        return IMPORT_STUDENTS_CHOICE_URL;
     }
 
     @Override
@@ -80,6 +89,6 @@ public class ImportDisciplinesManagementController extends AbstractManagementCon
     }
 
     private void populateTitle(Model model) {
-        model.addAttribute("title", "import-disciplines");
+        model.addAttribute("title", "import-students-choice");
     }
 }

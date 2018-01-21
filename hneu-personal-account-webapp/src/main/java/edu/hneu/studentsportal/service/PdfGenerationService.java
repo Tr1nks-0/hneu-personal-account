@@ -1,7 +1,5 @@
 package edu.hneu.studentsportal.service;
 
-
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.BaseFont;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -13,7 +11,6 @@ import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.servlet.ServletOutputStream;
-import java.io.IOException;
 import java.util.Map;
 
 @Log4j
