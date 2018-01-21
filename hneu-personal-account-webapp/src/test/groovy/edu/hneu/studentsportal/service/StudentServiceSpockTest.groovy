@@ -7,10 +7,10 @@ import spock.lang.Specification
 
 class StudentServiceSpockTest extends Specification {
 
-    static final String EMAIL_INTEGRATION_SERVICE_URL = 'test.email.service'
+    static final String EMAIL_INTEGRATION_SERVICE_URL = 'prepareStudentMarksReportPerSemester.email.service'
     static final String STUDENT_EMAIL = 'student@email'
     static
-    final String REQUEST_EMAIL_URL = 'test.email.service/EmailToOutController?name=олександр&surname=роздольський&groupId=8.04.51.16.01'
+    final String REQUEST_EMAIL_URL = 'prepareStudentMarksReportPerSemester.email.service/EmailToOutController?name=олександр&surname=роздольський&groupId=8.04.51.16.01'
     static final String ERROR_MESSAGE = 'error message'
 
     static final String STUDENT_NAME = 'Олександр'

@@ -1,4 +1,4 @@
-package edu.hneu.studentsportal.controller.management.pdf;
+package edu.hneu.studentsportal.controller;
 
 import lombok.SneakyThrows;
 

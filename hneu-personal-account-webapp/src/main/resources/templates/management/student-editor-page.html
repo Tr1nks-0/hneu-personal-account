@@ -29,6 +29,10 @@
                             <div class="col-md-12 panel-title">
                                 <span th:text="${student.surname + ' ' + student.name}"></span>
                                 <div class="pull-right">
+                                    <a class="btn btn-default" target="_blank"
+                                       th:href="@{/management/students/__${student.id}__/pdf}"
+                                       th:text="#{btn.profile.pdf}">
+                                    </a>
                                     <button type="button" class="btn btn-xs btn-danger" data-toggle="modal"
                                             th:attr="data-target='#deleteStudentModal'">
                                         <i class="fa fa-remove"></i>
