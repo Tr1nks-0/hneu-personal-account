@@ -1,4 +1,4 @@
-<aside class="main-sidebar" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz">
+<aside class="main-sidebar" xmlns:th="http://www.thymeleaf.org" xmlns:togglz="https://github.com/heneke/thymeleaf-extras-togglz">
     <section class="sidebar">
         <div class="user-panel">
             <div class="image">
@@ -45,6 +45,12 @@
                 <a href="/account/contactUs">
                     <i class="fa fa-envelope"></i>
                     <span th:text="#{top.menu.contacts}"></span>
+                </a>
+            </li>
+            <li togglz:active="LOAD_PROFILE_PDF">
+                <a href="/profile/pdf" target="_blank">
+                    <i class="fa fa-tasks"></i>
+                    <span th:text="#{btn.profile.pdf}"></span>
                 </a>
             </li>
             <li>

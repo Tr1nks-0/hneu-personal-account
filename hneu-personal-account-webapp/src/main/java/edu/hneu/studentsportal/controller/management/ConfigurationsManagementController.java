@@ -2,7 +2,6 @@ package edu.hneu.studentsportal.controller.management;
 
 import edu.hneu.studentsportal.enums.UserRole;
 import edu.hneu.studentsportal.feature.SiteFeature;
-import edu.hneu.studentsportal.service.MessageService;
 import edu.hneu.studentsportal.service.UserService;
 import javaslang.control.Try;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,6 @@ import static java.util.Objects.nonNull;
 public class ConfigurationsManagementController extends AbstractManagementController {
 
     private final UserService userService;
-    private final MessageService messageService;
 
     @GetMapping
     public String getConfigs(Model model) {
@@ -51,6 +49,7 @@ public class ConfigurationsManagementController extends AbstractManagementContro
         changeFeatureStateIfNeeded(request, SiteFeature.VIEW_CURRENT_MARKS.name(), SiteFeature.VIEW_CURRENT_MARKS);
         changeFeatureStateIfNeeded(request, SiteFeature.VIEW_DOCUMENTS.name(), SiteFeature.VIEW_DOCUMENTS);
         changeFeatureStateIfNeeded(request, SiteFeature.SEND_EMAIL_TO_DECAN.name(), SiteFeature.SEND_EMAIL_TO_DECAN);
+        changeFeatureStateIfNeeded(request, SiteFeature.LOAD_PROFILE_PDF.name(), SiteFeature.LOAD_PROFILE_PDF);
         return "redirect:" + MANAGE_CONFIGURATIONS_URL;
     }
 

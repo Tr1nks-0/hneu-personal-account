@@ -136,6 +136,12 @@
                                         <span th:text="#{form.label.management.configurations.account.features.contact.form}"></span>
                                     </label>
                                 </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="LOAD_PROFILE_PDF" type="checkbox" th:checked="${LOAD_PROFILE_PDF}" data-toggle="toggle"/>
+                                        <span th:text="#{form.label.management.configurations.account.features.load.profile}"></span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </form>

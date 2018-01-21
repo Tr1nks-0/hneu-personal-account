@@ -33,7 +33,11 @@ public enum SiteFeature implements Feature {
 
     @EnabledByDefault
     @Label("Send email to the decan")
-    SEND_EMAIL_TO_DECAN;
+    SEND_EMAIL_TO_DECAN,
+
+    @EnabledByDefault
+    @Label("Load profile in pdf")
+    LOAD_PROFILE_PDF;
 
     public boolean isActive() {
         return FeatureContext.getFeatureManager().isActive(this);
