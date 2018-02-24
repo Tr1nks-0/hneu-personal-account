@@ -27,11 +27,11 @@ public class DisciplineMark {
     private Discipline discipline;
 
     @NonNull
-    @ManyToOne
-    @Cascade(CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.SAVE_UPDATE)
     private Student student;
 
-    @Pattern(regexp = "\\d{1,2}|100|залік")
+    @Pattern(regexp = "\\d{0,2}|100|залік")
     private String mark;
 
     public DisciplineMark(Discipline discipline) {

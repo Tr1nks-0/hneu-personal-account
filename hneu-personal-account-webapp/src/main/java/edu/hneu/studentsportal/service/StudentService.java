@@ -44,7 +44,7 @@ public class StudentService {
 
     @SneakyThrows
     public Student createStudent(StudentDTO studentDTO) {
-        String studentEmail = receiveStudentEmail(studentDTO.getName(), studentDTO.getSurname(), studentDTO.getGroup().getName());
+        String studentEmail = "oleksandr.rozdolskyi@hneu.net";
         List<DisciplineMark> marks = disciplineMarkService.createMarksForNewStudent(studentDTO.getSpeciality(), studentDTO.getEducationProgram());
 
         final Student student = Student.builder()

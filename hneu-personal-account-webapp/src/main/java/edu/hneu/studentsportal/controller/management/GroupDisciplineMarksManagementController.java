@@ -11,7 +11,6 @@ import edu.hneu.studentsportal.service.EmailService;
 import edu.hneu.studentsportal.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,8 @@ import java.util.List;
 
 import static edu.hneu.studentsportal.controller.ControllerConstants.MANAGE_GROUPS_URL;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.thymeleaf.util.StringUtils.equalsIgnoreCase;
 
 @Log4j
 @Controller
@@ -67,7 +68,7 @@ public class GroupDisciplineMarksManagementController extends AbstractManagement
         List<DisciplineMark> marksToSave = new ArrayList<>();
         disciplineMarks.getMarks().forEach(mark -> {
             DisciplineMark disciplineMark = disciplineMarkRepository.getOne(mark.getId());
-            if (isFalse(StringUtils.equalsIgnoreCase(disciplineMark.getMark(), mark.getMark()))) {
+            if (isNotEmpty(mark.getMark()) && isFalse(equalsIgnoreCase(disciplineMark.getMark(), mark.getMark()))) {
                 disciplineMark.setMark(mark.getMark());
                 marksToSave.add(disciplineMark);
             }
