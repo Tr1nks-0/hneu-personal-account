@@ -81,7 +81,8 @@
         <td class="right" th:text="'На дату: ' + ${currentDate}"></td>
     </tr>
 </table>
-<table cellspacing="1" class="student-marks">
+
+<table cellspacing="1" class="student-marks" style="page-break-after:always;">
     <tr>
         <th rowspan="2" class="center">№</th>
         <th rowspan="2" class="center">ПІБ</th>
@@ -105,10 +106,35 @@
             th:text="${studentsColumns[student.email]['average']}"></td>
     </tr>
 </table>
+
+<div>
+    <p class="center" style="padding-top: 15px">Оцінки за вибірковими дисциплінами</p>
+    <table cellspacing="1" class="student-marks">
+        <tr>
+            <th class="center">№</th>
+            <th class="center">ПІБ</th>
+            <th class="center">Тип</th>
+            <th class="center">Назва</th>
+            <th class="center">Оцінка</th>
+        </tr>
+        <th:block th:each="student,i : ${students}">
+            <tr th:each="studentMark,i : ${studentsMarksForTemporalDisciplines[student.id]}">
+                <td class="center" th:text="${i.index + 1}"></td>
+                <td th:text="${student.surname + ' ' + student.name} "></td>
+                <td class="center" th:text="${studentMark.discipline.type.name}"></td>
+                <td th:text="${studentMark.discipline.label}"></td>
+                <td class="center" th:text="${studentMark.mark}"></td>
+            </tr>
+        </th:block>
+    </table>
+</div>
+
 <table style="padding-top: 10px;">
     <tr>
-        <td style="padding-left: 20px">Декан факультету економічної інформатики</td>
-        <td>Фахівець факультету економічної інформатики</td>
+        <td style="padding-left: 20px; padding-top: 10px">Декан факультету економічної інформатики</td>
+    </tr>
+    <tr>
+        <td style="padding-left: 5px; padding-top: 10px">Фахівець факультету економічної інформатики</td>
     </tr>
 </table>
 </body>

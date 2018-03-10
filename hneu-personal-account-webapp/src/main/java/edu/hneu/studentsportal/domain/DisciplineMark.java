@@ -22,12 +22,12 @@ public class DisciplineMark {
 
     @NonNull
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @Cascade(CascadeType.SAVE_UPDATE)
     private Discipline discipline;
 
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @Cascade(CascadeType.SAVE_UPDATE)
     private Student student;
 

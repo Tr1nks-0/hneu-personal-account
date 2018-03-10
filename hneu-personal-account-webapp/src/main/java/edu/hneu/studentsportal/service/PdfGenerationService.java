@@ -6,6 +6,7 @@ import edu.hneu.studentsportal.domain.Discipline;
 import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Group;
 import edu.hneu.studentsportal.domain.Student;
+import edu.hneu.studentsportal.enums.DisciplineType;
 import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.GroupRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
@@ -33,8 +34,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static edu.hneu.studentsportal.repository.DisciplineRepository.DisciplineSpecifications.*;
-import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 @Log4j
@@ -52,7 +53,7 @@ public class PdfGenerationService {
     public Map<String, Object> prepareStudentMarksReportPerSemester(long groupId, int course, int semester) {
         Group group = groupRepository.findById(groupId).orElseThrow(IllegalArgumentException::new);
         List<Student> students = studentRepository.findByGroup(group, new Sort(Sort.Direction.ASC, "surname", "name"));
-        List<Discipline> disciplines = getDisciplines(course, semester, group);
+        List<Discipline> disciplines = getRegularDisciplines(course, semester, group);
 
         Map<String, Object> variables = new HashedMap<>();
         variables.put("faculty", group.getSpeciality().getFaculty().getName());
@@ -65,27 +66,38 @@ public class PdfGenerationService {
         variables.put("students", students);
         variables.put("disciplines", disciplines);
         variables.put("year", getEducationYear(course, students));
-        variables.put("studentsColumns", getStudentsColumns(students, disciplines));
+        variables.put("studentsColumns", getStudentsMarksForRegularDisciplines(students, disciplines));
+        variables.put("studentsMarksForTemporalDisciplines", getStudentsMarksForTemporalDisciplines(students, course, semester));
         return variables;
     }
 
-    private List<Discipline> getDisciplines(int course, int semester, Group group) {
+    private Map<Long, List<DisciplineMark>> getStudentsMarksForTemporalDisciplines(List<Student> students, int course, int semester) {
+        return students.stream().collect(toMap(Student::getId, s -> s.getDisciplineMarks().stream()
+                .filter(mark -> !DisciplineType.REGULAR.equals(mark.getDiscipline().getType()))
+                .filter(mark -> mark.getDiscipline().isSecondary())
+                .filter(mark -> mark.getDiscipline().getCourse() == course)
+                .filter(mark -> mark.getDiscipline().getSemester() == semester)
+                .collect(toList())));
+    }
+
+    private List<Discipline> getRegularDisciplines(int course, int semester, Group group) {
         Specifications<Discipline> spec = where(hasCourseAndSemester(course, semester))
                 .and(hasSpeciality(group.getSpeciality()))
                 .and(hasEducationProgram(group.getEducationProgram()))
-                .and(isNotTemporal());
+                .and(hasType(DisciplineType.REGULAR));
         return disciplineRepository.findAll(spec, new Sort(Sort.Direction.ASC, "controlForm"));
     }
 
-    private Map<String, Map<String, String>> getStudentsColumns(List<Student> students, List<Discipline> disciplines) {
-        Map<String, Map<String, String>> studentsColumns = new HashMap<>();
+    private Map<String, Map<String, String>> getStudentsMarksForRegularDisciplines(List<Student> students, List<Discipline> disciplines) {
+        Map<String, Map<String, String>> studentsMarksForRegularDisciplines = new HashMap<>();
         students.forEach(student -> {
             List<DisciplineMark> marks = student.getDisciplineMarks().stream().filter(m -> disciplines.contains(m.getDiscipline())).collect(toList());
-            Map<String, String> studentColumns = marks.stream().collect(Collectors.toMap(m -> m.getDiscipline().getCode(), m -> nonNull(m.getMark()) ? m.getMark() : ""));
-            studentColumns.put("average", Optional.ofNullable(studentService.calculateAverageMark(marks)).map(String::valueOf).orElse(""));
-            studentsColumns.put(student.getEmail(), studentColumns);
+            Map<String, String> studentColumns = marks.stream().collect(toMap(m -> m.getDiscipline().getCode(), m -> Optional.ofNullable(m.getMark()).orElse("")));
+            Double averageMark = studentService.calculateAverageMark(marks);
+            studentColumns.put("average", Optional.ofNullable(averageMark).map(String::valueOf).orElse(""));
+            studentsMarksForRegularDisciplines.put(student.getEmail(), studentColumns);
         });
-        return studentsColumns;
+        return studentsMarksForRegularDisciplines;
     }
 
     private String getEducationYear(@RequestParam(defaultValue = "1") Integer course, List<Student> students) {

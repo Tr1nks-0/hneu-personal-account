@@ -42,6 +42,10 @@ public interface DisciplineRepository extends JpaRepository<Discipline, Long>, J
             return Specifications.where((root, query, cb) -> cb.and(cb.equal(root.get("educationProgram"), educationProgram)));
         }
 
+        public static Specifications<Discipline> hasType(DisciplineType type) {
+            return Specifications.where((root, query, cb) -> cb.and(cb.equal(root.get("type"), type)));
+        }
+
         public static Specifications<Discipline> isNotTemporal() {
             return Specifications.where((root, query, cb) -> cb.and(
                     cb.or(cb.equal(root.get("type"), DisciplineType.REGULAR), cb.isTrue(root.get("secondary"))))
