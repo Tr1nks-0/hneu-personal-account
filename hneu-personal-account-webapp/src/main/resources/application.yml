@@ -7,7 +7,7 @@ db:
   driver: com.mysql.jdbc.Driver
   username: ${DATABASE_USER:root}
   password: ${DATABASE_PASSWORD:root}
-  url: ${DATABASE_URL:jdbc:mysql://localhost:3306/stud_portal?useUnicode=yes&characterEncoding=UTF-8&useSSL=false}
+  url: ${DATABASE_URL:jdbc:mysql://localhost:3306/stud_portal?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&createDatabaseIfNotExist=true}
 hibernate:
   dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   show_sql: false

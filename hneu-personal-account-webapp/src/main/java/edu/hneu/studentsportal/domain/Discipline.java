@@ -68,6 +68,9 @@ public class Discipline {
     @Enumerated(EnumType.ORDINAL)
     private DisciplineType type;
 
+    @Column
+    private boolean disabled ;
+
     public Discipline(String label, DisciplineType type, int course, int semester) {
         this.label = label;
         this.type = type;

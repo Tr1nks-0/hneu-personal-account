@@ -103,6 +103,15 @@ public class DisciplinesManagementController extends AbstractManagementControlle
         });
     }
 
+    @PostMapping("/{id}/disabled/toggle")
+    @ResponseBody
+    public boolean toggleDisabled(@PathVariable long id) {
+        Discipline discipline = disciplineRepository.findOne(id);
+        discipline.setDisabled(!discipline.isDisabled());
+        disciplineRepository.saveAndFlush(discipline);
+        return discipline.isDisabled();
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public String handleError(DataIntegrityViolationException e, RedirectAttributes redirectAttributes) {
         return handleErrorInternal(e, messageService.disciplinesExistError(), redirectAttributes);
