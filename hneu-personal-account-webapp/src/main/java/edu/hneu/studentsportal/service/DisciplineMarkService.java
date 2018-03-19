@@ -50,7 +50,7 @@ public class DisciplineMarkService {
 
 
     public List<DisciplineMark> createMarksForNewStudent(Speciality speciality, EducationProgram educationProgram) {
-        Specifications<Discipline> specifications = where(hasSpeciality(speciality)).and(hasEducationProgram(educationProgram)).and(isTemporal());
+        Specifications<Discipline> specifications = where(hasSpeciality(speciality)).and(hasEducationProgram(educationProgram)).and(isTemporal()).and(isNotDisabled());
         List<Discipline> disciplines = disciplineRepository.findAll(specifications);
         if (disciplines.isEmpty()) {
             throw new IllegalStateException(String.format(messageService.cannotFindDisciplines(speciality.getName(), educationProgram.getName())));
