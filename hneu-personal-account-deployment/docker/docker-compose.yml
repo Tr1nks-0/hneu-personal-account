@@ -3,7 +3,7 @@ version: '3'
 services:
 
   webapp:
-    build: ../../hneu-personal-account-webapp
+    image: hneu-personal-account
     container_name: hneu-personal-account-webapp
     volumes:
       - ./run-wrapper.sh:/usr/local/bin/run-wrapper.sh

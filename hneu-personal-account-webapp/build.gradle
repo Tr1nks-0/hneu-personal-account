@@ -13,15 +13,15 @@ buildscript {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 apply plugin: 'org.springframework.boot'
 apply plugin: 'groovy'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'com.moowork.gulp'
+
+repositories {
+    mavenCentral()
+}
 
 node {
     download = true

@@ -1,4 +1,3 @@
 rootProject.name = 'hneu-personal-account'
 include 'hneu-personal-account-deployment'
 include 'hneu-personal-account-webapp'
-
