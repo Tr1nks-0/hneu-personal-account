@@ -72,15 +72,15 @@ public class DisciplinesExcelParser extends AbstractExcelParser<List<Discipline>
     }
 
     private Speciality parseSpeciality(Indexer indexer) {
-        Integer id = getIntegerCellValue(indexer, 0);
-        return specialityRepository.findById(Long.valueOf(id))
-                .orElseThrow(() -> new IllegalStateException("Cannot find speciality for code: " + id));
+        String code = getStringCellValue(indexer,0);
+        return specialityRepository.findByCode(code)
+                .orElseThrow(() -> new IllegalStateException("Cannot find speciality for code: " + code));
     }
 
     private EducationProgram parseEducationProgram(Indexer indexer) {
-        Integer id = getIntegerCellValue(indexer, 1);
-        return educationProgramRepository.findById(Long.valueOf(id))
-                .orElseThrow(() -> new IllegalStateException("Cannot find education program for code: " + id));
+        String code = getStringCellValue(indexer, 1);
+        return educationProgramRepository.findByCode(code)
+                .orElseThrow(() -> new IllegalStateException("Cannot find education program for code: " + code));
     }
 
 }
