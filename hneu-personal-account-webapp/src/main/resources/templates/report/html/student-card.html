@@ -1,0 +1,143 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"-->
+    <!--integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->
+    <!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"-->
+    <!--integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"-->
+    <!--crossorigin="anonymous"></script>-->
+
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        .verticalTableCell {
+            -moz-transform: rotate(-90deg);
+            -webkit-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            writing-mode: tb-rl;
+            width: 25px;
+            white-space: nowrap;
+        }
+
+
+    </style>
+
+</head>
+
+
+<body>
+<div>
+    <div><b>Харківський національний економічний університет імені Семена Кузнеця</b></div>
+    <div><b>Факультет:</b><span th:text="${student.faculty.name}"></span></div>
+    <div><b>Рівень вищої освіти/освітньо-кваліфікаційний рівень: </b><span th:text="${'todo'}"></span></div>
+    <div><b>Напрям підготовки/Спеціалізація: </b><span
+            th:text="${student.educationProgram.code+' '+student.educationProgram.name}"></span></div>
+    <!--TODO check if it right-->
+    <div><b>Спеціальність: </b><span th:text="${student.speciality.name}"></span></div>
+    <div><b>Спеціалізація: </b><span th:text="${student.educationProgram.name}"></span></div>
+    <ol>
+        <li>
+            <div><b>Прізвище, ім’я, по батькові: </b><span th:text="${student.surname+' '+student.name}"></span></div>
+        </li>
+        <li>
+            <div><b>Дата народження: &#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;&#95;</b><span
+                    th:text="${'todo'}"></span></div> <!--TODO-->
+        </li>
+        <li>
+            <div><b>Місце народження: </b><span th:text="${'todo'}"></span></div> <!--TODO-->
+        </li>
+        <li>
+            <div><b>Громадянство: </b><span th:text="${'todo'}"></span></div> <!--TODO-->
+        </li>
+        <li>
+            <div><b>Закінчив(ла): </b><span th:text="${'todo'}"></span></div> <!--TODO-->
+        </li>
+        <li>
+            <div><b>Сімейний стан: </b><span th:text="${'todo'}"></span></div> <!--TODO-->
+        </li>
+        <li>
+            <div><b>Місце проживання/місце реєстрації: </b><span th:text="${'todo'}"></span></div> <!--TODO-->
+        </li>
+        <li>
+            <div><b>Наявність пільг при вступі: </b><span th:text="${'todo'}"></span></div> <!--TODO-->
+        </li>
+        <li>
+            <div><b>Зарахований(а) наказом від: </b><span th:text="${'todo'}"></span></div> <!--TODO-->
+            <ol class="bracketed-ol">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ol>
+        </li>
+    </ol>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <td rowspan="2">Курс</td>
+        <td rowspan="2">Семестр</td>
+        <td rowspan="2">Назва навчальної дісципліни,<br/>навчальної практики</td>
+        <td colspan="2">Загальний обсяг</td>
+        <td colspan="2">Семестровий контроль, оцінка</td>
+        <td rowspan="2">Дата складання семестрового контролю й номер відомості</td>
+    </tr>
+    <tr>
+        <td>Години</td>
+        <td>Кредитів<br/>ЄКТС</td>
+        <td>Кількість<br/>балів</td>
+        <td>За національною<br/>шкалою</td>
+    </tr>
+    </thead>
+
+    <tbody th:each="course,courseIndex:${courses}">
+    <th:block th:each="semester,semesterIndex:${course.value.key}">
+        <th:block th:each="disciplineMark,disciplineMarkIndex:${semester.value}">
+            <tr>
+                <td class="verticalTableCell" th:if="${semesterIndex.index == 0 and disciplineMarkIndex.index==0}"
+                    th:rowspan="${(course.value.value>32)?course.value.value:32}"
+                >
+                    <p th:text="${numberNames[__${(course.key)-1}__]}+' '+
+                                             ${(student.incomeYear+course.key)-1}+' - '+
+                                             ${(student.incomeYear+course.key)}+' НАВЧАЛЬНИЙ РІК'"></p>
+                </td>
+
+                <td th:if="${disciplineMarkIndex.index ==0}"
+                    th:rowspan="${(semester.value.size()>16)?semester.value.size():16}"
+                    th:text="${numberNames[__${(semester.key)-1}__]}"></td>
+
+                <td th:text="${disciplineMark.discipline.label}"></td>
+                <td th:text="${'todo'}"></td>
+                <td th:text="${disciplineMark.discipline.credits}"></td>
+                <td th:text="${disciplineMark.mark}"></td>
+                <td th:text="${'todo'}"></td>
+                <td th:text="${'todo'}"></td>
+            </tr>
+        </th:block>
+        <th:block th:each="i : ${#numbers.sequence(1,__${(16-semester.value.size())>0?(16-semester.value.size()):0}__)}">
+            <tr>
+                <td>&nbsp;</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </th:block>
+    </th:block>
+    </tbody>
+
+</table>
+
+</body>
+</html>
