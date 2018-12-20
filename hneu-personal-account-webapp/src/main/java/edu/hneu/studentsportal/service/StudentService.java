@@ -4,7 +4,6 @@ import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.domain.dto.StudentDTO;
 import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import javaslang.control.Try;
 import lombok.RequiredArgsConstructor;
@@ -78,11 +77,13 @@ public class StudentService {
         Try<String> email = Try.of(() -> restTemplate.getForEntity(url, String.class))
                 .map(ResponseEntity::getBody)
                 .map(String::toLowerCase);
-        if (email.isSuccess() && email.get().contains("@")) {
+        if (email.isSuccess() &&
+                email.get().contains("@")) {
             return email.get();
         } else {
             throw new IllegalArgumentException(messageService.emailNotFoundForStudent(formattedName + " " + formatterSurname));
         }
+//        return "studentportaltest@hneu.net";
     }
 
     public Student save(Student student) {

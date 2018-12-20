@@ -3,6 +3,8 @@ package edu.hneu.studentsportal.parser.impl;
 
 import com.google.common.collect.Lists;
 import edu.hneu.studentsportal.domain.*;
+import edu.hneu.studentsportal.enums.Gender;
+import edu.hneu.studentsportal.enums.MaritalStatus;
 import edu.hneu.studentsportal.parser.AbstractExcelParser;
 import edu.hneu.studentsportal.parser.Indexer;
 import edu.hneu.studentsportal.repository.GroupRepository;
@@ -18,10 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
@@ -33,6 +35,8 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentsExcelParser extends AbstractExcelParser<Map<String, Student>> {
 
+    public static final String REPLACING_DATE_DELIMETERS = "(?ium)[,\\-/_\\\\]";
+    private final DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
     private final GroupRepository groupRepository;
     private final StudentService studentService;
     private final DisciplineMarkService disciplineMarkService;
@@ -81,6 +85,13 @@ public class StudentsExcelParser extends AbstractExcelParser<Map<String, Student
 
         List<DisciplineMark> marks = disciplineMarkService.createMarksForNewStudent(speciality, educationProgram);
 
+        Gender gender = parseGender(indexer);
+        Date birthDate = parseDate(indexer, 10);
+        String birthPlace = getStringCellValue(indexer, 11).trim();
+        String citizenship = getStringCellValue(indexer, 12).trim();
+        MaritalStatus maritalStatus = parseMaritalStatus(indexer);
+        String residencePlace = getStringCellValue(indexer, 14).trim();
+
         Student student = Student.builder()
                 .group(group)
                 .incomeYear(getIntegerCellValue(indexer, 2))
@@ -96,6 +107,14 @@ public class StudentsExcelParser extends AbstractExcelParser<Map<String, Student
                 .photo(fileService.getProfilePhoto(getStudentPhoto(indexer)))
                 .disciplineMarks(marks)
                 .contract("+".equals(getStringCellValue(indexer, 8)))
+
+                .gender(gender)
+                .birthDate(birthDate)
+                .birthPlace(birthPlace)
+                .citizenship(citizenship)
+                .maritalStatus(maritalStatus)
+                .residencePlace(residencePlace)
+
                 .build();
         marks.forEach(mark -> mark.setStudent(student));
         return student;
@@ -116,6 +135,26 @@ public class StudentsExcelParser extends AbstractExcelParser<Map<String, Student
         String groupName = getString1CellValue(indexer).trim();
         return groupRepository.findByName(groupName)
                 .orElseThrow(() -> new IllegalStateException("Cannot find group for name: " + groupName));
+    }
+
+    private MaritalStatus parseMaritalStatus(Indexer indexer) {
+        String maritalStr = getStringCellValue(indexer, 13).trim();
+        return MaritalStatus.getStatusByString(maritalStr);
+    }
+
+    private Gender parseGender(Indexer indexer) {
+        String genderStr = getStringCellValue(indexer, 9).trim();
+        return Gender.getByString(genderStr);
+    }
+
+    private Date parseDate(Indexer indexer, int index) {
+        String dateStr = getStringCellValue(indexer, index).trim().replaceAll(REPLACING_DATE_DELIMETERS, ".");
+        try {
+            return dateFormat.parse(dateStr);
+        } catch (ParseException e) {
+            log.trace(e.getMessage(), e);
+            throw new IllegalStateException(String.format("Cannot parse date from string \"%s\"", e));
+        }
     }
 
 }
