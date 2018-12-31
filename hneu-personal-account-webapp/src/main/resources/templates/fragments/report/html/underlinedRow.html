@@ -1,0 +1,9 @@
+<div class="row-underlined-line-div" th:fragment="underlinedRow(mainText)" xmlns:th="http://www.thymeleaf.org">
+    <!--/*@thymesVar id="title" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="underlineText" type="java.lang.String"*/-->
+        <div th:if="${title}" class="above-line-div-left"><strong th:text="${title+'&nbsp;'}"></strong></div>
+        <div class="above-line-div-right text-center">
+            <div class="underlined" th:text="${mainText}"></div>
+            <div th:if="${underlineText}" class="font-9 text-center" th:text="${'('+underlineText+')'}"></div>
+    </div>
+</div>
