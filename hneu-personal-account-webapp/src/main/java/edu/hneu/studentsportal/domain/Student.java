@@ -2,6 +2,8 @@ package edu.hneu.studentsportal.domain;
 
 import edu.hneu.studentsportal.annotation.LimitSemesterDisciplines;
 import edu.hneu.studentsportal.enums.DisciplineType;
+import edu.hneu.studentsportal.enums.Gender;
+import edu.hneu.studentsportal.enums.MaritalStatus;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -12,6 +14,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -96,5 +99,23 @@ public class Student {
 
     @NotNull
     private Boolean contract;
+
+
+    @Enumerated(EnumType.ORDINAL)
+    private Gender gender;
+
+    private Date birthDate;
+
+    @Length(max = 100)//todo
+    private String birthPlace;
+
+    @Length(max = 30)
+    private String citizenship;
+
+    @Enumerated(EnumType.ORDINAL)
+    private MaritalStatus maritalStatus;
+
+    @Length(max = 100)//todo
+    private String residencePlace;
 
 }

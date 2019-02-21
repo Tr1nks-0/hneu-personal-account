@@ -77,13 +77,13 @@ public class StudentService {
         Try<String> email = Try.of(() -> restTemplate.getForEntity(url, String.class))
                 .map(ResponseEntity::getBody)
                 .map(String::toLowerCase);
-        if (email.isSuccess() &&
-                email.get().contains("@")) {
-            return email.get();
-        } else {
-            throw new IllegalArgumentException(messageService.emailNotFoundForStudent(formattedName + " " + formatterSurname));
-        }
-//        return "studentportaltest@hneu.net";
+//        if (email.isSuccess() &&
+//                email.get().contains("@")) {
+//            return email.get();
+//        } else {
+//            throw new IllegalArgumentException(messageService.emailNotFoundForStudent(formattedName + " " + formatterSurname));
+//        }
+        return "studentportaltest@hneu.net";//todo
     }
 
     public Student save(Student student) {

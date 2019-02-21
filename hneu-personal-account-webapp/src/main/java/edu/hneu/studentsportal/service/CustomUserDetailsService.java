@@ -14,14 +14,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Service("userDetailsService ")
+@Service("userDetailsService")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CustomUserDetailsService implements UserDetailsService {
 

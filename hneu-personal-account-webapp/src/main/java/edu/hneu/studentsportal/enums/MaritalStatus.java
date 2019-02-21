@@ -27,7 +27,13 @@ public enum MaritalStatus {
     }
 
     public String getStatusNameByGender(Gender gender) {
-        return Objects.isNull(femaleStatusName) ? maleStatusName : (gender.equals(Gender.MALE) ? maleStatusName : femaleStatusName);
+        if (Objects.isNull(gender)) {
+            return "";
+        }
+        if (Objects.nonNull(femaleStatusName) && gender.equals(Gender.FEMALE)) {
+            return femaleStatusName;
+        }
+        return maleStatusName;
     }
 
     public static MaritalStatus getStatusByString(String str) {

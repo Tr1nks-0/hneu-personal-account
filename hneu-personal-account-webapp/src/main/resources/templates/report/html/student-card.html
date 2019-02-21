@@ -126,6 +126,7 @@
 <!--/*@thymesVar id="tableData" type="java.util.List<edu.hneu.studentsportal.domain.dto.studentcart.CourseData>"*/-->
 <!--/*@thymesVar id="course" type="edu.hneu.studentsportal.domain.dto.studentcart.CourseData"*/-->
 <!--/*@thymesVar id="semester" type="edu.hneu.studentsportal.domain.dto.studentcart.SemesterData"*/-->
+<!--/*@thymesVar id="hoursPerCredit" type="java.lang.Double"*/-->
 
 <body>
 <div id="page-1" class="page-A4">
@@ -340,7 +341,7 @@
                         <div th:text="${disciplineMark.discipline.label}" class="font-10"></div>
                     </td>
                     <td>
-                        <div th:text="${'todo'}"></div>
+                        <div th:text="${hoursPerCredit * disciplineMark.discipline.credits}"></div>
                     </td>
                     <td>
                         <div th:text="${disciplineMark.discipline.credits}"></div>
