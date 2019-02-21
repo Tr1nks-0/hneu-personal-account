@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/card")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentCardController {
-    private static final String[] NUMBER_NAMES = {"ПЕРШИЙ", "ДРУГИЙ", "ТРЕТІЙ", "ЧЕТВЕРТИЙ", "ПЕРШИЙ", "ДРУГИЙ"};
+    private static final String[] NUMBER_NAMES = {"ПЕРШИЙ", "ДРУГИЙ", "ТРЕТІЙ", "ЧЕТВЕРТИЙ"};
     private static final double HOURS_PER_CREDIT = 30;
 
     @Resource

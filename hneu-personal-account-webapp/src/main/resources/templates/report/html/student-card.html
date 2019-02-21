@@ -146,7 +146,7 @@
 
     <div class="photo-text-pair">
         <div class="text">
-            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${'todo'},
+            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${T(edu.hneu.studentsportal.enums.StudyLevel).byLevelId(__${student.group.name.substring(0,student.group.name.indexOf('.'))}__).name},
                                                                                   title='Рівень вищої освіти/освітньо-кваліфікаційний рівень',
                                                                                   underlineText='молодший спеціаліст, бакалавр, спеціаліст')"></div>
 
@@ -184,18 +184,40 @@
         </li>
     </ol>
 
-    <ol start="4">
+    <style>
+        ol.citizenship-graduated {
+            /*padding: 20px;*/
+            /*margin-left: 47px;*/
+            /*margin-left: 6%;*/
+            list-style-type: decimal;
+        }
+
+        ol.citizenship-graduated li {
+            float: left;
+            /*margin: 0 10px;*/
+            padding: 0 10px;
+            width: 47%;
+
+        }
+    </style>
+
+    <ol start="4" class="citizenship-graduated">
         <li>
             <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${student.citizenship},
                                                                                   title='Громадянство')"></div>
         </li>
-        <!--todo-->
         <li>
-            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${'todo'},
-                                                                                  title='Закінчив(ла)',
-                                                                                  underlineText='найменування навчального закладу')"></div>
+            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText='&nbsp;',
+                                                                                  title='Закінчив(ла)')"></div>
         </li>
     </ol>
+    <!--<ol style="list-style-type: none;">-->
+    <!--<li>-->
+    <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; В&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;роцi',
+                                                                                  underlineText='найменування навчального закладу')"></div>
+    <!--todo-->
+    <!--</li>-->
+    <!--</ol>-->
 
 
     <ol start="6">
@@ -207,20 +229,17 @@
             <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${student.residencePlace},
                                                                                   title='Місце проживання/місце реєстрації',
                                                                                   underlineText='поштовий індекс, область, район, назва населеного пункту')"></div>
-            <!--todo-->
             <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${student.residencePlace},
                                                                                   underlineText='вулиця, номери будинку, квартири, телефону')"></div>
         </li>
         <li>
-            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${'todo'},
+            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText='&nbsp;',
                                                                                   title='Наявність пільг при вступі')"></div>
-            <!--todo-->
-            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${'todo'})"></div>
+            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText='&nbsp;')"></div>
         </li>
         <li>
             <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${'&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;року&nbsp;№&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'},
                                                                                   title='Зарахований (а) наказом від')"></div>
-            <!--todo-->
             <ol>
                 <li>
                     <div><strong>за конкурсом: зі стажем, без стажу </strong>(підкреслити)</div>
@@ -251,19 +270,19 @@
             </ol>
         </li>
         <li>
-            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${'todo'},
+            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText='&nbsp;',
                                                                                   title='Трудова книжка',
                                                                                   underlineText='номер, коли і ким видана')"></div>
         </li>
         <li>
-            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText=${'todo'},
+            <div th:replace="fragments/report/html/underlinedRow :: underlinedRow(mainText='&nbsp;',
                                                                                   title='Реєстраційний номер облікової картки платника податків або серія та номер паспорта (для фізичних осіб, які через свої релігійні переконання відмовились від реєстраційного номера облікової картки платника податків та офіційно повідомили про це відповідний контролюючий орган і мають відмітку у паспорті)')"></div>
         </li>
         <li>
             <div>
                 <strong>Переведення з курсу на курс, перерва в академічному навчанні, заохочення, стягнення</strong>
             </div>
-            <table>
+            <table style="width: 100%">
                 <thead>
                 <tr>
                     <td>Курс</td>
@@ -326,7 +345,7 @@
                     <td class="vertical-cell font-12"
                         th:if="${semesterIndex.index == 0 and disciplineMarkIndex.index==0}"
                         th:rowspan="${(course.disciplineMarksCount()>32)?course.disciplineMarksCount():32}">
-                        <div th:text="${numberNames[__${(course.number)-1}__]}+' '+
+                        <div th:text="${numberNames[__${(course.number) > 4 ? (course.number)-5 : (course.number)-1}__]}+' '+
                                         ${(student.incomeYear+course.number)-1}+' - '+
                                         ${(student.incomeYear+course.number)}+' НАВЧАЛЬНИЙ РІК'"></div>
                     </td>
