@@ -1,29 +1,20 @@
 package edu.hneu.studentsportal.domain.dto.studentcart;
 
+import lombok.Data;
+
+@Data
 public class DisciplineMarkData {
 
 
     private DisciplineData discipline;
     private String mark;
+    private SheetData markSheet;
 
-    public DisciplineMarkData(DisciplineData discipline, String mark) {
+    public DisciplineMarkData(DisciplineData discipline, String mark, SheetData markSheet) {
         this.discipline = discipline;
         this.mark = mark;
+        this.markSheet = markSheet;
     }
 
-    public DisciplineData getDiscipline() {
-        return discipline;
-    }
 
-    public void setDiscipline(DisciplineData discipline) {
-        this.discipline = discipline;
-    }
-
-    public String getMark() {
-        return mark;
-    }
-
-    public void setMark(String mark) {
-        this.mark = mark;
-    }
 }

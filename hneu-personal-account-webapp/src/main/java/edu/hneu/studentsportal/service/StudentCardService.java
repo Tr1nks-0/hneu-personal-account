@@ -24,6 +24,8 @@ public class StudentCardService {
     private StudentRepository studentRepository;
     @Resource
     private DisciplineMarkService disciplineMarkService;
+    @Resource
+    private SheetService sheetService;
 
 
     public Student getStudent(long studentId) {
@@ -59,15 +61,15 @@ public class StudentCardService {
     }
 
     private DisciplineMarkData mapDisciplineMark(DisciplineMark disciplineMark) {
-        return new DisciplineMarkData(mapDiscipline(disciplineMark.getDiscipline()), disciplineMark.getMark());
+        return new DisciplineMarkData(mapDiscipline(disciplineMark.getDiscipline()), disciplineMark.getMark(), sheetService.mapSheet(disciplineMark.getMarksSheet()));
     }
 
     private DisciplineData mapDiscipline(Discipline discipline) {
         return new DisciplineData(discipline.getCode(),
-                discipline.getCredits(),
-                discipline.getControlForm(),
-                discipline.getLabel(),
-                discipline.isSecondary(),
-                discipline.getType());
+            discipline.getCredits(),
+            discipline.getControlForm(),
+            discipline.getLabel(),
+            discipline.isSecondary(),
+            discipline.getType());
     }
 }

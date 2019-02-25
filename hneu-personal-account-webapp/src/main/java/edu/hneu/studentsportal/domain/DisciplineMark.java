@@ -34,6 +34,11 @@ public class DisciplineMark {
     @Pattern(regexp = "\\d{0,2}|100|залік")
     private String mark;
 
+
+    @ManyToOne
+    @JoinColumn(name = "marks_sheet_id")
+    private Sheet marksSheet;
+
     public DisciplineMark(Discipline discipline) {
         this.discipline = discipline;
     }
