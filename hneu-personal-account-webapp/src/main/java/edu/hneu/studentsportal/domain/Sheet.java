@@ -30,10 +30,6 @@ public class Sheet {
     private Integer number;
 
     @NotNull
-    @Length(min = 3, max = 100)
-    private String title;
-
-    @NotNull
     @Length(min = 3, max = 256)
     private String content;
 }

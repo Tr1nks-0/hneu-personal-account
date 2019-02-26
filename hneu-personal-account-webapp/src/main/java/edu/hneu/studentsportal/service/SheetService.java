@@ -13,6 +13,6 @@ public class SheetService {
         if (Objects.isNull(sheet)) {
             return null;
         }
-        return new SheetData(sheet.getDate(), sheet.getNumber(), sheet.getTitle(), sheet.getContent());
+        return new SheetData(sheet.getDate(), sheet.getNumber(), sheet.getContent());
     }
 }

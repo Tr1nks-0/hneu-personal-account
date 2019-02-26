@@ -127,6 +127,7 @@
 <!--/*@thymesVar id="course" type="edu.hneu.studentsportal.domain.dto.studentcart.CourseData"*/-->
 <!--/*@thymesVar id="semester" type="edu.hneu.studentsportal.domain.dto.studentcart.SemesterData"*/-->
 <!--/*@thymesVar id="hoursPerCredit" type="java.lang.Double"*/-->
+<!--/*@thymesVar id="marksSheet" type="edu.hneu.studentsportal.domain.Sheet"*/-->
 
 <body>
 <div id="page-1" class="page-A4">
@@ -371,7 +372,12 @@
                     <td>
                         <div th:text="${@markConverterService.getNationalMark(disciplineMark.mark)}"></div>
                     </td>
-                    <td>data</td>
+                    <td>
+                        <div style="font-size: 15px"
+                             th:text="${disciplineMark.markSheet!=null ? disciplineMark.markSheet.getFormattedDateString() : ''}"></div>
+                        <div style="font-size: 15px"
+                             th:text="${disciplineMark.markSheet!=null ? ('№ '+ disciplineMark.markSheet.number) : ''}"></div>
+                    </td>
                 </tr>
             </th:block>
             <th:block

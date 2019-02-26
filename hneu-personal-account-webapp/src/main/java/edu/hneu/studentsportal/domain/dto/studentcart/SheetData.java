@@ -12,12 +12,10 @@ public class SheetData {
 
     private Date date;
     private Integer number;
-    private String title;
     private String content;
-    public SheetData(Date date, Integer number, String title, String content) {
+    public SheetData(Date date, Integer number, String content) {
         this.date = date;
         this.number = number;
-        this.title = title;
         this.content = content;
     }
 
