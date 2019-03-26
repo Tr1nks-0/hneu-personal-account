@@ -4,7 +4,6 @@ import edu.hneu.studentsportal.domain.DisciplineMark;
 import edu.hneu.studentsportal.domain.Student;
 import edu.hneu.studentsportal.domain.dto.StudentDTO;
 import edu.hneu.studentsportal.enums.UserRole;
-import edu.hneu.studentsportal.repository.DisciplineRepository;
 import edu.hneu.studentsportal.repository.StudentRepository;
 import javaslang.control.Try;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -33,7 +32,6 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class StudentService {
 
     private final MessageService messageService;
-    private final RestOperations restTemplate;
     private final StudentRepository studentRepository;
     private final UserService userService;
     private final FileService fileService;
@@ -75,6 +73,7 @@ public class StudentService {
         String formattedName = name.toLowerCase().split(" ")[0];
         String formatterSurname = surname.toLowerCase().trim();
         String url = format("%s/EmailToOutController?name=%s&surname=%s&groupId=%s", emailsIntegrationServiceUrl, formattedName, formatterSurname, groupName);
+        RestTemplate restTemplate = new RestTemplate();
         Try<String> email = Try.of(() -> restTemplate.getForEntity(url, String.class))
                 .map(ResponseEntity::getBody)
                 .map(String::toLowerCase);
@@ -102,6 +101,8 @@ public class StudentService {
         }
         return null;
     }
+
+
 
     public Integer getStudentRating(Student student) {
         Specifications<Student> specifications = where(hasSpecialityAndIncomeYear(student.getSpeciality(), student.getIncomeYear()));
