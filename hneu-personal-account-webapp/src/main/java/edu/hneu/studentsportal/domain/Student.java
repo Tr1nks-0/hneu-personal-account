@@ -46,8 +46,6 @@ public class Student {
 
     @NotNull
     @Column(name = "passport_number")
-    @Min(0)
-    @Max(Integer.MAX_VALUE)
     private String passportNumber;
 
     @NotNull

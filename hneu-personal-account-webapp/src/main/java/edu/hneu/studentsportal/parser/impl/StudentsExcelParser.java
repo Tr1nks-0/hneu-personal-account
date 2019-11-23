@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang.BooleanUtils.isFalse;
@@ -77,7 +74,10 @@ public class StudentsExcelParser extends AbstractExcelParser<Map<String, Student
 
         String surname = getStringCellValue(indexer, 3).trim();
         String name = getStringCellValue(indexer, 4).trim();
-        String email = studentService.receiveStudentEmail(name, surname, group.getName());
+        String email = getStringCellValue(indexer, 9).trim();
+        if(email.isEmpty()){
+            email=studentService.receiveStudentEmail(name, surname, group.getName());
+        }
 
         List<DisciplineMark> marks = disciplineMarkService.createMarksForNewStudent(speciality, educationProgram);
 
